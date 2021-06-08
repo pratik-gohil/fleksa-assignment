@@ -8,7 +8,7 @@ export interface IPropsNavLink {
 
 const Wrapper = styled.li`
   padding: ${props => props.theme.dimen.X2}px ${props => props.theme.dimen.X4}px;
-  border-radius: ${props => props.theme.dimen.X}px;
+  border-radius: ${props => props.theme.borderRadius}px;
   &:hover {
     background-color: ${props => props.theme.primaryColor};
   }

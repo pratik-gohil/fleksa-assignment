@@ -37,6 +37,12 @@ export const IndexSlice = createSlice({
     updateProducts: (state, action) => {
       state.products = action.payload
     },
+    updateReviews: (state, action) => {
+      state.reviews = action.payload
+    },
+    updateImages: (state, action) => {
+      state.images = action.payload
+    },
   },
   extraReducers: {
     [HYDRATE]: (state, action) => {
@@ -48,8 +54,16 @@ export const IndexSlice = createSlice({
   }
 })
 
-export const { updateAddress, updateShop, updateProducts } = IndexSlice.actions
+export const {
+  updateAddress,
+  updateShop,
+  updateProducts,
+  updateReviews,
+  updateImages,
+} = IndexSlice.actions
 
 export const selectAddress = (state: RootState) => state.index.address
 export const selectShop = (state: RootState) => state.index.shop
 export const selectProducts = (state: RootState) => state.index.products
+export const selectReviews = (state: RootState) => state.index.reviews
+export const selectImages = (state: RootState) => state.index.images

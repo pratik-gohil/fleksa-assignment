@@ -1,12 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { createWrapper } from "next-redux-wrapper";
 import { AddressesSlice } from "./slices/addresses.slices.redux";
+import { ConfigurationSlice } from "./slices/configuration.slices.redux";
 import { IndexSlice } from "./slices/index.slices.redux";
 
 const store = configureStore({
   reducer: {
     index: IndexSlice.reducer,
-    address: AddressesSlice.reducer
+    address: AddressesSlice.reducer,
+    configuration: ConfigurationSlice.reducer,
   },
   preloadedState: {
 
@@ -17,10 +19,9 @@ const store = configureStore({
       immutableCheck: true
     })
   },
-  devTools: true
 })
 
-const wrapper = createWrapper(() => store, { debug: true})
+const wrapper = createWrapper(() => store, { debug: false})
 
 export default wrapper
 

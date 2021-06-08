@@ -1,5 +1,7 @@
 import React from "react";
 import App, { AppInitialProps, AppContext } from "next/app";
+import { appWithTranslation } from 'next-i18next'
+
 import wrapper from '../redux/store.redux';
 
 class WrappedApp extends App<AppInitialProps> {
@@ -24,5 +26,5 @@ class WrappedApp extends App<AppInitialProps> {
     return <Component {...pageProps} />;
   }
 }
-
-export default wrapper.withRedux(WrappedApp);
+ 
+export default wrapper.withRedux(appWithTranslation(WrappedApp));

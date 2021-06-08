@@ -1,5 +1,6 @@
 import { FunctionComponent } from "react";
 import styled from "styled-components";
+import { BREAKPOINTS } from "../../../../constants/grid-system-configuration";
 
 const WrapperHeader = styled.header`
   height: ${props => props.theme.navMobile.height}px;
@@ -10,6 +11,9 @@ const WrapperHeader = styled.header`
   bottom: 0;
   border-top: ${props => props.theme.border};
   z-index: 10;
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    display: none;
+  }
 `
 
 const NavbarMobile: FunctionComponent = ({ }) => {

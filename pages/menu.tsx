@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 import React from "react";
+import Head from "next/head";
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import HttpGetIndex from "../http/index/get.index.http";
 import { updateAddress, updateImages, updateProducts, updateReviews, updateShop } from "../redux/slices/index.slices.redux";
@@ -36,10 +37,10 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async ctx
   }
 })
 
-function Home({ templateNumber }: any) {
+function Menu({ templateNumber }: any) {
   return <TemplateToShow templateList={templateList} templateNumber={templateNumber}>
     <IndexPageTemplateOne />
   </TemplateToShow>
 }
 
-export default Home
+export default Menu

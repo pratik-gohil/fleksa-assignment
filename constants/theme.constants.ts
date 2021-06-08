@@ -26,6 +26,7 @@ export interface ITheme {
   textLightActiveColor: string
   textDarkColor: string
   textDarkActiveColor: string
+  borderRadius: number
   navDesktop: IThemeNavDesktop
   navMobile: IThemeNavMobile
   footer: IThemeFooter
@@ -39,6 +40,7 @@ export const THEME_ONE: ITheme = {
   textLightActiveColor: "#fff",
   textDarkColor: "#333",
   textDarkActiveColor: "#000",
+  borderRadius: 6,
   navDesktop: {
     height: 70,
     backgroundColor: "#fff",

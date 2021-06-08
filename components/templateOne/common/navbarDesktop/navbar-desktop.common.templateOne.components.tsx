@@ -4,8 +4,12 @@ import { useAppSelector } from "../../../../redux/hooks.redux";
 import { selectShop } from "../../../../redux/slices/index.slices.redux";
 import { Col, Container, Row } from "react-grid-system";
 import NavLink from "./nav-link.common.templateOne.components";
+import { useTranslation } from "next-i18next";
+import NavLanguageChange from "./nav-language-change.templateOne.components";
+import { BREAKPOINTS } from "../../../../constants/grid-system-configuration";
 
 const WrapperHeader = styled.header`
+  display: none;
   height: ${props => props.theme.navDesktop.height}px;
   background: ${props => props.theme.navDesktop.backgroundColor};
   position: fixed;
@@ -14,6 +18,9 @@ const WrapperHeader = styled.header`
   right: 0;
   border-bottom: ${props => props.theme.border};
   z-index: 10;
+  @media (min-width: ${BREAKPOINTS.md}px) {
+    display: block;
+  }
 `
 
 const Logo = styled.img`
@@ -31,13 +38,13 @@ const Navbar = styled.nav`
 const NavbarList = styled.ul`
   display: flex;
   list-style: none;
-  justify-content: center;
+  align-items: center;
   padding: 0;
   margin: 0;
 `
 
 const NavbarDesktop: FunctionComponent = ({ }) => {
-
+  const { t } = useTranslation('header')  
   const shopData = useAppSelector(selectShop)
 
   return <WrapperHeader>
@@ -51,11 +58,12 @@ const NavbarDesktop: FunctionComponent = ({ }) => {
         <Col>
           <Navbar>
             <NavbarList>
-              <NavLink title="MENU" path="/menu" />
-              <NavLink title="RESERVATION" path="/reservation" />
-              <NavLink title="GALLERY" path="/gallery" />
-              <NavLink title="CONTACT" path="/contact" />
-              <NavLink title="LOGIN" path="/login" />
+              <NavLink title={t("@menu")} path="/menu" />
+              <NavLink title={t("@reservation")} path="/reservation" />
+              <NavLink title={t("@gallery")} path="/gallery" />
+              <NavLink title={t("@contact")} path="/contact" />
+              <NavLink title={t("@login")} path="/login" />
+              <NavLanguageChange />
             </NavbarList>
           </Navbar>
         </Col>
