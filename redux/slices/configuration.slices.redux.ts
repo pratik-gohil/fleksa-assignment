@@ -45,4 +45,4 @@ export const ConfigurationSlice = createSlice({
 
 export const { updateLanguage } = ConfigurationSlice.actions
 
-export const getLanguage = (state: RootState) => state.configuration.language
+export const selectLanguage = (state: RootState) => state.configuration.language

@@ -35,6 +35,30 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     margin: ${props => props.theme.dimen.X4}px 0;
   }
+
+  @-webkit-keyframes pulsing {
+    to {
+      box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+    }
+  }
+
+  @-moz-keyframes pulsing {
+    to {
+      box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+    }
+  }
+
+  @-ms-keyframes pulsing {
+    to {
+      box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+    }
+  }
+
+  @keyframes pulsing {
+    to {
+      box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+    }
+  }
 `
 
 export default GlobalStyle

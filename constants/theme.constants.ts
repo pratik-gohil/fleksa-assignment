@@ -20,6 +20,9 @@ export interface IDimens {
 }
 
 export interface ITheme {
+  primaryColorRed: number
+  primaryColorGreen: number
+  primaryColorBlue: number
   primaryColor: string
   border: string
   textLightColor: string
@@ -34,6 +37,9 @@ export interface ITheme {
 }
 
 export const THEME_ONE: ITheme = {
+  primaryColorRed: 255,
+  primaryColorGreen: 238,
+  primaryColorBlue: 50,
   primaryColor: "rgb(255, 238, 50)",
   border: "1px solid rgba(0, 0, 0, 0.1)",
   textLightColor: "#ccc",
