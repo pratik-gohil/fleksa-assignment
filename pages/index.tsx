@@ -4,14 +4,13 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import HttpGetIndex from "../http/index/get.index.http";
 import { updateAddress, updateImages, updateProducts, updateReviews, updateShop } from "../redux/slices/index.slices.redux";
 import IndexStoreWrapper from "../redux/store.redux";
-import IndexPageTemplateOne from "../templates/one/index.one.templates";
 import TemplateToShow from "../templates/template-to-show.templates";
 import { updateLanguage } from "../redux/slices/configuration.slices.redux";
 
-const PageContainer = dynamic(import("../components/templateOne/common/page-container.commom.templateOne.components"))
+const IndexPageTemplateOne = dynamic(import("../templates/one/index.one.templates"))
 
 const templateList = [
-  PageContainer
+  IndexPageTemplateOne
 ]
 
 export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async ctx => {
@@ -37,9 +36,7 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async ctx
 })
 
 function Home({ templateNumber }: any) {
-  return <TemplateToShow templateList={templateList} templateNumber={templateNumber}>
-    <IndexPageTemplateOne />
-  </TemplateToShow>
+  return <TemplateToShow templateList={templateList} templateNumber={templateNumber} />
 }
 
 export default Home

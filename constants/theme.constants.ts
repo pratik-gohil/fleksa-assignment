@@ -52,8 +52,8 @@ export const THEME_ONE: ITheme = {
     backgroundColor: "#fff",
   },
   navMobile: {
-    height: 70,
-    backgroundColor: "#fff",
+    height: 60,
+    backgroundColor: "#444",
   },
   footer: {
     background: "#222"
@@ -66,4 +66,6 @@ export const THEME_ONE: ITheme = {
   },
 }
 
-export const THEME_TWO: ITheme = THEME_ONE
+export const THEME_TWO: ITheme = {
+  ...THEME_ONE,
+}
