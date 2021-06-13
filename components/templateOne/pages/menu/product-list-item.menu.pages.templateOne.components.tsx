@@ -1,12 +1,10 @@
 import React, { FunctionComponent, useState } from "react";
-import { Col, Container, Row } from "react-grid-system";
 import styled, { css } from "styled-components";
 
 import { useAppSelector } from "../../../../redux/hooks.redux";
 import { BREAKPOINTS } from "../../../../constants/grid-system-configuration";
 import { selectLanguage } from "../../../../redux/slices/configuration.slices.redux";
-import { useTranslation } from "react-i18next";
-import { ICategoryProduct, ICategorySingleProductChoice } from "../../../../interfaces/common/category.common.interfaces";
+import { ICategoryProduct } from "../../../../interfaces/common/category.common.interfaces";
 import MenuPageChoiceList from "./choice-list.menu.pages.templateOne.components";
 import AddButton from "../../common/addButton/add-button.common.templateOne.components";
 
@@ -49,9 +47,6 @@ const BannerImage = styled.img<IPropsBannerImage>`
   object-fit: cover;
   display: block;
   transition-duration: 500ms;
-  @media (min-width: ${BREAKPOINTS.lg}px) {
-    height: ${props => props.isOpen? 400: 0}px;
-  }
 `
 
 const ClosedViewContainer = styled.div`
@@ -111,11 +106,22 @@ const RecipeCost = styled.p`
 
 const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem> = ({ product, isOpen, setOpenItemId }) => {
   const language = useAppSelector(selectLanguage)
+  const [ selectedOption, setSelectedOption ] = useState<number|undefined>()
 
-  const [ selectedOption, setSelectedOption ] = useState<string|undefined>()
+  let optionsIndex = 0
+  const getNextIndex = () => ++optionsIndex
+
+  function toggle() {
+    if (isOpen) {
+      setOpenItemId(undefined)
+    } else {
+      setOpenItemId(product.id)
+      setSelectedOption(1)
+    }
+  }
 
   return <ListItem isOpen={isOpen}>
-    <ClosedViewContainer onClick={() => setOpenItemId(isOpen? undefined: product.id)}>
+    <ClosedViewContainer onClick={toggle}>
       {product.image &&  <BannerImage src={product.image} loading="lazy" isOpen={isOpen} />}
       <ClosedViewInfoContainer>
         <ClosedViewInfoContainerSection1>
@@ -125,16 +131,17 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
         </ClosedViewInfoContainerSection1>
         <ClosedViewInfoContainerSection2>
           {product.image && <ClosedViewInfoImage src={product.image} loading="lazy" isOpen={isOpen} />}
-          <AddButton hasImage={!!product.image} isOpen={isOpen} />
+          <AddButton canOpen={!!product.choice && product.choice.length > 0 } hasImage={!!product.image} isOpen={isOpen} />
         </ClosedViewInfoContainerSection2>
       </ClosedViewInfoContainer>
     </ClosedViewContainer>
     <OptionsContainer isOpen={isOpen}>
       {product.choice && product.choice.map(cho =><MenuPageChoiceList
+        getNextIndex={getNextIndex}
         productType={product.type_}
         choice={cho}
-        isOptionOpen={selectedOption === cho.name_json.english}
-        setSelectedOption={name => setSelectedOption(name)}
+        selectedOption={selectedOption}
+        setSelectedOption={id => setSelectedOption(id)}
       />)}
     </OptionsContainer>
   </ListItem>

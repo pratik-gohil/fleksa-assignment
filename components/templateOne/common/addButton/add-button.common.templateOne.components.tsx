@@ -4,6 +4,7 @@ import styled, { css } from "styled-components";
 export interface IPropsAddButton {
   hasImage: boolean
   isOpen: boolean
+  canOpen: boolean
 }
 
 interface IPropsWrapperButton {
@@ -18,7 +19,7 @@ const WrapperButton = styled.div<IPropsWrapperButton>`
     flex: 1 1 auto;
   `}
   ${props => props.hasImage && (props.isOpen? css`
-    margin-top: -48px;
+    margin-top: -60px;
   `: css`
     margin-top: -12px;
   `)}
@@ -38,8 +39,12 @@ const AddButtonItem = styled.p`
   transition-duration: 500ms;
 `
 
-const AddButton: FunctionComponent<IPropsAddButton> = ({ hasImage, isOpen }) => {
-  return <WrapperButton hasImage={hasImage} isOpen={isOpen}>
+const AddButton: FunctionComponent<IPropsAddButton> = ({ canOpen, hasImage, isOpen }) => {
+  return <WrapperButton onClick={(e) => {
+    if (!canOpen) {
+      e.stopPropagation()
+    }
+  }} hasImage={hasImage} isOpen={isOpen}>
     <AddButtonItem>ADD +</AddButtonItem>
   </WrapperButton>
 }

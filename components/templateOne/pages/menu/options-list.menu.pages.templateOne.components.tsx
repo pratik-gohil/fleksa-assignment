@@ -12,9 +12,10 @@ export interface IChoiceData {
 }
 
 export interface IPropsMenuPageCategoryListItem {
+  optionKey: number
   isOptionOpen: boolean
   choice: IChoiceData
-  setSelectedOption(name: string|undefined): void
+  setSelectedOption(name: number|undefined): void
 }
 
 const Wrapper = styled.div`
@@ -29,6 +30,7 @@ const ListContainer = styled.div<{ isOptionOpen: boolean }>`
   max-height: ${props => props.isOptionOpen? "260px": "0px"};
   overflow: auto;
   background-color: #f9f9f9;
+  transition-duration: 500ms;
 `
 
 const List = styled.ul`
@@ -36,21 +38,37 @@ const List = styled.ul`
 `
 
 const ListItem = styled.li`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+`
 
+const RadioButton = styled.span`
+  width: 20px;
+  height: 20px;
+  margin-left: 12px;
+  display: block;
+  border-radius: 100%;
+  border: ${props => props.theme.border};
+  background-color: ${props => props.theme.primaryColor};
 `
 
 
-const MenuPageOptionsList: FunctionComponent<IPropsMenuPageCategoryListItem> = ({ choice, isOptionOpen, setSelectedOption }) => {
+const MenuPageOptionsList: FunctionComponent<IPropsMenuPageCategoryListItem> = ({ optionKey, choice, isOptionOpen, setSelectedOption }) => {
   const language = useAppSelector(selectLanguage)
 
+  function toggle() {
+    setSelectedOption(isOptionOpen? optionKey+1: optionKey)
+  }
+
   return choice.options? <Wrapper>
-    <TitleContainer onClick={() => setSelectedOption(choice.name_json.english)}>
+    <TitleContainer onClick={toggle}>
       <p style={{ margin: 0, padding: 12 }}>{choice.name_json[language]}</p>
     </TitleContainer>
     <ListContainer isOptionOpen={isOptionOpen}>
       <List>
         {choice.options.map(option => <ListItem>
-          <p style={{ margin: 0, padding: 12 }}>{option.name_json[language]}</p>
+          <RadioButton /><p style={{ margin: 0, padding: 12 }}>{option.name_json[language]}</p>
         </ListItem>)}
       </List>
     </ListContainer>

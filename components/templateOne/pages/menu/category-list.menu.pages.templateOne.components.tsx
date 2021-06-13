@@ -26,7 +26,7 @@ const MenuPageCategoryList: FunctionComponent = ({}) => {
 
   return <List>
     {categories.map((category, index) => {
-      return <ListItem key={index}>
+      return <ListItem key={index} id={category.name_json.english.toLowerCase().split(" ").join("-")}>
         <CategoryTitle>{category.name_json[language]}</CategoryTitle>
         <MenuPageProductList
           products={category.products}
@@ -36,7 +36,6 @@ const MenuPageCategoryList: FunctionComponent = ({}) => {
       </ListItem>
     })}
   </List>
-
 }
 
 export default MenuPageCategoryList
