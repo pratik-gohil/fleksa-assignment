@@ -62,7 +62,7 @@ export const THEME_ONE: ITheme = {
     X: 4,
     X2: 8,
     X3: 12,
-    X4: 16
+    X4: 12
   },
 }
 

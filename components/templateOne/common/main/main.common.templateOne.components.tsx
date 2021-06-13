@@ -5,7 +5,7 @@ import { BREAKPOINTS } from "../../../../constants/grid-system-configuration";
 const WrapperMain = styled.main`
   margin-top: 0;
   margin-bottom: ${props => props.theme.navMobile.height}px;
-  @media (min-width: ${BREAKPOINTS.md}px) {
+  @media (min-width: ${BREAKPOINTS.lg}px) {
     margin-top: ${props => props.theme.navDesktop.height}px;
     margin-bottom: 0;
   }

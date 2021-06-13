@@ -64,7 +64,7 @@ export default class Net {
 
   public getUrl(postfix?: string, query?: IQuery): string {
     const queryString = query? Object.keys(query).map(key => `${key}=${query[key]}`).join("&"): undefined
-    const url = `https://my.fleksa.com/${postfix}`
+    const url = `https://myqa.fleksa.com/${postfix}`
     const finalUrl = queryString? `${url}?${queryString}`: url
     console.log(finalUrl)
     return finalUrl

@@ -11,7 +11,7 @@ const WrapperHeader = styled.header`
   bottom: 0;
   border-top: ${props => props.theme.border};
   z-index: 10;
-  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+  @media screen and (min-width: ${BREAKPOINTS.lg}px) {
     display: none;
   }
 `

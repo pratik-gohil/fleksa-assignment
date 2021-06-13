@@ -108,17 +108,17 @@ const IndexPageAboutUs: FunctionComponent = ({}) => {
             <Row>
               <Col xs={12} style={{ paddingBottom: 2}}>
                 <ImageContiner>
-                  <Image src={imagesData[0]} loading="lazy" layout="fill" objectFit="cover" />
+                  {imagesData[0] && <Image src={imagesData[0]} loading="lazy" layout="fill" objectFit="cover" />}
                 </ImageContiner>
               </Col>
               <Col xs={6} style={{ paddingRight: 1}}>
                 <ImageContiner>
-                  <Image src={imagesData[1]} loading="lazy" layout="fill" objectFit="cover" />
+                  {imagesData[1] && <Image src={imagesData[1]} loading="lazy" layout="fill" objectFit="cover" />}
                 </ImageContiner>
               </Col>
               <Col xs={6} style={{ paddingLeft: 1}}>
                 <ImageContiner>
-                  <Image src={imagesData[2]} loading="lazy" layout="fill" objectFit="cover" />
+                  {imagesData[2] && <Image src={imagesData[2]} loading="lazy" layout="fill" objectFit="cover" />}
                 </ImageContiner>
               </Col>
             </Row>

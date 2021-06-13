@@ -1,4 +1,5 @@
 import { ILanguageData } from "./language-data.common.interfaces";
+import { IType } from "./types.common.interfaces";
 
 interface IProductChoiceOption {
   name_json: ILanguageData
@@ -9,7 +10,7 @@ export interface IProductChoice {
   has_products: boolean
   name_json: ILanguageData
   options: Array<IProductChoiceOption>
-  type_: string
+  type_: IType
 }
 
 export interface IProduct {

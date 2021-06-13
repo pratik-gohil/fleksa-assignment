@@ -18,7 +18,7 @@ const WrapperHeader = styled.header`
   right: 0;
   border-bottom: ${props => props.theme.border};
   z-index: 10;
-  @media (min-width: ${BREAKPOINTS.md}px) {
+  @media (min-width: ${BREAKPOINTS.lg}px) {
     display: block;
   }
 `

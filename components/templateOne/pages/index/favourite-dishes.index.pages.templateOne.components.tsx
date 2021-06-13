@@ -9,6 +9,7 @@ import HorizontalList from "../../common/horizontal-list/horizontal-list.templat
 import HorizontalListItem, { IResponsive } from "../../common/horizontal-list/horizontal-list-item.templateOne.component";
 import { useTranslation } from "react-i18next";
 import { selectLanguage } from "../../../../redux/slices/configuration.slices.redux";
+import { BREAKPOINTS } from "../../../../constants/grid-system-configuration";
 
 const WrapperSection = styled.section`
   border-bottom: ${props => props.theme.border};
@@ -29,6 +30,15 @@ const Card = styled.div`
   overflow: hidden;
   margin: 0 8px;
   height: 100%;
+`
+
+const ImageContainer = styled.div`
+  width: 100%;
+  height: 200px;
+  position: relative;
+  @media (min-width: ${BREAKPOINTS.lg}px) {
+    height: 240;
+  }
 `
 
 const InfoContainer = styled.div`
@@ -58,12 +68,18 @@ const InfoContainerBottom = styled.div`
   align-items: center;
   p {
     font-weight: 700;
-    margin: ${props => props.theme.dimen.X4}px;
+    margin: ${props => props.theme.dimen.X4}px 0;
+    &:first-child {
+      margin-left: ${props => props.theme.dimen.X4}px;
+    }
+    &:last-child {
+      margin-right: ${props => props.theme.dimen.X4}px;
+    }
   }
 `
 
 const ItemPrice = styled.p`
-  font-size: 26px;
+  font-size: 20px;
 `
 
 const ItemToProduct = styled.a`
@@ -88,11 +104,11 @@ const ItemToProduct = styled.a`
 const responsive: IResponsive = {
   sm: {
     width: 300,
-    height: 400,
+    height: 460,
   },
   md: {
     width: 300,
-    height: 400,
+    height: 460,
   },
   lg: {
     width: 360,
@@ -122,9 +138,9 @@ const IndexPageFavouriteDishes: FunctionComponent = ({}) => {
             {prductsData.map((product) => {
               return <HorizontalListItem key={product.id} responsive={responsive}>
                 <Card>
-                  <div style={{ width: "100%", height: 240, position: 'relative' }}>
-                    <Image src={product.image} layout="fill" loading="lazy" objectFit="cover" />
-                  </div>
+                  <ImageContainer>
+                    {product.image && <Image src={product.image} layout="fill" loading="lazy" objectFit="cover" />}
+                  </ImageContainer>
                   <InfoContainer>
                     <InfoContainerTop>
                       <ItemTitle>{product.name_json[language]}</ItemTitle>

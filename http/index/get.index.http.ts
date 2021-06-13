@@ -6,7 +6,7 @@ export default class HttpGetIndex {
   public async get() {
     try {
       const response = await Net.getInstance().get<IHttpGetIndexGetResponse>({
-        path: "pyapi/restaurant-nidda.de/index"
+        path: "pyapi/smartpizzas.fleksa.com/index" // "pyapi/restaurant-nidda.de/index"
       })
       return response
     } catch (error) {

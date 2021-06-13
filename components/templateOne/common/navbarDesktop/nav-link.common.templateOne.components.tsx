@@ -17,7 +17,7 @@ const Wrapper = styled.li`
 `
 
 const Title = styled.h2`
-  font-size: 14px;
+  font-size: 18px;
   padding: 0;
   margin: 0;
 `

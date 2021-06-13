@@ -1,4 +1,5 @@
 import { createGlobalStyle } from "styled-components";
+import { BREAKPOINTS } from "./grid-system-configuration";
 
 const GlobalStyle = createGlobalStyle`
   html,
@@ -34,6 +35,33 @@ const GlobalStyle = createGlobalStyle`
     color: ${props => props.theme.textDarkColor};
     padding: 0;
     margin: ${props => props.theme.dimen.X4}px 0;
+  }
+
+  h1 {
+    font-size: 36px;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+
+  ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  @media (min-width: ${BREAKPOINTS.lg}px) {
+    p {
+      font-size: 18px;
+    }
+    h1 {
+      font-size: 48px;
+    }
+
+    h2 {
+      font-size: 32px;
+    }
   }
 
   @-webkit-keyframes pulsing {

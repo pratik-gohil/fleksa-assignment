@@ -27,7 +27,6 @@ const FlagImage = styled.img`
 
 const NavLanguageChange = ({}) => {
   const router = useRouter()
-  console.log(router.locales, router.locale)
   
   return <Link href="" locale={router.locale === "en"? "de": "en"}>
     <FlagContainer>

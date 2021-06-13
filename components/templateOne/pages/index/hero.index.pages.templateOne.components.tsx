@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 const WrapperSection = styled.section`
   height: calc(100vh - ${props => props.theme.navMobile.height}px);
   position: relative;
-  @media (min-width: ${BREAKPOINTS.md}px) {
+  @media (min-width: ${BREAKPOINTS.lg}px) {
     height: calc(100vh - ${props => props.theme.navDesktop.height}px);
   }
 `
@@ -76,7 +76,7 @@ const IndexPageHero: FunctionComponent = ({}) => {
 
   return <WrapperSection>
     <ImageContainer>
-      <Image src={shopData?.cover||""} layout="fill" loading="eager" objectFit="cover" />
+      {shopData?.cover && <Image src={shopData?.cover} layout="fill" loading="eager" objectFit="cover" />}
     </ImageContainer>
     <ContentContainer>
       <Container>

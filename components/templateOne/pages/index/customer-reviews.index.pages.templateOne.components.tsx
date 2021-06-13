@@ -73,7 +73,6 @@ const IndexPageCustomerReviews: FunctionComponent = ({}) => {
           <HorizontalList>
             {reviewsData.map((review, index) => {
               const stars: Array<ReactNode> = []
-              console.log(review.rating)
               for (let index = 1; index <= 5; index++) {
                 stars.push(<SvgStar key={index} style={{ margin: 6, width: 36, height: 36, fill: index <= Number(review.rating)? "rgb(255, 238, 50)": "#eaeaea"}} />)
               }

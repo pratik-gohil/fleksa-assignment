@@ -3,9 +3,11 @@ import { createWrapper } from "next-redux-wrapper";
 import { AddressesSlice } from "./slices/addresses.slices.redux";
 import { ConfigurationSlice } from "./slices/configuration.slices.redux";
 import { IndexSlice } from "./slices/index.slices.redux";
+import { MenuSlice } from "./slices/menu.slices.redux";
 
 const store = configureStore({
   reducer: {
+    menu: MenuSlice.reducer,
     index: IndexSlice.reducer,
     address: AddressesSlice.reducer,
     configuration: ConfigurationSlice.reducer,
