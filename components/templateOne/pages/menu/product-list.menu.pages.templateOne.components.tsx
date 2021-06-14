@@ -17,6 +17,7 @@ const List = styled.ul`
 const MenuPageProductList: FunctionComponent<IPropsMenuPageCategoryListItem> = ({ products, openItemId, setOpenItemId }) => {
   return <List>
     {products.map(product => <MenuPageProductListItem
+      key={product.id}
       product={product}
       isOpen={product.id === openItemId}
       setOpenItemId={setOpenItemId}

@@ -43,8 +43,11 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async ctx
   }
 })
 
-function Menu({ templateNumber, responseMenu }: any) {
-  console.log(responseMenu)
+function Menu({
+  templateNumber,
+  // responseMenu
+}: any) {
+  // console.log(responseMenu)
   return <TemplateToShow templateList={templateList} templateNumber={templateNumber} />
 }
 

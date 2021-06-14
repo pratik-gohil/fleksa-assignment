@@ -67,7 +67,7 @@ const MenuPageOptionsList: FunctionComponent<IPropsMenuPageCategoryListItem> = (
     </TitleContainer>
     <ListContainer isOptionOpen={isOptionOpen}>
       <List>
-        {choice.options.map(option => <ListItem>
+        {choice.options.map(option => <ListItem key={option.name_json.english}>
           <RadioButton /><p style={{ margin: 0, padding: 12 }}>{option.name_json[language]}</p>
         </ListItem>)}
       </List>

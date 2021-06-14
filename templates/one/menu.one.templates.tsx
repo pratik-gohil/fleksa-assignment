@@ -29,7 +29,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
         </Col>
         <SideContainer lg={3}>
           <SideView>
-            
+            <p>Your Cart</p>
           </SideView>
         </SideContainer>
       </Row>

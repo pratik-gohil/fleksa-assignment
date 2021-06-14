@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { Fragment, FunctionComponent } from "react";
 
 import { ICategoryMultipleProductChoice, ICategorySingleProductChoice } from "../../../../interfaces/common/category.common.interfaces";
 import { IType } from "../../../../interfaces/common/types.common.interfaces";
@@ -31,6 +31,7 @@ const MenuPageChoiceList: FunctionComponent<IPropsMenuPageCategoryListItem> = ({
     const optionKeyTemp = getNextIndex()
     return <>
       <MenuPageOptionsList
+        key={optionKeyTemp}
         optionKey={optionKeyTemp}
         choice={choicesMulti}
         isOptionOpen={selectedOption === optionKeyTemp}
@@ -41,13 +42,14 @@ const MenuPageChoiceList: FunctionComponent<IPropsMenuPageCategoryListItem> = ({
           if (choice.options && choice.options.length > 0) {
             const optionKey = getNextIndex()
             return <MenuPageOptionsList
+              key={optionKey}
               optionKey={optionKey}
               choice={choice}
               isOptionOpen={selectedOption === optionKey}
               setSelectedOption={setSelectedOption}
             />
           }
-          return <></>
+          return <Fragment key={chId} />
         })
       })}
     </>

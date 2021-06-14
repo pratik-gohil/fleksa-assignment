@@ -106,7 +106,7 @@ const RecipeCost = styled.p`
 
 const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem> = ({ product, isOpen, setOpenItemId }) => {
   const language = useAppSelector(selectLanguage)
-  const [ selectedOption, setSelectedOption ] = useState<number|undefined>()
+  const [ selectedOption, setSelectedOption ] = useState<number|undefined>(1)
 
   let optionsIndex = 0
   const getNextIndex = () => ++optionsIndex
@@ -137,6 +137,7 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
     </ClosedViewContainer>
     <OptionsContainer isOpen={isOpen}>
       {product.choice && product.choice.map(cho =><MenuPageChoiceList
+        key={cho.name_json.english}
         getNextIndex={getNextIndex}
         productType={product.type_}
         choice={cho}
