@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 import React from "react";
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import HttpGetIndex from "../http/index/get.index.http";
+import PyApiHttpGetIndex from "../http/pyapi/index/get.index.pyapi.http";
 import { updateAddress, updateImages, updateShop } from "../redux/slices/index.slices.redux";
 import IndexStoreWrapper from "../redux/store.redux";
 import TemplateToShow from "../templates/template-to-show.templates";
@@ -15,7 +15,7 @@ const templateList = [
 
 export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async ctx => {
   try {
-    const response = await new HttpGetIndex().get()
+    const response = await new PyApiHttpGetIndex().get()
 
     await ctx.store.dispatch(updateLanguage((ctx as any).locale))
     await ctx.store.dispatch(updateAddress(response?.address))

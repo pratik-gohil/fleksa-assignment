@@ -1,13 +1,13 @@
 import dynamic from "next/dynamic";
 import React from "react";
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import HttpGetIndex from "../http/index/get.index.http";
+import PyApiHttpGetIndex from "../http/pyapi/index/get.index.pyapi.http";
 import { updateAddress, updateShop } from "../redux/slices/index.slices.redux";
 import IndexStoreWrapper from "../redux/store.redux";
 import TemplateToShow from "../templates/template-to-show.templates";
 import { updateLanguage } from "../redux/slices/configuration.slices.redux";
-import HttpGetMenu from "../http/menu/menu.index.http";
 import { updateCategories, updateParts, updateSides } from "../redux/slices/menu.slices.redux";
+import PyApiHttpGetMenu from "../http/pyapi/menu/get.menu.index.pyapi.http";
 
 const MenuPageTemplateOne = dynamic(import("../templates/one/menu.one.templates"))
 
@@ -17,12 +17,12 @@ const templateList = [
 
 export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async ctx => {
   try {
-    const responseIndex = await new HttpGetIndex().get()
+    const responseIndex = await new PyApiHttpGetIndex().get()
 
     // If shop id is not available throw error
     if (!responseIndex?.shop.id) throw new Error("Shop id not found")
 
-    const responseMenu = await new HttpGetMenu().get({ shopId: responseIndex?.shop.id })
+    const responseMenu = await new PyApiHttpGetMenu().get({ shopId: responseIndex?.shop.id })
     await ctx.store.dispatch(updateCategories(responseMenu?.categories))
     await ctx.store.dispatch(updateSides(responseMenu?.sides))
     await ctx.store.dispatch(updateParts(responseMenu?.parts))
@@ -35,7 +35,7 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async ctx
       props: {
         ...(await serverSideTranslations((ctx as any).locale, ['header', 'footer'])),
         templateNumber: 0,
-        responseMenu: await new HttpGetMenu().get({ shopId: responseIndex?.shop.id })
+        responseMenu: await new PyApiHttpGetMenu().get({ shopId: responseIndex?.shop.id })
       },
     }
   } catch (error) {

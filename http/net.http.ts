@@ -18,21 +18,11 @@ export interface IPost extends IGet {
   body?: IBody
 }
 
-export default class Net {
-  private static instance: Net
-  private readonly defaultHeaders: IHeaders
+export default abstract class Net {
+  protected readonly defaultHeaders: IHeaders = {}
 
-  private constructor() {
-    this.defaultHeaders = {
-      "Content-Type": ContentType.APPLICATION_JSON
-    }
-  }
-
-  public static getInstance() {
-    if (!this.instance) {
-      this.instance = new Net()
-    }
-    return this.instance
+  constructor(defaultHeaders: IHeaders) {
+    this.defaultHeaders = defaultHeaders
   }
 
   public async get<T>({path, query, headers}: IGet): Promise<T> {
@@ -62,11 +52,5 @@ export default class Net {
     }
   }
 
-  public getUrl(postfix?: string, query?: IQuery): string {
-    const queryString = query? Object.keys(query).map(key => `${key}=${query[key]}`).join("&"): undefined
-    const url = `https://myqa.fleksa.com/${postfix}`
-    const finalUrl = queryString? `${url}?${queryString}`: url
-    console.log(finalUrl)
-    return finalUrl
-  }
+  public abstract getUrl(postfix?: string, query?: IQuery): string
 }

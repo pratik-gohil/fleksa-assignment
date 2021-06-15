@@ -4,7 +4,11 @@ import NavbarMobile from "./navbarMobile/navbar-mobile.common.templateOne.compon
 import NavbarDesktop from "./navbarDesktop/navbar-desktop.common.templateOne.components";
 import Footer from "./footer/footer.common.templateOne.components";
 
-const PageContainer: FunctionComponent = ({ children }) => {
+export interface IPropsPageContainer {
+  showFooter?: boolean
+}
+
+const PageContainer: FunctionComponent<IPropsPageContainer> = ({ children, showFooter=true }) => {
   
   return <>
     <NavbarDesktop />
@@ -13,7 +17,7 @@ const PageContainer: FunctionComponent = ({ children }) => {
       {children}
     </Main>
 
-    <Footer />
+    {showFooter && <Footer />}
 
     <NavbarMobile />
   </>
