@@ -5,7 +5,7 @@ export default class PyApiHttpGetMenu {
 
   public async get({ shopId }: IPyApiHttpGetMenuGetRequestData) {
     try {
-      const response = await NetPyApi.getInstance().get<IPyApiHttpGetMenuGetResponse>({
+      const response = await new NetPyApi().get<IPyApiHttpGetMenuGetResponse>({
         path: `pyapi/${shopId}/menu`
       })
       return response

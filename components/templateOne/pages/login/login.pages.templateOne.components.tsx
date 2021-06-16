@@ -2,13 +2,17 @@ import React, { FunctionComponent, useState } from "react";
 import Image from "next/image";
 import styled from "styled-components";
 import OtpInput from 'react-otp-input';
-import { useAppSelector } from "../../../../redux/hooks.redux";
+import { useCookies } from "react-cookie";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
 import { selectShop } from "../../../../redux/slices/index.slices.redux";
 import PhoneInput from "react-phone-input-2";
 import NodeApiHttpPostLogin from "../../../../http/nodeapi/login/post.login.nodeapi.http";
 import { BREAKPOINTS } from "../../../../constants/grid-system-configuration";
 import LoadingIndicator from "../../common/loadingIndicator/loading-indicator.common.templateOne.components";
 import NodeApiHttpPostVerify from "../../../../http/nodeapi/verify/post.verify.nodeapi.http";
+import { useRouter } from "next/dist/client/router";
+import { COOKIE_BEARER_TOKEN } from "../../../../constants/keys-cookies.constants";
+import { updateBearerToken } from "../../../../redux/slices/user.slices.redux";
 
 const LoginContainer = styled.div`
   display: flex;
@@ -84,12 +88,24 @@ const SendOtpButtonText = styled.p`
 `
 
 const LoginComponent: FunctionComponent = ({}) => {
+  const router = useRouter()
+  const [ , setCookie ] = useCookies([COOKIE_BEARER_TOKEN])
   const shopData = useAppSelector(selectShop)
+  const dispatch = useAppDispatch()
   const [ otp, setOtp ] = useState("")
   const [ phone, setPhone ] = useState("")
   const [ countryCode, setCountryCode ] = useState<number>(49)
   const [ loading, setLoading ] = useState(false)
   const [ customerId, setCustomerId ] = useState<number|undefined>()
+
+  async function finishLogin(bearerToken: string) {
+    await dispatch(updateBearerToken(bearerToken))
+    setCookie(COOKIE_BEARER_TOKEN, bearerToken, {
+      maxAge: 365*24*60*60*1000,
+      sameSite: "strict"
+    })
+    await new Promise(resolve => setTimeout(resolve, 500));
+  }
 
   async function onTapSendOtp() {
     setLoading(true)
@@ -119,7 +135,10 @@ const LoginComponent: FunctionComponent = ({}) => {
           shopId: shopData?.id as unknown as number
         })
         console.log("response", response)
-        
+        if (response?.token) {
+          await finishLogin(response.token)
+          router.push("/account")
+        }
       }
     } catch (error) {
       console.log(error)
@@ -175,7 +194,6 @@ const LoginComponent: FunctionComponent = ({}) => {
             value={phone}
             enableSearch
             onChange={(ph, data) => {
-              console.log(ph)
               if ((data as any).dialCode !== countryCode) {
                 setCountryCode((data as any).dialCode)
               }

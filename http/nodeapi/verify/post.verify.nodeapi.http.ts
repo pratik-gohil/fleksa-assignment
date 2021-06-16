@@ -8,7 +8,7 @@ export default class NodeApiHttpPostVerify {
 
   public async post({ otp, shopId, customerId }: INodeApiHttpPostVerifyRequestData) {
     try {
-      const response = await NetNodeApi.getInstance().post<INodeApiHttpPostVerifyResponse>({
+      const response = await new NetNodeApi().post<INodeApiHttpPostVerifyResponse>({
         path: "role/customer/verify",
         body: {
           otp,

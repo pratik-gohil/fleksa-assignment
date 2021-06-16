@@ -1,0 +1,1 @@
+export const COOKIE_BEARER_TOKEN = "@IS_BEARER_TOKEN"

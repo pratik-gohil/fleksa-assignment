@@ -1,16 +1,25 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { HYDRATE } from 'next-redux-wrapper'
-import { LS_BEARER_TOKEN } from '../../constants/local-storage-keys.constants'
+import { ICustomer } from '../../interfaces/common/customer.common.interfaces'
 import { RootState } from '../store.redux'
 
 const SLICE_NAME = "user"
 
 export interface IUserSliceState {
   bearerToken: string|null
+  customer: ICustomer
 }
 
 const initialState: IUserSliceState = {
-  bearerToken: typeof window === "undefined"? null: localStorage.getItem(LS_BEARER_TOKEN)
+  bearerToken: null,
+  customer: {
+    name: '',
+    email: null,
+    country_code: '',
+    phone: '',
+    email_verified: null,
+    phone_verified: null
+  }
 }
 
 export const UserSlice = createSlice({
@@ -19,6 +28,9 @@ export const UserSlice = createSlice({
   reducers: {
     updateBearerToken(state, action) {
       state.bearerToken = action.payload
+    },
+    updateCustomer(state, action) {
+      state.customer = action.payload
     },
   },
   extraReducers: {
@@ -31,6 +43,10 @@ export const UserSlice = createSlice({
   }
 })
 
-export const { updateBearerToken } = UserSlice.actions
+export const {
+  updateBearerToken,
+  updateCustomer
+} = UserSlice.actions
 
 export const selectBearerToken = (state: RootState) => state.user.bearerToken
+export const selectCustomer = (state: RootState) => state.user.customer

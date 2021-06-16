@@ -1,20 +1,9 @@
-import Net, { ContentType, IQuery } from "../net.http"
+import Net, { IQuery } from "../net.http"
 
 export default class NetPyApi extends Net {
-  private static instance: NetPyApi
 
-  private constructor() {
-    const defaultHeaders = {
-      "Content-Type": ContentType.APPLICATION_JSON
-    }
-    super(defaultHeaders)
-  }
-
-  public static getInstance() {
-    if (!this.instance) {
-      this.instance = new NetPyApi()
-    }
-    return this.instance
+  constructor() {
+    super({})
   }
 
   public getUrl(postfix?: string, query?: IQuery): string {

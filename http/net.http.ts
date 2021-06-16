@@ -18,15 +18,30 @@ export interface IPost extends IGet {
   body?: IBody
 }
 
+export interface INetConstructor {
+  bearerToken?: string
+  additionalHeaders?: IHeaders
+}
+
 export default abstract class Net {
   protected readonly defaultHeaders: IHeaders = {}
 
-  constructor(defaultHeaders: IHeaders) {
-    this.defaultHeaders = defaultHeaders
+  constructor({ bearerToken, additionalHeaders }: INetConstructor) {
+    this.defaultHeaders = {
+      "Content-Type": ContentType.APPLICATION_JSON
+    }
+    if (bearerToken) {
+      this.defaultHeaders["Authorization"] = `Bearer ${bearerToken}`
+    }
+    this.defaultHeaders = {
+      ...this.defaultHeaders,
+      ...additionalHeaders
+    }
   }
 
   public async get<T>({path, query, headers}: IGet): Promise<T> {
     try {
+      console.log("this.defaultHeaders", this.defaultHeaders)
       const response = await fetch(this.getUrl(path, query), {
         method: 'get',
         headers: { ...this.defaultHeaders, headers} as unknown as HeadersInit|undefined,

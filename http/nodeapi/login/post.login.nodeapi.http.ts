@@ -8,7 +8,7 @@ export default class NodeApiHttpPostLogin {
 
   public async post({ countryCode, phone, shopId }: INodeApiHttpPostLoginRequestData) {
     try {
-      const response = await NetNodeApi.getInstance().post<INodeApiHttpPostLoginResponse>({
+      const response = await new NetNodeApi().post<INodeApiHttpPostLoginResponse>({
         path: "role/customer/login",
         body: {
           country_code: countryCode,

@@ -1,4 +1,3 @@
-import throttle from "lodash/throttle";
 import { configureStore } from "@reduxjs/toolkit";
 import { createWrapper } from "next-redux-wrapper";
 import { AddressesSlice } from "./slices/addresses.slices.redux";
@@ -6,7 +5,6 @@ import { ConfigurationSlice } from "./slices/configuration.slices.redux";
 import { IndexSlice } from "./slices/index.slices.redux";
 import { MenuSlice } from "./slices/menu.slices.redux";
 import { UserSlice } from "./slices/user.slices.redux";
-import { LS_BEARER_TOKEN } from "../constants/local-storage-keys.constants";
 
 const store = configureStore({
   reducer: {
@@ -24,17 +22,19 @@ const store = configureStore({
   },
 })
 
-store.subscribe(throttle(() => {
-  console.log('subscribe yayyyy')
-  try {
-    const state = store.getState()
-    if (state.user.bearerToken) {
-      localStorage.setItem(LS_BEARER_TOKEN, state.user.bearerToken)
+store.subscribe(() => {
+  if (typeof window !== "undefined") {
+    try {
+      // const state = store.getState()
+      // if (state.user.) {
+      //   localStorage.setItem(, )
+      // }
+    } catch (error) {
+      console.error(error)
     }
-  } catch (error) {
-    console.error(error)
   }
-}, 1000))
+  console.log('subscribe called...')
+})
 
 const wrapper = createWrapper(() => store, { debug: false})
 
