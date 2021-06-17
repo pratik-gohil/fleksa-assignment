@@ -7,6 +7,7 @@ import { selectLanguage } from "../../../../redux/slices/configuration.slices.re
 import { ICategoryProduct } from "../../../../interfaces/common/category.common.interfaces";
 import MenuPageChoiceList from "./choice-list.menu.pages.templateOne.components";
 import AddButton from "../../common/addButton/add-button.common.templateOne.components";
+import { memo } from "react";
 
 export interface IPropsMenuPageCategoryListItem {
   product: ICategoryProduct
@@ -149,4 +150,6 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
 
 }
 
-export default MenuPageProductListItem
+export default memo(MenuPageProductListItem, (prevProps, nextProps) => {
+  return prevProps.isOpen === nextProps.isOpen
+})
