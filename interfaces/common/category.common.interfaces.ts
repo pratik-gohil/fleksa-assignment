@@ -2,7 +2,7 @@ import { ILanguageData } from "./language-data.common.interfaces";
 import { IType } from "./types.common.interfaces";
 
 export interface ICategoryProductSideProducts {
-  name: ILanguageData
+  name_json: ILanguageData
   option_ids: Array<number>
   type_: IType
 }

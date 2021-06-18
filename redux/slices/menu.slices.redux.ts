@@ -57,4 +57,5 @@ export const selectParts = (state: RootState, idList: Array<number>) => {
   })
   return data
 }
-export const selectSides = (state: RootState) => state.menu.sides
+export const selectSide = (state: RootState, id: number) => state.menu.sides[id]
+export const selectSidesArray = (state: RootState, idList: Array<number>) => idList.map(i => state.menu.sides[i]).filter(i => i)

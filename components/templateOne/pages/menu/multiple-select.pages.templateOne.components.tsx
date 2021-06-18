@@ -1,53 +1,93 @@
 import React, { Fragment, FunctionComponent } from "react";
+import { useEffect } from "react";
 import { useState } from "react";
 
-import { ICategoryMultipleProductChoice, ICategorySingleProductChoice } from "../../../../interfaces/common/category.common.interfaces";
-import { useAppSelector } from "../../../../redux/hooks.redux";
+import { ICategoryMultipleProductChoice } from "../../../../interfaces/common/category.common.interfaces";
+import { ILanguageData } from "../../../../interfaces/common/language-data.common.interfaces";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
 import { selectParts } from "../../../../redux/slices/menu.slices.redux";
+import { updateItemSelectionNewItem } from "../../../../redux/slices/item-selection.slices.redux";
+import MenuPageMultipleSelector from "./multiple-selector.pages.templateOne.components";
 import MenuPageOptionsList, { IChoiceData } from "./options-list.menu.pages.templateOne.components";
+import MenuPageSides from "./sides.menu.pages.templateOne.components";
+
+export interface IChoiceDataWithId extends IChoiceData {
+  options: Array<{
+    name_json: ILanguageData
+    price: number
+    id: number
+  }>
+}
 
 export interface IPropsMenuPageCategoryListItem {
+  isOpen: boolean
+  topProductId: number
   selectedOption: number|undefined
   choice: ICategoryMultipleProductChoice
   getNextIndex(reset?: boolean): number
   setSelectedOption(name: number|undefined): void
 }
 
-const MenuPageMultipleChoiceList: FunctionComponent<IPropsMenuPageCategoryListItem> = ({ choice, selectedOption, setSelectedOption, getNextIndex }) => {
-  const [ selectionMultiple, setSelectionMultiple ] = useState<number>(choice.choice[0])
+const MenuPageMultipleChoiceList: FunctionComponent<IPropsMenuPageCategoryListItem> = ({ isOpen, choice, topProductId, selectedOption, setSelectedOption, getNextIndex }) => {
+  const [ selectionMultipleId, setSelectionMultipleId ] = useState<number>(choice.choice[0])
+  const dispach = useAppDispatch()
+
+  useEffect(() => {
+    if (isOpen) {
+      dispach(updateItemSelectionNewItem({
+        topProductId,
+        productId: selectionMultipleId,
+        type: "MULTIPLE",
+        mainName: choice.name_json,
+        partName: parts[selectionMultipleId].name_json
+      }))
+    }
+  }, [ isOpen, selectionMultipleId ])
 
   const parts = useAppSelector(state => selectParts(state, choice.choice))
-  const choicesMulti: IChoiceData = {
+  const choicesMulti: IChoiceDataWithId = {
     name_json: choice.name_json,
-    options: []
+    options: [],
+    type_: "SINGLE"
   }
   choice.choice.map(chId => {
     choicesMulti.options?.push({
       name_json: parts[chId].name_json,
-      price: parts[chId].price
+      price: parts[chId].price,
+      id: parts[chId].id
     })
   })
-  const optionKeyTemp = getNextIndex()
   return <>
-    <MenuPageOptionsList
-      key={optionKeyTemp}
-      optionKey={optionKeyTemp}
+    <MenuPageMultipleSelector
+      selectedOption={selectedOption}
       choice={choicesMulti}
-      isOptionOpen={selectedOption === optionKeyTemp}
+      selectionMultipleId={selectionMultipleId}
+      setSelectionMultipleId={id => setSelectionMultipleId(id)}
+      getNextIndex={getNextIndex}
       setSelectedOption={setSelectedOption}
     />
-    {parts[selectionMultiple] && parts[selectionMultiple].choice?.map(choice => {
-      if (choice.options && choice.options.length > 0) {
-        const optionKey = getNextIndex()
+    {parts[selectionMultipleId] && parts[selectionMultipleId].choice?.map((cho, index) => {
+      if (cho.options && cho.options.length > 0) {
         return <MenuPageOptionsList
-          key={optionKey}
-          optionKey={optionKey}
-          choice={choice}
-          isOptionOpen={selectedOption === optionKey}
+          key={index}
+          choiceIndex={index}
+          selectedOption={selectedOption}
+          choice={cho}
+          productId={selectionMultipleId}
+          getNextIndex={getNextIndex}
           setSelectedOption={setSelectedOption}
         />
       }
-      return <Fragment key={selectionMultiple} />
+      return <Fragment key={selectionMultipleId} />
+    })}
+    {parts[selectionMultipleId] && parts[selectionMultipleId].side_products_json?.map(sideProduct => {
+      return <MenuPageSides
+        selectedOption={selectedOption}
+        sideProduct={sideProduct}
+        productId={selectionMultipleId}
+        setSelectedOption={id => setSelectedOption(id)}
+        getNextIndex={getNextIndex}
+      />
     })}
   </>
 }

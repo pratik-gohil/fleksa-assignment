@@ -6,7 +6,7 @@ export default class PyApiHttpGetIndex {
   public async get() {
     try {
       const response = await new NetPyApi().get<IPyApiHttpGetIndexResponse>({
-        path: "pyapi/smartpizzas.fleksa.com/index" // "pyapi/restaurant-nidda.de/index"
+        path: "pyapi/roma.fleksa.com/index" //"pyapi/smartpizzas.fleksa.com/index" "pyapi/restaurant-nidda.de/index"
       })
       return response
     } catch (error) {

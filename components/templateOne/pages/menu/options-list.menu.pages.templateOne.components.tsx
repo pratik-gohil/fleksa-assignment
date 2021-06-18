@@ -1,78 +1,107 @@
 import React, { FunctionComponent } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 
 import { ICategoryProductChoiceOptions } from "../../../../interfaces/common/category.common.interfaces";
 import { ILanguageData } from "../../../../interfaces/common/language-data.common.interfaces";
-import { useAppSelector } from "../../../../redux/hooks.redux";
+import { IType } from "../../../../interfaces/common/types.common.interfaces";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
 import { selectLanguage } from "../../../../redux/slices/configuration.slices.redux";
+import { selectItemSelectionChoice, updateItemSelectionChoice } from "../../../../redux/slices/item-selection.slices.redux";
 
 export interface IChoiceData {
   name_json: ILanguageData
   options: Array<ICategoryProductChoiceOptions>|undefined
+  type_: IType
 }
 
 export interface IPropsMenuPageCategoryListItem {
-  optionKey: number
-  isOptionOpen: boolean
   choice: IChoiceData
+  selectedOption: number|undefined
+  productId: number
+  choiceIndex: number
+  getNextIndex(): number
   setSelectedOption(name: number|undefined): void
 }
 
-const Wrapper = styled.div`
+export const StyledOptionsWrapper = styled.div`
   border-top: ${props => props.theme.border};
 `
 
-const TitleContainer = styled.div`
+export const StyledOptionsTitleContainer = styled.div`
   cursor: pointer;
 `
 
-const ListContainer = styled.div<{ isOptionOpen: boolean }>`
+export const StyledOptionsListContainer = styled.div<{ isOptionOpen: boolean }>`
   max-height: ${props => props.isOptionOpen? "260px": "0px"};
   overflow: auto;
   background-color: #f9f9f9;
   transition-duration: 500ms;
 `
 
-const List = styled.ul`
+export const StyledOptionsList = styled.ul`
   border-top: ${props => props.theme.border};
 `
 
-const ListItem = styled.li`
+export const StyledOptionsListItem = styled.li`
   display: flex;
   align-items: center;
   cursor: pointer;
 `
 
-const RadioButton = styled.span`
+export const StyledOptionsRadioButton = styled.span<{selected: boolean}>`
   width: 20px;
   height: 20px;
   margin-left: 12px;
   display: block;
   border-radius: 100%;
   border: ${props => props.theme.border};
-  background-color: ${props => props.theme.primaryColor};
+  background-color: ${props => props.selected && props.theme.primaryColor};
 `
 
 
-const MenuPageOptionsList: FunctionComponent<IPropsMenuPageCategoryListItem> = ({ optionKey, choice, isOptionOpen, setSelectedOption }) => {
+const MenuPageOptionsList: FunctionComponent<IPropsMenuPageCategoryListItem> = ({ productId, choiceIndex, getNextIndex, choice, selectedOption, setSelectedOption }) => {
   const language = useAppSelector(selectLanguage)
+  const optionData = useAppSelector(state => selectItemSelectionChoice(state, productId))
+  const dispach = useAppDispatch()
+  const [ optionKey ] = useState(getNextIndex())
 
-  function toggle() {
-    setSelectedOption(isOptionOpen? optionKey+1: optionKey)
+  const selectedIndex = optionData && optionData[choiceIndex]
+  if (optionData && !selectedIndex && choice.options) {
+    dispach(updateItemSelectionChoice({
+      id: choiceIndex,
+      data: {
+        product_index: 0,
+        price: choice.options[0].price,
+        name: choice.options[0].name_json
+      }
+    }))
   }
 
-  return choice.options? <Wrapper>
-    <TitleContainer onClick={toggle}>
+  const isOptionOpen = selectedOption === optionKey
+  const toggle = () => setSelectedOption(isOptionOpen? optionKey+1: optionKey)
+
+  return <StyledOptionsWrapper>
+    <StyledOptionsTitleContainer onClick={toggle}>
       <p style={{ margin: 0, padding: 12 }}>{choice.name_json[language]}</p>
-    </TitleContainer>
-    <ListContainer isOptionOpen={isOptionOpen}>
-      <List>
-        {choice.options.map(option => <ListItem key={option.name_json.english}>
-          <RadioButton /><p style={{ margin: 0, padding: 12 }}>{option.name_json[language]}</p>
-        </ListItem>)}
-      </List>
-    </ListContainer>
-  </Wrapper>: <></>
+    </StyledOptionsTitleContainer>
+    <StyledOptionsListContainer isOptionOpen={isOptionOpen}>
+      <StyledOptionsList>
+        {choice.options?.map((option, index) => <StyledOptionsListItem key={option.name_json.english} onClick={() => {
+          dispach(updateItemSelectionChoice({
+            id: choiceIndex,
+            data: {
+              product_index: index,
+              price: option.price,
+              name: option.name_json
+            }
+          }))
+        }}>
+          <StyledOptionsRadioButton selected={index === selectedIndex?.product_index} /><p style={{ margin: 0, padding: 12 }}>{option.name_json[language]}</p>
+        </StyledOptionsListItem>)}
+      </StyledOptionsList>
+    </StyledOptionsListContainer>
+  </StyledOptionsWrapper>
 }
 
 export default MenuPageOptionsList
