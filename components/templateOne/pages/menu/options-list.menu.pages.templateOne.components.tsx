@@ -46,6 +46,7 @@ export const StyledOptionsList = styled.ul`
 export const StyledOptionsListItem = styled.li`
   display: flex;
   align-items: center;
+  justify-content: space-between;
   cursor: pointer;
 `
 
@@ -59,6 +60,10 @@ export const StyledOptionsRadioButton = styled.span<{selected: boolean}>`
   background-color: ${props => props.selected && props.theme.primaryColor};
 `
 
+export const StyledOptionsRadioButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+`
 
 const MenuPageOptionsList: FunctionComponent<IPropsMenuPageCategoryListItem> = ({ productId, choiceIndex, getNextIndex, choice, selectedOption, setSelectedOption }) => {
   const language = useAppSelector(selectLanguage)
@@ -97,7 +102,11 @@ const MenuPageOptionsList: FunctionComponent<IPropsMenuPageCategoryListItem> = (
             }
           }))
         }}>
-          <StyledOptionsRadioButton selected={index === selectedIndex?.product_index} /><p style={{ margin: 0, padding: 12 }}>{option.name_json[language]}</p>
+          <StyledOptionsRadioButtonContainer>
+            <StyledOptionsRadioButton selected={index === selectedIndex?.product_index} />
+            <span style={{ margin: 0, padding: 12 }}>{option.name_json[language]}</span>
+          </StyledOptionsRadioButtonContainer>
+          {option.price > 0 && <span style={{ margin: 0, padding: 12 }}>+€{option.price}</span>}
         </StyledOptionsListItem>)}
       </StyledOptionsList>
     </StyledOptionsListContainer>

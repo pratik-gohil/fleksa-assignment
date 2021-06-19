@@ -6,10 +6,6 @@ import MenuPageBanner from "../../components/templateOne/pages/menu/banner.menu.
 import MenuPageCategoryList from "../../components/templateOne/pages/menu/category-list.menu.pages.templateOne.components";
 import MenuPageCategorySidebar from "../../components/templateOne/pages/menu/category-sidebar.menu.pages.templateOne.components";
 
-const SideContainer = styled(Col)`
-
-`
-
 const SideView = styled.div`
   position: sticky;
   top: 82px;
@@ -20,19 +16,19 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
     <MenuPageBanner />
     <Container>
       <Row>
-        <SideContainer lg={3}>
+        <Col sm={12} md={12} lg={12} xxl={3}>
           <SideView>
             <MenuPageCategorySidebar />
           </SideView>
-        </SideContainer>
-        <Col lg={6}>
+        </Col>
+        <Col sm={12} md={12} lg={7} xxl={6}>
           <MenuPageCategoryList />
         </Col>
-        <SideContainer lg={3}>
+        <Col sm={12} md={12} lg={5} xxl={3}>
           <SideView>
             <Cart />
           </SideView>
-        </SideContainer>
+        </Col>
       </Row>
     </Container>
   </>

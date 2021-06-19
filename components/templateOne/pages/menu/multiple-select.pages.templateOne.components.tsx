@@ -1,4 +1,4 @@
-import React, { Fragment, FunctionComponent } from "react";
+import React, { FunctionComponent } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 
@@ -21,6 +21,7 @@ export interface IChoiceDataWithId extends IChoiceData {
 
 export interface IPropsMenuPageCategoryListItem {
   isOpen: boolean
+  mainName: ILanguageData
   topProductId: number
   selectedOption: number|undefined
   choice: ICategoryMultipleProductChoice
@@ -28,7 +29,7 @@ export interface IPropsMenuPageCategoryListItem {
   setSelectedOption(name: number|undefined): void
 }
 
-const MenuPageMultipleChoiceList: FunctionComponent<IPropsMenuPageCategoryListItem> = ({ isOpen, choice, topProductId, selectedOption, setSelectedOption, getNextIndex }) => {
+const MenuPageMultipleChoiceList: FunctionComponent<IPropsMenuPageCategoryListItem> = ({ mainName, isOpen, choice, topProductId, selectedOption, setSelectedOption, getNextIndex }) => {
   const [ selectionMultipleId, setSelectionMultipleId ] = useState<number>(choice.choice[0])
   const dispach = useAppDispatch()
 
@@ -38,8 +39,9 @@ const MenuPageMultipleChoiceList: FunctionComponent<IPropsMenuPageCategoryListIt
         topProductId,
         productId: selectionMultipleId,
         type: "MULTIPLE",
-        mainName: choice.name_json,
-        partName: parts[selectionMultipleId].name_json
+        mainName: mainName,
+        partName: parts[selectionMultipleId].name_json,
+        cost: parts[selectionMultipleId].price
       }))
     }
   }, [ isOpen, selectionMultipleId ])
@@ -78,7 +80,7 @@ const MenuPageMultipleChoiceList: FunctionComponent<IPropsMenuPageCategoryListIt
           setSelectedOption={setSelectedOption}
         />
       }
-      return <Fragment key={selectionMultipleId} />
+      return <></>
     })}
     {parts[selectionMultipleId] && parts[selectionMultipleId].side_products_json?.map(sideProduct => {
       return <MenuPageSides

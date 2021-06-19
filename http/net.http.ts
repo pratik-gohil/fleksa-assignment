@@ -41,7 +41,6 @@ export default abstract class Net {
 
   public async get<T>({path, query, headers}: IGet): Promise<T> {
     try {
-      console.log("this.defaultHeaders", this.defaultHeaders)
       const response = await fetch(this.getUrl(path, query), {
         method: 'get',
         headers: { ...this.defaultHeaders, headers} as unknown as HeadersInit|undefined,

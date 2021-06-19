@@ -1,5 +1,7 @@
+import { useEffect, useState } from "react";
 import { FunctionComponent } from "react";
 import styled, { css } from "styled-components";
+import { ICategoryProduct } from "../../../../interfaces/common/category.common.interfaces";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
 import { selectCartItemByCartId, updateAddProduct, updateReduceProduct } from "../../../../redux/slices/cart.slices.redux";
 import { selectItemSelectionByTopProductId } from "../../../../redux/slices/item-selection.slices.redux";
@@ -8,7 +10,7 @@ export interface IPropsAddButton {
   hasImage: boolean
   isOpen: boolean
   canOpen: boolean
-  topProductId: number
+  product: ICategoryProduct
 }
 
 interface IPropsWrapperButton {
@@ -61,25 +63,40 @@ const QuantityCount = styled.div`
   padding: 0 4px;
 `
 
-const AddButton: FunctionComponent<IPropsAddButton> = ({ topProductId, canOpen, hasImage, isOpen }) => {
+const AddButton: FunctionComponent<IPropsAddButton> = ({ product, canOpen, hasImage, isOpen }) => {
 
-  const selectionData = useAppSelector(state => selectItemSelectionByTopProductId(state, topProductId))
-  const cartData = useAppSelector(state => selectCartItemByCartId(state, selectionData? selectionData.cartId: null))  
+  const [ lastCartId, setLastCartId ] = useState<string|null>(null)
+  const selectionData = useAppSelector(state => selectItemSelectionByTopProductId(state, product.id))
+  const cartData = useAppSelector(state => selectCartItemByCartId(state, lastCartId))  
   const dispach = useAppDispatch()
 
-
-  // console.log("cartData", JSON.stringify(selectionData, null, 2))
+  useEffect(() => {
+    if (selectionData?.cartId) setLastCartId(selectionData.cartId)
+  }, [ selectionData ])
 
   function addItemToCart() {
-    if ((!canOpen || (canOpen && isOpen)) && selectionData) {
-      console.log(JSON.stringify(selectionData, null, 2))
+    if ((canOpen && isOpen) && selectionData) {
       dispach(updateAddProduct({
+        topProductId: product.id,
         cartId: selectionData.cartId,
         productId: selectionData.productId,
         sideProducts: selectionData.sideProducts,
         choice: selectionData.choice,
         mainName: selectionData.mainName,
-        partName: selectionData.partName
+        partName: selectionData.partName,
+        type: selectionData.type,
+        totalCost: selectionData.totalCost,
+      }))
+    } if (!canOpen) {
+      dispach(updateAddProduct({
+        topProductId: product.id,
+        cartId: `${product.id}||`,
+        productId: product.id,
+        sideProducts: null,
+        choice: null,
+        type: product.type_,
+        totalCost: product.price,
+        mainName: product.name_json
       }))
     }
   }

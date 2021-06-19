@@ -11,6 +11,7 @@ enum LANGUAGES {
 
 export interface IIndexSliceState {
   language: LANGUAGES
+  showLogin: boolean
   configuration: {
     host: string
     baseUrlPyApi: string
@@ -19,6 +20,7 @@ export interface IIndexSliceState {
 
 const initialState: IIndexSliceState = {
   language: LANGUAGES.de,
+  showLogin: false,
   configuration: {
     host: '',
     baseUrlPyApi: '',
@@ -32,6 +34,9 @@ export const ConfigurationSlice = createSlice({
     updateLanguage(state, action) {
       state.language = (<any>LANGUAGES)[action.payload]
     },
+    updateShowLogin(state, action) {
+      state.showLogin = action.payload
+    },
   },
   extraReducers: {
     [HYDRATE]: (state, action) => {
@@ -43,6 +48,7 @@ export const ConfigurationSlice = createSlice({
   }
 })
 
-export const { updateLanguage } = ConfigurationSlice.actions
+export const { updateLanguage, updateShowLogin } = ConfigurationSlice.actions
 
 export const selectLanguage = (state: RootState) => state.configuration.language
+export const selectShowLogin = (state: RootState) => state.configuration.showLogin

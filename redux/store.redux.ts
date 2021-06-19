@@ -6,7 +6,9 @@ import { IndexSlice } from "./slices/index.slices.redux";
 import { MenuSlice } from "./slices/menu.slices.redux";
 import { ItemSelectionSlice } from "./slices/item-selection.slices.redux";
 import { UserSlice } from "./slices/user.slices.redux";
-import { CartSlice } from "./slices/cart.slices.redux";
+import { CartSlice, ICartSliceState } from "./slices/cart.slices.redux";
+import { LS_CART } from "../constants/keys-local-storage.constants";
+import { CheckoutSlice } from "./slices/checkout.slices.redux";
 
 const store = configureStore({
   reducer: {
@@ -14,9 +16,21 @@ const store = configureStore({
     menu: MenuSlice.reducer,
     user: UserSlice.reducer,
     index: IndexSlice.reducer,
+    checkout: CheckoutSlice.reducer,
     address: AddressesSlice.reducer,
     configuration: ConfigurationSlice.reducer,
     itemSelection: ItemSelectionSlice.reducer,
+  },
+  preloadedState: {
+    cart: typeof window !== "undefined"? (
+      JSON.parse(localStorage.getItem(LS_CART) || `{
+        "items": {},
+        "cartCost": 0
+      }`) as ICartSliceState
+    ): ({
+      items: {},
+      cartCost: 0
+    })
   },
   middleware: getDefaultMiddleware => {
     return getDefaultMiddleware({
@@ -29,15 +43,12 @@ const store = configureStore({
 store.subscribe(() => {
   if (typeof window !== "undefined") {
     try {
-      // const state = store.getState()
-      // if (state.user.) {
-      //   localStorage.setItem(, )
-      // }
+      const state = store.getState()
+      localStorage.setItem(LS_CART, JSON.stringify(state.cart))
     } catch (error) {
       console.error(error)
     }
   }
-  console.log('subscribe called...')
 })
 
 const wrapper = createWrapper(() => store, { debug: false})

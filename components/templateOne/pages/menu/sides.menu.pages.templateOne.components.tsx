@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
 import { selectLanguage } from "../../../../redux/slices/configuration.slices.redux";
 import { selectSidesArray } from "../../../../redux/slices/menu.slices.redux";
 import { selectItemSelectionSideProduct, updateItemSelectionAddSideProduct, updateItemSelectionRemoveSideProduct } from "../../../../redux/slices/item-selection.slices.redux";
-import { StyledOptionsWrapper, StyledOptionsTitleContainer, StyledOptionsListContainer, StyledOptionsList, StyledOptionsListItem, StyledOptionsRadioButton } from "./options-list.menu.pages.templateOne.components";
+import { StyledOptionsWrapper, StyledOptionsTitleContainer, StyledOptionsListContainer, StyledOptionsList, StyledOptionsListItem, StyledOptionsRadioButton, StyledOptionsRadioButtonContainer } from "./options-list.menu.pages.templateOne.components";
 
 export interface IPropsMenuPageCategoryListItem {
   selectedOption: number|undefined
@@ -46,7 +46,11 @@ const MenuPageSides: FunctionComponent<IPropsMenuPageCategoryListItem> = ({ prod
             }))
           }
         }}>
-          <StyledOptionsRadioButton selected={selectedSides? selectedSides[option.id] !== undefined: false} /><p style={{ margin: 0, padding: 12 }}>{option.name_json[language]}</p>
+          <StyledOptionsRadioButtonContainer>
+            <StyledOptionsRadioButton selected={selectedSides? selectedSides[option.id] !== undefined: false} />
+            <span style={{ margin: 0, padding: 12 }}>{option.name_json[language]}</span>
+          </StyledOptionsRadioButtonContainer>
+          {option.price > 0 && <span style={{ margin: 0, padding: 12 }}>+€{option.price}</span>}
         </StyledOptionsListItem>)}
       </StyledOptionsList>
     </StyledOptionsListContainer>

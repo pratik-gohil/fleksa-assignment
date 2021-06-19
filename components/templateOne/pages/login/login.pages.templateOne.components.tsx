@@ -14,14 +14,16 @@ import { useRouter } from "next/dist/client/router";
 import { COOKIE_BEARER_TOKEN } from "../../../../constants/keys-cookies.constants";
 import { updateBearerToken } from "../../../../redux/slices/user.slices.redux";
 
+
+export interface IPropsLoginComponent {
+  onLogin?(): void
+}
+
 const LoginContainer = styled.div`
   display: flex;
   flex: 1 1 auto;
   border: ${props => props.theme.border};
   border-radius: ${props => props.theme.borderRadius}px;
-  @media (min-width: ${BREAKPOINTS.lg}px) {
-    
-  }
 `
 
 const SectionOne = styled.section`
@@ -44,6 +46,12 @@ const SectionTwo = styled.section`
   flex: 1;
   justify-content: center;
   padding: 24px 0;
+  background-color: #fff;
+  border-radius: ${props => props.theme.borderRadius}px;
+  @media (min-width: ${BREAKPOINTS.lg}px) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
 `
 
 const Title = styled.h2`
@@ -87,7 +95,7 @@ const SendOtpButtonText = styled.p`
   cursor: pointer;
 `
 
-const LoginComponent: FunctionComponent = ({}) => {
+const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) => {
   const router = useRouter()
   const [ , setCookie ] = useCookies([COOKIE_BEARER_TOKEN])
   const shopData = useAppSelector(selectShop)
@@ -119,7 +127,7 @@ const LoginComponent: FunctionComponent = ({}) => {
         setCustomerId(response.customer_id)
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
     } finally {
       setLoading(false)
     }
@@ -134,14 +142,14 @@ const LoginComponent: FunctionComponent = ({}) => {
           customerId,
           shopId: shopData?.id as unknown as number
         })
-        console.log("response", response)
         if (response?.token) {
           await finishLogin(response.token)
-          router.push("/account")
+          // on login callback is present call it, otherwise send the user to account page
+          onLogin? onLogin(): router.push("/account")
         }
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
     } finally {
       setLoading(false)
     }
@@ -159,7 +167,6 @@ const LoginComponent: FunctionComponent = ({}) => {
           <OtpInput
             value={otp}
             onChange={(otp: React.SetStateAction<string>) => {
-              console.log(otp)
               setOtp(otp)
             }}
             numInputs={5}
@@ -173,7 +180,7 @@ const LoginComponent: FunctionComponent = ({}) => {
               margin: "0 8px",
               border: '1px solid rgba(0, 0, 0, 0.1)',
               borderRadius: 4,
-              color: "#222"
+              color: "#222",
             }}
           />
         </InputContainer>

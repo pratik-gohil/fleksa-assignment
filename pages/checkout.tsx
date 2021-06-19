@@ -7,36 +7,38 @@ import { updateAddress, updateShop } from "../redux/slices/index.slices.redux";
 import IndexStoreWrapper from "../redux/store.redux";
 import TemplateToShow from "../templates/template-to-show.templates";
 import { updateLanguage } from "../redux/slices/configuration.slices.redux";
-import { updateCategories, updateParts, updateSides } from "../redux/slices/menu.slices.redux";
-import PyApiHttpGetMenu from "../http/pyapi/menu/get.menu.index.pyapi.http";
 import { COOKIE_BEARER_TOKEN } from "../constants/keys-cookies.constants";
-import { updateBearerToken } from "../redux/slices/user.slices.redux";
+import { updateBearerToken, updateCustomer } from "../redux/slices/user.slices.redux";
+import NodeApiHttpGetUser from "../http/nodeapi/user/get.user.nodeapi.http";
 
-const MenuPageTemplateOne = dynamic(import("../templates/one/menu.one.templates"))
+const CheckoutPageTemplateOne = dynamic(import("../templates/one/checkout.one.templates"))
 
 const templateList = [
-  MenuPageTemplateOne
+  CheckoutPageTemplateOne
 ]
 
 export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async ctx => {
   try {
     const cookies = new Cookies(ctx.req, ctx.res)
     const bearerToken = cookies.get(COOKIE_BEARER_TOKEN)
-    if (bearerToken) await ctx.store.dispatch(updateBearerToken(bearerToken))
+    if (bearerToken) {
+      ctx.store.dispatch(updateBearerToken(bearerToken))
+    } else {
+      return {
+        redirect: {
+          permanent: false,
+          destination: "/login",
+        },
+      }
+    }
 
     const responseIndex = await new PyApiHttpGetIndex().get()
-
-    // If shop id is not available throw error
-    if (!responseIndex?.shop.id) throw new Error("Shop id not found")
-
-    const responseMenu = await new PyApiHttpGetMenu().get({ shopId: responseIndex?.shop.id })
-    ctx.store.dispatch(updateCategories(responseMenu?.categories))
-    ctx.store.dispatch(updateSides(responseMenu?.sides))
-    ctx.store.dispatch(updateParts(responseMenu?.parts))
-
     ctx.store.dispatch(updateLanguage((ctx as any).locale))
     ctx.store.dispatch(updateAddress(responseIndex?.address))
     ctx.store.dispatch(updateShop(responseIndex?.shop))
+
+    const userData = await new NodeApiHttpGetUser(bearerToken).get({ })
+    ctx.store.dispatch(updateCustomer(userData?.data.customer))
 
     return {
       props: {
@@ -49,8 +51,8 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async ctx
   }
 })
 
-function Menu({ templateNumber }: any) {
+function Checkout({ templateNumber }: any) {
   return <TemplateToShow templateList={templateList} templateNumber={templateNumber} />
 }
 
-export default Menu
+export default Checkout

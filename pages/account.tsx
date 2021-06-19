@@ -21,15 +21,24 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async ctx
   try {
     const cookies = new Cookies(ctx.req, ctx.res)
     const bearerToken = cookies.get(COOKIE_BEARER_TOKEN)
-    if (bearerToken) await ctx.store.dispatch(updateBearerToken(bearerToken))
+    if (bearerToken) {
+      ctx.store.dispatch(updateBearerToken(bearerToken))
+    } else {
+      return {
+        redirect: {
+          permanent: false,
+          destination: "/login",
+        },
+      }
+    }
 
     const response = await new PyApiHttpGetIndex().get()
-    await ctx.store.dispatch(updateLanguage((ctx as any).locale))
-    await ctx.store.dispatch(updateAddress(response?.address))
-    await ctx.store.dispatch(updateShop(response?.shop))
+    ctx.store.dispatch(updateLanguage((ctx as any).locale))
+    ctx.store.dispatch(updateAddress(response?.address))
+    ctx.store.dispatch(updateShop(response?.shop))
 
     const userData = await new NodeApiHttpGetUser(bearerToken).get({ })
-    await ctx.store.dispatch(updateCustomer(userData?.data.customer))
+    ctx.store.dispatch(updateCustomer(userData?.data.customer))
 
     return {
       props: {

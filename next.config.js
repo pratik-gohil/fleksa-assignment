@@ -20,5 +20,6 @@ module.exports = withPWA({
       'fleksa-image.s3.eu-central-1.amazonaws.com',
       'fleksa.s3.eu-central-1.amazonaws.com',
     ],
+    disableStaticImages: true
   },
 })

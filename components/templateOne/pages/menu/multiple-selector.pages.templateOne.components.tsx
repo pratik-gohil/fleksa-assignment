@@ -3,7 +3,7 @@ import React, { FunctionComponent, useState } from "react";
 import { useAppSelector } from "../../../../redux/hooks.redux";
 import { selectLanguage } from "../../../../redux/slices/configuration.slices.redux";
 import { IChoiceDataWithId } from "./multiple-select.pages.templateOne.components";
-import { StyledOptionsWrapper, StyledOptionsTitleContainer, StyledOptionsListContainer, StyledOptionsList, StyledOptionsListItem, StyledOptionsRadioButton, IChoiceData } from "./options-list.menu.pages.templateOne.components";
+import { StyledOptionsWrapper, StyledOptionsTitleContainer, StyledOptionsListContainer, StyledOptionsList, StyledOptionsListItem, StyledOptionsRadioButton, IChoiceData, StyledOptionsRadioButtonContainer } from "./options-list.menu.pages.templateOne.components";
 
 export interface IPropsMenuPageCategoryListItem {
   selectedOption: number|undefined
@@ -34,7 +34,11 @@ const MenuPageMultipleSelector: FunctionComponent<IPropsMenuPageCategoryListItem
             setSelectionMultipleId(option.id)
           }
         }}>
-          <StyledOptionsRadioButton selected={option.id === selectionMultipleId} /><p style={{ margin: 0, padding: 12 }}>{option.name_json[language]}</p>
+          <StyledOptionsRadioButtonContainer>
+            <StyledOptionsRadioButton selected={option.id === selectionMultipleId} />
+            <span style={{ margin: 0, padding: 12 }}>{option.name_json[language]}</span>
+          </StyledOptionsRadioButtonContainer>
+          {option.price > 0 && <span style={{ margin: 0, padding: 12 }}>+€{option.price}</span>}
         </StyledOptionsListItem>)}
       </StyledOptionsList>
     </StyledOptionsListContainer>

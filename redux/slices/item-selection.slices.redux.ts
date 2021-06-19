@@ -7,6 +7,22 @@ const SLICE_NAME = "itemSelection"
 
 export type IItemSelectionType = "SINGLE" | "PART"
 
+// key is id of side product
+// value is an object containing price of the side product
+interface IIndexSliceStateSideProducts extends Record<number, {
+  price: number
+  name: ILanguageData
+} | null> { }
+
+
+// key is top_index
+// value is an object containing product_index and price of choice
+interface IIndexSliceStateChoice extends Record<number, {
+  product_index: number
+  price: number
+  name: ILanguageData
+} | null> { }
+
 export interface IIndexSliceState {
   cartId: string | null
   productId: number | null
@@ -14,19 +30,10 @@ export interface IIndexSliceState {
   type: IItemSelectionType | null
   mainName: ILanguageData | null
   partName: ILanguageData | null
-  // key is id of side product
-  // value is an object containing price of the side product
-  sideProducts: Record<number, {
-    price: number
-    name: ILanguageData
-  } | null>
-  // key is top_index
-  // value is an object containing product_index and price of choice
-  choice: Record<number, {
-    product_index: number
-    price: number
-    name: ILanguageData
-  } | null>
+  sideProducts: IIndexSliceStateSideProducts
+  choice: IIndexSliceStateChoice
+  productPrice: number
+  totalCost: number
 }
 
 const initialState: IIndexSliceState = {
@@ -37,7 +44,9 @@ const initialState: IIndexSliceState = {
   partName: null,
   type: null,
   sideProducts: {},
-  choice: {}
+  choice: {},
+  productPrice: 0,
+  totalCost: 0,
 }
 
 function generateCartId({ productId, sideProducts, choice }: IIndexSliceState): string {
@@ -45,6 +54,20 @@ function generateCartId({ productId, sideProducts, choice }: IIndexSliceState): 
   const choiceStr = Object.keys(choice).map(key => `${key},${choice[Number(key)]?.product_index}`).join("-")
 
   return `${productId}|${sideProdStr}|${choiceStr}`
+}
+
+function calculateTotalCost(productCost: number, sideProducts: IIndexSliceStateSideProducts, choice: IIndexSliceStateChoice): number {
+  let sideProdCost = 0
+  let choiceCost = 0
+  Object.keys(sideProducts).map(key => {
+    const price = sideProducts && sideProducts[Number(key)]?.price
+    if (price) sideProdCost += price
+  })
+  Object.keys(choice).map(key => {
+    const price = choice && choice[Number(key)]?.price
+    if (price) choiceCost += price
+  })
+  return productCost + sideProdCost + choiceCost
 }
 
 export const ItemSelectionSlice = createSlice({
@@ -60,18 +83,23 @@ export const ItemSelectionSlice = createSlice({
       state.sideProducts = {}
       state.choice = {}
       state.cartId = state.productId? generateCartId(state): null
+      state.productPrice = action.payload.cost
+      state.totalCost = calculateTotalCost(state.productPrice, state.sideProducts, state.choice)
     },
     updateItemSelectionAddSideProduct(state, action) {
       state.sideProducts[action.payload.id] = action.payload.data
       state.cartId = state.productId? generateCartId(state): null
+      state.totalCost = calculateTotalCost(state.productPrice, state.sideProducts, state.choice)
     },
     updateItemSelectionRemoveSideProduct(state, action) {
       delete state.sideProducts[action.payload]
       state.cartId = state.productId? generateCartId(state): null
+      state.totalCost = calculateTotalCost(state.productPrice, state.sideProducts, state.choice)
     },
     updateItemSelectionChoice(state, action) {
       state.choice[action.payload.id] = action.payload.data
       state.cartId = state.productId? generateCartId(state): null
+      state.totalCost = calculateTotalCost(state.productPrice, state.sideProducts, state.choice)
     },
   },
   extraReducers: {

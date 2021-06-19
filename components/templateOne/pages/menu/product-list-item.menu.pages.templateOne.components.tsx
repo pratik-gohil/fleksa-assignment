@@ -109,7 +109,6 @@ const RecipeCost = styled.p`
 const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem> = ({ product, isOpen, setOpenItemId }) => {
   const language = useAppSelector(selectLanguage)
   const [ selectedOption, setSelectedOption ] = useState<number|undefined>(1)
-  // const selectionS
 
   let optionsIndex = 0
   const getNextIndex = () => ++optionsIndex
@@ -134,18 +133,17 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
         </ClosedViewInfoContainerSection1>
         <ClosedViewInfoContainerSection2>
           {product.image && <ClosedViewInfoImage src={product.image} loading="lazy" isOpen={isOpen} />}
-          <AddButton topProductId={product.id} canOpen={!!product.choice && product.choice.length > 0 } hasImage={!!product.image} isOpen={isOpen} />
+          <AddButton product={product} canOpen={!!product.choice && product.choice.length > 0 } hasImage={!!product.image} isOpen={isOpen} />
         </ClosedViewInfoContainerSection2>
       </ClosedViewInfoContainer>
     </ClosedViewContainer>
     <OptionsContainer isOpen={isOpen}>
       {product.choice && product.choice.map((cho, index) =><MenuPageChoiceList
-        key={cho.name_json.english}
+        key={cho.name_json.english+index}
         getNextIndex={getNextIndex}
-        productType={product.type_}
         choice={cho}
         isOpen={isOpen}
-        topProductId={product.id}
+        product={product}
         choiceIndex={index}
         selectedOption={selectedOption}
         setSelectedOption={id => setSelectedOption(id)}

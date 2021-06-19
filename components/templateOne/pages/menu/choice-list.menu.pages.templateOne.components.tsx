@@ -1,7 +1,6 @@
 import React, { FunctionComponent } from "react";
 
-import { ICategoryMultipleProductChoice, ICategorySingleProductChoice } from "../../../../interfaces/common/category.common.interfaces";
-import { IType } from "../../../../interfaces/common/types.common.interfaces";
+import { ICategoryMultipleProductChoice, ICategoryProduct, ICategorySingleProductChoice } from "../../../../interfaces/common/category.common.interfaces";
 import MenuPageOptionsList from "./options-list.menu.pages.templateOne.components";
 import MenuPageMultipleChoiceList from "./multiple-select.pages.templateOne.components";
 import { useEffect } from "react";
@@ -9,25 +8,25 @@ import { useAppDispatch } from "../../../../redux/hooks.redux";
 import { updateItemSelectionNewItem } from "../../../../redux/slices/item-selection.slices.redux";
 
 export interface IPropsMenuPageCategoryListItem {
-  productType: IType
   selectedOption: number|undefined
   choice: ICategorySingleProductChoice|ICategoryMultipleProductChoice
   choiceIndex: number
-  topProductId: number
   isOpen: boolean
+  product: ICategoryProduct
   getNextIndex(reset?: boolean): number
   setSelectedOption(name: number|undefined): void
 }
 
-const MenuPageChoiceList: FunctionComponent<IPropsMenuPageCategoryListItem> = ({ isOpen, topProductId, choiceIndex, productType, choice, selectedOption, setSelectedOption, getNextIndex }) => {
+const MenuPageChoiceList: FunctionComponent<IPropsMenuPageCategoryListItem> = ({ product, isOpen, choiceIndex, choice, selectedOption, setSelectedOption, getNextIndex }) => {
   const dispach = useAppDispatch()
   
-  if (productType === "MULTIPLE") {
+  if (product.type_ === "MULTIPLE") {
     return <MenuPageMultipleChoiceList
       choice={choice as ICategoryMultipleProductChoice}
       getNextIndex={getNextIndex}
       isOpen={isOpen}
-      topProductId={topProductId}
+      mainName={product.name_json}
+      topProductId={product.id}
       selectedOption={selectedOption}
       setSelectedOption={setSelectedOption}
     />
@@ -35,10 +34,11 @@ const MenuPageChoiceList: FunctionComponent<IPropsMenuPageCategoryListItem> = ({
     useEffect(() => {
       if (isOpen) {
         dispach(updateItemSelectionNewItem({
-          topProductId: topProductId,
-          productId: topProductId,
+          topProductId: product.id,
+          productId: product.id,
           type: "SINGLE",
-          mainName: choice.name_json,
+          mainName: product.name_json,
+          cost: product.price
           // partName: Single product type do not have part name
         }))
       }
@@ -48,7 +48,7 @@ const MenuPageChoiceList: FunctionComponent<IPropsMenuPageCategoryListItem> = ({
       return <MenuPageOptionsList
         selectedOption={selectedOption}
         choice={tempChoice}
-        productId={topProductId}
+        productId={product.id}
         choiceIndex={choiceIndex}
         getNextIndex={getNextIndex}
         setSelectedOption={setSelectedOption}
