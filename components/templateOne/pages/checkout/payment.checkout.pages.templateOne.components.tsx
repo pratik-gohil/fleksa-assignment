@@ -1,3 +1,4 @@
+import { useRouter } from "next/dist/client/router";
 import React, { FunctionComponent, useEffect } from "react";
 import { useState } from "react";
 import { Row, Col } from "react-grid-system";
@@ -7,7 +8,7 @@ import styled from "styled-components";
 import NodeApiHttpPostOrder from "../../../../http/nodeapi/order/post.order.nodeapi.http";
 import { IMakeOrderProducts } from "../../../../interfaces/http/nodeapi/order/post.order.nodeapi.http";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
-import { ICartItem, selectCart } from "../../../../redux/slices/cart.slices.redux";
+import { selectCart } from "../../../../redux/slices/cart.slices.redux";
 import { selectPaymentMethod, updatePaymentMethod } from "../../../../redux/slices/checkout.slices.redux";
 import { selectShop } from "../../../../redux/slices/index.slices.redux";
 import { selectBearerToken, selectCustomer } from "../../../../redux/slices/user.slices.redux";
@@ -56,6 +57,7 @@ const OrderButton = styled.div`
 `
 
 const CheckoutPagePayment: FunctionComponent = ({}) => {
+  const router = useRouter()
   const [ orderButtonLoading, setOrderButtonLoading ] = useState(false)
   const paymentMethodData = useAppSelector(selectPaymentMethod)
   const bearerToken = useAppSelector(selectBearerToken)
@@ -115,6 +117,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
           }
         })
         console.log(response)
+        router.push("/order-placed")
       } catch (error) {
         console.error(error)
       } finally {

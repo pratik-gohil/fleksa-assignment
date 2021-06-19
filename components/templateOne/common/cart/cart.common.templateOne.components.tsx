@@ -65,7 +65,11 @@ const Price = styled.p`
 `
 
 const CartCost = styled.div`
-
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border-top: ${props => props.theme.border};
+  font-weight: 700;
 `
 
 const Cart: FunctionComponent = ({}) => {
@@ -89,7 +93,10 @@ const Cart: FunctionComponent = ({}) => {
         </ListItem>
       })}
     </List>
-    <CartCost>{cartData.cartCost}</CartCost>
+    <CartCost>
+      <ItemTitle>Total</ItemTitle>
+      <Price>€{cartData.cartCost}</Price>
+    </CartCost>
     <OrderButton onClick={() => isLoggedIn? router.push("/checkout"): dispach(updateShowLogin(true))}>ORDER</OrderButton>
   </Wrapper>
 }

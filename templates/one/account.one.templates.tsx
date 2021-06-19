@@ -2,9 +2,6 @@ import React, { FunctionComponent } from "react";
 import { useState } from "react";
 import styled from "styled-components";
 import AccountPageMyAccount from "../../components/templateOne/pages/account/my-account.account.pages.templateOne.components";
-import { BREAKPOINTS } from "../../constants/grid-system-configuration";
-import { useAppSelector } from "../../redux/hooks.redux";
-import { selectLanguage } from "../../redux/slices/configuration.slices.redux";
 
 const List = styled.ul`
 
@@ -29,8 +26,6 @@ const ContentContainer = styled.div<{isOpen: boolean}>`
 `
 
 const AccountPageTemplateOne: FunctionComponent = ({}) => {
-  const language = useAppSelector(selectLanguage)
-
   const [ indexOpen, setIndexOpen ] = useState<number|undefined>()
 
   return <List>

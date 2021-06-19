@@ -2,7 +2,6 @@ import React, { FunctionComponent } from "react";
 import { Col, Container, Row } from "react-grid-system";
 import styled from "styled-components";
 import { useAppSelector } from "../../../../redux/hooks.redux";
-import { selectLanguage } from "../../../../redux/slices/configuration.slices.redux";
 import { selectCustomer } from "../../../../redux/slices/user.slices.redux";
 
 
@@ -12,7 +11,6 @@ const WrapperSection = styled.section`
 
 
 const AccountPageMyAccount: FunctionComponent = ({}) => {
-  const language = useAppSelector(selectLanguage)
   const customerData = useAppSelector(selectCustomer)
 
   return <WrapperSection>

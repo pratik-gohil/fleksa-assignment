@@ -3,7 +3,7 @@ import React, { FunctionComponent, useState } from "react";
 import { useAppSelector } from "../../../../redux/hooks.redux";
 import { selectLanguage } from "../../../../redux/slices/configuration.slices.redux";
 import { IChoiceDataWithId } from "./multiple-select.pages.templateOne.components";
-import { StyledOptionsWrapper, StyledOptionsTitleContainer, StyledOptionsListContainer, StyledOptionsList, StyledOptionsListItem, StyledOptionsRadioButton, IChoiceData, StyledOptionsRadioButtonContainer } from "./options-list.menu.pages.templateOne.components";
+import { StyledOptionsWrapper, StyledOptionsTitleContainer, StyledOptionsListContainer, StyledOptionsList, StyledOptionsListItem, StyledOptionsRadioButton, StyledOptionsRadioButtonContainer } from "./options-list.menu.pages.templateOne.components";
 
 export interface IPropsMenuPageCategoryListItem {
   selectedOption: number|undefined

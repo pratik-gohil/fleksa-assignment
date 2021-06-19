@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { HYDRATE } from 'next-redux-wrapper'
 import { ILanguageData } from '../../interfaces/common/language-data.common.interfaces'
 import { IType } from '../../interfaces/common/types.common.interfaces'
 import { RootState } from '../store.redux'
@@ -77,15 +76,6 @@ export const CartSlice = createSlice({
       }
     }
   },
-  extraReducers: {
-    [HYDRATE]: (state, action) => {
-      // do not hydrate. cart data to be picked from local storage
-      return {
-        ...state,
-        // ...(action.payload)[SLICE_NAME],
-      };
-    },
-  }
 })
 
 export const {
