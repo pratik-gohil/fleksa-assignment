@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { Fragment, FunctionComponent } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 
@@ -80,10 +80,11 @@ const MenuPageMultipleChoiceList: FunctionComponent<IPropsMenuPageCategoryListIt
           setSelectedOption={setSelectedOption}
         />
       }
-      return <></>
+      return <Fragment key={index} />
     })}
     {parts[selectionMultipleId] && parts[selectionMultipleId].side_products_json?.map(sideProduct => {
       return <MenuPageSides
+        key={sideProduct.name_json.english}
         selectedOption={selectedOption}
         sideProduct={sideProduct}
         productId={selectionMultipleId}

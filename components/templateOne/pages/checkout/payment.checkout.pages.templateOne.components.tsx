@@ -10,6 +10,7 @@ import { IMakeOrderProducts } from "../../../../interfaces/http/nodeapi/order/po
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
 import { selectCart } from "../../../../redux/slices/cart.slices.redux";
 import { selectPaymentMethod, updatePaymentMethod } from "../../../../redux/slices/checkout.slices.redux";
+import { selectConfiguration } from "../../../../redux/slices/configuration.slices.redux";
 import { selectShop } from "../../../../redux/slices/index.slices.redux";
 import { selectBearerToken, selectCustomer } from "../../../../redux/slices/user.slices.redux";
 import LoadingIndicator from "../../common/loadingIndicator/loading-indicator.common.templateOne.components";
@@ -62,6 +63,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   const paymentMethodData = useAppSelector(selectPaymentMethod)
   const bearerToken = useAppSelector(selectBearerToken)
   const customerData = useAppSelector(selectCustomer)
+  const configuration = useAppSelector(selectConfiguration)
   const shopData = useAppSelector(selectShop)
   const cartData = useAppSelector(selectCart)
   const dispach = useAppDispatch()
@@ -97,7 +99,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
           }
         })
   
-        const response = new NodeApiHttpPostOrder(bearerToken).post({
+        const response = new NodeApiHttpPostOrder(configuration, bearerToken).post({
           order: {
             shop_id: shopData?.id,
             name: customerData.name,

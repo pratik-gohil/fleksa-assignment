@@ -9,13 +9,16 @@ enum LANGUAGES {
   en = "english"
 }
 
+export interface IConfiguration {
+  host: string
+  baseUrlPyApi: string
+  baseUrlNodeApi: string
+}
+
 export interface IIndexSliceState {
   language: LANGUAGES
   showLogin: boolean
-  configuration: {
-    host: string
-    baseUrlPyApi: string
-  }
+  configuration: IConfiguration
 }
 
 const initialState: IIndexSliceState = {
@@ -24,6 +27,7 @@ const initialState: IIndexSliceState = {
   configuration: {
     host: '',
     baseUrlPyApi: '',
+    baseUrlNodeApi: '',
   },
 }
 
@@ -37,6 +41,9 @@ export const ConfigurationSlice = createSlice({
     updateShowLogin(state, action) {
       state.showLogin = action.payload
     },
+    updateConfiguration(state, action) {
+      state.configuration = action.payload
+    },
   },
   extraReducers: {
     [HYDRATE]: (state, action) => {
@@ -48,7 +55,8 @@ export const ConfigurationSlice = createSlice({
   }
 })
 
-export const { updateLanguage, updateShowLogin } = ConfigurationSlice.actions
+export const { updateLanguage, updateShowLogin, updateConfiguration } = ConfigurationSlice.actions
 
 export const selectLanguage = (state: RootState) => state.configuration.language
 export const selectShowLogin = (state: RootState) => state.configuration.showLogin
+export const selectConfiguration = (state: RootState) => state.configuration.configuration

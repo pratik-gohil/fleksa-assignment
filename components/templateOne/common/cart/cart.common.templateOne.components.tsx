@@ -15,11 +15,12 @@ const Wrapper = styled.div`
   top: 0;
   right: 0;
   bottom: 0;
-  display: flex;
   flex-direction: column;
   flex: 1;
+  display: none;
   @media (min-width: ${BREAKPOINTS.lg}px) {
     position: relative;
+    display: flex;
   }
 `
 

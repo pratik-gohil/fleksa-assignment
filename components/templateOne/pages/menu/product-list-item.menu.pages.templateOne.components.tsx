@@ -150,6 +150,7 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
       />)}
       {product.type_ === "SINGLE" && product.side_products_json?.map(sideProduct => {
         return <MenuPageSides
+          key={sideProduct.name_json.english}
           selectedOption={selectedOption}
           sideProduct={sideProduct}
           productId={product.id}

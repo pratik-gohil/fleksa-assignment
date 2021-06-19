@@ -13,6 +13,7 @@ import NodeApiHttpPostVerify from "../../../../http/nodeapi/verify/post.verify.n
 import { useRouter } from "next/dist/client/router";
 import { COOKIE_BEARER_TOKEN } from "../../../../constants/keys-cookies.constants";
 import { updateBearerToken } from "../../../../redux/slices/user.slices.redux";
+import { selectConfiguration } from "../../../../redux/slices/configuration.slices.redux";
 
 
 export interface IPropsLoginComponent {
@@ -99,6 +100,7 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
   const router = useRouter()
   const [ , setCookie ] = useCookies([COOKIE_BEARER_TOKEN])
   const shopData = useAppSelector(selectShop)
+  const configuration = useAppSelector(selectConfiguration)
   const dispatch = useAppDispatch()
   const [ otp, setOtp ] = useState("")
   const [ phone, setPhone ] = useState("")
@@ -118,7 +120,7 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
   async function onTapSendOtp() {
     setLoading(true)
     try {
-      const response = await new NodeApiHttpPostLogin().post({
+      const response = await new NodeApiHttpPostLogin(configuration).post({
         countryCode,
         phone: phone.substring(String(countryCode).length),
         shopId: shopData?.id as unknown as number
@@ -137,7 +139,7 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
     setLoading(true)
     try {
       if (customerId) {
-        const response = await new NodeApiHttpPostVerify().post({
+        const response = await new NodeApiHttpPostVerify(configuration).post({
           otp,
           customerId,
           shopId: shopData?.id as unknown as number
