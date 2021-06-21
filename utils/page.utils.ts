@@ -28,8 +28,10 @@ export async function getServerSidePropsCommon(ctx: any, requiresLogin: boolean)
     if (requiresLogin && !bearerToken) {
       return {
         redirect: {
-          permanent: false,
-          destination: "/login",
+          redirect: {
+            permanent: false,
+            destination: "/login",
+          }
         },
         configuration,
       }
