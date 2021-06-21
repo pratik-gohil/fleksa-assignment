@@ -14,7 +14,7 @@ const templateList = [
 
 export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async ctx => {
   try {
-    const { redirect, responseIndex } = await getServerSidePropsCommon(ctx, true)
+    const { redirect, responseIndex } = await getServerSidePropsCommon(ctx, false)
     if (redirect) return redirect
 
     ctx.store.dispatch(updateProducts(responseIndex?.products))
