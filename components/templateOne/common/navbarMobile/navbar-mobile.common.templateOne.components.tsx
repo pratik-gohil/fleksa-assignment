@@ -67,8 +67,13 @@ const Button = styled.button`
   height: 100%;
 `
 
-const Link = styled(Button)`
-
+const Link = styled.a`
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 `
 
 const NavbarMobile: FunctionComponent = ({ }) => {

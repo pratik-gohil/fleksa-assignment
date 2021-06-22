@@ -20,9 +20,16 @@ const Wrapper = styled.div<{ showCart: boolean }>`
   background: #fff;
   display: ${props => props.showCart? "flex": "none"};
   z-index: 9999;
+  padding: 0 ${props => props.theme.dimen.X4}px;
+  padding-bottom: ${props => props.theme.navMobile.height}px;
+  max-height: 100vh;
+  overflow: auto;
   @media (min-width: ${BREAKPOINTS.lg}px) {
+    padding: 0;
+    margin: 0;
     position: relative;
     display: flex;
+    max-height: calc(100vh - ${props => props.theme.navDesktop.height}px);
   }
 `
 
@@ -32,6 +39,7 @@ const List = styled.ul`
   display: flex;
   flex: 1;
   flex-direction: column;
+  overflow: auto;
 `
 
 const ListItem = styled.li`
@@ -49,22 +57,28 @@ const OrderButton = styled.p`
   background-color: #222;
   color: #fff;
   padding: ${props => props.theme.dimen.X4}px;
-  margin: ${props => props.theme.dimen.X4*2}px 0;
+  margin: 0 0 ${props => props.theme.dimen.X4}px 0;
   border-radius: ${props => props.theme.borderRadius}px;
   text-align: center;
   font-weight: 600;
   cursor: pointer;
 `
 
-const OrderInfoContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+const Column1 = styled.div`
+  flex: 8;
+`
+
+const Column2 = styled.div`
+`
+
+const Column3 = styled.div`
+  flex: 3;
 `
 
 const Price = styled.p`
   margin-left: 8px;
   font-weight: 700;
+  text-align: right;
 `
 
 const CartCost = styled.div`
@@ -89,11 +103,15 @@ const Cart: FunctionComponent = ({}) => {
       {cartData.items && Object.keys(cartData.items).map(key => {
         const cartItem = cartData.items[key]
         return <ListItem key={key}>
-          <ItemTitle>{cartItem.mainName[language]} {cartItem.partName && "(" + cartItem.partName[language] + ")"}</ItemTitle>
-          <OrderInfoContainer>
+          <Column1>
+            <ItemTitle>{cartItem.mainName[language]} {cartItem.partName && "(" + cartItem.partName[language] + ")"}</ItemTitle>
+          </Column1>
+          <Column2>
             <CartAddRemoveButton cartItem={cartItem} />
+          </Column2>
+          <Column3>
             <Price>€ {cartItem.totalCost}</Price>
-          </OrderInfoContainer>
+          </Column3>
         </ListItem>
       })}
     </List>

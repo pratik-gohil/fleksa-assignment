@@ -8,7 +8,7 @@ import MenuPageCategorySidebar from "../../components/templateOne/pages/menu/cat
 
 const SideView = styled.div`
   position: sticky;
-  top: 82px;
+  top: ${props => props.theme.navDesktop.height}px;
   z-index: 1;
 `
 
