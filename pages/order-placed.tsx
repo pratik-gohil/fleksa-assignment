@@ -13,7 +13,7 @@ const templateList = [
 
 export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async ctx => {
   try {
-    const { redirect } = await getServerSidePropsCommon(ctx, false)
+    const { redirect } = await getServerSidePropsCommon(ctx, true)
     if (redirect) return redirect
 
     return {

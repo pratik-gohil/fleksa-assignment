@@ -6,10 +6,8 @@ export default class PyApiHttpGetIndex extends ApiHttpCommon {
 
   public async get() {
     try {
-      //"pyapi/smartpizzas.fleksa.com/index" "pyapi/restaurant-nidda.de/index"
-      const restaurantUrl = this.configuration.host === "localhost:3000" || "newqa.fleksa.de"? "roma.fleksa.com": this.configuration.host
       const response = await new NetPyApi(this.configuration).get<IPyApiHttpGetIndexResponse>({
-        path:  `pyapi/${restaurantUrl}/index`
+        path:`pyapi/${this.configuration.host}/index`
       })
       return response
     } catch (error) {
