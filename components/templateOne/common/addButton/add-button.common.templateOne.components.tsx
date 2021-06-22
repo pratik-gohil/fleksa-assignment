@@ -71,8 +71,12 @@ const AddButton: FunctionComponent<IPropsAddButton> = ({ product, canOpen, hasIm
   const dispach = useAppDispatch()
 
   useEffect(() => {
-    if (selectionData?.cartId) setLastCartId(selectionData.cartId)
-  }, [ selectionData ])
+    if (selectionData?.cartId) {
+      setLastCartId(selectionData.cartId)
+    } else {
+      setLastCartId(`${product.id}||`)
+    }
+  }, [ selectionData, product ])
 
   function addItemToCart() {
     if ((canOpen && isOpen) && selectionData) {
@@ -102,8 +106,8 @@ const AddButton: FunctionComponent<IPropsAddButton> = ({ product, canOpen, hasIm
   }
 
   function reduceItemFromCart() {
-    if ((!canOpen || (canOpen && isOpen)) && selectionData) {
-      dispach(updateReduceProduct({ cartId: selectionData.cartId }))
+    if ((!canOpen || (canOpen && isOpen)) && lastCartId) {
+      dispach(updateReduceProduct({ cartId: lastCartId }))
     }
   }
 

@@ -1,5 +1,4 @@
 import React, { ComponentType, FunctionComponent } from "react";
-import { ScreenClassProvider } from "react-grid-system";
 import { ThemeProvider } from "styled-components";
 import PageContainer, { IPropsPageContainer } from "../components/templateOne/common/page-container.commom.templateOne.components";
 import GlobalStyle from "../constants/global-style.constants";
@@ -23,14 +22,12 @@ const TemplateToShow: FunctionComponent<IPropsTemplateToShow> = ({ templateList,
   const shop = useAppSelector(selectShop)
 
   const ViewTemaplte = templateList[templateNumber]
-  return <ScreenClassProvider>
-    <ThemeProvider theme={themes[!isNaN(Number(shop?.website_template))? 1: Number(shop?.website_template)]}>
-      <GlobalStyle />
-      <PageContainer {...pageContainer}>
-        <ViewTemaplte />
-      </PageContainer>
-    </ThemeProvider>
-  </ScreenClassProvider>
+  return <ThemeProvider theme={themes[isNaN(Number(shop?.website_template))? 1: Number(shop?.website_template)]}>
+    <GlobalStyle />
+    <PageContainer {...pageContainer}>
+      <ViewTemaplte />
+    </PageContainer>
+  </ThemeProvider>
 }
 
 export default TemplateToShow

@@ -2,8 +2,6 @@ import React from "react";
 import Cookies from "cookies";
 import IndexStoreWrapper from "../../redux/store.redux";
 import { COOKIE_SELECTED_RESTAURANT_NAME } from "../../constants/keys-cookies.constants";
-import { logout } from "../../utils/logout";
-
 
 export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async ctx => {
   try {
@@ -14,12 +12,10 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async ctx
       sameSite: "strict"
     })
 
-    await logout(ctx, cookies)
-
     return {
       redirect: {
         permanent: false,
-        destination: "/",
+        destination: "/logout",
       }
     }
   } catch (error) {

@@ -74,6 +74,10 @@ export const CartSlice = createSlice({
         state.cartCost -= state.items[action.payload.cartId].costOneItem
         delete state.items[action.payload.cartId]
       }
+    },
+    updateClearCart(state) {
+      state.items = {}
+      state.cartCost = 0
     }
   },
 })
@@ -81,6 +85,7 @@ export const CartSlice = createSlice({
 export const {
   updateAddProduct,
   updateReduceProduct,
+  updateClearCart,
 } = CartSlice.actions
 
 export const selectCart = (state: RootState) => state.cart
