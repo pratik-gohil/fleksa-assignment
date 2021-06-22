@@ -18,12 +18,14 @@ export interface IConfiguration {
 export interface IIndexSliceState {
   language: LANGUAGES
   showLogin: boolean
+  showCart: boolean
   configuration: IConfiguration
 }
 
 const initialState: IIndexSliceState = {
   language: LANGUAGES.de,
   showLogin: false,
+  showCart: false,
   configuration: {
     host: '',
     baseUrlPyApi: '',
@@ -41,6 +43,9 @@ export const ConfigurationSlice = createSlice({
     updateShowLogin(state, action) {
       state.showLogin = action.payload
     },
+    updateShowCart(start, action) {
+      start.showCart = action.payload
+    },
     updateConfiguration(state, action) {
       state.configuration = action.payload
     },
@@ -55,8 +60,14 @@ export const ConfigurationSlice = createSlice({
   }
 })
 
-export const { updateLanguage, updateShowLogin, updateConfiguration } = ConfigurationSlice.actions
+export const {
+  updateLanguage,
+  updateShowLogin,
+  updateConfiguration,
+  updateShowCart,
+} = ConfigurationSlice.actions
 
 export const selectLanguage = (state: RootState) => state.configuration.language
 export const selectShowLogin = (state: RootState) => state.configuration.showLogin
+export const selectShowCart = (state: RootState) => state.configuration.showCart
 export const selectConfiguration = (state: RootState) => state.configuration.configuration

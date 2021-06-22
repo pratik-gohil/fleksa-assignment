@@ -5,11 +5,11 @@ import { BREAKPOINTS } from "../../../../constants/grid-system-configuration";
 
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
 import { selectCart } from "../../../../redux/slices/cart.slices.redux";
-import { selectLanguage, updateShowLogin } from "../../../../redux/slices/configuration.slices.redux";
+import { selectLanguage, selectShowCart, updateShowLogin } from "../../../../redux/slices/configuration.slices.redux";
 import { selectIsUserLoggedIn } from "../../../../redux/slices/user.slices.redux";
 import CartAddRemoveButton from "./add-remove.cart.common.templateOne.components";
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ showCart: boolean }>`
   position: fixed;
   left: 0;
   top: 0;
@@ -17,7 +17,9 @@ const Wrapper = styled.div`
   bottom: 0;
   flex-direction: column;
   flex: 1;
-  display: none;
+  background: #fff;
+  display: ${props => props.showCart? "flex": "none"};
+  z-index: 9999;
   @media (min-width: ${BREAKPOINTS.lg}px) {
     position: relative;
     display: flex;
@@ -75,12 +77,13 @@ const CartCost = styled.div`
 
 const Cart: FunctionComponent = ({}) => {
   const router = useRouter()
+  const showCart = useAppSelector(selectShowCart)
   const language = useAppSelector(selectLanguage)
   const cartData = useAppSelector(selectCart)
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn)
   const dispach = useAppDispatch()
 
-  return <Wrapper>
+  return <Wrapper showCart={showCart}>
     <Title>Your Cart</Title>
     <List>
       {cartData.items && Object.keys(cartData.items).map(key => {

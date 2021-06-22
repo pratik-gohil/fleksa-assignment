@@ -9,6 +9,7 @@ import MenuPageCategorySidebar from "../../components/templateOne/pages/menu/cat
 const SideView = styled.div`
   position: sticky;
   top: 82px;
+  z-index: 1;
 `
 
 const MenuPageTemplateOne: FunctionComponent = ({}) => {
