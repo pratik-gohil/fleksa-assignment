@@ -17,15 +17,15 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
     <MenuPageBanner />
     <Container>
       <Row>
-        <Col sm={12} md={12} lg={12} xxl={3}>
+        <Col sm={12} md={12} lg={3} xxl={3}>
           <SideView>
             <MenuPageCategorySidebar />
           </SideView>
         </Col>
-        <Col sm={12} md={12} lg={7} xxl={6}>
+        <Col sm={12} md={12} lg={5} xxl={6}>
           <MenuPageCategoryList />
         </Col>
-        <Col sm={12} md={12} lg={5} xxl={3}>
+        <Col sm={12} md={12} lg={4} xxl={3}>
           <SideView>
             <Cart />
           </SideView>

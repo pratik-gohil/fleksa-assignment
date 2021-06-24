@@ -9,15 +9,18 @@ import { selectCategories } from "../../../../redux/slices/menu.slices.redux";
 
 const List = styled.ul`
   display: flex;
-  flex-direction: row;
-  @media (min-width: ${BREAKPOINTS.xxl}px) {
+  overflow: auto;
+  @media (min-width: ${BREAKPOINTS.lg}px) {
     flex-direction: column;
   }
 `
 
 const ListItem = styled.li`
   display: flex;
-  justify-content: flex-end;
+  flex-shrink: 0;
+  @media (min-width: ${BREAKPOINTS.lg}px) {
+    justify-content: flex-end;
+  }
 `
 
 const CategoryButton = styled.button`
@@ -25,11 +28,16 @@ const CategoryButton = styled.button`
   background-color: #fff;
   border: none;
   cursor: pointer;
+  margin: ${props => props.theme.dimen.X2}px;
 `
 
 const CategoryButtonText = styled.h2`
-  text-align: right;
+  display: block;
   font-size: 16px;
+  margin: 0;
+  @media (min-width: ${BREAKPOINTS.lg}px) {
+    text-align: right;
+  }
 `
 
 const MenuPageCategorySidebar: FunctionComponent = ({}) => {
