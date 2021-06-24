@@ -102,12 +102,12 @@ const NavbarMobile: FunctionComponent = ({ }) => {
         title: "Options",
         button: toggleOptions,
         icon: SvgOptions
-      }].map(item => {
+      }].map((item, index) => {
         const view = <>
           {item.icon && <item.icon />}
           <Title>{item.title}</Title>
         </>
-        return <ListItem>
+        return <ListItem key={index}>
           {item.link? (
             <Link href={item.link}>{view}</Link>
           ): (
