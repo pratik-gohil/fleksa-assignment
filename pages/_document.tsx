@@ -58,19 +58,6 @@ export default class MyDocument extends Document {
           <link rel='mask-icon' href='/static/icons/safari-pinned-tab.svg' color='#5bbad5' />
           <link rel='shortcut icon' href='/favicon.ico' />
           <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:300,400,500' />
-              
-          <meta name='twitter:card' content='summary' />
-          <meta name='twitter:url' content='https://yourdomain.com' />
-          <meta name='twitter:title' content='PWA App' />
-          <meta name='twitter:description' content='Best PWA App in the world' />
-          <meta name='twitter:image' content='https://yourdomain.com/static/icons/android-chrome-192x192.png' />
-          <meta name='twitter:creator' content='@DavidWShadow' />
-          <meta property='og:type' content='website' />
-          <meta property='og:title' content='PWA App' />
-          <meta property='og:description' content='Best PWA App in the world' />
-          <meta property='og:site_name' content='PWA App' />
-          <meta property='og:url' content='https://yourdomain.com' />
-          <meta property='og:image' content='https://yourdomain.com/static/icons/apple-touch-icon.png' />
 
           <link rel='apple-touch-startup-image' href='/static/images/apple_splash_2048.png' sizes='2048x2732' />
           <link rel='apple-touch-startup-image' href='/static/images/apple_splash_1668.png' sizes='1668x2224' />
@@ -82,6 +69,9 @@ export default class MyDocument extends Document {
 
           {/* PWA CONFIG END */}
 
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+          <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700;800&display=swap" rel="stylesheet"></link>
 
           {(this.props as any).pathname === "/menu" && <script src={`https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}&libraries=places`}></script>}
         </Head>
