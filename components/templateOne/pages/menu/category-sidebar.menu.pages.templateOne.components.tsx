@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from "react";
 import styled from "styled-components";
+import { BREAKPOINTS } from "../../../../constants/grid-system-configuration";
 import { ICategory } from "../../../../interfaces/common/category.common.interfaces";
 
 import { useAppSelector } from "../../../../redux/hooks.redux";
@@ -8,7 +9,10 @@ import { selectCategories } from "../../../../redux/slices/menu.slices.redux";
 
 const List = styled.ul`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  @media (min-width: ${BREAKPOINTS.xxl}px) {
+    flex-direction: column;
+  }
 `
 
 const ListItem = styled.li`

@@ -120,7 +120,7 @@ const AddButton: FunctionComponent<IPropsAddButton> = ({ product, canOpen, hasIm
         <QuantityCount>{cartData.quantity}</QuantityCount>
         <ButtonItem onClick={addItemToCart}>+</ButtonItem>
       </>: (
-        <ButtonItem onClick={addItemToCart}>ADD +</ButtonItem>
+        <ButtonItem onClick={addItemToCart}>ADD{canOpen && " +"}</ButtonItem>
       )}
     </ButtonContainer>
   </WrapperButton>

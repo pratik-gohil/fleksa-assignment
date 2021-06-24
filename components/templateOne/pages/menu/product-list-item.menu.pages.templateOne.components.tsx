@@ -64,7 +64,9 @@ const ClosedViewInfoContainer = styled.div`
 `
 
 const ClosedViewInfoContainerSection1 = styled.div`
-
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `
 
 const ClosedViewInfoContainerSection2 = styled.div`
@@ -72,13 +74,13 @@ const ClosedViewInfoContainerSection2 = styled.div`
   flex-shrink: 0;
   flex-direction: column;
   align-items: center;
-  width: 100px;
+  width: 120px;
   margin-left: 12px;
 `
 
 const ClosedViewInfoImage = styled.img<IPropsClosedViewInfoImage>`
   width: inherit;
-  height: 70px;
+  height: 100px;
   object-fit: cover;
   opacity: ${props => props.isOpen? 0: 1};
   border-radius: ${props => props.theme.borderRadius}px;
