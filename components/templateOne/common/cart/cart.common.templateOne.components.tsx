@@ -8,6 +8,7 @@ import { selectCart } from "../../../../redux/slices/cart.slices.redux";
 import { selectLanguage, selectShowCart, updateShowLogin } from "../../../../redux/slices/configuration.slices.redux";
 import { selectIsUserLoggedIn } from "../../../../redux/slices/user.slices.redux";
 import CartAddRemoveButton from "./add-remove.cart.common.templateOne.components";
+import SvgCartEmpty from "../../../../public/assets/svg/cart-empty.svg";
 
 const Wrapper = styled.div<{ showCart: boolean }>`
   position: fixed;
@@ -33,7 +34,11 @@ const Wrapper = styled.div<{ showCart: boolean }>`
   }
 `
 
-const Title = styled.h3``
+const Title = styled.h3`
+  text-align: center;
+  font-size: 26px;
+  margin-top: 0;
+`
 
 const List = styled.ul`
   display: flex;
@@ -53,8 +58,8 @@ const ItemTitle = styled.p`
   font-size: 16px;
 `
 
-const OrderButton = styled.p`
-  background-color: #222;
+const OrderButton = styled.p<{ isActive: boolean }>`
+  background-color: ${props => props.isActive? "#222": "#aaa"};
   color: #fff;
   padding: ${props => props.theme.dimen.X4}px;
   margin: 0 0 ${props => props.theme.dimen.X4}px 0;
@@ -73,11 +78,15 @@ const Column2 = styled.div`
 
 const Column3 = styled.div`
   flex: 3;
+  display: flex;
+  flex-shrink: 0;
 `
 
 const Price = styled.p`
+  display: flex;
+  flex-shrink: 0;
   margin-left: 8px;
-  font-weight: 700;
+  font-weight: 600;
   text-align: right;
 `
 
@@ -86,7 +95,27 @@ const CartCost = styled.div`
   flex-direction: row;
   justify-content: space-between;
   border-top: ${props => props.theme.border};
-  font-weight: 700;
+  font-weight: 600;
+`
+
+const CartEmptyContainer = styled.div`
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: center;
+`
+
+const TextFeelingHungry = styled.p`
+  text-align: center;
+  font-size: 24px;
+  font-weight: 600;
+  margin: ${props => props.theme.dimen.X4}px 0 0 0;
+`
+
+const TextChooseDishes = styled(TextFeelingHungry)`
+  font-size: 16px;
+  font-weight: 400;
+  margin: 0 0 ${props => props.theme.dimen.X4}px 0;
 `
 
 const Cart: FunctionComponent = ({}) => {
@@ -96,30 +125,45 @@ const Cart: FunctionComponent = ({}) => {
   const cartData = useAppSelector(selectCart)
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn)
   const dispach = useAppDispatch()
+  
+  const cartItemKeys = cartData.items? Object.keys(cartData.items): []
+
+  function onClickOrderButton() {
+    if (cartItemKeys.length > 0) {
+      isLoggedIn? router.push("/checkout"): dispach(updateShowLogin(true))
+    }
+  }
 
   return <Wrapper showCart={showCart}>
     <Title>Your Cart</Title>
     <List>
-      {cartData.items && Object.keys(cartData.items).map(key => {
-        const cartItem = cartData.items[key]
-        return <ListItem key={key}>
-          <Column1>
-            <ItemTitle>{cartItem.mainName[language]} {cartItem.partName && "(" + cartItem.partName[language] + ")"}</ItemTitle>
-          </Column1>
-          <Column2>
-            <CartAddRemoveButton cartItem={cartItem} />
-          </Column2>
-          <Column3>
-            <Price>€ {cartItem.totalCost}</Price>
-          </Column3>
-        </ListItem>
-      })}
+      {cartItemKeys.length > 0? <>
+        {cartItemKeys.map(key => {
+          const cartItem = cartData.items[key]
+          return <ListItem key={key}>
+            <Column1>
+              <ItemTitle>{cartItem.mainName[language]} {cartItem.partName && "(" + cartItem.partName[language] + ")"}</ItemTitle>
+            </Column1>
+            <Column2>
+              <CartAddRemoveButton cartItem={cartItem} />
+            </Column2>
+            <Column3>
+              <Price>€ {cartItem.totalCost.toFixed(2)}</Price>
+            </Column3>
+          </ListItem>
+        })}
+        <CartCost>
+          <ItemTitle>Total</ItemTitle>
+          <Price>€{cartData.cartCost.toFixed(2)}</Price>
+        </CartCost>
+      </>: <CartEmptyContainer>
+          <SvgCartEmpty />
+          <TextFeelingHungry>Feeling hungry?</TextFeelingHungry>
+          <TextChooseDishes>Choose delicious dishes from the menu to place an order.</TextChooseDishes>
+      </CartEmptyContainer>}
     </List>
-    <CartCost>
-      <ItemTitle>Total</ItemTitle>
-      <Price>€{cartData.cartCost}</Price>
-    </CartCost>
-    <OrderButton onClick={() => isLoggedIn? router.push("/checkout"): dispach(updateShowLogin(true))}>ORDER</OrderButton>
+
+    <OrderButton isActive={cartItemKeys.length > 0} onClick={onClickOrderButton}>ORDER</OrderButton>
   </Wrapper>
 }
 
