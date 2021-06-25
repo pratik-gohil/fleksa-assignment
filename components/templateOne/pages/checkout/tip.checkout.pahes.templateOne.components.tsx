@@ -55,7 +55,7 @@ const CheckoutPageTip: FunctionComponent = ({}) => {
   const dispach = useAppDispatch()
   const [ otherTip, setOtherTip ] = useState(false)
 
-  const tipOptions = [5, 10, 20].map(percent => Math.floor((cartData.cartCost * percent) / 100) || 1)
+  const tipOptions = [5, 10, 20].map(percent => Math.floor((cartData.cartCost * percent) / 100))
 
   function onChangeTip(amount: number|null) {
     dispach(updateTip(amount))
@@ -64,16 +64,16 @@ const CheckoutPageTip: FunctionComponent = ({}) => {
   return <StyledCheckoutCard>
     <StyledCheckoutTitle>TIP</StyledCheckoutTitle>
     <TipOptionsList>
-      {tipOptions.map(amount => {
+      {tipOptions.map((amount, index) => {
         const isSelected = amount === tipData
-        return <TipOptionsItem isSelected={isSelected} onClick={() => {
+        return <TipOptionsItem key={index} isSelected={isSelected} onClick={() => {
           setOtherTip(false)
           onChangeTip(isSelected? null: amount)
           }}>
           <p>€{amount}</p>
         </TipOptionsItem>
       })}
-      <TipOptionsItem isSelected={otherTip}>
+      <TipOptionsItem key="custom" isSelected={otherTip}>
         {otherTip? <>
           <span>€</span>
           <input autoFocus type="number" value={tipData || ""} onChange={e => onChangeTip(e.target.value? Number(e.target.value): null)} />

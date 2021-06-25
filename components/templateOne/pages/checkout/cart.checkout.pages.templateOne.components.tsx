@@ -70,10 +70,10 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
           <Title>Discount</Title>
           <Price>€{0}</Price>
         </ContainerItem>
-        {tipData && tipData > 0 && <ContainerItem>
+        {tipData && tipData > 0? <ContainerItem>
           <Title>Tip</Title>
           <Price>€{tipData.toFixed(2)}</Price>
-        </ContainerItem>}
+        </ContainerItem>: <></>}
         <ContainerItem>
           <Title style={{ fontWeight: 700 }}>Total</Title>
           <Price>€{(cartData.cartCost + (tipData || 0)).toFixed(2)}</Price>

@@ -3,12 +3,12 @@ import React, { FunctionComponent, useEffect } from "react";
 import { useState } from "react";
 import { Row, Col } from "react-grid-system";
 
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import NodeApiHttpPostOrder from "../../../../http/nodeapi/order/post.order.nodeapi.http";
 import { IMakeOrderProducts } from "../../../../interfaces/http/nodeapi/order/post.order.nodeapi.http";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
 import { selectCart } from "../../../../redux/slices/cart.slices.redux";
-import { selectPaymentMethod, updatePaymentMethod } from "../../../../redux/slices/checkout.slices.redux";
+import { selectPaymentMethod, updatePaymentMethod, ICheckoutPaymentMethods } from "../../../../redux/slices/checkout.slices.redux";
 import { selectConfiguration } from "../../../../redux/slices/configuration.slices.redux";
 import { selectShop } from "../../../../redux/slices/index.slices.redux";
 import { selectBearerToken, selectCustomer } from "../../../../redux/slices/user.slices.redux";
@@ -22,7 +22,7 @@ const PaymentMethodList = styled.ul`
   margin: 0 -${props => props.theme.dimen.X4}px;
 `
 
-const PaymentMethodItems = styled.li`
+const PaymentMethodItems = styled.li<{ isActive: boolean }>`
   display: flex;
   flex: 1;
   margin: ${props => props.theme.dimen.X4}px;
@@ -30,6 +30,10 @@ const PaymentMethodItems = styled.li`
   border: ${props => props.theme.border};
   justify-content: center;
   border-radius: ${props => props.theme.borderRadius}px;
+  ${props => props.isActive && css`
+    border-color: ${props => props.theme.primaryColor};
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2);
+  `}
   cursor: pointer;
 `
 
@@ -132,9 +136,12 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
     <Row>
       <Col xs={12}>
         <PaymentMethodList>
-          <PaymentMethodItems onClick={() => dispach(updatePaymentMethod("CASH"))}>CASH</PaymentMethodItems>
-          <PaymentMethodItems onClick={() => dispach(updatePaymentMethod("CARD"))}>CARD</PaymentMethodItems>
-          <PaymentMethodItems onClick={() => dispach(updatePaymentMethod("PAYPAL"))}>PAYPAL</PaymentMethodItems>
+          {(["CASH", "CARD", "PAYPAL"] as Array<ICheckoutPaymentMethods>).map(method => {
+            return <PaymentMethodItems
+              isActive={paymentMethodData === method}
+              onClick={() => dispach(updatePaymentMethod(method))}
+            >{method}</PaymentMethodItems>
+          })}
         </PaymentMethodList>
       </Col>
       <Col xs={12}>
