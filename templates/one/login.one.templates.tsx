@@ -1,7 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { Col, Container, Row } from "react-grid-system";
 
-import "react-phone-input-2/lib/material.css"
 import styled from "styled-components";
 import LoginComponent from "../../components/templateOne/pages/login/login.pages.templateOne.components";
 import { BREAKPOINTS } from "../../constants/grid-system-configuration";

@@ -8,10 +8,12 @@ export type ICheckoutPaymentMethods = "CASH" | "CARD" | "PAYPAL"
 
 export interface ICheckoutSliceState {
   paymentMethod: ICheckoutPaymentMethods
+  tip: number|null
 }
 
 const initialState: ICheckoutSliceState = {
-  paymentMethod: "CASH"
+  paymentMethod: "CASH",
+  tip: null,
 }
 
 export const CheckoutSlice = createSlice({
@@ -20,6 +22,9 @@ export const CheckoutSlice = createSlice({
   reducers: {
     updatePaymentMethod(state, action) {
       state.paymentMethod = action.payload
+    },
+    updateTip(state, action) {
+      state.tip = action.payload
     },
   },
   extraReducers: {
@@ -32,6 +37,10 @@ export const CheckoutSlice = createSlice({
   }
 })
 
-export const { updatePaymentMethod } = CheckoutSlice.actions
+export const {
+  updatePaymentMethod,
+  updateTip,
+} = CheckoutSlice.actions
 
 export const selectPaymentMethod = (state: RootState) => state.checkout.paymentMethod
+export const selectTip = (state: RootState) => state.checkout.tip

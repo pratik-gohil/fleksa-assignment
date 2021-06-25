@@ -1,7 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { Row, Col } from "react-grid-system";
 
-import "react-phone-input-2/lib/material.css"
 import styled from "styled-components";
 import { StyledCheckoutCard, StyledCheckoutTitle } from "./customer-info.checkout.pages.templateOne.components";
 

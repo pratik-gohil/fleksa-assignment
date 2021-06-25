@@ -1,7 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { Row, Col } from "react-grid-system";
 
-import "react-phone-input-2/lib/material.css"
 import styled from "styled-components";
 import { useAppSelector } from "../../../../redux/hooks.redux";
 import { selectCustomer } from "../../../../redux/slices/user.slices.redux";
@@ -13,6 +12,7 @@ export const StyledCheckoutCard = styled.div`
   padding: ${props => props.theme.dimen.X4}px;
   margin: ${props => props.theme.dimen.X4}px 0;
   overflow: hidden;
+  box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
 `
 
 export const StyledCheckoutTitle = styled.h3`

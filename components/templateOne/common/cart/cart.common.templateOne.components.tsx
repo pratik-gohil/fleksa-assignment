@@ -56,6 +56,7 @@ const ListItem = styled.li`
 
 const ItemTitle = styled.p`
   font-size: 16px;
+  margin: ${props => props.theme.dimen.X4}px 0;
 `
 
 const OrderButton = styled.p<{ isActive: boolean }>`
@@ -78,6 +79,7 @@ const Column2 = styled.div`
 
 const Column3 = styled.div`
   flex: 3;
+  justify-content: flex-end;
   display: flex;
   flex-shrink: 0;
 `
@@ -85,7 +87,7 @@ const Column3 = styled.div`
 const Price = styled.p`
   display: flex;
   flex-shrink: 0;
-  margin-left: 8px;
+  margin: ${props => props.theme.dimen.X4}px 0;
   font-weight: 600;
   text-align: right;
 `

@@ -3,7 +3,6 @@ import React, { FunctionComponent, useEffect } from "react";
 import { useState } from "react";
 import { Row, Col } from "react-grid-system";
 
-import "react-phone-input-2/lib/material.css"
 import styled from "styled-components";
 import NodeApiHttpPostOrder from "../../../../http/nodeapi/order/post.order.nodeapi.http";
 import { IMakeOrderProducts } from "../../../../interfaces/http/nodeapi/order/post.order.nodeapi.http";
