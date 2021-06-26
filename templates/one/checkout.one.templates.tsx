@@ -30,7 +30,7 @@ const CheckoutPageTemplateOne: FunctionComponent = ({}) => {
   return <PayPalScriptProvider options={{
     debug: false,
     "client-id": "sb",
-    // currency: "USD",
+    currency: "EUR",
     // intent: "capture",
     // "data-client-token": "abc123xyz==",
   }}>

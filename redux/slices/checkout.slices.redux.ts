@@ -4,7 +4,7 @@ import { RootState } from '../store.redux'
 
 const SLICE_NAME = "checkout"
 
-export type ICheckoutPaymentMethods = "CASH" | "CARD" | "PAYPAL"
+export type ICheckoutPaymentMethods = "CASH" | "STRIPE" | "PAYPAL"
 export type ICheckoutOrderTypes = "PICKUP" | "DELIVERY" | "DINE_IN"
 
 export interface ICheckoutSliceState {

@@ -35,6 +35,29 @@ export interface INodeApiHttpPostOrderRequestData {
   }
 }
 
-export interface INodeApiHttpPostOrderResponse {
-  
+export interface IOrderResponseCash {
+  _paymentMethod: "CASH"
+  result: boolean
+  data: {
+    order_id: number
+  }
 }
+
+export interface IOrderResponsePaypal {
+  _paymentMethod: "PAYPAL"
+  result: boolean
+  paypal_order_id: string
+  order_id: number
+  amount: number
+  merchant_id: string
+}
+
+export interface IOrderResponseStripe {
+  _paymentMethod: "STRIPE"
+  result: boolean
+  client_secret: string
+  amount: number
+  merchant_id: string
+}
+
+export type INodeApiHttpPostOrderResponse = IOrderResponseCash | IOrderResponsePaypal | IOrderResponseStripe

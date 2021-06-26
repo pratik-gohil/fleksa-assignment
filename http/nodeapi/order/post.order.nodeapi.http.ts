@@ -7,15 +7,16 @@ import NetNodeApi from "../net.nodeapi.http"
 
 export default class NodeApiHttpPostOrder extends ApiHttpCommon {
 
-  public async post({ order }: INodeApiHttpPostOrderRequestData) {
+  public async post({ order }: INodeApiHttpPostOrderRequestData): Promise<INodeApiHttpPostOrderResponse> {
     try {
       const response = await new NetNodeApi(this.configuration, this.bearerToken).post<INodeApiHttpPostOrderResponse>({
         path: "order/create",
         body: order as any
       })
+      response._paymentMethod = order.payment_method
       return response
     } catch (error) {
-      console.error(error)
+      throw error
     }
   }
 }

@@ -6,7 +6,7 @@ import { PayPalButtons } from "@paypal/react-paypal-js";
 
 import styled, { css } from "styled-components";
 import NodeApiHttpPostOrder from "../../../../http/nodeapi/order/post.order.nodeapi.http";
-import { IMakeOrderProducts } from "../../../../interfaces/http/nodeapi/order/post.order.nodeapi.http";
+import { IMakeOrderProducts, IOrderResponsePaypal } from "../../../../interfaces/http/nodeapi/order/post.order.nodeapi.http";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
 import { selectCart } from "../../../../redux/slices/cart.slices.redux";
 import { selectPaymentMethod, updatePaymentMethod, ICheckoutPaymentMethods, selectTip } from "../../../../redux/slices/checkout.slices.redux";
@@ -15,7 +15,7 @@ import { selectShop } from "../../../../redux/slices/index.slices.redux";
 import { selectBearerToken, selectCustomer } from "../../../../redux/slices/user.slices.redux";
 import LoadingIndicator from "../../common/loadingIndicator/loading-indicator.common.templateOne.components";
 import { StyledCheckoutCard, StyledCheckoutTitle } from "./customer-info.checkout.pages.templateOne.components";
-import { checkoutFinalAmount } from "../../../../utils/checkout.utils";
+import NodeApiHttpPostPaypal from "../../../../http/nodeapi/paypal/post.paypal.nodeapi.http";
 
 
 const PaymentMethodList = styled.ul`
@@ -104,7 +104,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
           }
         })
   
-        const response = new NodeApiHttpPostOrder(configuration, bearerToken).post({
+        const response = await new NodeApiHttpPostOrder(configuration, bearerToken).post({
           order: {
             shop_id: shopData?.id,
             name: customerData.name,
@@ -116,7 +116,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
             want_at: new Date().toString(),
             products,
             payment_method: paymentMethodData,
-            tip: undefined,
+            tip: tipData? tipData: undefined,
             discount_token: "",
             coupon_token: "",
             description: "",
@@ -151,9 +151,9 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
         {orderButtonLoading? <LoadingIndicator />: <OrderButton>ORDER AND PAY</OrderButton>}
       </OrderButtonCashContainer>
       break;
-    case "CARD":
+    // case "CARD":
 
-      break;
+    //   break;
     case "PAYPAL":
       orderButton = <PayPalButtons fundingSource="paypal" style={{
         label: "pay",
@@ -161,24 +161,16 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
         color: "black",
         layout: "vertical",
         tagline: false
-      }} createOrder={async (_, actions) => {
-
-        const response = await createOrder()
-
-        return ""
-        // return await actions.order.create({
-        //   purchase_units: [{
-        //     amount: {
-        //       value: checkoutFinalAmount(cartData.cartCost, tipData).toFixed(2)
-        //     },
-        //   }],
-        //   application_context: {
-        //     shipping_preference: "NO_SHIPPING"
-        //   }
-        // })
-      }} onApprove={async (_, actions) => {
-        const details = await actions.order.capture()
-        console.log(details)
+      }} createOrder={async () => {
+        const response = await createOrder() as IOrderResponsePaypal
+        return response.paypal_order_id
+      }} onApprove={async (data) => {
+        if (bearerToken) {
+          const response = await new NodeApiHttpPostPaypal(configuration, bearerToken).postOrderSuccess({
+            paypalOrderId: data.orderID
+          })
+          console.log(response)
+        }
       }} />
       break;
     default:
@@ -190,7 +182,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
     <Row>
       <Col xs={12}>
         <PaymentMethodList>
-          {(["CASH", "CARD", "PAYPAL"] as Array<ICheckoutPaymentMethods>).map(method => {
+          {(["CASH", "STRIPE", "PAYPAL"] as Array<ICheckoutPaymentMethods>).map(method => {
             return <PaymentMethodItems
               isActive={paymentMethodData === method}
               onClick={() => dispach(updatePaymentMethod(method))}
