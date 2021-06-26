@@ -3,7 +3,6 @@ import React, { FunctionComponent } from "react";
 import { Col, Container, Row } from "react-grid-system";
 import styled from "styled-components";
 
-
 import CheckoutPageCart from "../../components/templateOne/pages/checkout/cart.checkout.pages.templateOne.components";
 import CheckoutPageComments from "../../components/templateOne/pages/checkout/comments.checkout.pages.templateOne.components";
 import CheckoutPageCustomerInfo from "../../components/templateOne/pages/checkout/customer-info.checkout.pages.templateOne.components";

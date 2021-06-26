@@ -24,6 +24,7 @@ export interface ITheme {
   primaryColorGreen: number
   primaryColorBlue: number
   primaryColor: string
+  fontFamily: string
   border: string
   textLightColor: string
   textLightActiveColor: string
@@ -41,6 +42,7 @@ export const THEME_ONE: ITheme = {
   primaryColorGreen: 238,
   primaryColorBlue: 50,
   primaryColor: "rgb(255, 238, 50)",
+  fontFamily: "'Poppins', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
   border: "1px solid rgba(0, 0, 0, 0.1)",
   textLightColor: "#ccc",
   textLightActiveColor: "#fff",
