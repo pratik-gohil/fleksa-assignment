@@ -1,7 +1,5 @@
-import { ICheckoutPaymentMethods } from "../../../../redux/slices/checkout.slices.redux"
+import { ICheckoutOrderTypes, ICheckoutPaymentMethods } from "../../../../redux/slices/checkout.slices.redux"
 import { ILanguageData } from "../../../common/language-data.common.interfaces"
-
-export type IOrderType = "PICKUP" | "DELIVERY" | "DINE_IN"
 
 export interface IMakeOrderProducts {
   id: number
@@ -33,7 +31,7 @@ export interface INodeApiHttpPostOrderRequestData {
     discount_token?: string,
     coupon_token?: string,
     description?: string,
-    order_type: IOrderType
+    order_type: ICheckoutOrderTypes
   }
 }
 

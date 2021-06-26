@@ -6,6 +6,7 @@ import { useAppSelector } from "../../../../redux/hooks.redux";
 import { selectCart } from "../../../../redux/slices/cart.slices.redux";
 import { selectTip } from "../../../../redux/slices/checkout.slices.redux";
 import { selectLanguage } from "../../../../redux/slices/configuration.slices.redux";
+import { checkoutFinalAmount } from "../../../../utils/checkout.utils";
 import { StyledCheckoutCard, StyledCheckoutTitle } from "./customer-info.checkout.pages.templateOne.components";
 
 export const StyledCheckoutTextarea = styled.textarea`
@@ -76,7 +77,7 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
         </ContainerItem>: <></>}
         <ContainerItem>
           <Title style={{ fontWeight: 700 }}>Total</Title>
-          <Price>€{(cartData.cartCost + (tipData || 0)).toFixed(2)}</Price>
+          <Price>€{checkoutFinalAmount(cartData.cartCost, tipData).toFixed(2)}</Price>
         </ContainerItem>
       </Col>
     </Row>

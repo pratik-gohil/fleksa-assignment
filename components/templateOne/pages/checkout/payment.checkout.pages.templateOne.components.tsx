@@ -1,19 +1,21 @@
 import { useRouter } from "next/dist/client/router";
-import React, { FunctionComponent, useEffect } from "react";
+import React, { FunctionComponent } from "react";
 import { useState } from "react";
 import { Row, Col } from "react-grid-system";
+import { PayPalButtons } from "@paypal/react-paypal-js";
 
 import styled, { css } from "styled-components";
 import NodeApiHttpPostOrder from "../../../../http/nodeapi/order/post.order.nodeapi.http";
 import { IMakeOrderProducts } from "../../../../interfaces/http/nodeapi/order/post.order.nodeapi.http";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
 import { selectCart } from "../../../../redux/slices/cart.slices.redux";
-import { selectPaymentMethod, updatePaymentMethod, ICheckoutPaymentMethods } from "../../../../redux/slices/checkout.slices.redux";
+import { selectPaymentMethod, updatePaymentMethod, ICheckoutPaymentMethods, selectTip } from "../../../../redux/slices/checkout.slices.redux";
 import { selectConfiguration } from "../../../../redux/slices/configuration.slices.redux";
 import { selectShop } from "../../../../redux/slices/index.slices.redux";
 import { selectBearerToken, selectCustomer } from "../../../../redux/slices/user.slices.redux";
 import LoadingIndicator from "../../common/loadingIndicator/loading-indicator.common.templateOne.components";
 import { StyledCheckoutCard, StyledCheckoutTitle } from "./customer-info.checkout.pages.templateOne.components";
+import { checkoutFinalAmount } from "../../../../utils/checkout.utils";
 
 
 const PaymentMethodList = styled.ul`
@@ -46,13 +48,19 @@ const Disclaimer = styled.p`
 `
 
 const OrderButtonContainer = styled.div`
+  height: 70px;
+  margin-top: ${props => props.theme.dimen.X4}px;
+`
+
+const OrderButtonCashContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 70px;
-  margin: 0 -${props => props.theme.dimen.X4}px -${props => props.theme.dimen.X4}px;
+  height: 60px;
   background-color: ${props => props.theme.primaryColor};
   cursor: pointer;
+  border: ${props => props.theme.border};
+  border-radius: 1000px;
 `
 
 const OrderButton = styled.div`
@@ -69,17 +77,11 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   const configuration = useAppSelector(selectConfiguration)
   const shopData = useAppSelector(selectShop)
   const cartData = useAppSelector(selectCart)
+  const tipData = useAppSelector(selectTip)
   const dispach = useAppDispatch()
 
-  useEffect(() => {
-    dispach(updatePaymentMethod("CASH"))
-  }, [ ])
-
-  function onClickOrderButton() {
-    if (orderButtonLoading) return
-    setOrderButtonLoading(true)
+  async function createOrder() {
     if (bearerToken && shopData?.id && customerData.email && customerData.phone && customerData.country_code) {
-
       try {
         const products: Array<IMakeOrderProducts> = Object.keys(cartData.items).map(key => {
           const prod = cartData.items[key]
@@ -122,13 +124,61 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
           }
         })
         console.log(response)
-        router.push("/order-placed")
+        return response
       } catch (error) {
-        console.error(error)
-      } finally {
-        setOrderButtonLoading(false)
+        throw error
       }
     }
+  }
+
+  async function onClickCashOrderButton() {
+    try {
+      if (orderButtonLoading) return
+      setOrderButtonLoading(true)
+      await createOrder()
+      router.push("/order-placed")
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setOrderButtonLoading(false)
+    }
+  }
+
+  let orderButton
+  switch (paymentMethodData) {
+    case "CASH":
+      orderButton = <OrderButtonCashContainer onClick={onClickCashOrderButton}>
+        {orderButtonLoading? <LoadingIndicator />: <OrderButton>ORDER AND PAY</OrderButton>}
+      </OrderButtonCashContainer>
+      break;
+    case "CARD":
+
+      break;
+    case "PAYPAL":
+      orderButton = <PayPalButtons fundingSource="paypal" style={{
+        label: "pay",
+        shape: "pill",
+        color: "black",
+        layout: "vertical",
+        tagline: false
+      }} createOrder={async (_, actions) => {
+        return await actions.order.create({
+          purchase_units: [{
+            amount: {
+              value: checkoutFinalAmount(cartData.cartCost, tipData).toFixed(2)
+            }
+          }],
+          application_context: {
+            shipping_preference: "NO_SHIPPING"
+          }
+        })
+      }} onApprove={async (_, actions) => {
+        const details = await actions.order.capture()
+        console.log(details)
+      }} />
+      break;
+    default:
+      break;
   }
 
   return <StyledCheckoutCard>
@@ -148,12 +198,8 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
         <Disclaimer>By clicking on ORDER AND PAY you agree with the contents of the shopping cart, the data you filled out, our Privacy Policy and Terms of use.</Disclaimer>
       </Col>
       <Col xs={12}>
-        <OrderButtonContainer onClick={onClickOrderButton}>
-          {orderButtonLoading? (
-            <LoadingIndicator />
-          ): (
-            <OrderButton>ORDER AND PAY</OrderButton>
-          )}
+        <OrderButtonContainer>
+          {orderButton}
         </OrderButtonContainer>
       </Col>
     </Row>

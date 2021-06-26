@@ -1,6 +1,8 @@
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import React, { FunctionComponent } from "react";
 import { Col, Container, Row } from "react-grid-system";
 import styled from "styled-components";
+
 
 import CheckoutPageCart from "../../components/templateOne/pages/checkout/cart.checkout.pages.templateOne.components";
 import CheckoutPageComments from "../../components/templateOne/pages/checkout/comments.checkout.pages.templateOne.components";
@@ -25,24 +27,32 @@ const CartContainerSmall = styled.div`
 `
 
 const CheckoutPageTemplateOne: FunctionComponent = ({}) => {
-  return <Container>
-    <Row>
-      <Col lg={6}>
-        <CheckoutPageCustomerInfo />
-        <CartContainerSmall>
-          <CheckoutPageCart />
-        </CartContainerSmall>
-        <CheckoutPageComments />
-        <CheckoutPageTip />
-        <CheckoutPagePayment />
-      </Col>
-      <Col lg={6}>
-        <CartContainerLarge>
-          <CheckoutPageCart />
-        </CartContainerLarge>
-      </Col>
-    </Row>
-  </Container>
+  return <PayPalScriptProvider options={{
+    debug: false,
+    "client-id": "sb",
+    // currency: "USD",
+    // intent: "capture",
+    // "data-client-token": "abc123xyz==",
+  }}>
+    <Container>
+      <Row>
+        <Col lg={6}>
+          <CheckoutPageCustomerInfo />
+          <CartContainerSmall>
+            <CheckoutPageCart />
+          </CartContainerSmall>
+          <CheckoutPageComments />
+          <CheckoutPageTip />
+          <CheckoutPagePayment />
+        </Col>
+        <Col lg={6}>
+          <CartContainerLarge>
+            <CheckoutPageCart />
+          </CartContainerLarge>
+        </Col>
+      </Row>
+    </Container>
+  </PayPalScriptProvider>
 }
 
 export default CheckoutPageTemplateOne
