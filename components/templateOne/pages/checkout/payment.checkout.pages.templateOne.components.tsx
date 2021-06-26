@@ -56,7 +56,7 @@ const OrderButtonCashContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 60px;
+  height: 45px;
   background-color: ${props => props.theme.primaryColor};
   cursor: pointer;
   border: ${props => props.theme.border};
@@ -162,16 +162,20 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
         layout: "vertical",
         tagline: false
       }} createOrder={async (_, actions) => {
-        return await actions.order.create({
-          purchase_units: [{
-            amount: {
-              value: checkoutFinalAmount(cartData.cartCost, tipData).toFixed(2)
-            }
-          }],
-          application_context: {
-            shipping_preference: "NO_SHIPPING"
-          }
-        })
+
+        const response = await createOrder()
+
+        return ""
+        // return await actions.order.create({
+        //   purchase_units: [{
+        //     amount: {
+        //       value: checkoutFinalAmount(cartData.cartCost, tipData).toFixed(2)
+        //     },
+        //   }],
+        //   application_context: {
+        //     shipping_preference: "NO_SHIPPING"
+        //   }
+        // })
       }} onApprove={async (_, actions) => {
         const details = await actions.order.capture()
         console.log(details)

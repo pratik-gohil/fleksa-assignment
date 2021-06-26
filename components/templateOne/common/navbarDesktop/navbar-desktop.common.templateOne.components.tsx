@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import React, { FunctionComponent } from "react";
 import styled from "styled-components";
 import { useAppSelector } from "../../../../redux/hooks.redux";
 import { selectShop } from "../../../../redux/slices/index.slices.redux";
@@ -7,6 +7,8 @@ import NavLink from "./nav-link.common.templateOne.components";
 import { useTranslation } from "next-i18next";
 import NavLanguageChange from "./nav-language-change.templateOne.components";
 import { BREAKPOINTS } from "../../../../constants/grid-system-configuration";
+import { selectIsUserLoggedIn } from "../../../../redux/slices/user.slices.redux";
+import NavUserProfile from "./nav-profile-image.templateOne.components";
 
 const WrapperHeader = styled.header`
   display: none;
@@ -46,14 +48,13 @@ const NavbarList = styled.ul`
 const NavbarDesktop: FunctionComponent = ({ }) => {
   const { t } = useTranslation('header')  
   const shopData = useAppSelector(selectShop)
+  const isLoggedIn = useAppSelector(selectIsUserLoggedIn)
 
   return <WrapperHeader>
     <Container>
       <Row>
         <Col>
-          <a href="/">
-            {shopData?.logo && <Logo src={shopData?.logo} loading="lazy" />}
-          </a>
+          <a href="/">{shopData?.logo && <Logo src={shopData?.logo} loading="lazy" />}</a>
         </Col>
         <Col>
           <Navbar>
@@ -62,7 +63,7 @@ const NavbarDesktop: FunctionComponent = ({ }) => {
               <NavLink title={t("@reservation")} path="/reservation" />
               <NavLink title={t("@gallery")} path="/gallery" />
               <NavLink title={t("@contact")} path="/contact" />
-              <NavLink title={t("@login")} path="/login" />
+              {isLoggedIn? <NavUserProfile />: <NavLink title={t("@login")} path="/login" />}
               <NavLanguageChange />
             </NavbarList>
           </Navbar>

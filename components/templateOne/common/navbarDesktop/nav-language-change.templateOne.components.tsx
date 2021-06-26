@@ -6,11 +6,6 @@ import styled from "styled-components"
 const SvgFlagGerman = "/assets/svg/flag-german.svg"
 const SvgFlagUnitedKingdom = "/assets/svg/flag-united-kingdom.svg"
 
-export interface IPropsNavLink {
-  title: string
-  path: string
-}
-
 const FlagContainer = styled.div`
   padding: 0 ${props => props.theme.dimen.X4}px;
 `
