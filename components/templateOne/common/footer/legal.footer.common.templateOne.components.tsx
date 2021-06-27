@@ -1,10 +1,14 @@
 import React, { FunctionComponent } from "react";
 import styled from "styled-components";
+import { BREAKPOINTS } from "../../../../constants/grid-system-configuration";
 
 const Text = styled.p`
-  font-size: 14px;
   text-align: right;
-  margin-top: 0;
+  font-size: 12px;
+  @media (min-width: ${BREAKPOINTS.lg}px) {
+    font-size: 14px;
+    margin-top: 0;
+  }
 `
 
 const LegalLinks: FunctionComponent = () => {

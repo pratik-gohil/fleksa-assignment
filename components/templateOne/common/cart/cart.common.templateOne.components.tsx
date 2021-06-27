@@ -17,17 +17,17 @@ const Wrapper = styled.div<{ showCart: boolean }>`
   left: 0;
   top: 0;
   right: 0;
-  bottom: 0;
+  bottom: ${props => props.theme.navMobile.height}px;
   flex-direction: column;
   flex: 1;
   background: #fff;
   display: ${props => props.showCart? "flex": "none"};
   z-index: 9999;
   padding: 0 ${props => props.theme.dimen.X4}px;
-  padding-bottom: ${props => props.theme.navMobile.height}px;
   max-height: 100vh;
   overflow: auto;
   @media (min-width: ${BREAKPOINTS.lg}px) {
+    bottom: 0;
     padding: 0;
     margin: 0;
     position: relative;
@@ -39,7 +39,14 @@ const Wrapper = styled.div<{ showCart: boolean }>`
 const Title = styled.h3`
   text-align: center;
   font-size: 26px;
-  margin-top: 0;
+  margin: 0 -12px ${props => props.theme.dimen.X4}px -12px;
+  padding: ${props => props.theme.dimen.X4}px;
+  background-color: #f9f9f9;
+  border-bottom: ${props => props.theme.border};
+  @media (min-width: ${BREAKPOINTS.lg}px) {
+    margin: 0;
+    background-color: transparent;
+  }
 `
 
 const List = styled.ul`
@@ -108,6 +115,7 @@ const CartEmptyContainer = styled.div`
   flex: 1 1 auto;
   flex-direction: column;
   align-items: center;
+  margin-top: ${props => props.theme.dimen.X4*2}px;
 `
 
 const TextFeelingHungry = styled.p`
@@ -148,7 +156,7 @@ const Cart: FunctionComponent = ({}) => {
       {cartItemKeys.length > 0? <>
         {cartItemKeys.map(key => {
           const cartItem = cartData.items[key]
-          return <ListItem key={key}>
+          return cartItem && <ListItem key={key}>
             <Column1>
               <ItemTitle>{cartItem.mainName[language]} {cartItem.partName && "(" + cartItem.partName[language] + ")"}</ItemTitle>
             </Column1>

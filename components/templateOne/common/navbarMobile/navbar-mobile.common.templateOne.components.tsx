@@ -7,6 +7,9 @@ import SvgHome from "../../../../public/assets/svg/home.svg";
 import SvgOptions from "../../../../public/assets/svg/options.svg";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
 import { selectShowCart, updateShowCart } from "../../../../redux/slices/configuration.slices.redux";
+import { useRouter } from "next/dist/client/router";
+import { useState } from "react";
+import NavbarMobileOptions from "./navbar-mobile-options.common.templateOne.components";
 
 const WrapperHeader = styled.header`
   height: ${props => props.theme.navMobile.height}px;
@@ -17,7 +20,7 @@ const WrapperHeader = styled.header`
   bottom: 0;
   border-top: ${props => props.theme.border};
   z-index: 10;
-  @media screen and (min-width: ${BREAKPOINTS.lg}px) {
+  @media (min-width: ${BREAKPOINTS.lg}px) {
     display: none;
   }
 `
@@ -28,9 +31,10 @@ const List = styled.ul`
   height: inherit;
   flex-direction: row;
   justify-content: space-between;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
 `
 
-const ListItem = styled.li`
+const ListItem = styled.li<{ isActive: boolean }>`
   display: flex;
   flex: 1 1 auto;
   height: inherit;
@@ -42,12 +46,12 @@ const ListItem = styled.li`
     width: 28px;
     height: 28px;
     display: block;
-    fill: ${props => props.theme.primaryColor};
+    fill: ${props => props.isActive? props.theme.primaryColor: "#fff"};
   }
 `
 
-const Title = styled.p`
-  color: ${props => props.theme.primaryColor};
+const Title = styled.p<{ isActive: boolean }>`
+  color: ${props => props.isActive? props.theme.primaryColor: "#fff"};
   font-size: 12px;
   padding: 0;
   margin: 4px 0 0 0;
@@ -77,37 +81,44 @@ const Link = styled.a`
 `
 
 const NavbarMobile: FunctionComponent = ({ }) => {
+  const router = useRouter()
+  const [ showOptions, setShowOptions ] = useState(true)
   const showCart = useAppSelector(selectShowCart)
   const dispach = useAppDispatch()
   
   const toggleCart = () => dispach(updateShowCart(!showCart))
+  const toggleOptions = () => setShowOptions(!showOptions) 
 
-  const toggleOptions = () => undefined 
+  console.error("router.pathname", router.pathname)
 
   return <WrapperHeader>
     <List>
       {[{
         title: "Home",
         link: "/",
-        icon: SvgHome
+        icon: SvgHome,
+        isActive: !showOptions && !showCart && router.pathname === "/",
       }, {
         title: "Menu",
         link: "/menu",
-        icon: SvgMenu
+        icon: SvgMenu,
+        isActive: !showOptions && !showCart && router.pathname === "/menu",
       }, {
         title: "Cart",
         button: toggleCart,
-        icon: SvgCart
+        icon: SvgCart,
+        isActive: showCart
       }, {
         title: "Options",
         button: toggleOptions,
-        icon: SvgOptions
+        icon: SvgOptions,
+        isActive: showOptions
       }].map((item, index) => {
         const view = <>
           {item.icon && <item.icon />}
-          <Title>{item.title}</Title>
+          <Title isActive={item.isActive}>{item.title}</Title>
         </>
-        return <ListItem key={index}>
+        return <ListItem key={index} isActive={item.isActive}>
           {item.link? (
             <Link href={item.link}>{view}</Link>
           ): (
@@ -116,6 +127,7 @@ const NavbarMobile: FunctionComponent = ({ }) => {
         </ListItem>
       })}
     </List>
+    <NavbarMobileOptions isOpen={showOptions} />
   </WrapperHeader>
 }
 

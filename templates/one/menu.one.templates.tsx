@@ -5,11 +5,15 @@ import Cart from "../../components/templateOne/common/cart/cart.common.templateO
 import MenuPageBanner from "../../components/templateOne/pages/menu/banner.menu.pages.templateOne.components";
 import MenuPageCategoryList from "../../components/templateOne/pages/menu/category-list.menu.pages.templateOne.components";
 import MenuPageCategorySidebar from "../../components/templateOne/pages/menu/category-sidebar.menu.pages.templateOne.components";
+import { BREAKPOINTS } from "../../constants/grid-system-configuration";
 
 const SideView = styled.div`
   position: sticky;
   top: ${props => props.theme.navDesktop.height}px;
-  z-index: 1;
+  display: none;
+  @media (min-width: ${BREAKPOINTS.lg}px) {
+    display: block;
+  }
 `
 
 const MenuPageTemplateOne: FunctionComponent = ({}) => {
