@@ -9,6 +9,8 @@ import { selectLanguage, selectShowCart, updateShowLogin } from "../../../../red
 import { selectIsUserLoggedIn } from "../../../../redux/slices/user.slices.redux";
 import CartAddRemoveButton from "./add-remove.cart.common.templateOne.components";
 import SvgCartEmpty from "../../../../public/assets/svg/cart-empty.svg";
+import { useEffect } from "react";
+import { useState } from "react";
 
 const Wrapper = styled.div<{ showCart: boolean }>`
   position: fixed;
@@ -94,6 +96,7 @@ const Price = styled.p`
 
 const CartCost = styled.div`
   display: flex;
+  flex: 1;
   flex-direction: row;
   justify-content: space-between;
   border-top: ${props => props.theme.border};
@@ -122,13 +125,16 @@ const TextChooseDishes = styled(TextFeelingHungry)`
 
 const Cart: FunctionComponent = ({}) => {
   const router = useRouter()
+  const [ cartItemKeys, setCartItemKeys ] = useState<Array<string>>([])
   const showCart = useAppSelector(selectShowCart)
   const language = useAppSelector(selectLanguage)
   const cartData = useAppSelector(selectCart)
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn)
   const dispach = useAppDispatch()
   
-  const cartItemKeys = cartData.items? Object.keys(cartData.items): []
+  useEffect(() => {
+    setCartItemKeys(cartData.items? Object.keys(cartData.items): [])
+  }, [ cartData ])
 
   function onClickOrderButton() {
     if (cartItemKeys.length > 0) {
@@ -154,15 +160,19 @@ const Cart: FunctionComponent = ({}) => {
             </Column3>
           </ListItem>
         })}
-        <CartCost>
-          <ItemTitle>Total</ItemTitle>
-          <Price>€{cartData.cartCost.toFixed(2)}</Price>
-        </CartCost>
-      </>: <CartEmptyContainer>
-          <SvgCartEmpty />
-          <TextFeelingHungry>Feeling hungry?</TextFeelingHungry>
-          <TextChooseDishes>Choose delicious dishes from the menu to place an order.</TextChooseDishes>
-      </CartEmptyContainer>}
+        <ListItem key="info-cart">
+          <CartCost>
+            <ItemTitle>Total</ItemTitle>
+            <Price>€{cartData.cartCost.toFixed(2)}</Price>
+          </CartCost>
+        </ListItem>
+      </>: <ListItem key="empty-cart">
+        <CartEmptyContainer>
+            <SvgCartEmpty />
+            <TextFeelingHungry>Feeling hungry?</TextFeelingHungry>
+            <TextChooseDishes>Choose delicious dishes from the menu to place an order.</TextChooseDishes>
+        </CartEmptyContainer>
+      </ListItem>}
     </List>
 
     <OrderButton isActive={cartItemKeys.length > 0} onClick={onClickOrderButton}>ORDER</OrderButton>

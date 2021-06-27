@@ -134,12 +134,16 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
     setOrderCanBePlaced(canPlace)
   }, [ bearerToken, shopData?.id, customerData.email, customerData.phone, customerData.country_code ])
 
+  async function onPaymentDone() {
+    router.push("/order-placed")
+  }
+
   async function onClickCashOrderButton() {
     try {
       if (orderButtonLoading || !orderCanBePlaced) return
       setOrderButtonLoading(true)
       await createOrder()
-      router.push("/order-placed")
+      await onPaymentDone()
     } catch (error) {
       console.error(error)
     } finally {
@@ -155,10 +159,10 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
       </OrderButtonCashContainer>
       break;
     case "STRIPE":
-      orderButton = <CheckoutPageOrderButtonStripe createOrder={createOrder} orderCanBePlaced={orderCanBePlaced} />
+      orderButton = <CheckoutPageOrderButtonStripe onPaymentDone={onPaymentDone} createOrder={createOrder} orderCanBePlaced={orderCanBePlaced} />
       break;
     case "PAYPAL":
-      orderButton = <CheckoutPageOrderButtonPaypal createOrder={createOrder} orderCanBePlaced={orderCanBePlaced} />
+      orderButton = <CheckoutPageOrderButtonPaypal onPaymentDone={onPaymentDone} createOrder={createOrder} orderCanBePlaced={orderCanBePlaced} />
       break;
     default:
       break;

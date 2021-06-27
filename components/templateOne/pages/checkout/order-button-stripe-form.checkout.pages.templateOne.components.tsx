@@ -1,11 +1,14 @@
 import React, { FormEvent, FunctionComponent } from "react";
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
-import { INodeApiHttpPostOrderResponse } from "../../../../interfaces/http/nodeapi/order/post.order.nodeapi.http";
+import { INodeApiHttpPostOrderResponse, IOrderResponseStripe } from "../../../../interfaces/http/nodeapi/order/post.order.nodeapi.http";
 import styled from "styled-components";
+import { useState } from "react";
+import LoadingIndicator from "../../common/loadingIndicator/loading-indicator.common.templateOne.components";
 
 export interface IPropsCheckoutPageOrderButtonStripeForm {
   createOrder(): Promise<INodeApiHttpPostOrderResponse>
   orderCanBePlaced: boolean
+  onPaymentDone(): Promise<void>
 }
 
 const Form = styled.form`
@@ -37,13 +40,17 @@ const OrderButton = styled.div`
   font-family: ${props => props.theme.fontFamily};
 `
 
-const CheckoutPageOrderButtonStripeForm: FunctionComponent<IPropsCheckoutPageOrderButtonStripeForm> = ({ orderCanBePlaced }) => {
+const CheckoutPageOrderButtonStripeForm: FunctionComponent<IPropsCheckoutPageOrderButtonStripeForm> = ({ onPaymentDone, createOrder, orderCanBePlaced }) => {
+  const [ buttonLoading, setButtonLoading ] = useState(false)
   const stripe = useStripe();
   const elements = useElements();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     // Block native form submission.
     event.preventDefault();
+    setButtonLoading(true)
+
+    const response = await createOrder() as IOrderResponseStripe
 
     if (!stripe || !elements) {
       // Stripe.js has not loaded yet. Make sure to disable
@@ -58,19 +65,21 @@ const CheckoutPageOrderButtonStripeForm: FunctionComponent<IPropsCheckoutPageOrd
 
     if (!cardElement) return // to supress type error
     // Use your card Element with other Stripe.js APIs
-    const {error, paymentMethod} = await stripe.createPaymentMethod({
-      type: 'card',
-      card: cardElement,
+    const {error, paymentIntent} = await stripe.confirmCardPayment(response.client_secret, {
+      payment_method: {
+        card: cardElement
+      }
     });
 
     if (error) {
       console.log('[error]', error);
-    } else {
-      console.log('[PaymentMethod]', paymentMethod);
+    } else if (paymentIntent?.id) {
+      await onPaymentDone()
     }
+    setButtonLoading(false)
   };
 
-  const buttonDisabled = !stripe || !orderCanBePlaced
+  const buttonDisabled = !stripe || !orderCanBePlaced || buttonLoading
 
   return <Form onSubmit={handleSubmit}>
     <CardElementContainer>
@@ -94,7 +103,7 @@ const CheckoutPageOrderButtonStripeForm: FunctionComponent<IPropsCheckoutPageOrd
       />
     </CardElementContainer>
     <SubmitButton type="submit" disabled={buttonDisabled}>
-      <OrderButton>ORDER AND PAY</OrderButton>
+      {buttonLoading? <LoadingIndicator />: <OrderButton>ORDER AND PAY</OrderButton>}
     </SubmitButton>
   </Form>
 }

@@ -9,9 +9,10 @@ import { selectBearerToken } from "../../../../redux/slices/user.slices.redux";
 export interface IPropsCheckoutPageOrderButtonPaypal {
   createOrder(): Promise<INodeApiHttpPostOrderResponse>
   orderCanBePlaced: boolean
+  onPaymentDone(): Promise<void>
 }
 
-const CheckoutPageOrderButtonPaypal: FunctionComponent<IPropsCheckoutPageOrderButtonPaypal> = ({ createOrder, orderCanBePlaced }) => {
+const CheckoutPageOrderButtonPaypal: FunctionComponent<IPropsCheckoutPageOrderButtonPaypal> = ({ onPaymentDone, createOrder, orderCanBePlaced }) => {
   const bearerToken = useAppSelector(selectBearerToken)
   const configuration = useAppSelector(selectConfiguration)
 
@@ -26,10 +27,10 @@ const CheckoutPageOrderButtonPaypal: FunctionComponent<IPropsCheckoutPageOrderBu
     return response.paypal_order_id
   }} onApprove={async (data) => {
     if (bearerToken) {
-      const response = await new NodeApiHttpPostPaypal(configuration, bearerToken).postOrderSuccess({
+      await new NodeApiHttpPostPaypal(configuration, bearerToken).postOrderSuccess({
         paypalOrderId: data.orderID
       })
-      console.log(response)
+      await onPaymentDone()
     }
   }} />
 }
