@@ -40,6 +40,7 @@ export interface ICategoryProduct {
   side_products_json: Array<ICategoryProductSideProducts>|null
   sku: string
   type_: IType
+  _metaSeachText: Record<string, string>
 }
 
 export interface ICategory {

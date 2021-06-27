@@ -7,9 +7,12 @@ import MenuPageCategoryList from "../../components/templateOne/pages/menu/catego
 import MenuPageCategorySidebar from "../../components/templateOne/pages/menu/category-sidebar.menu.pages.templateOne.components";
 import { BREAKPOINTS } from "../../constants/grid-system-configuration";
 
-const SideView = styled.div`
+const SideViewLeft = styled.div`
   position: sticky;
   top: ${props => props.theme.navDesktop.height}px;
+`
+
+const SideViewRight = styled(SideViewLeft)`
   display: none;
   @media (min-width: ${BREAKPOINTS.lg}px) {
     display: block;
@@ -22,17 +25,17 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
     <Container>
       <Row>
         <Col sm={12} md={12} lg={3} xxl={3}>
-          <SideView>
+          <SideViewLeft>
             <MenuPageCategorySidebar />
-          </SideView>
+          </SideViewLeft>
         </Col>
         <Col sm={12} md={12} lg={5} xxl={6}>
           <MenuPageCategoryList />
         </Col>
         <Col sm={12} md={12} lg={4} xxl={3}>
-          <SideView>
+          <SideViewRight>
             <Cart />
-          </SideView>
+          </SideViewRight>
         </Col>
       </Row>
     </Container>

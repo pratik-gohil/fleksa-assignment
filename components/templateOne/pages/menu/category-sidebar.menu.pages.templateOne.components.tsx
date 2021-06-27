@@ -1,11 +1,11 @@
 import React, { FunctionComponent } from "react";
 import styled from "styled-components";
 import { BREAKPOINTS } from "../../../../constants/grid-system-configuration";
-import { ICategory } from "../../../../interfaces/common/category.common.interfaces";
 
 import { useAppSelector } from "../../../../redux/hooks.redux";
 import { selectLanguage } from "../../../../redux/slices/configuration.slices.redux";
-import { selectCategories } from "../../../../redux/slices/menu.slices.redux";
+import { selectCategoryNames } from "../../../../redux/slices/menu.slices.redux";
+import MenuSearch from "./search.menu.pages.templateOne.components";
 
 const List = styled.ul`
   display: flex;
@@ -37,22 +37,36 @@ const CategoryButtonText = styled.h2`
   margin: 0;
   @media (min-width: ${BREAKPOINTS.lg}px) {
     text-align: right;
+      &::after {
+      content: '';
+      display: block;
+      width: 0;
+      height: 2px;
+      background: ${props => props.theme.primaryColor};
+      transition: width .3s;
+    }
+    &:hover::after {
+      width: 100%;
+    }
   }
 `
 
 const MenuPageCategorySidebar: FunctionComponent = ({}) => {
   const language = useAppSelector(selectLanguage)
-  const categories = useAppSelector(selectCategories)
+  const categories = useAppSelector(selectCategoryNames)
 
-  const scrollIntoView = (category: ICategory) => document.getElementById(category.name_json.english.toLowerCase().split(" ").join("-"))?.scrollIntoView({
+  const scrollIntoView = (categoryEnglishName: string) => document.getElementById(categoryEnglishName.toLowerCase().split(" ").join("-"))?.scrollIntoView({
     block: "start",
     behavior: "smooth"
   })
 
   return <List>
+    <ListItem key="search">
+      <MenuSearch />
+    </ListItem>
     {categories.map((category, index) => {
       return <ListItem key={index}>
-        <CategoryButton onClick={scrollIntoView.bind(null, category)}>
+        <CategoryButton onClick={scrollIntoView.bind(null, category.name_json.english)}>
           <CategoryButtonText>{category.name_json[language]}</CategoryButtonText>
         </CategoryButton>
       </ListItem>

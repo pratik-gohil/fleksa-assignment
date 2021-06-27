@@ -82,7 +82,7 @@ const Link = styled.a`
 
 const NavbarMobile: FunctionComponent = ({ }) => {
   const router = useRouter()
-  const [ showOptions, setShowOptions ] = useState(true)
+  const [ showOptions, setShowOptions ] = useState(false)
   const showCart = useAppSelector(selectShowCart)
   const dispach = useAppDispatch()
   

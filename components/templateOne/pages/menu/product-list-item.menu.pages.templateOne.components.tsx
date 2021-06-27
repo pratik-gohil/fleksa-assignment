@@ -29,7 +29,6 @@ const ListItem = styled.li<IPropsListItem>`
   overflow: hidden;
   margin: -2px -15px;
   transition-duration: 500ms;
-
   @media (min-width: ${BREAKPOINTS.sm}px) {
     margin: -2px 0;
     border: ${props => props.isOpen? props.theme.border: "1px solid transparent"};
@@ -162,7 +161,6 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
       })}
     </OptionsContainer>
   </ListItem>
-
 }
 
 export default memo(MenuPageProductListItem, (prevProps, nextProps) => {
