@@ -1,5 +1,6 @@
 import React, { Fragment, FunctionComponent, useState } from "react";
 import styled from "styled-components";
+import { BREAKPOINTS } from "../../../../constants/grid-system-configuration";
 
 import { useAppSelector } from "../../../../redux/hooks.redux";
 import { selectLanguage } from "../../../../redux/slices/configuration.slices.redux";
@@ -16,6 +17,12 @@ const ListItem = styled.li`
 
 const CategoryTitle = styled.h3`
   font-size: 26px;
+  margin: 0;
+  text-align: center;
+  padding: ${props => props.theme.dimen.X4}px 0 ${props => props.theme.dimen.X4}px;
+  @media (min-width: ${BREAKPOINTS.lg}px) {
+    padding: ${props => props.theme.dimen.X4*6}px 0 ${props => props.theme.dimen.X4}px;
+  }
 `
 
 const MenuPageCategoryList: FunctionComponent = ({}) => {

@@ -33,7 +33,8 @@ const store = configureStore({
     ): ({
       orderType: null,
       paymentMethod: "CASH",
-      tip: null
+      tip: null,
+      comment: ""
     })
   },
   middleware: getDefaultMiddleware => {

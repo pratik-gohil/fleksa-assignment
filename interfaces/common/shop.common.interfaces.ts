@@ -8,7 +8,7 @@ export interface IShop {
   id: number
   is_pureveg: null,
   logo: string
-  name: 'Restaurant Nidda',
+  name: string,
   paypal_available: boolean,
   place: string
   social: null,
@@ -18,3 +18,40 @@ export interface IShop {
   website_options: null,
   website_template: string
 }
+
+interface ITimingsOpenClose {
+  close: string
+  open: string
+}
+
+export interface ITimingsDay {
+  available: boolean,
+  delivery: {
+    availability: boolean,
+    timings: Array<ITimingsOpenClose>|undefined
+  },
+  shop: {
+    availability: boolean,
+    timings: Array<ITimingsOpenClose>|undefined
+  },
+  updated_at: string
+}
+
+export interface ITimingsHoliday {
+  dates: Array<string>,
+  delivery: {
+    availability: boolean,
+    timings: Array<ITimingsOpenClose>|undefined
+  },
+  shop: {
+    availability: boolean
+    timings: Array<ITimingsOpenClose>|undefined
+  }
+}
+
+export interface ITimingsMonth {
+  end: number
+  start: number
+}
+
+export type ITimings = Record<string, ITimingsDay|Array<ITimingsHoliday>|ITimingsMonth>

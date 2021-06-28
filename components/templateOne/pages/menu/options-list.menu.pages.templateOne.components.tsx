@@ -50,12 +50,12 @@ export const StyledOptionsListItem = styled.li`
   cursor: pointer;
 `
 
-export const StyledOptionsRadioButton = styled.span<{selected: boolean}>`
+export const StyledOptionsRadioButton = styled.span<{selected: boolean, multiselect: boolean}>`
   width: 20px;
   height: 20px;
   margin-left: 12px;
   display: block;
-  border-radius: 100%;
+  border-radius: ${props => props.multiselect? "4px": "100%"};
   border: ${props => props.theme.border};
   background-color: ${props => props.selected && props.theme.primaryColor};
 `
@@ -103,7 +103,7 @@ const MenuPageOptionsList: FunctionComponent<IPropsMenuPageCategoryListItem> = (
           }))
         }}>
           <StyledOptionsRadioButtonContainer>
-            <StyledOptionsRadioButton selected={index === selectedIndex?.product_index} />
+            <StyledOptionsRadioButton multiselect={false} selected={index === selectedIndex?.product_index} />
             <span style={{ margin: 0, padding: 12 }}>{option.name_json[language]}</span>
           </StyledOptionsRadioButtonContainer>
           {option.price > 0 && <span style={{ margin: 0, padding: 12 }}>+€{option.price}</span>}

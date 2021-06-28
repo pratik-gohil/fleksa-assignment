@@ -35,7 +35,7 @@ const MenuPageMultipleSelector: FunctionComponent<IPropsMenuPageCategoryListItem
           }
         }}>
           <StyledOptionsRadioButtonContainer>
-            <StyledOptionsRadioButton selected={option.id === selectionMultipleId} />
+            <StyledOptionsRadioButton multiselect={false} selected={option.id === selectionMultipleId} />
             <span style={{ margin: 0, padding: 12 }}>{option.name_json[language]}</span>
           </StyledOptionsRadioButtonContainer>
           {option.price > 0 && <span style={{ margin: 0, padding: 12 }}>+€{option.price}</span>}

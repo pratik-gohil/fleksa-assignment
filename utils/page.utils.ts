@@ -3,7 +3,7 @@ import { IConfiguration, updateConfiguration, updateLanguage } from "../redux/sl
 import { COOKIE_BEARER_TOKEN, COOKIE_SELECTED_RESTAURANT_NAME } from "../constants/keys-cookies.constants";
 import { updateBearerToken, updateCustomer } from "../redux/slices/user.slices.redux";
 import PyApiHttpGetIndex from "../http/pyapi/index/get.index.pyapi.http";
-import { updateAddress, updateShop } from "../redux/slices/index.slices.redux";
+import { updateAddress, updateShop, updateTimings } from "../redux/slices/index.slices.redux";
 import NodeApiHttpGetUser from "../http/nodeapi/user/get.user.nodeapi.http";
 
 export async function getServerSidePropsCommon(ctx: any, requiresLogin: boolean) {
@@ -57,6 +57,7 @@ export async function getServerSidePropsCommon(ctx: any, requiresLogin: boolean)
     
     ctx.store.dispatch(updateAddress(responseIndex?.address))
     ctx.store.dispatch(updateShop(responseIndex?.shop))
+    ctx.store.dispatch(updateTimings(responseIndex?.timings))
 
     return {
       bearerToken,

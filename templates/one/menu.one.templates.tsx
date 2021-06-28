@@ -5,7 +5,7 @@ import Cart from "../../components/templateOne/common/cart/cart.common.templateO
 import MenuPageBanner from "../../components/templateOne/pages/menu/banner.menu.pages.templateOne.components";
 import MenuPageCategoryList from "../../components/templateOne/pages/menu/category-list.menu.pages.templateOne.components";
 import MenuPageCategorySidebar from "../../components/templateOne/pages/menu/category-sidebar.menu.pages.templateOne.components";
-import MenuPageOrderTypeManager from "../../components/templateOne/pages/menu/order-type-manager.menu.pages.templateOne.components";
+import OrderTypeManager from "../../components/templateOne/common/orderType/order-type-manager.menu.pages.templateOne.components";
 import { BREAKPOINTS } from "../../constants/grid-system-configuration";
 import { useAppSelector } from "../../redux/hooks.redux";
 import { selectOrderType } from "../../redux/slices/checkout.slices.redux";
@@ -14,6 +14,9 @@ import { selectShowOrderTypeSelect } from "../../redux/slices/menu.slices.redux"
 const SideViewLeft = styled.div`
   position: sticky;
   top: ${props => props.theme.navDesktop.height}px;
+  @media (min-width: ${BREAKPOINTS.lg}px) {
+    margin-top: ${props => props.theme.dimen.X4*5}px;
+  }
 `
 
 const SideViewRight = styled(SideViewLeft)`
@@ -46,7 +49,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
         </Col>
       </Row>
     </Container>
-    {(showSelectOrderType || orderType === null) && <MenuPageOrderTypeManager />}
+    {(showSelectOrderType || orderType === null) && <OrderTypeManager key="key-ajkndalkwdmalkwmdlkw" />}
   </>
 }
 

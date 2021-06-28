@@ -1,3 +1,4 @@
+import moment from "moment";
 import { useRouter } from "next/dist/client/router";
 import React, { FunctionComponent, useEffect } from "react";
 import { useState } from "react";
@@ -8,7 +9,7 @@ import NodeApiHttpPostOrder from "../../../../http/nodeapi/order/post.order.node
 import { IMakeOrderProducts } from "../../../../interfaces/http/nodeapi/order/post.order.nodeapi.http";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
 import { selectCart } from "../../../../redux/slices/cart.slices.redux";
-import { selectPaymentMethod, updatePaymentMethod, ICheckoutPaymentMethods, selectTip } from "../../../../redux/slices/checkout.slices.redux";
+import { selectPaymentMethod, updatePaymentMethod, ICheckoutPaymentMethods, selectTip, selectComment, selectOrderType, ICheckoutOrderTypes, selectWantAt } from "../../../../redux/slices/checkout.slices.redux";
 import { selectConfiguration } from "../../../../redux/slices/configuration.slices.redux";
 import { selectShop } from "../../../../redux/slices/index.slices.redux";
 import { selectBearerToken, selectCustomer } from "../../../../redux/slices/user.slices.redux";
@@ -72,9 +73,12 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   const [ orderButtonLoading, setOrderButtonLoading ] = useState(false)
   const [ orderCanBePlaced, setOrderCanBePlaced ] = useState(false)
   const paymentMethodData = useAppSelector(selectPaymentMethod)
+  const configuration = useAppSelector(selectConfiguration)
   const bearerToken = useAppSelector(selectBearerToken)
   const customerData = useAppSelector(selectCustomer)
-  const configuration = useAppSelector(selectConfiguration)
+  const orderType = useAppSelector(selectOrderType)
+  const wantAtData = useAppSelector(selectWantAt)
+  const comment = useAppSelector(selectComment)
   const shopData = useAppSelector(selectShop)
   const cartData = useAppSelector(selectCart)
   const tipData = useAppSelector(selectTip)
@@ -110,16 +114,16 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
           email: customerData.email as any,
           phone: customerData.phone as any,
           country_code: customerData.country_code as any,
-          is_delivery: false,
-          customer_address_id: undefined,
-          want_at: new Date().toString(),
+          is_delivery: orderType === "DELIVERY",
+          customer_address_id: undefined, ///////////////////////////////////////
+          want_at: moment(`${wantAtData?.date.value as string} ${wantAtData?.time.value as string}`).toString(),
           products,
           payment_method: paymentMethodData,
           tip: tipData? tipData: undefined,
           discount_token: "",
           coupon_token: "",
-          description: "",
-          order_type: "PICKUP"
+          description: comment,
+          order_type: orderType as ICheckoutOrderTypes,
         }
       })
       console.log(response)

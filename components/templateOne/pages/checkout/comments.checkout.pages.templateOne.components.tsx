@@ -1,8 +1,13 @@
 import React, { FunctionComponent } from "react";
+import { useState } from "react";
 import { Row, Col } from "react-grid-system";
 
 import styled from "styled-components";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
+import { selectComment, updateComment } from "../../../../redux/slices/checkout.slices.redux";
 import { StyledCheckoutCard, StyledCheckoutTitle } from "./customer-info.checkout.pages.templateOne.components";
+import EditButton from "./edit-button.checkout.pages.templateOne.components";
+import EditContainer from "./edit-container.checkout.pages.templateOne.components";
 
 export const StyledCheckoutTextarea = styled.textarea`
   width: 100%;
@@ -15,11 +20,18 @@ export const StyledCheckoutTextarea = styled.textarea`
 `
 
 const CheckoutPageComments: FunctionComponent = ({}) => {
+  const [ editing, setEditing ] = useState(false)
+  const comment = useAppSelector(selectComment)
+  const dispach = useAppDispatch()
+
   return <StyledCheckoutCard>
-    <StyledCheckoutTitle>COMMENTS</StyledCheckoutTitle>
+    <EditContainer>
+      <StyledCheckoutTitle>COMMENTS</StyledCheckoutTitle>
+      <EditButton onClick={() => setEditing(!editing)} />
+    </EditContainer>
     <Row>
       <Col xs={12}>
-        <StyledCheckoutTextarea />
+        {editing? <StyledCheckoutTextarea value={comment} onChange={e => dispach(updateComment(e.target.value))} />: <p>{comment}</p>}
       </Col>
     </Row>
   </StyledCheckoutCard>

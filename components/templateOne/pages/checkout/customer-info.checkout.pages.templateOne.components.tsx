@@ -1,9 +1,11 @@
 import React, { FunctionComponent } from "react";
-import { Row, Col } from "react-grid-system";
+import { useState } from "react";
 
 import styled from "styled-components";
-import { useAppSelector } from "../../../../redux/hooks.redux";
-import { selectCustomer } from "../../../../redux/slices/user.slices.redux";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
+import { selectCustomer, updateCustomerEmail, updateCustomerName } from "../../../../redux/slices/user.slices.redux";
+import EditButton from "./edit-button.checkout.pages.templateOne.components";
+import EditContainer from "./edit-container.checkout.pages.templateOne.components";
 
 
 export const StyledCheckoutCard = styled.div`
@@ -21,41 +23,65 @@ export const StyledCheckoutTitle = styled.h3`
 `
 
 export const StyledCheckoutInput = styled.input`
+  flex: 2;
   width: 100%;
   border: ${props => props.theme.border};
   border-radius: ${props => props.theme.borderRadius}px;
   padding: ${props => props.theme.dimen.X4}px;
 `
 
+export const StyledCheckoutText = styled.p`
+  flex: 2;
+  width: 100%;
+  padding: ${props => props.theme.dimen.X4}px 0;
+  margin: 0;
+`
+
+const Text = styled.p`
+  flex: 1;
+`
+
 const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
   const userData = useAppSelector(selectCustomer)
+  const [ editableName, setEditableName ] = useState(false)
+  const [ editableEmail, setEditableEmail ] = useState(false)
+  const dispach = useAppDispatch()
 
   return <StyledCheckoutCard>
     <StyledCheckoutTitle>How can we reach you?</StyledCheckoutTitle>
-    <Row>
-      <Col xs={6}>
-        <p>Name</p>
-      </Col>
-      <Col xs={6}>
-        <StyledCheckoutInput type="text" placeholder="Name" value={userData.name} />
-      </Col>
-    </Row>
-    <Row>
-      <Col xs={6}>
-        <p>Email</p>
-      </Col>
-      <Col xs={6}>
-        <StyledCheckoutInput type="text" placeholder="Email" value={userData.email || ""} />
-      </Col>
-    </Row>
-    <Row>
-      <Col xs={6}>
-        <p>Phone</p>
-      </Col>
-      <Col xs={6}>
-        <StyledCheckoutInput type="text" placeholder="Phone" value={userData.phone || ""} />
-      </Col>
-    </Row>
+    <EditContainer>
+      <Text>Name</Text>
+      {editableName || !userData.name? (
+        <StyledCheckoutInput
+          type="text"
+          placeholder="Name"
+          value={userData.name}
+          onChange={e => dispach(updateCustomerName(e.target.value))}
+        />
+      ): (
+        <StyledCheckoutText>{userData.name}</StyledCheckoutText>
+      )}
+      <EditButton onClick={() => setEditableName(!editableName)} />
+    </EditContainer>
+    <EditContainer>
+      <Text>Email</Text>
+      {editableEmail || !userData.email? (
+        <StyledCheckoutInput
+          type="text"
+          placeholder="Email"
+          value={userData.email || ""}
+          onChange={e => dispach(updateCustomerEmail(e.target.value))}
+        />
+      ): (
+        <StyledCheckoutText>{userData.email}</StyledCheckoutText>
+      )}
+      <EditButton onClick={() => setEditableEmail(!editableEmail)} />
+    </EditContainer>
+    <EditContainer>
+      <Text>Phone</Text>
+      <StyledCheckoutText>+{userData.country_code} {userData.phone}</StyledCheckoutText>
+      <EditButton disabled={true} />
+    </EditContainer>
   </StyledCheckoutCard>
 }
 

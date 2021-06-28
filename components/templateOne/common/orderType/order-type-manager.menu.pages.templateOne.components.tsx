@@ -98,7 +98,7 @@ const SelectedTick = styled.div`
   }
 `
 
-const MenuPageOrderTypeManager: FunctionComponent = () => {
+const OrderTypeManager: FunctionComponent = () => {
   const orderType = useAppSelector(selectOrderType)
   const dispach = useAppDispatch()
 
@@ -159,4 +159,4 @@ const MenuPageOrderTypeManager: FunctionComponent = () => {
   </Wrapper>
 }
 
-export default MenuPageOrderTypeManager
+export default OrderTypeManager

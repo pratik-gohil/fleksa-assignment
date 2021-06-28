@@ -47,7 +47,7 @@ const MenuPageSides: FunctionComponent<IPropsMenuPageCategoryListItem> = ({ prod
           }
         }}>
           <StyledOptionsRadioButtonContainer>
-            <StyledOptionsRadioButton selected={selectedSides? selectedSides[option.id] !== undefined: false} />
+            <StyledOptionsRadioButton multiselect={true} selected={selectedSides? selectedSides[option.id] !== undefined: false} />
             <span style={{ margin: 0, padding: 12 }}>{option.name_json[language]}</span>
           </StyledOptionsRadioButtonContainer>
           {option.price > 0 && <span style={{ margin: 0, padding: 12 }}>+€{option.price}</span>}

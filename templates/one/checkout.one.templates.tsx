@@ -7,6 +7,7 @@ import CheckoutPageCart from "../../components/templateOne/pages/checkout/cart.c
 import CheckoutPageComments from "../../components/templateOne/pages/checkout/comments.checkout.pages.templateOne.components";
 import CheckoutPageCustomerInfo from "../../components/templateOne/pages/checkout/customer-info.checkout.pages.templateOne.components";
 import CheckoutPagePayment from "../../components/templateOne/pages/checkout/payment.checkout.pages.templateOne.components";
+import CheckoutPageSummary from "../../components/templateOne/pages/checkout/summary.checkout.pages.templateOne.components";
 import CheckoutPageTip from "../../components/templateOne/pages/checkout/tip.checkout.pahes.templateOne.components";
 import { BREAKPOINTS } from "../../constants/grid-system-configuration";
 
@@ -40,6 +41,7 @@ const CheckoutPageTemplateOne: FunctionComponent = ({}) => {
           <CartContainerSmall>
             <CheckoutPageCart />
           </CartContainerSmall>
+          <CheckoutPageSummary />
           <CheckoutPageComments />
           <CheckoutPageTip />
           <CheckoutPagePayment />
