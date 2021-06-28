@@ -22,7 +22,7 @@ const Wrapper = styled.div<{ showCart: boolean }>`
   flex: 1;
   background: #fff;
   display: ${props => props.showCart? "flex": "none"};
-  z-index: 9999;
+  z-index: 1;
   padding: 0 ${props => props.theme.dimen.X4}px;
   max-height: 100vh;
   overflow: auto;
