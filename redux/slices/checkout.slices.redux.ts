@@ -11,14 +11,12 @@ export interface ICheckoutSliceState {
   orderType: ICheckoutOrderTypes|null
   paymentMethod: ICheckoutPaymentMethods
   tip: number|null
-  amountToPay: number|null
 }
 
 const initialState: ICheckoutSliceState = {
   orderType: null,
   paymentMethod: "CASH",
   tip: null,
-  amountToPay: null
 }
 
 export const CheckoutSlice = createSlice({
@@ -34,12 +32,17 @@ export const CheckoutSlice = createSlice({
     updateOrderType(state, action) {
       state.orderType = action.payload
     },
+    updateClearCheckout(state) {
+      state.orderType = null
+      state.paymentMethod = "CASH"
+      state.tip = null
+    },
   },
   extraReducers: {
-    [HYDRATE]: (state, action) => {
+    [HYDRATE]: (state) => {
       return {
         ...state,
-        ...(action.payload)[SLICE_NAME],
+        // ...(action.payload)[SLICE_NAME],
       };
     },
   }
@@ -48,6 +51,8 @@ export const CheckoutSlice = createSlice({
 export const {
   updatePaymentMethod,
   updateTip,
+  updateOrderType,
+  updateClearCheckout,
 } = CheckoutSlice.actions
 
 export const selectPaymentMethod = (state: RootState) => state.checkout.paymentMethod

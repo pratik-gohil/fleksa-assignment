@@ -9,6 +9,7 @@ import { FunctionComponent } from "react";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useAppDispatch } from "../redux/hooks.redux";
 import { updateClearCart } from "../redux/slices/cart.slices.redux";
+import { updateClearCheckout } from "../redux/slices/checkout.slices.redux";
 
 const Template: FunctionComponent = () => <></>
 
@@ -34,6 +35,7 @@ function Logout({ templateNumber }: any) {
   useEffect(() => {
     if (typeof window !== "undefined") {
       dispach(updateClearCart())
+      dispach(updateClearCheckout())
       setTimeout(() => {
         router.push("/")
       }, 300);

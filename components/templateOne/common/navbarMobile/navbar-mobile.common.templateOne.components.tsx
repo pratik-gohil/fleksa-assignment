@@ -89,8 +89,6 @@ const NavbarMobile: FunctionComponent = ({ }) => {
   const toggleCart = () => dispach(updateShowCart(!showCart))
   const toggleOptions = () => setShowOptions(!showOptions) 
 
-  console.error("router.pathname", router.pathname)
-
   return <WrapperHeader>
     <List>
       {[{

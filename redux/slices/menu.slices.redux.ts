@@ -12,6 +12,7 @@ export interface IMenuSliceState {
   sides: Record<number, IMenuSide>
   parts: Record<number, IMenuPart>
   searchQuery: string
+  showOrderTypeSelect: boolean
 }
 
 const initialState: IMenuSliceState = {
@@ -19,6 +20,7 @@ const initialState: IMenuSliceState = {
   sides: {},
   parts: {},
   searchQuery: "",
+  showOrderTypeSelect: false,
 }
 
 export const MenuSlice = createSlice({
@@ -52,6 +54,9 @@ export const MenuSlice = createSlice({
     updateSearchQuery(state, action) {
       state.searchQuery = action.payload
     },
+    updateShowOrderTypeSelect(state, action) {
+      state.showOrderTypeSelect = action.payload
+    },
   },
   extraReducers: {
     [HYDRATE]: (state, action) => {
@@ -68,6 +73,7 @@ export const {
   updateParts,
   updateSides,
   updateSearchQuery,
+  updateShowOrderTypeSelect
 } = MenuSlice.actions
 
 export const selectCategoriesSearch = (state: RootState, searchQuery: string) => {
@@ -102,3 +108,4 @@ export const selectParts = (state: RootState, idList: Array<number>) => {
 export const selectSide = (state: RootState, id: number) => state.menu.sides[id]
 export const selectSidesArray = (state: RootState, idList: Array<number>) => idList.map(i => state.menu.sides[i]).filter(i => i)
 export const selectSearchQuery = (state: RootState) => state.menu.searchQuery
+export const selectShowOrderTypeSelect = (state: RootState) => state.menu.showOrderTypeSelect
