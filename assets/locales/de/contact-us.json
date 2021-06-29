@@ -1,0 +1,14 @@
+{
+  "@title": "Schreiben Sie uns",
+  "@name": "Name",
+  "@email": "E-Mail",
+  "@subject": "Betreff",
+  "@message": "Ihre Nachricht",
+  "@MONDAY": "Montag",
+  "@TUESDAY": "Dienstag",
+  "@WEDNESDAY": "Mittwoch",
+  "@THURSDAY": "Donnerstag",
+  "@FRIDAY": "Freitag",
+  "@SATURDAY": "Samstag",
+  "@SUNDAY": "Sonntag"
+}

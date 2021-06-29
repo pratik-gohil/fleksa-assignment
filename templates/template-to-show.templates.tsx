@@ -21,11 +21,11 @@ const TemplateToShow: FunctionComponent<IPropsTemplateToShow> = ({ templateList,
 
   const shop = useAppSelector(selectShop)
 
-  const ViewTemaplte = templateList[templateNumber]
+  const ViewTemplate = templateList[templateNumber]
   return <ThemeProvider theme={themes[isNaN(Number(shop?.website_template))? 1: Number(shop?.website_template)]}>
     <GlobalStyle />
     <PageContainer {...pageContainer}>
-      <ViewTemaplte />
+      <ViewTemplate />
     </PageContainer>
   </ThemeProvider>
 }

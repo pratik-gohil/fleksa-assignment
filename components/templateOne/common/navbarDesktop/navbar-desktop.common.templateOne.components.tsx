@@ -62,7 +62,7 @@ const NavbarDesktop: FunctionComponent = ({ }) => {
               <NavLink title={t("@menu")} path="/menu" />
               <NavLink title={t("@reservation")} path="/reservation" />
               <NavLink title={t("@gallery")} path="/gallery" />
-              <NavLink title={t("@contact")} path="/contact" />
+              <NavLink title={t("@contact")} path="/contact-us" />
               {isLoggedIn? <NavUserProfile />: <NavLink title={t("@login")} path="/login" />}
               <NavLanguageChange />
             </NavbarList>
