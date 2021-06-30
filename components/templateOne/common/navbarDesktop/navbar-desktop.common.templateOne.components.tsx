@@ -1,76 +1,82 @@
-import React, { FunctionComponent } from "react";
-import styled from "styled-components";
-import { useAppSelector } from "../../../../redux/hooks.redux";
-import { selectShop } from "../../../../redux/slices/index.slices.redux";
-import { Col, Container, Row } from "react-grid-system";
-import NavLink from "./nav-link.common.templateOne.components";
-import { useTranslation } from "next-i18next";
-import NavLanguageChange from "./nav-language-change.templateOne.components";
-import { BREAKPOINTS } from "../../../../constants/grid-system-configuration";
-import { selectIsUserLoggedIn } from "../../../../redux/slices/user.slices.redux";
-import NavUserProfile from "./nav-profile-image.templateOne.components";
+import React, { FunctionComponent } from 'react';
+import styled from 'styled-components';
+import { useAppSelector } from '../../../../redux/hooks.redux';
+import { selectShop } from '../../../../redux/slices/index.slices.redux';
+import { Col, Container, Row } from 'react-grid-system';
+import NavLink from './nav-link.common.templateOne.components';
+import { useTranslation } from 'next-i18next';
+import NavLanguageChange from './nav-language-change.templateOne.components';
+import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
+import { selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
+import NavUserProfile from './nav-profile-image.templateOne.components';
 
 const WrapperHeader = styled.header`
   display: none;
-  height: ${props => props.theme.navDesktop.height}px;
-  background: ${props => props.theme.navDesktop.backgroundColor};
+  height: ${(props) => props.theme.navDesktop.height}px;
+  background: ${(props) => props.theme.navDesktop.backgroundColor};
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  border-bottom: ${props => props.theme.border};
+  border-bottom: ${(props) => props.theme.border};
   z-index: 10;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+
   @media (min-width: ${BREAKPOINTS.lg}px) {
     display: block;
   }
-`
+`;
 
 const Logo = styled.img`
-  padding: ${props => props.theme.dimen.X2}px 0;
-  height: ${props => props.theme.navDesktop.height}px;
-`
+  padding: ${(props) => props.theme.dimen.X2}px 0;
+  height: ${(props) => props.theme.navDesktop.height}px;
+`;
 
 const Navbar = styled.nav`
   display: flex;
-  align-items: center;
+  /* align-items: center; */
   justify-content: flex-end;
-  height: ${props => props.theme.navDesktop.height}px;
-`
+  height: ${(props) => props.theme.navDesktop.height}px;
+`;
 
 const NavbarList = styled.ul`
   display: flex;
   list-style: none;
   align-items: center;
+  justify-content: space-between;
   padding: 0;
   margin: 0;
-`
+`;
 
-const NavbarDesktop: FunctionComponent = ({ }) => {
-  const { t } = useTranslation('header')  
-  const shopData = useAppSelector(selectShop)
-  const isLoggedIn = useAppSelector(selectIsUserLoggedIn)
+const NavbarDesktop: FunctionComponent = ({}) => {
+  const { t } = useTranslation('header');
+  const shopData = useAppSelector(selectShop);
+  const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
 
-  return <WrapperHeader>
-    <Container>
-      <Row>
-        <Col>
-          <a href="/">{shopData?.logo && <Logo src={shopData?.logo} loading="lazy" />}</a>
-        </Col>
-        <Col>
-          <Navbar>
-            <NavbarList>
-              <NavLink title={t("@menu")} path="/menu" />
-              <NavLink title={t("@reservation")} path="/reservation" />
-              <NavLink title={t("@gallery")} path="/gallery" />
-              <NavLink title={t("@contact")} path="/contact-us" />
-              {isLoggedIn? <NavUserProfile />: <NavLink title={t("@login")} path="/login" />}
-              <NavLanguageChange />
-            </NavbarList>
-          </Navbar>
-        </Col>
-      </Row>
-    </Container>
-  </WrapperHeader>
-}
+  return (
+    <WrapperHeader>
+      <Container fluid>
+        <Row>
+          <Col md={4}>
+            <a href="/">{shopData?.logo && <Logo src={shopData?.logo} loading="lazy" />}</a>
+          </Col>
 
-export default NavbarDesktop
+          <Col md={8}>
+            <Navbar>
+              <NavbarList>
+                <NavLink title={t('@menu')} path="/menu" />
+                <NavLink title={t('@reservation')} path="/reservation" />
+                <NavLink title={t('@gallery')} path="/gallery" />
+                <NavLink title={t('@contact')} path="/contact-us" />
+                {isLoggedIn ? <NavUserProfile /> : <NavLink title={t('@login')} path="/login" />}
+                <NavLanguageChange />
+              </NavbarList>
+            </Navbar>
+          </Col>
+        </Row>
+      </Container>
+    </WrapperHeader>
+  );
+};
+
+export default NavbarDesktop;
