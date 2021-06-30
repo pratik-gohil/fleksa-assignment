@@ -20,6 +20,7 @@ const WrapperHeader = styled.header`
   right: 0;
   border-bottom: ${(props) => props.theme.border};
   z-index: 10;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 
   @media (min-width: ${BREAKPOINTS.lg}px) {
     display: block;
@@ -59,6 +60,7 @@ const NavbarDesktop: FunctionComponent = ({}) => {
           <Col md={4}>
             <a href="/">{shopData?.logo && <Logo src={shopData?.logo} loading="lazy" />}</a>
           </Col>
+
           <Col md={8}>
             <Navbar>
               <NavbarList>
