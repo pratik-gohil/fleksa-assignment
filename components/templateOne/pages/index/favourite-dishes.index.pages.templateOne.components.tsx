@@ -146,7 +146,7 @@ const IndexPageFavouriteDishes: FunctionComponent = ({}) => {
           <Col>
             <Title>{t('@favourite-dishes-title')}</Title>
 
-            <HorizontalList>
+            <HorizontalList childCount={productsData.length}>
               {productsData.map((product) => {
                 return (
                   <HorizontalListItem key={product.id} responsive={responsive}>

@@ -1,8 +1,13 @@
-import { createRef, FunctionComponent } from 'react';
+import { createRef } from 'react';
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import SvgNext from '../../../../public/assets/svg/next.svg';
 import SvgPrevious from '../../../../public/assets/svg/previous.svg';
+
+type HorizontalListProps = {
+  children?: JSX.Element[];
+  childCount: number;
+};
 
 const ListWrapper = styled.div`
   display: flex;
@@ -55,7 +60,7 @@ const RightButton = styled(LeftButton)`
   right: -34px;
 `;
 
-const HorizontalList: FunctionComponent = ({ children }) => {
+const HorizontalList = ({ children, childCount }: HorizontalListProps) => {
   const refHorizontalDrawer = createRef<HTMLUListElement>();
   let currentScrollPosition = 0;
   let scrollDistance = 400;
@@ -79,12 +84,16 @@ const HorizontalList: FunctionComponent = ({ children }) => {
   return (
     <ListWrapper>
       <ListItemsContainer ref={refHorizontalDrawer}>{children}</ListItemsContainer>
-      <LeftButton onClick={scrollLeft}>
-        <SvgPrevious />
-      </LeftButton>
-      <RightButton onClick={scrollRight}>
-        <SvgNext />
-      </RightButton>
+      {childCount >= 3 && (
+        <>
+          <LeftButton onClick={scrollLeft}>
+            <SvgPrevious />
+          </LeftButton>
+          <RightButton onClick={scrollRight}>
+            <SvgNext />
+          </RightButton>
+        </>
+      )}
     </ListWrapper>
   );
 };

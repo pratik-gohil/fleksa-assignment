@@ -76,7 +76,7 @@ const IndexPageCustomerReviews: FunctionComponent = ({}) => {
         <Row>
           <Col>
             <Title>{t('@customer-review-title')}</Title>
-            <HorizontalList>
+            <HorizontalList childCount={reviewsData.length}>
               {reviewsData.map((review, index) => {
                 const stars: Array<ReactNode> = [];
                 for (let index = 1; index <= 5; index++) {
