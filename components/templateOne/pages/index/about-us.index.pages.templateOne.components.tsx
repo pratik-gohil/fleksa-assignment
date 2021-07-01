@@ -107,21 +107,37 @@ const IndexPageAboutUs: FunctionComponent = ({}) => {
           <Col sm={12} lg={6}>
             <ImagesContainer>
               <Row>
-                <Col xs={12} style={{ paddingBottom: 2 }}>
-                  <ImageContiner>{imagesData[0] && <Image src={imagesData[0]} loading="lazy" layout="fill" objectFit="cover" />}</ImageContiner>
-                </Col>
-                <Col xs={6} style={{ paddingRight: 1 }}>
-                  <ImageContiner>{imagesData[1] && <Image src={imagesData[1]} loading="lazy" layout="fill" objectFit="cover" />}</ImageContiner>
-                </Col>
-                <Col xs={6} style={{ paddingLeft: 1 }}>
-                  <ImageContiner>{imagesData[2] && <Image src={imagesData[2]} loading="lazy" layout="fill" objectFit="cover" />}</ImageContiner>
-                </Col>
+                {(imagesData.length === 1 || imagesData.length >= 2) && (
+                  <Col xs={12} style={{ paddingBottom: 2 }}>
+                    <ImageContiner
+                      style={{
+                        height: imagesData.length === 1 ? '400px' : '200px',
+                      }}
+                    >
+                      {imagesData[0] && <Image src={imagesData[0]} loading="lazy" layout="fill" objectFit="cover" />}
+                    </ImageContiner>
+                  </Col>
+                )}
+
+                {(imagesData.length === 2 || imagesData.length >= 3) && (
+                  <Col xs={imagesData.length === 2 ? 12 : 6} style={{ paddingRight: 1 }}>
+                    <ImageContiner>{imagesData[1] && <Image src={imagesData[1]} loading="lazy" layout="fill" objectFit="cover" />}</ImageContiner>
+                  </Col>
+                )}
+
+                {imagesData.length >= 3 && (
+                  <Col xs={6} style={{ paddingLeft: 1 }}>
+                    <ImageContiner>{imagesData[2] && <Image src={imagesData[2]} loading="lazy" layout="fill" objectFit="cover" />}</ImageContiner>
+                  </Col>
+                )}
               </Row>
+
               <a href="/gallery">
                 <ImagesContainerHover>
                   <ImagesContainerHoverTextMore>
                     More <SvgRightArrow />
                   </ImagesContainerHoverTextMore>
+
                   <p style={{ marginBottom: 14 }}>Gallery</p>
                 </ImagesContainerHover>
               </a>

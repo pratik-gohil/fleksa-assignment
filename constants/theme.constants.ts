@@ -51,7 +51,7 @@ export const THEME_ONE: ITheme = {
   textDarkActiveColor: '#000',
   borderRadius: 6,
   navDesktop: {
-    height: 80,
+    height: 75,
     backgroundColor: '#fff',
   },
   navMobile: {
