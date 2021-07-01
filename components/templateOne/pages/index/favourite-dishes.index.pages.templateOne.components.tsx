@@ -127,7 +127,7 @@ const IndexPageFavouriteDishes: FunctionComponent = ({}) => {
   const language = useAppSelector(selectLanguage);
   const prductsData = useAppSelector(selectProducts);
 
-  return (
+  return !!prductsData.length ? (
     <WrapperSection>
       <Container>
         <Row>
@@ -164,7 +164,7 @@ const IndexPageFavouriteDishes: FunctionComponent = ({}) => {
         </Row>
       </Container>
     </WrapperSection>
-  );
+  ) : null;
 };
 
 export default IndexPageFavouriteDishes;
