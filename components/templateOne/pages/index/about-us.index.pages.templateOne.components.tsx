@@ -117,11 +117,13 @@ const IndexPageAboutUs: FunctionComponent = ({}) => {
                   <ImageContiner>{imagesData[2] && <Image src={imagesData[2]} loading="lazy" layout="fill" objectFit="cover" />}</ImageContiner>
                 </Col>
               </Row>
+
               <a href="/gallery">
                 <ImagesContainerHover>
                   <ImagesContainerHoverTextMore>
                     More <SvgRightArrow />
                   </ImagesContainerHoverTextMore>
+
                   <p style={{ marginBottom: 14 }}>Gallery</p>
                 </ImagesContainerHover>
               </a>

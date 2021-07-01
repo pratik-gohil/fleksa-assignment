@@ -12,7 +12,6 @@ import { selectLanguage } from '../../../../redux/slices/configuration.slices.re
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 
 const WrapperSection = styled.section`
-  border-bottom: ${(props) => props.theme.border};
   padding: ${(props) => props.theme.dimen.X4 * 4}px 0;
 `;
 
@@ -29,7 +28,7 @@ const Card = styled.div`
   border-radius: ${(props) => props.theme.borderRadius}px;
   overflow: hidden;
   margin: 0 8px;
-  height: 100%;
+  height: 98%;
 
   &:hover {
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
@@ -77,6 +76,7 @@ const InfoContainerBottom = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+
   p {
     font-weight: 700;
     margin: ${(props) => props.theme.dimen.X4}px 0;
