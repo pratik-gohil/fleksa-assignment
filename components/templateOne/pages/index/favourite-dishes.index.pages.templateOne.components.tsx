@@ -30,14 +30,27 @@ const Card = styled.div`
   overflow: hidden;
   margin: 0 8px;
   height: 100%;
+
+  &:hover {
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  }
 `;
 
 const ImageContainer = styled.div`
   width: 100%;
   height: 200px;
   position: relative;
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
+  transition: transform 0.1s linear;
+
   @media (min-width: ${BREAKPOINTS.lg}px) {
     height: 240;
+  }
+
+  &:hover {
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+
+    transform: scale(1.09);
   }
 `;
 
@@ -85,9 +98,8 @@ const ItemToProduct = styled.a`
     display: flex;
     align-items: center;
     background-color: ${(props) => props.theme.primaryColor};
-    border-radius: ${(props) => props.theme.borderRadius}px;
     padding: ${(props) => props.theme.dimen.X2}px ${(props) => props.theme.dimen.X4}px;
-    border: ${(props) => props.theme.border};
+
     span {
       font-weight: 900;
       font-size: 22px;
@@ -125,9 +137,9 @@ const responsive: IResponsive = {
 const IndexPageFavouriteDishes: FunctionComponent = ({}) => {
   const { t } = useTranslation('page-index');
   const language = useAppSelector(selectLanguage);
-  const prductsData = useAppSelector(selectProducts);
+  const productsData = useAppSelector(selectProducts);
 
-  return !!prductsData.length ? (
+  return !!productsData.length ? (
     <WrapperSection>
       <Container>
         <Row>
@@ -135,11 +147,12 @@ const IndexPageFavouriteDishes: FunctionComponent = ({}) => {
             <Title>{t('@favourite-dishes-title')}</Title>
 
             <HorizontalList>
-              {prductsData.map((product) => {
+              {productsData.map((product) => {
                 return (
                   <HorizontalListItem key={product.id} responsive={responsive}>
                     <Card>
                       <ImageContainer>{product.image && <Image src={product.image} layout="fill" loading="lazy" objectFit="cover" />}</ImageContainer>
+
                       <InfoContainer>
                         <InfoContainerTop>
                           <ItemTitle>{product.name_json[language]}</ItemTitle>
@@ -148,6 +161,7 @@ const IndexPageFavouriteDishes: FunctionComponent = ({}) => {
 
                         <InfoContainerBottom>
                           <ItemPrice>€{product.price}</ItemPrice>
+
                           <ItemToProduct href="/menu">
                             <p>
                               {t('@to-product')} <span>+</span>
