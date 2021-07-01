@@ -4,12 +4,20 @@ import styled from 'styled-components';
 export interface IPropsNavLink {
   title: string;
   path: string;
+  isActive: boolean;
 }
 
-const Wrapper = styled.li`
+const Wrapper = styled.li<{
+  isActive: boolean;
+}>`
   padding: 4px 4px;
   border: 1px solid transparent;
   transition: all 0.1s ease-in;
+  border: ${(p) => (p.isActive ? '3px solid #ffd100' : 'none')};
+  backdrop-filter: ${(p) => (p.isActive ? 'blur(10px)' : 'none')};
+  box-shadow: ${(p) => (p.isActive ? '-5px -5px 0px -2px #ffd100' : 'none')};
+  -webkit-box-shadow: ${(p) => (p.isActive ? '-5px -5px 0px -2px #ffd100' : 'none')};
+  -moz-box-shadow: ${(p) => (p.isActive ? '-5px -5px 0px -2px #ffd100' : 'none')};
 
   &:hover {
     border: 3px solid #ffd100;
@@ -33,10 +41,10 @@ const CustomLink = styled.a`
   min-width: 100px;
 `;
 
-const NavLink: FunctionComponent<IPropsNavLink> = ({ title, path }) => {
+const NavLink: FunctionComponent<IPropsNavLink> = ({ title, path, isActive }) => {
   return (
     <CustomLink href={path}>
-      <Wrapper>
+      <Wrapper isActive={isActive}>
         <Title>{title}</Title>
       </Wrapper>
     </CustomLink>

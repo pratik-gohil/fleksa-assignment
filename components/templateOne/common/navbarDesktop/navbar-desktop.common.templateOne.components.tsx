@@ -9,6 +9,7 @@ import NavLanguageChange from './nav-language-change.templateOne.components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
 import NavUserProfile from './nav-profile-image.templateOne.components';
+import { useRouter } from 'next/router';
 
 const WrapperHeader = styled.header`
   display: none;
@@ -35,7 +36,6 @@ const Logo = styled.img`
 
 const Navbar = styled.nav`
   display: flex;
-  /* align-items: center; */
   justify-content: flex-end;
   height: ${(props) => props.theme.navDesktop.height}px;
 `;
@@ -53,6 +53,7 @@ const NavbarDesktop: FunctionComponent = ({}) => {
   const { t } = useTranslation('header');
   const shopData = useAppSelector(selectShop);
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
+  const router = useRouter();
 
   return (
     <WrapperHeader>
@@ -65,11 +66,11 @@ const NavbarDesktop: FunctionComponent = ({}) => {
           <Col md={8}>
             <Navbar>
               <NavbarList>
-                <NavLink title={t('@menu')} path="/menu" />
-                <NavLink title={t('@reservation')} path="/reservation" />
-                <NavLink title={t('@gallery')} path="/gallery" />
-                <NavLink title={t('@contact')} path="/contact-us" />
-                {isLoggedIn ? <NavUserProfile /> : <NavLink title={t('@login')} path="/login" />}
+                <NavLink title={t('@menu')} path="/menu" isActive={router.pathname === '/menu'} />
+                <NavLink title={t('@reservation')} path="/reservation" isActive={router.pathname === '/reservation'} />
+                <NavLink title={t('@gallery')} path="/gallery" isActive={router.pathname === '/gallery'} />
+                <NavLink title={t('@contact')} path="/contact-us" isActive={router.pathname === '/contact-us'} />
+                {isLoggedIn ? <NavUserProfile /> : <NavLink title={t('@login')} path="/login" isActive={router.pathname === '/login'} />}
                 <NavLanguageChange />
               </NavbarList>
             </Navbar>
