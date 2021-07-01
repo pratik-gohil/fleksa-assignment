@@ -12,11 +12,11 @@ const Wrapper = styled.li`
   transition: all 0.1s ease-in;
 
   &:hover {
-    border: 3px solid ${(p) => p.theme.primaryColor};
+    border: 3px solid #ffd100;
     backdrop-filter: blur(10px);
-    box-shadow: ${(p) => `-5px -5px 0px -2px ${p.theme.primaryColor}`};
-    -webkit-box-shadow: ${(p) => `-5px -5px 0px -2px ${p.theme.primaryColor}`};
-    -moz-box-shadow: ${(p) => `-5px -5px 0px -2px ${p.theme.primaryColor}`};
+    box-shadow: -5px -5px 0px -2px #ffd100;
+    -webkit-box-shadow: -5px -5px 0px -2px #ffd100;
+    -moz-box-shadow: -5px -5px 0px -2px #ffd100;
   }
 `;
 

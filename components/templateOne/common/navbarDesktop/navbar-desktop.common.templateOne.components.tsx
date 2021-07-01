@@ -28,7 +28,8 @@ const WrapperHeader = styled.header`
 `;
 
 const Logo = styled.img`
-  padding: ${(props) => props.theme.dimen.X2}px 0;
+  padding: 2px 0;
+  margin-left: 1rem;
   height: ${(props) => props.theme.navDesktop.height}px;
 `;
 
