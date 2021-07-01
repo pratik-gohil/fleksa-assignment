@@ -21,7 +21,7 @@ const Title = styled.h2`
 `;
 
 const Card = styled.div`
-  border: ${(props) => props.theme.border};
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
   border-radius: ${(props) => props.theme.borderRadius}px;
   overflow: hidden;
   margin: 0 8px;
@@ -29,8 +29,15 @@ const Card = styled.div`
   display: flex;
   justify-content: space-between;
   flex-direction: column;
+
+  transition: transform 0.4s ease;
+
   p {
     padding: 0 ${(props) => props.theme.dimen.X4}px;
+  }
+
+  &:hover {
+    transform: scale(1.01) translateY(-15px);
   }
 `;
 
@@ -80,6 +87,7 @@ const IndexPageCustomerReviews: FunctionComponent = ({}) => {
                     />,
                   );
                 }
+
                 return (
                   <HorizontalListItem key={index} responsive={responsive}>
                     <Card>
