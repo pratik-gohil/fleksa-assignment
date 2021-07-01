@@ -30,7 +30,7 @@ const ContentContainer = styled.div`
   position: absolute;
   left: 0;
   right: 0;
-  top: 0;
+  top: -7rem;
   bottom: 0;
   background: rgb(0, 0, 0);
   background: linear-gradient(90deg, rgba(0, 0, 0, 0.4962359943977591) 0%, rgba(255, 255, 255, 0) 100%);
@@ -44,11 +44,16 @@ const ContentContainer = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 64px;
+  font-size: 5rem;
   margin: 0;
+  padding: 0;
 `;
 
-const SubTitle = styled.h2``;
+const SubTitle = styled.h2`
+  padding: 0;
+  margin: 0;
+  font-size: 1.8rem;
+`;
 
 const OrderButton = styled.a`
   background-color: ${(props) => props.theme.primaryColor};
@@ -58,7 +63,7 @@ const OrderButton = styled.a`
   border-radius: ${(props) => props.theme.borderRadius}px;
   border: ${(props) => props.theme.border};
   padding: 12px 24px;
-  margin: 12px 0;
+  margin: 24px 0;
   display: inline-block;
   -webkit-animation: pulsing 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
   -moz-animation: pulsing 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
@@ -76,8 +81,14 @@ const IndexPageHero: FunctionComponent = ({}) => {
   return (
     <WrapperSection>
       <ImageContainer>{shopData?.cover && <Image src={shopData?.cover} layout="fill" loading="eager" objectFit="cover" />}</ImageContainer>
+
       <ContentContainer>
-        <Container>
+        <Container
+          fluid
+          style={{
+            paddingLeft: '4rem',
+          }}
+        >
           <Row>
             <Col>
               <Title>{shopData?.name}</Title>
