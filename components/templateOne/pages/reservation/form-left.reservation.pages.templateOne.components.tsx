@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import PhoneInput from 'react-phone-input-2';
 import styled, { css } from 'styled-components';
 
 const Wrapper = styled.div``;
@@ -28,6 +29,8 @@ const BaseInputStyle = css`
 const Input = styled.input`
   ${BaseInputStyle}
 
+  transition: border 0.2s linear;
+
   &::placeholder {
     font-weight: 300;
   }
@@ -39,6 +42,12 @@ const Input = styled.input`
     font-family: inherit;
     background-color: white;
   }
+
+  &:hover,
+  &:active,
+  &:focus {
+    border: 1px solid ${(p) => p.theme.textDarkActiveColor};
+  }
 `;
 
 const InputTextBox = styled(InputBox)`
@@ -47,10 +56,10 @@ const InputTextBox = styled(InputBox)`
 
 const Textarea = styled.textarea`
   ${BaseInputStyle}
-  padding: 0;
+  padding: 1rem;
   margin: 0;
   resize: both;
-  min-height: 8ch;
+  min-height: 10ch;
   max-height: 15ch;
 `;
 
@@ -92,6 +101,9 @@ const ReservationButton = styled.button`
 `;
 
 const FormLeftInputs = () => {
+  const [phone, setPhone] = useState('');
+  const [countryCode, setCountryCode] = useState<number>(49);
+
   return (
     <Wrapper>
       <InputBox>
@@ -102,6 +114,24 @@ const FormLeftInputs = () => {
       <InputBox>
         <Label>Email</Label>
         <Input type="email" placeholder="john@gmail.com" />
+      </InputBox>
+
+      <InputBox>
+        <Label>Phone Number</Label>
+
+        <PhoneInput
+          country={'de'}
+          value={phone}
+          enableSearch
+          specialLabel=""
+          onChange={(ph, data) => {
+            if ((data as any).dialCode !== countryCode) {
+              setCountryCode((data as any).dialCode);
+            }
+            setPhone(ph);
+          }}
+          inputStyle={{ width: '100%' }}
+        />
       </InputBox>
 
       <InputTextBox>

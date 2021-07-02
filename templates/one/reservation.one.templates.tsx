@@ -45,10 +45,10 @@ const ReservationTemplateOne: FunctionComponent = ({}) => {
 
               <FormContainer>
                 <Row justify="center">
-                  <Col xl={6}>
+                  <Col xl={6} sm={12}>
                     <FormLeftInputs />
                   </Col>
-                  <Col xl={6}>
+                  <Col xl={6} sm={12}>
                     <FormRightInputs />
                   </Col>
                 </Row>
