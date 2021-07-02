@@ -8,8 +8,10 @@ import styled from 'styled-components';
 import { BREAKPOINTS } from '../../constants/grid-system-configuration';
 
 const ReservationContainer = styled.section`
-  display: flex;
-  width: 100%;
+  /* display: flex; */
+  /* width: 100%; */
+  position: relative;
+  margin-top: 4rem;
 `;
 
 const WidthFix = styled.div`
@@ -23,6 +25,21 @@ const WidthFix = styled.div`
 const FormContainer = styled.div`
   border-top: 2px solid rgba(0, 0, 0, 0.1);
   padding: 1rem 0;
+`;
+
+const CoupleImg = styled.img`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  max-width: 40%;
+
+  @media (min-width: 992px) {
+    max-width: 50%;
+  }
+
+  @media (min-width: 576px) {
+    max-width: 30%;
+  }
 `;
 
 const ReservationTemplateOne: FunctionComponent = ({}) => {
@@ -52,6 +69,8 @@ const ReservationTemplateOne: FunctionComponent = ({}) => {
           </Row>
         </Container>
       </WidthFix>
+
+      <CoupleImg src="/assets/svg/couple.svg" alt="couple" />
     </ReservationContainer>
   );
 };
