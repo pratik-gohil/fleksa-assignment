@@ -102,18 +102,21 @@ const ReservationButton = styled.button`
 
 const FormLeftInputs = () => {
   const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [comment, setComment] = useState('');
   const [countryCode, setCountryCode] = useState<number>(49);
 
   return (
     <Wrapper>
       <InputBox>
         <Label>Name</Label>
-        <Input type="text" placeholder="John Doe" />
+        <Input type="text" placeholder="John Doe" value={name} onChange={(e) => setName(e.target.value)} />
       </InputBox>
 
       <InputBox>
         <Label>Email</Label>
-        <Input type="email" placeholder="john@gmail.com" />
+        <Input type="email" placeholder="john@gmail.com" value={email} onChange={(e) => setEmail(e.target.value)} />
       </InputBox>
 
       <InputBox>
@@ -136,7 +139,7 @@ const FormLeftInputs = () => {
 
       <InputTextBox>
         <Label>Comments</Label>
-        <Textarea />
+        <Textarea value={comment} onChange={(e) => setComment(e.target.value)} />
       </InputTextBox>
 
       <Acknowledgement>
