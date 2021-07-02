@@ -9,7 +9,7 @@ const ReservationContainer = styled.section`
   height: calc(100vh - ${(props) => props.theme.navMobile.height}px);
   display: flex;
   width: 100%;
-  align-items: center;
+
   @media (min-width: ${BREAKPOINTS.lg}px) {
     height: calc(100vh - ${(props) => props.theme.navDesktop.height}px);
   }
