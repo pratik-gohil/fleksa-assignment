@@ -37,22 +37,40 @@ const ContentContainer = styled.div`
   color: #fff;
   display: flex;
   flex: 1 1 auto;
+  padding: 0 0 0 1rem;
+
   div {
-    width: 100%;
     align-self: center;
+    width: 90%;
+  }
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    div {
+      width: 100%;
+    }
   }
 `;
 
 const Title = styled.h1`
-  font-size: 5rem;
+  font-size: clamp(2.53rem, 5rem, 8vw);
   margin: 0;
   padding: 0;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    font-weight: 500;
+    line-height: 1.2;
+  }
 `;
 
 const SubTitle = styled.h2`
   padding: 0;
   margin: 0;
-  font-size: 1.8rem;
+  font-size: clamp(1rem, 1.8rem, 3vw);
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    padding-top: 0.5rem;
+    font-weight: 400;
+  }
 `;
 
 const OrderButton = styled.a`
@@ -71,6 +89,12 @@ const OrderButton = styled.a`
   animation: pulsing 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
   transition: all 300ms ease-in-out;
   box-shadow: 0 0 0 0 rgba(${(props) => `${props.theme.primaryColorRed},${props.theme.primaryColorGreen},${props.theme.primaryColorBlue}, 0.7`});
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    margin: 18px 0;
+    padding: 12px 24px;
+    font-size: 18px;
+  }
 `;
 
 const IndexPageHero: FunctionComponent = ({}) => {
@@ -83,14 +107,14 @@ const IndexPageHero: FunctionComponent = ({}) => {
       <ImageContainer>{shopData?.cover && <Image src={shopData?.cover} layout="fill" loading="eager" objectFit="cover" />}</ImageContainer>
 
       <ContentContainer>
-        <Container
-          fluid
-          style={{
-            paddingLeft: '4rem',
-          }}
-        >
+        <Container fluid>
           <Row>
-            <Col>
+            <Col
+              style={{
+                padding: 0,
+                margin: 0,
+              }}
+            >
               <Title>{shopData?.name}</Title>
               <SubTitle>{shopData?.category_json[language]}</SubTitle>
               <OrderButton href="/menu">{t('@order-online')}</OrderButton>
