@@ -10,7 +10,6 @@ import { BREAKPOINTS } from "../../constants/grid-system-configuration";
 import { useAppSelector } from "../../redux/hooks.redux";
 import { selectOrderType } from "../../redux/slices/checkout.slices.redux";
 import { selectShowOrderTypeSelect } from "../../redux/slices/menu.slices.redux";
-import AddressAdd from "../../components/templateOne/common/addresses/address-add.common.templateOne.components";
 
 const SideViewLeft = styled.div`
   position: sticky;

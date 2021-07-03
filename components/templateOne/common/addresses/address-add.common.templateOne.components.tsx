@@ -4,8 +4,8 @@ import { FunctionComponent } from "react";
 import styled from "styled-components";
 
 import { BREAKPOINTS } from "../../../../constants/grid-system-configuration";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
-import { selectLanguageCode } from "../../../../redux/slices/configuration.slices.redux";
+// import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
+// import { selectLanguageCode } from "../../../../redux/slices/configuration.slices.redux";
 
 
 const Wrapper = styled.div`
@@ -45,14 +45,14 @@ const Title = styled.h3`
   border-bottom: ${props => props.theme.border};
 `
 
-const SubTitle = styled.h4<{ selected: boolean }>`
-  padding: 0;
-  margin: 0;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1;
-  color: ${props => props.selected? "rgb(25, 135, 84)": "#222"};
-`
+// const SubTitle = styled.h4<{ selected: boolean }>`
+//   padding: 0;
+//   margin: 0;
+//   font-size: 16px;
+//   font-weight: 400;
+//   line-height: 1;
+//   color: ${props => props.selected? "rgb(25, 135, 84)": "#222"};
+// `
 
 const InputContainer = styled.div`
   margin: ${props => props.theme.dimen.X4}px;
@@ -67,8 +67,8 @@ const Input = styled.input`
 
 const AddressAdd: FunctionComponent = () => {
   const { t } = useTranslation("add-address")
-  const languageCode = useAppSelector(selectLanguageCode)
-  const dispach = useAppDispatch()
+  // const languageCode = useAppSelector(selectLanguageCode)
+  // const dispach = useAppDispatch()
 
   let autoComplete
 

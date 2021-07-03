@@ -8,7 +8,7 @@ import { selectLanguage } from "../../../../redux/slices/configuration.slices.re
 import SvgDelivery from "../../../../public/assets/svg/delivery.svg";
 import SvgPickup from "../../../../public/assets/svg/pickup.svg";
 import SvgDinein from "../../../../public/assets/svg/dinein.svg";
-import { selectOrderType } from "../../../../redux/slices/checkout.slices.redux";
+import { ICheckoutOrderTypes, selectOrderType } from "../../../../redux/slices/checkout.slices.redux";
 import { updateShowOrderTypeSelect } from "../../../../redux/slices/menu.slices.redux";
 
 const BannerContainer = styled.section`
@@ -71,7 +71,10 @@ const OrderTypeView = styled.div`
   height: 64px;
 `
 
-const OrderType = {
+const OrderType: Record<ICheckoutOrderTypes, {
+  title: string
+  logo: any
+}> = {
   "DELIVERY": {
     title: "Delivery",
     logo: SvgDelivery
@@ -82,6 +85,11 @@ const OrderType = {
   },
   "DINE_IN": {
     title: "Dine-in",
+    logo: SvgDinein
+  },
+  // placeholder item. order type will not be reservation
+  "RESERVATION": {
+    title: "",
     logo: SvgDinein
   }
 }
