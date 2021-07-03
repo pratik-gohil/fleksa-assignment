@@ -5,8 +5,12 @@ import RestaurantTimingUtils, { ILabelValue } from '../../../../utils/restaurant
 import { useAppSelector } from '../../../../redux/hooks.redux';
 import { selectAddress, selectTimings } from '../../../../redux/slices/index.slices.redux';
 import moment from 'moment';
+import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+  margin: 0;
+  padding: 0;
+`;
 const Label = styled.p`
   color: ${(p) => p.theme.textDarkColor};
   font-size: 1rem;
@@ -33,16 +37,33 @@ const SelectBox = styled.select`
   -webkit-appearance: none !important;
   appearance: none !important;
   padding-right: 2rem !important;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    padding: 1rem;
+    text-align: center;
+  }
 `;
 const Option = styled.option``;
 
-const InputBox = styled.div`
+const InputBox = styled.div<{
+  visible?: boolean;
+}>`
   padding: 0.8rem 1rem;
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 4px;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    margin: 1rem 0 0 0;
+    display: ${(p) => (p.visible ? 'block' : 'none')};
+  }
 `;
 const InputBoxDateTime = styled(InputBox)`
   margin: 0 0.5rem;
+  display: block;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    margin: 1rem 0 0 0;
+  }
 `;
 const ChoosenTime = styled.p`
   color: ${(p) => p.theme.textDarkColor};
@@ -51,6 +72,10 @@ const ChoosenTime = styled.p`
   text-align: center;
   padding: 0;
   margin: 0;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    text-align: left;
+  }
 `;
 const DateInput = styled.input`
   padding: 0;
@@ -77,9 +102,9 @@ const TimeSlots = styled.div`
   overflow-x: hidden;
   max-height: 500px;
 
-  @media (max-width: 576px) {
-    max-width: 100%;
-    padding: 1rem 0 0 0rem;
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    /* max-height: 200px; */
+    /* padding: 1rem 0 0 0; */
   }
 `;
 const Slot = styled.div<{
@@ -155,8 +180,6 @@ const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGue
         isReservation: true,
       });
 
-      console.log('time list : ', timeData);
-
       setTimingList(timeData);
 
       setTime({
@@ -170,10 +193,16 @@ const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGue
 
   return (
     <Wrapper>
-      <Container fluid>
+      <Container
+        fluid
+        style={{
+          padding: 0,
+          margin: 0,
+        }}
+      >
         <Label>No. of Guests & Date - Time​</Label>
         <Row nogutter>
-          <Col xl={3}>
+          <Col xl={3} sm={3}>
             <SelectBox value={totalGuest} onChange={(e) => setTotalGuest(e.target.value)}>
               {['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '20+'].map((r) => (
                 <Option key={r} value={r}>
@@ -182,13 +211,13 @@ const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGue
               ))}
             </SelectBox>
           </Col>
-          <Col xl={6}>
+          <Col xl={6} sm={7}>
             <InputBoxDateTime>
               <DateInput type="date" value={date} onChange={handleDateChange} />
             </InputBoxDateTime>
           </Col>
-          <Col xl={3}>
-            <InputBox>
+          <Col xl={3} sm={2}>
+            <InputBox visible={!!timingList.length}>
               <ChoosenTime>{time.value}</ChoosenTime>
             </InputBox>
           </Col>

@@ -13,6 +13,10 @@ import { ILabelValue } from '../../utils/restaurant-timings.utils';
 const ReservationContainer = styled.section`
   position: relative;
   margin-top: 4rem;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    margin-top: 1rem;
+  }
 `;
 
 const WidthFix = styled.div`
@@ -26,20 +30,27 @@ const WidthFix = styled.div`
 const FormContainer = styled.div`
   border-top: 2px solid rgba(0, 0, 0, 0.1);
   padding: 1rem 0;
+
+  div {
+    @media (max-width: ${BREAKPOINTS.sm}px) {
+      /* flex-direction: row; */
+    }
+  }
 `;
 
 const CoupleImg = styled.img`
   position: absolute;
   bottom: 0;
-  right: 0;
+  left: 0;
   max-width: 40%;
+  transform: scaleX(-1);
 
   @media (min-width: 992px) {
     max-width: 50%;
   }
 
-  @media (min-width: 576px) {
-    max-width: 30%;
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    display: none;
   }
 `;
 
@@ -66,9 +77,6 @@ const ReservationTemplateOne: FunctionComponent = ({}) => {
               <FormContainer>
                 <Row justify="center">
                   <Col xl={6} sm={12}>
-                    <FormLeftInputs time={time} date={date} totalGuest={totalGuest} />
-                  </Col>
-                  <Col xl={6} sm={12}>
                     <FormRightInputs
                       time={time}
                       date={date}
@@ -78,6 +86,9 @@ const ReservationTemplateOne: FunctionComponent = ({}) => {
                       setTotalGuest={setTotalGuest}
                     />
                   </Col>
+                  <Col xl={6} sm={12}>
+                    <FormLeftInputs time={time} date={date} totalGuest={totalGuest} />
+                  </Col>
                 </Row>
               </FormContainer>
             </Col>
@@ -86,6 +97,7 @@ const ReservationTemplateOne: FunctionComponent = ({}) => {
       </WidthFix>
 
       <CoupleImg src="/assets/svg/couple.svg" alt="couple" />
+      {/* <Snackbar message="test error message" /> */}
     </ReservationContainer>
   );
 };
