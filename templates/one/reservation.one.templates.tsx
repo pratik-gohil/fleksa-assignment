@@ -23,19 +23,13 @@ const WidthFix = styled.div`
   width: 100%;
 
   @media (min-width: ${BREAKPOINTS.lg}px) {
-    margin-bottom: 120px;
+    margin-bottom: 30px;
   }
 `;
 
 const FormContainer = styled.div`
   border-top: 2px solid rgba(0, 0, 0, 0.1);
   padding: 1rem 0;
-
-  div {
-    @media (max-width: ${BREAKPOINTS.sm}px) {
-      /* flex-direction: row; */
-    }
-  }
 `;
 
 const CoupleImg = styled.img`
@@ -46,7 +40,7 @@ const CoupleImg = styled.img`
   transform: scaleX(-1);
 
   @media (min-width: 992px) {
-    max-width: 50%;
+    max-width: 30%;
   }
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
@@ -67,7 +61,7 @@ const ReservationTemplateOne: FunctionComponent = ({}) => {
       <WidthFix>
         <Container fluid>
           <Row justify="center" nogutter nowrap>
-            <Col sm={8}>
+            <Col sm={8} lg={10}>
               <Row>
                 <Col sm={12}>
                   <Header />
@@ -76,7 +70,7 @@ const ReservationTemplateOne: FunctionComponent = ({}) => {
 
               <FormContainer>
                 <Row justify="center">
-                  <Col xl={6} sm={12}>
+                  <Col xl={6} lg={6} sm={12}>
                     <FormRightInputs
                       time={time}
                       date={date}
@@ -86,7 +80,7 @@ const ReservationTemplateOne: FunctionComponent = ({}) => {
                       setTotalGuest={setTotalGuest}
                     />
                   </Col>
-                  <Col xl={6} sm={12}>
+                  <Col xl={6} lg={6} sm={12}>
                     <FormLeftInputs time={time} date={date} totalGuest={totalGuest} />
                   </Col>
                 </Row>

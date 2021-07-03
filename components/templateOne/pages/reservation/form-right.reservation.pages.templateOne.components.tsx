@@ -38,7 +38,7 @@ const SelectBox = styled.select`
   appearance: none !important;
   padding-right: 2rem !important;
 
-  @media (max-width: ${BREAKPOINTS.sm}px) {
+  @media (max-width: ${BREAKPOINTS.md}px) {
     padding: 1rem;
     text-align: center;
   }
@@ -52,7 +52,7 @@ const InputBox = styled.div<{
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 4px;
 
-  @media (max-width: ${BREAKPOINTS.sm}px) {
+  @media (max-width: ${BREAKPOINTS.md}px) {
     margin: 1rem 0 0 0;
     display: ${(p) => (p.visible ? 'block' : 'none')};
   }
@@ -61,7 +61,7 @@ const InputBoxDateTime = styled(InputBox)`
   margin: 0 0.5rem;
   display: block;
 
-  @media (max-width: ${BREAKPOINTS.sm}px) {
+  @media (max-width: ${BREAKPOINTS.md}px) {
     margin: 1rem 0 0 0;
   }
 `;
@@ -73,7 +73,7 @@ const ChoosenTime = styled.p`
   padding: 0;
   margin: 0;
 
-  @media (max-width: ${BREAKPOINTS.sm}px) {
+  @media (max-width: ${BREAKPOINTS.md}px) {
     text-align: left;
   }
 `;
@@ -102,9 +102,9 @@ const TimeSlots = styled.div`
   overflow-x: hidden;
   max-height: 500px;
 
-  @media (max-width: ${BREAKPOINTS.sm}px) {
-    /* max-height: 200px; */
-    /* padding: 1rem 0 0 0; */
+  @media (max-width: ${BREAKPOINTS.md}px) {
+    max-height: 200px;
+    padding: 1rem 0 0 0;
   }
 `;
 const Slot = styled.div<{
@@ -202,7 +202,7 @@ const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGue
       >
         <Label>No. of Guests & Date - Time​</Label>
         <Row nogutter>
-          <Col xl={3} sm={3}>
+          <Col xl={3} lg={3}>
             <SelectBox value={totalGuest} onChange={(e) => setTotalGuest(e.target.value)}>
               {['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '20+'].map((r) => (
                 <Option key={r} value={r}>
@@ -211,12 +211,12 @@ const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGue
               ))}
             </SelectBox>
           </Col>
-          <Col xl={6} sm={7}>
+          <Col xl={6} lg={6}>
             <InputBoxDateTime>
               <DateInput type="date" value={date} onChange={handleDateChange} />
             </InputBoxDateTime>
           </Col>
-          <Col xl={3} sm={2}>
+          <Col xl={3} lg={3}>
             <InputBox visible={!!timingList.length}>
               <ChoosenTime>{time.value}</ChoosenTime>
             </InputBox>
