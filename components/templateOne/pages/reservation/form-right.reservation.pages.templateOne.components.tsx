@@ -114,7 +114,6 @@ const IndigationText = styled.p`
   text-align: center;
   font-size: 0.7rem;
   color: rgba(0, 0, 0, 0.4);
-  /* padding: 0.rem 0; */
 `;
 
 interface IFormRightInputsProps {
