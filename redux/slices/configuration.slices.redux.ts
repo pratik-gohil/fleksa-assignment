@@ -17,6 +17,7 @@ export interface IConfiguration {
 
 export interface IIndexSliceState {
   language: LANGUAGES
+  languageCode: string
   showLogin: boolean
   showCart: boolean
   configuration: IConfiguration
@@ -24,6 +25,7 @@ export interface IIndexSliceState {
 
 const initialState: IIndexSliceState = {
   language: LANGUAGES.de,
+  languageCode: "de",
   showLogin: false,
   showCart: false,
   configuration: {
@@ -38,6 +40,7 @@ export const ConfigurationSlice = createSlice({
   initialState,
   reducers: {
     updateLanguage(state, action) {
+      state.languageCode = action.payload
       state.language = (<any>LANGUAGES)[action.payload]
     },
     updateShowLogin(state, action) {
@@ -68,6 +71,7 @@ export const {
 } = ConfigurationSlice.actions
 
 export const selectLanguage = (state: RootState) => state.configuration.language
+export const selectLanguageCode = (state: RootState) => state.configuration.languageCode
 export const selectShowLogin = (state: RootState) => state.configuration.showLogin
 export const selectShowCart = (state: RootState) => state.configuration.showCart
 export const selectConfiguration = (state: RootState) => state.configuration.configuration

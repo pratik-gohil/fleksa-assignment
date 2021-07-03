@@ -4,6 +4,7 @@ import { IAddress } from "../../interfaces/common/address.common.interfaces";
 import { IProduct } from "../../interfaces/common/product.common.interfaces";
 import { IReview } from "../../interfaces/common/review.common.interfaces";
 import { IShop, ITimings } from "../../interfaces/common/shop.common.interfaces";
+import { ISibling } from "../../interfaces/common/sibling.common.interfaces";
 import { RootState } from "../store.redux";
 
 const SLICE_NAME = "index"
@@ -15,6 +16,7 @@ export interface IIndexSliceState {
   reviews: Array<IReview>
   shop: IShop|null
   timings: ITimings|null
+  siblings: Array<ISibling>
 }
 
 const initialState: IIndexSliceState = {
@@ -23,7 +25,8 @@ const initialState: IIndexSliceState = {
   products: [],
   reviews: [],
   shop: null,
-  timings: null
+  timings: null,
+  siblings: []
 }
 
 export const IndexSlice = createSlice({
@@ -48,6 +51,9 @@ export const IndexSlice = createSlice({
     updateTimings: (state, action) => {
       state.timings = action.payload
     },
+    updateSiblings: (state, action) => {
+      state.timings = action.payload
+    },
   },
   extraReducers: {
     [HYDRATE]: (state, action) => {
@@ -66,6 +72,7 @@ export const {
   updateReviews,
   updateImages,
   updateTimings,
+  updateSiblings
 } = IndexSlice.actions
 
 export const selectAddress = (state: RootState) => state.index.address
@@ -74,3 +81,4 @@ export const selectProducts = (state: RootState) => state.index.products
 export const selectReviews = (state: RootState) => state.index.reviews
 export const selectImages = (state: RootState) => state.index.images
 export const selectTimings = (state: RootState) => state.index.timings
+export const selectSiblings = (state: RootState) => state.index.siblings

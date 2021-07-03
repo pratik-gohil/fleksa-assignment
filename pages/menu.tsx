@@ -3,8 +3,6 @@ import React from "react";
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import IndexStoreWrapper from "../redux/store.redux";
 import TemplateToShow from "../templates/template-to-show.templates";
-import { updateCategories, updateParts, updateSides } from "../redux/slices/menu.slices.redux";
-import PyApiHttpGetMenu from "../http/pyapi/menu/get.menu.index.pyapi.http";
 import { getServerSidePropsCommon } from "../utils/page.utils";
 
 const MenuPageTemplateOne = dynamic(import("../templates/one/menu.one.templates"))
@@ -15,18 +13,21 @@ const templateList = [
 
 export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async ctx => {
   try {
-    const { redirect, responseIndex, configuration } = await getServerSidePropsCommon(ctx, false)
+    const { redirect, responseIndex } = await getServerSidePropsCommon(ctx, false)
     if (redirect) return redirect
 
-    if (!responseIndex?.shop.id) throw new Error("Shop id not found")
-    const responseMenu = await new PyApiHttpGetMenu(configuration).get({ shopId: responseIndex?.shop.id })
-    ctx.store.dispatch(updateCategories(responseMenu?.categories))
-    ctx.store.dispatch(updateSides(responseMenu?.sides))
-    ctx.store.dispatch(updateParts(responseMenu?.parts))
-
+    if (responseIndex?.siblings.length === 0) {
+      return {
+        redirect: {
+          permanent: true,
+          destination: `/menu/${responseIndex?.shop.id}`,
+        }
+      }
+    }
+    
     return {
       props: {
-        ...(await serverSideTranslations((ctx as any).locale, ['header', 'footer'])),
+        ...(await serverSideTranslations((ctx as any).locale, ['header', 'footer', 'add-address'])),
         templateNumber: 0,
       },
     }

@@ -17,6 +17,7 @@ export async function getServerSidePropsCommon(ctx: any, requiresLogin: boolean)
      * If above constraints are met but no restaurant name found in cookie, use roma.fleksa.com
      * If restauant name includes ".fleksa." it will use production API's otherwise use testing API's
      */
+    console.log("ctx.req.headers", ctx.req.headers, ctx.req.headers.host)
     const host: string = ctx.req.headers.host === "localhost:3000" || "newqa.fleksa.de"? restaurantName || "roma.fleksa.com": ctx.req.headers.host
     const baseUrlPyApi = host.includes(".fleksa.")? "https://myqa.fleksa.com": "https://my.fleksa.com"
     const baseUrlNodeApi = host.includes(".fleksa.")? "https://orderqa.fleksa.com": "https://order.fleksa.com"
