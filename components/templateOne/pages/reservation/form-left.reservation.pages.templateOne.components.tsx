@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PhoneInput from 'react-phone-input-2';
 import styled, { css } from 'styled-components';
+import { ILabelValue } from '../../../../utils/restaurant-timings.utils';
 
 const Wrapper = styled.div``;
 const InputBox = styled.div`
@@ -100,7 +101,13 @@ const ReservationButton = styled.button`
   }
 `;
 
-const FormLeftInputs = () => {
+interface IFormLeftInputsProps {
+  date: string;
+  time: ILabelValue;
+  totalGuest: string;
+}
+
+const FormLeftInputs = ({}: IFormLeftInputsProps) => {
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');

@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Col, Container, Row } from 'react-grid-system';
+import RestaurantTimingUtils, { ILabelValue } from '../../../../utils/restaurant-timings.utils';
+import { useAppSelector } from '../../../../redux/hooks.redux';
+import { selectAddress, selectTimings } from '../../../../redux/slices/index.slices.redux';
+import moment from 'moment';
 
 const Wrapper = styled.div``;
 const Label = styled.p`
@@ -48,7 +52,7 @@ const ChoosenTime = styled.p`
   padding: 0;
   margin: 0;
 `;
-const DateTimeInput = styled.input`
+const DateInput = styled.input`
   padding: 0;
   margin: 0;
   width: 100%;
@@ -78,7 +82,10 @@ const TimeSlots = styled.div`
     padding: 1rem 0 0 0rem;
   }
 `;
-const Slot = styled.div`
+const Slot = styled.div<{
+  active: boolean;
+  break?: boolean;
+}>`
   padding: 0.5rem;
   border-radius: 0.5rem;
   width: 60px;
@@ -93,46 +100,113 @@ const Slot = styled.div`
   cursor: ${(p) => (p.break ? 'not-allowed' : 'pointer')};
   color: ${(p) => (p.break ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,1)')};
 
+  &:hover {
+    border-color: rgba(0, 0, 0, 1);
+  }
+
   @media (max-width: 576px) {
     width: 50px;
     height: 40px;
   }
 `;
 
-const FormRightInputs = () => {
+const IndigationText = styled.p`
+  text-align: center;
+  font-size: 0.7rem;
+  color: rgba(0, 0, 0, 0.4);
+  /* padding: 0.rem 0; */
+`;
+
+interface IFormRightInputsProps {
+  date: string;
+  time: ILabelValue;
+  totalGuest: string;
+  setTotalGuest: React.Dispatch<React.SetStateAction<string>>;
+  setDate: React.Dispatch<React.SetStateAction<string>>;
+  setTime: React.Dispatch<React.SetStateAction<ILabelValue>>;
+}
+
+const timeUtils = new RestaurantTimingUtils();
+
+const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGuest }: IFormRightInputsProps) => {
+  const timingsData = useAppSelector(selectTimings);
+  const addressData = useAppSelector(selectAddress);
+  const [timingList, setTimingList] = useState<ILabelValue[]>([]);
+
+  const handleDateChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDate(e.target.value);
+  };
+
+  // TODO: this is called when user selects or changes  date
+  useEffect(() => {
+    if (!date) return;
+
+    if (date && timingsData && addressData?.prepare_time && addressData?.delivery_time) {
+      const timeData = timeUtils.generateTimeList({
+        date: {
+          value: moment(date).format().toUpperCase(),
+          label: '',
+        },
+        timingsData,
+        type: 'RESERVATION',
+        interval: {
+          pickup_time: addressData?.prepare_time,
+          delivery_time: addressData?.delivery_time,
+        },
+        isReservation: true,
+      });
+
+      console.log('time list : ', timeData);
+
+      setTimingList(timeData);
+
+      setTime({
+        value: timeData[0]?.value || '-',
+        label: '',
+      });
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [date]);
+
   return (
     <Wrapper>
       <Container fluid>
         <Label>No. of Guests & Date - Time​</Label>
         <Row nogutter>
           <Col xl={3}>
-            <SelectBox>
-              {[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, '20+'].map((r) => (
-                <Option value={r}>{r}</Option>
+            <SelectBox value={totalGuest} onChange={(e) => setTotalGuest(e.target.value)}>
+              {['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '20+'].map((r) => (
+                <Option key={r} value={r}>
+                  {r}
+                </Option>
               ))}
             </SelectBox>
           </Col>
           <Col xl={6}>
             <InputBoxDateTime>
-              <DateTimeInput type="date" value="2020-12-31" />
+              <DateInput type="date" value={date} onChange={handleDateChange} />
             </InputBoxDateTime>
           </Col>
           <Col xl={3}>
             <InputBox>
-              <ChoosenTime>18:50</ChoosenTime>
+              <ChoosenTime>{time.value}</ChoosenTime>
             </InputBox>
           </Col>
         </Row>
         <Row nogutter>
-          <SlotContainer>
-            <TimeSlots>
-              {['12:00', '12:45', '01:30', '02:15', '03:00', '03:45', '04:30', '12:00', '12:45', '01:30', '02:15', '03:00', '03:45', '04:30'].map(
-                (time) => (
-                  <Slot>{time}</Slot>
-                ),
-              )}
-            </TimeSlots>
-          </SlotContainer>
+          <Col xl={12}>
+            <SlotContainer>
+              <TimeSlots>
+                {timingList.map((t, i) => (
+                  <Slot key={i} onClick={() => setTime(t)} active={time.value === t.value} break={t.break}>
+                    {t.value}
+                  </Slot>
+                ))}
+              </TimeSlots>
+              <IndigationText>Choose slot</IndigationText>
+            </SlotContainer>
+          </Col>
         </Row>
       </Container>
     </Wrapper>

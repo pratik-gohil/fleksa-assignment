@@ -6,10 +6,11 @@ import FormRightInputs from '../../components/templateOne/pages/reservation/form
 
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../constants/grid-system-configuration';
+import { useState } from 'react';
+import moment from 'moment';
+import { ILabelValue } from '../../utils/restaurant-timings.utils';
 
 const ReservationContainer = styled.section`
-  /* display: flex; */
-  /* width: 100%; */
   position: relative;
   margin-top: 4rem;
 `;
@@ -43,6 +44,13 @@ const CoupleImg = styled.img`
 `;
 
 const ReservationTemplateOne: FunctionComponent = ({}) => {
+  const [date, setDate] = useState<string>(moment().format('YYYY-MM-DD'));
+  const [time, setTime] = useState<ILabelValue>({
+    value: '',
+    label: '',
+  });
+  const [totalGuest, setTotalGuest] = useState('2');
+
   return (
     <ReservationContainer>
       <WidthFix>
@@ -58,10 +66,17 @@ const ReservationTemplateOne: FunctionComponent = ({}) => {
               <FormContainer>
                 <Row justify="center">
                   <Col xl={6} sm={12}>
-                    <FormLeftInputs />
+                    <FormLeftInputs time={time} date={date} totalGuest={totalGuest} />
                   </Col>
                   <Col xl={6} sm={12}>
-                    <FormRightInputs />
+                    <FormRightInputs
+                      time={time}
+                      date={date}
+                      setTime={setTime}
+                      setDate={setDate}
+                      totalGuest={totalGuest}
+                      setTotalGuest={setTotalGuest}
+                    />
                   </Col>
                 </Row>
               </FormContainer>

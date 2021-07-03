@@ -3,18 +3,20 @@ import { ITimings, ITimingsDay } from '../interfaces/common/shop.common.interfac
 import { ICheckoutOrderTypes } from '../redux/slices/checkout.slices.redux';
 
 export interface ILabelValue {
-  value: string
-  label: string
+  value: string;
+  label: string;
+  break?: boolean;
 }
 
 export interface IPropsGenerateTimeList {
-  date: ILabelValue
-  timingsData: ITimings
-  type: ICheckoutOrderTypes
+  date: ILabelValue;
+  timingsData: ITimings;
+  type: ICheckoutOrderTypes;
+  isReservation?: boolean;
   interval: {
-    pickup_time: number
-    delivery_time: number
-  }
+    pickup_time: number;
+    delivery_time: number;
+  };
 }
 
 export default class RestaurantTimingUtils {
@@ -22,24 +24,23 @@ export default class RestaurantTimingUtils {
    * @param {number} limit - Total length of dates list
    * @returns array of objects { value, label }
    */
-  public generateDates(start: number=0, limit: number=5) {
+  public generateDates(start: number = 0, limit: number = 5) {
     const tempDateList = [];
 
     while (start !== limit) {
       const date = moment().add(start, 'days');
-  
+
       tempDateList.push({
         value: date.format('YYYY-MM-DD'),
         label: date.format('dddd, MMMM D'),
       });
-  
+
       start += 1;
     }
-  
+
     return tempDateList;
   }
 
-  
   /**
    *
    * @param {object} time - Restaurant timing object for particular day {shop, delivery, weekDay}
@@ -47,18 +48,17 @@ export default class RestaurantTimingUtils {
    * @param {object} interval - restaurant timing intervals
    * @returns - Array of array timing list for each period
    */
-  public generateTimeList({ date, timingsData, type, interval }: IPropsGenerateTimeList) {
-
+  public generateTimeList({ date, timingsData, type, interval, isReservation }: IPropsGenerateTimeList) {
     const weekDay = moment(date.value).format('dddd').toUpperCase();
     const day = timingsData[weekDay] as ITimingsDay;
 
     const deliveryType = type === 'DELIVERY';
 
     // TODO: Set adjacent time interval depends on order type
-    const adjacentPeriodIntervel = 10;
+    const adjacentPeriodIntervel = isReservation ? 30 : 10;
     const initialDifference = deliveryType ? interval.delivery_time : interval.pickup_time;
 
-    let timingList: Array<{ value: string; label: string }> = [];
+    let timingList: Array<{ value: string; label: string; break?: boolean }> = [];
 
     // TODO: If delivery time available of the shop pick delivery object instead of shop object
     const processPayload = deliveryType ? day.delivery : day.shop;
@@ -67,13 +67,29 @@ export default class RestaurantTimingUtils {
     if (!processPayload.availability) return [];
 
     // TODO: Loop throw each timing object for generating list
-    processPayload.timings?.forEach((t) => {
+    processPayload.timings?.forEach((t, i) => {
+      // For adding break intervals
+      if (processPayload.timings && processPayload.timings[i - 1] && isReservation && timingList.length) {
+        console.log('break : ', processPayload?.timings[i - 1].close, ' to ', processPayload?.timings[i].open);
+
+        const break_start = moment(processPayload?.timings[i - 1].close, 'h:mm a');
+        const break_end = moment(processPayload?.timings[i].open, 'h:mm a');
+
+        while (break_start < break_end) {
+          timingList.push({
+            value: break_start.format('HH:mm'),
+            label: `${break_start.format('HH:mm')} - ${break_start.add(adjacentPeriodIntervel, 'm').format('HH:mm')}`,
+            break: true,
+          });
+        }
+      }
+
       //   TODO: Round current time to the nearest 15 or 45
       const start = moment();
       const open = moment(t.open, 'h:mm a');
       const close = moment(t.close, 'h:mm a');
       const todayDayCheck = weekDay === start.format('dddd').toUpperCase();
-      let temp: number|Moment = adjacentPeriodIntervel;
+      let temp: number | Moment = adjacentPeriodIntervel;
 
       // TODO: Only for current day
       if (todayDayCheck) {
@@ -84,7 +100,7 @@ export default class RestaurantTimingUtils {
 
         start.set({
           hours: start.hours(),
-          minutes: temp + initialDifference,
+          minutes: isReservation ? temp : temp + initialDifference,
         });
       }
 
