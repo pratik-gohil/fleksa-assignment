@@ -70,8 +70,6 @@ export default class RestaurantTimingUtils {
     processPayload.timings?.forEach((t, i) => {
       // For adding break intervals
       if (processPayload.timings && processPayload.timings[i - 1] && isReservation && timingList.length) {
-        console.log('break : ', processPayload?.timings[i - 1].close, ' to ', processPayload?.timings[i].open);
-
         const break_start = moment(processPayload?.timings[i - 1].close, 'h:mm a');
         const break_end = moment(processPayload?.timings[i].open, 'h:mm a');
 
