@@ -1,6 +1,12 @@
+import moment from 'moment';
 import React, { useState } from 'react';
 import PhoneInput from 'react-phone-input-2';
 import styled, { css } from 'styled-components';
+import NodeApiHttpPostRervation from '../../../../http/nodeapi/reservation/post.reservation.nodeapi.http';
+import { useAppSelector } from '../../../../redux/hooks.redux';
+import { selectConfiguration } from '../../../../redux/slices/configuration.slices.redux';
+import { selectShop } from '../../../../redux/slices/index.slices.redux';
+import { selectBearerToken } from '../../../../redux/slices/user.slices.redux';
 import { ILabelValue } from '../../../../utils/restaurant-timings.utils';
 
 const Wrapper = styled.div``;
@@ -107,23 +113,49 @@ interface IFormLeftInputsProps {
   totalGuest: string;
 }
 
-const FormLeftInputs = ({}: IFormLeftInputsProps) => {
+const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [comment, setComment] = useState('');
   const [countryCode, setCountryCode] = useState<number>(49);
 
+  const bearerToken = useAppSelector(selectBearerToken);
+  const configuration = useAppSelector(selectConfiguration);
+  const shopData = useAppSelector(selectShop);
+
+  const handleReserveButtonClick = async () => {
+    try {
+      const response = await new NodeApiHttpPostRervation(configuration, bearerToken as any).post({
+        countryCode: `${countryCode}`,
+        phone: phone.substring(String(countryCode).length),
+        shop_id: shopData?.id as unknown as number,
+        description: comment,
+        email,
+        name,
+        date_time: moment(`${date} ${time.value}`).format(),
+        guests_count: totalGuest,
+      });
+
+      if (!response.result) {
+      }
+
+      console.log('response : ', response);
+    } catch (e) {
+      console.log('error : ', e);
+    }
+  };
+
   return (
     <Wrapper>
       <InputBox>
         <Label>Name</Label>
-        <Input type="text" placeholder="John Doe" value={name} onChange={(e) => setName(e.target.value)} />
+        <Input type="text" placeholder="John Doe" value={name} onChange={(e) => setName(e.target.value)} required={true} />
       </InputBox>
 
       <InputBox>
         <Label>Email</Label>
-        <Input type="email" placeholder="john@gmail.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <Input type="email" placeholder="john@gmail.com" value={email} onChange={(e) => setEmail(e.target.value)} required={true} />
       </InputBox>
 
       <InputBox>
@@ -153,7 +185,7 @@ const FormLeftInputs = ({}: IFormLeftInputsProps) => {
         By continuing, you agree to Fleksa's <LinkText href="#">Terms of use</LinkText> and <LinkText href="#">Privacy Policy</LinkText>
       </Acknowledgement>
 
-      <ReservationButton>Reserve Now</ReservationButton>
+      <ReservationButton onClick={handleReserveButtonClick}>Reserve Now</ReservationButton>
     </Wrapper>
   );
 };

@@ -203,7 +203,7 @@ const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGue
                   </Slot>
                 ))}
               </TimeSlots>
-              <IndigationText>Choose slot</IndigationText>
+              <IndigationText>{timingList.length ? 'Choose slot' : 'Currently not available'}</IndigationText>
             </SlotContainer>
           </Col>
         </Row>
