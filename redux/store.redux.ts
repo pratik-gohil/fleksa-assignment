@@ -1,4 +1,4 @@
-import { configureStore, Store } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
 import { createWrapper } from "next-redux-wrapper";
 import { AddressesSlice } from "./slices/addresses.slices.redux";
 import { ConfigurationSlice } from "./slices/configuration.slices.redux";
