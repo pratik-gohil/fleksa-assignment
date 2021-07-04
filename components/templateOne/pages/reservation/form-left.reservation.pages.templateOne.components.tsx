@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import PhoneInput from 'react-phone-input-2';
 import styled, { css } from 'styled-components';
 import NodeApiHttpPostRervation from '../../../../http/nodeapi/reservation/post.reservation.nodeapi.http';
+import LoadingIndicator from '../../common/loadingIndicator/loading-indicator.common.templateOne.components';
+
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { updateError } from '../../../../redux/slices/common.slices.redux';
 import { selectConfiguration } from '../../../../redux/slices/configuration.slices.redux';
@@ -97,6 +99,9 @@ const ReservationButton = styled.button`
   outline: none;
   border-radius: 10px;
   margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   cursor: pointer;
   &:hover {
@@ -107,6 +112,8 @@ const ReservationButton = styled.button`
     width: 100%;
   }
 `;
+
+const ButtonText = styled.span``;
 
 interface IFormLeftInputsProps {
   date: string;
@@ -120,6 +127,7 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
   const [name, setName] = useState('');
   const [comment, setComment] = useState('');
   const [countryCode, setCountryCode] = useState<number>(49);
+  const [loading, setLoading] = useState(false);
 
   const bearerToken = useAppSelector(selectBearerToken);
   const configuration = useAppSelector(selectConfiguration);
@@ -128,6 +136,7 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
 
   const handleReserveButtonClick = async () => {
     try {
+      setLoading(true);
       const response = await new NodeApiHttpPostRervation(configuration, bearerToken as any).post({
         countryCode: `${countryCode}`,
         phone: phone.substring(String(countryCode).length),
@@ -140,6 +149,8 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
       });
 
       if (!response.result) {
+        setLoading(false);
+
         return dispatch(
           updateError({
             show: true,
@@ -148,10 +159,16 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
           }),
         );
       }
-
-      console.log('response : ', response);
     } catch (e) {
       console.log('error : ', e);
+      setLoading(false);
+      return dispatch(
+        updateError({
+          show: true,
+          message: 'Ooops! Something went wrong.',
+          severity: 'error',
+        }),
+      );
     }
   };
 
@@ -194,7 +211,9 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
         By continuing, you agree to Fleksa's <LinkText href="#">Terms of use</LinkText> and <LinkText href="#">Privacy Policy</LinkText>
       </Acknowledgement>
 
-      <ReservationButton onClick={handleReserveButtonClick}>Reserve Now</ReservationButton>
+      <ReservationButton onClick={handleReserveButtonClick}>
+        {loading ? <LoadingIndicator width={20} /> : <ButtonText> Reserve Now </ButtonText>}
+      </ReservationButton>
     </Wrapper>
   );
 };
