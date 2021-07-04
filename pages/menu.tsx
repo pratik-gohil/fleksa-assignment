@@ -20,13 +20,12 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async ctx
     if (responseIndex?.siblings.length === 0) {
       return {
         redirect: {
-          permanent: true,
+          permanent: false,
           destination: `/menu/${responseIndex?.shop.id}`,
         }
       }
     }
 
-    console.log("responseIndex?.siblings", responseIndex?.siblings)
     ctx.store.dispatch(updateSiblings(responseIndex?.siblings))
     
     return {

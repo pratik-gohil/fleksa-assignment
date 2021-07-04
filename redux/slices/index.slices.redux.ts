@@ -52,7 +52,7 @@ export const IndexSlice = createSlice({
       state.timings = action.payload
     },
     updateSiblings: (state, action) => {
-      state.timings = action.payload
+      state.siblings = action.payload
     },
   },
   extraReducers: {

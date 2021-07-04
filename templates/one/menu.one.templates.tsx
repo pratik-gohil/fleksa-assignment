@@ -1,26 +1,14 @@
 import React, { FunctionComponent } from "react";
-import { Col, Container, Row } from "react-grid-system";
 import styled from "styled-components";
 import { BREAKPOINTS } from "../../constants/grid-system-configuration";
 import { useAppSelector } from "../../redux/hooks.redux";
-import { selectOrderType } from "../../redux/slices/checkout.slices.redux";
-import { selectShowOrderTypeSelect } from "../../redux/slices/menu.slices.redux";
 import { useEffect } from "react";
-import { selectShop, selectSiblings } from "../../redux/slices/index.slices.redux";
-
-const SideViewLeft = styled.div`
-  position: sticky;
-  top: ${props => props.theme.navDesktop.height}px;
-  @media (min-width: ${BREAKPOINTS.lg}px) {
-    margin-top: ${props => props.theme.dimen.X4*5}px;
-  }
-`
+import { selectSiblings } from "../../redux/slices/index.slices.redux";
 
 const FullHeightColumn = styled.div`
   display: block;
   height: calc(100vh - ${props => props.theme.navMobile.height}px);
   width: 50%;
-  background: #f44336;
   float: left;
   @media (min-width: ${BREAKPOINTS.lg}px) {
     height: calc(100vh - ${props => props.theme.navDesktop.height}px);
@@ -35,6 +23,14 @@ const FullHeightColumnRight = styled(FullHeightColumn)`
   
 `
 
+const List = styled.ul`
+
+`
+
+const ListItem = styled.li`
+
+`
+
 const MapContainer = styled.div`
   width: 100%;
   height: 100%
@@ -43,34 +39,13 @@ const MapContainer = styled.div`
 let map: google.maps.Map;
 
 const MenuPageTemplateOne: FunctionComponent = ({}) => {
-  const shopData = useAppSelector(selectShop)
   const siblingsData = useAppSelector(selectSiblings)
-  const orderType = useAppSelector(selectOrderType)
-  const showSelectOrderType = useAppSelector(selectShowOrderTypeSelect)
 
   function initMap(): void {
-    console.log("mapppppppp")
     map = new google.maps.Map(document.getElementById("map") as HTMLElement, {
       center: new google.maps.LatLng(-33.91722, 151.23064),
       zoom: 16,
     });
-
-    console.log(map)
-  
-    const iconBase =
-      "https://developers.google.com/maps/documentation/javascript/examples/full/images/";
-  
-    const icons: Record<string, { icon: string }> = {
-      parking: {
-        icon: iconBase + "parking_lot_maps.png",
-      },
-      library: {
-        icon: iconBase + "library_maps.png",
-      },
-      info: {
-        icon: iconBase + "info-i_maps.png",
-      },
-    };
   
     const features = [
       {
@@ -153,7 +128,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
   
     // Create markers.
     for (let i = 0; i < features.length; i++) {
-      const marker = new google.maps.Marker({
+      new google.maps.Marker({
         position: features[i].position,
         // icon: shopData?.logo,
         map: map,
@@ -165,17 +140,17 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
     initMap()
   }, [ ])
 
-  console.log("siblingsData", siblingsData)
-  
   return <>
     <FullHeightColumnLeft>
-      {siblingsData.map(sibling => {
-        return <li>
-          <a href="http://">
-            <p>{sibling.name}</p>
-          </a>
-        </li>
-      })}
+      <List>
+        {siblingsData.map(sibling => {
+          return <ListItem>
+            <a href={`/menu/${sibling.id}`}>
+              <p>{sibling.name}</p>
+            </a>
+          </ListItem>
+        })}
+      </List>
     </FullHeightColumnLeft>
     <FullHeightColumnRight>
       <MapContainer id="map"></MapContainer>
