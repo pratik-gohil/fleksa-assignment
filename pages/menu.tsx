@@ -4,6 +4,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import IndexStoreWrapper from "../redux/store.redux";
 import TemplateToShow from "../templates/template-to-show.templates";
 import { getServerSidePropsCommon } from "../utils/page.utils";
+import { updateSiblings } from "../redux/slices/index.slices.redux";
 
 const MenuPageTemplateOne = dynamic(import("../templates/one/menu.one.templates"))
 
@@ -24,6 +25,9 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async ctx
         }
       }
     }
+
+    console.log("responseIndex?.siblings", responseIndex?.siblings)
+    ctx.store.dispatch(updateSiblings(responseIndex?.siblings))
     
     return {
       props: {
@@ -37,7 +41,7 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async ctx
 })
 
 function Menu({ templateNumber }: any) {
-  return <TemplateToShow templateList={templateList} templateNumber={templateNumber} />
+  return <TemplateToShow templateList={templateList} templateNumber={templateNumber} pageContainer={{ showFooter: false }} />
 }
 
 export default Menu

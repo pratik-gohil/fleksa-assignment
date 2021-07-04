@@ -9,10 +9,10 @@ import { getServerSidePropsCommon } from "../../utils/page.utils";
 import Cookies from "cookies";
 import { COOKIE_SELECTED_MENU_ID } from "../../constants/keys-cookies.constants";
 
-const MenuPageTemplateOne = dynamic(import("../../templates/one/menu.one.templates"))
+const MenuByIdPageTemplateOne = dynamic(import("../../templates/one/menu/menu-by-id.menu.one.templates"))
 
 const templateList = [
-  MenuPageTemplateOne
+  MenuByIdPageTemplateOne
 ]
 
 export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async ctx => {
