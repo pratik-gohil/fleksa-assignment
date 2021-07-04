@@ -1,3 +1,4 @@
+import { useRouter } from 'next/dist/client/router';
 import React, { FunctionComponent } from 'react';
 import { Col, Container, Row } from 'react-grid-system';
 
@@ -29,7 +30,14 @@ const WidthFix = styled.div`
   }
 `;
 
-const LoginAllPages: FunctionComponent = ({}) => {
+interface ILoginAllPagesProps {
+  path: string;
+  callback?: () => void | Promise<void>;
+  isRedirect: boolean;
+}
+
+const LoginAllPages: FunctionComponent<ILoginAllPagesProps> = ({ path, callback, isRedirect }) => {
+  const router = useRouter();
   const showLogin = useAppSelector(selectShowLogin);
   const dispach = useAppDispatch();
 
@@ -39,7 +47,13 @@ const LoginAllPages: FunctionComponent = ({}) => {
         <Container>
           <Row justify="center">
             <Col xl={8} onClick={(e) => e.stopPropagation()}>
-              <LoginComponent />
+              <LoginComponent
+                onLogin={() => {
+                  if (callback) callback();
+
+                  if (isRedirect) router.push(path);
+                }}
+              />
             </Col>
           </Row>
         </Container>

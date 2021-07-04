@@ -15,6 +15,10 @@ import { COOKIE_BEARER_TOKEN } from '../../../../constants/keys-cookies.constant
 import { updateBearerToken } from '../../../../redux/slices/user.slices.redux';
 import { selectConfiguration } from '../../../../redux/slices/configuration.slices.redux';
 
+export interface IPropsLoginComponent {
+  onLogin?(): void;
+}
+
 const LoginContainer = styled.div`
   display: flex;
   flex: 1 1 auto;
@@ -91,7 +95,7 @@ const SendOtpButtonText = styled.p`
   cursor: pointer;
 `;
 
-const LoginComponent: FunctionComponent = () => {
+const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) => {
   const router = useRouter();
   const [, setCookie] = useCookies([COOKIE_BEARER_TOKEN]);
   const shopData = useAppSelector(selectShop);
@@ -141,7 +145,8 @@ const LoginComponent: FunctionComponent = () => {
         });
         if (response?.token) {
           await finishLogin(response.token);
-          router.push('/account');
+          // on login callback is present call it, otherwise send the user to account page
+          onLogin ? onLogin() : router.push('/account');
         }
       }
     } catch (error) {

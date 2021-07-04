@@ -1,43 +1,38 @@
-import React, { FunctionComponent } from "react";
-import Main from "./main/main.common.templateOne.components";
-import NavbarMobile from "./navbarMobile/navbar-mobile.common.templateOne.components";
-import NavbarDesktop from "./navbarDesktop/navbar-desktop.common.templateOne.components";
-import Footer from "./footer/footer.common.templateOne.components";
-import LoginAllPages from "./login/login.common.templateOne.components";
-import Cart from "./cart/cart.common.templateOne.components";
-import styled from "styled-components";
-import { BREAKPOINTS } from "../../../constants/grid-system-configuration";
+import React, { FunctionComponent } from 'react';
+import Main from './main/main.common.templateOne.components';
+import NavbarMobile from './navbarMobile/navbar-mobile.common.templateOne.components';
+import NavbarDesktop from './navbarDesktop/navbar-desktop.common.templateOne.components';
+import Footer from './footer/footer.common.templateOne.components';
+import Cart from './cart/cart.common.templateOne.components';
+import styled from 'styled-components';
+import { BREAKPOINTS } from '../../../constants/grid-system-configuration';
 
 export interface IPropsPageContainer {
-  showFooter?: boolean
+  showFooter?: boolean;
 }
 
 const AllPagesCartContainer = styled.div`
   @media (min-width: ${BREAKPOINTS.lg}px) {
     display: none;
   }
-`
+`;
 
-const PageContainer: FunctionComponent<IPropsPageContainer> = ({ children, showFooter=true }) => {
-  
-  return <>
-    <NavbarDesktop />
-    
-    <Main>
-      {children}
-    </Main>
+const PageContainer: FunctionComponent<IPropsPageContainer> = ({ children, showFooter = true }) => {
+  return (
+    <>
+      <NavbarDesktop />
 
-    {showFooter && <Footer />}
+      <Main>{children}</Main>
 
-    <NavbarMobile />
-    
-    <AllPagesCartContainer>
-      <Cart />
-    </AllPagesCartContainer>
+      {showFooter && <Footer />}
 
-    <LoginAllPages />
-  </>
+      <NavbarMobile />
 
-}
+      <AllPagesCartContainer>
+        <Cart />
+      </AllPagesCartContainer>
+    </>
+  );
+};
 
-export default PageContainer
+export default PageContainer;

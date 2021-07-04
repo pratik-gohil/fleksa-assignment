@@ -4,6 +4,7 @@ import PhoneInput from 'react-phone-input-2';
 import styled, { css } from 'styled-components';
 import NodeApiHttpPostRervation from '../../../../http/nodeapi/reservation/post.reservation.nodeapi.http';
 import LoadingIndicator from '../../common/loadingIndicator/loading-indicator.common.templateOne.components';
+import LoginAllPages from '../../common/login/login.common.templateOne.components';
 
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { updateError } from '../../../../redux/slices/common.slices.redux';
@@ -11,6 +12,7 @@ import { selectConfiguration, updateShowLogin } from '../../../../redux/slices/c
 import { selectShop } from '../../../../redux/slices/index.slices.redux';
 import { selectBearerToken } from '../../../../redux/slices/user.slices.redux';
 import { ILabelValue } from '../../../../utils/restaurant-timings.utils';
+import { useRouter } from 'next/router';
 
 const Wrapper = styled.div``;
 const InputBox = styled.div`
@@ -132,11 +134,16 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
   const bearerToken = useAppSelector(selectBearerToken);
   const configuration = useAppSelector(selectConfiguration);
   const shopData = useAppSelector(selectShop);
+
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const handleReserveButtonClick = async () => {
     try {
-      if (!bearerToken) return dispatch(updateShowLogin(true));
+      if (!bearerToken) {
+        dispatch(updateShowLogin(true));
+        return;
+      } else dispatch(updateShowLogin(false));
 
       setLoading(true);
 
@@ -154,13 +161,14 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
       if (!response.result) {
         setLoading(false);
 
-        return dispatch(
+        dispatch(
           updateError({
             show: true,
             message: response.message,
             severity: 'error',
           }),
         );
+        return;
       }
 
       setLoading(false);
@@ -171,10 +179,13 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
       setComment('');
       setName('');
       setCountryCode(49);
+
+      // TODO: Redirect to success page
+      router.push('/reservation-success');
     } catch (e) {
       console.log('error : ', e);
       setLoading(false);
-      return dispatch(
+      dispatch(
         updateError({
           show: true,
           message: 'Ooops! Something went wrong.',
@@ -226,6 +237,8 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
       <ReservationButton onClick={handleReserveButtonClick}>
         {loading ? <LoadingIndicator width={20} /> : <ButtonText> Reserve Now </ButtonText>}
       </ReservationButton>
+
+      <LoginAllPages path="/reservation" callback={handleReserveButtonClick} isRedirect={false} />
     </Wrapper>
   );
 };
