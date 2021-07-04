@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 import PhoneInput from 'react-phone-input-2';
 import styled, { css } from 'styled-components';
 import NodeApiHttpPostRervation from '../../../../http/nodeapi/reservation/post.reservation.nodeapi.http';
-import { useAppSelector } from '../../../../redux/hooks.redux';
+import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
+import { updateError } from '../../../../redux/slices/common.slices.redux';
 import { selectConfiguration } from '../../../../redux/slices/configuration.slices.redux';
 import { selectShop } from '../../../../redux/slices/index.slices.redux';
 import { selectBearerToken } from '../../../../redux/slices/user.slices.redux';
@@ -123,6 +124,7 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
   const bearerToken = useAppSelector(selectBearerToken);
   const configuration = useAppSelector(selectConfiguration);
   const shopData = useAppSelector(selectShop);
+  const dispatch = useAppDispatch();
 
   const handleReserveButtonClick = async () => {
     try {
@@ -138,6 +140,13 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
       });
 
       if (!response.result) {
+        return dispatch(
+          updateError({
+            show: true,
+            message: response.message,
+            severity: 'error',
+          }),
+        );
       }
 
       console.log('response : ', response);

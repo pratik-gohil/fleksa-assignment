@@ -11,4 +11,5 @@ export interface INodeApiHttpReservationRequestData {
 
 export interface INodeApiHttpReservationResponseData {
   result: boolean;
+  message?: string;
 }

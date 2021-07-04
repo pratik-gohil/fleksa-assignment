@@ -23,8 +23,8 @@ const initialState: ICommonSliceState = {
   error: {
     message: 'test error message',
     severity: 'info',
-    show: true,
-    duration: 5000,
+    show: false,
+    duration: 3000,
   },
 };
 

@@ -28,7 +28,7 @@ const Wrapper = styled.div<{
   display: ${(p) => (p.show ? 'flex' : 'none')};
   align-items: center;
   justify-content: space-between;
-  animation: bubble 1s cubic-bezier(0.17, 0.89, 0.32, 1.49);
+  animation: bubble 0.5s cubic-bezier(0.17, 0.89, 0.32, 1.49);
 
   @keyframes bubble {
     0% {
@@ -65,13 +65,17 @@ export const Snackbar = () => {
   };
 
   useEffect(() => {
-    setTimeout(() => {
+    const viewTimer = setTimeout(() => {
       dispatch(
         updateError({
-          show: !error.show,
+          show: false,
         }),
       );
     }, error.duration);
+
+    return () => {
+      clearTimeout(viewTimer);
+    };
   }, []);
 
   return (
