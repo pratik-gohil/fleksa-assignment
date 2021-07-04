@@ -7,7 +7,7 @@ import LoadingIndicator from '../../common/loadingIndicator/loading-indicator.co
 
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { updateError } from '../../../../redux/slices/common.slices.redux';
-import { selectConfiguration } from '../../../../redux/slices/configuration.slices.redux';
+import { selectConfiguration, updateShowLogin } from '../../../../redux/slices/configuration.slices.redux';
 import { selectShop } from '../../../../redux/slices/index.slices.redux';
 import { selectBearerToken } from '../../../../redux/slices/user.slices.redux';
 import { ILabelValue } from '../../../../utils/restaurant-timings.utils';
@@ -136,7 +136,10 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
 
   const handleReserveButtonClick = async () => {
     try {
+      if (!bearerToken) return dispatch(updateShowLogin(true));
+
       setLoading(true);
+
       const response = await new NodeApiHttpPostRervation(configuration, bearerToken as any).post({
         countryCode: `${countryCode}`,
         phone: phone.substring(String(countryCode).length),

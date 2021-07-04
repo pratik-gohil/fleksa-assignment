@@ -10,6 +10,7 @@ import { BREAKPOINTS } from '../../constants/grid-system-configuration';
 import { useState } from 'react';
 import moment from 'moment';
 import { ILabelValue } from '../../utils/restaurant-timings.utils';
+import LoginAllPages from '../../components/templateOne/common/login/login.common.templateOne.components';
 
 const ReservationContainer = styled.section`
   position: relative;
@@ -95,6 +96,8 @@ const ReservationTemplateOne: FunctionComponent = ({}) => {
       <CoupleImg src="/assets/svg/couple.svg" alt="couple" />
 
       <Snackbar />
+
+      <LoginAllPages />
     </ReservationContainer>
   );
 };
