@@ -11,7 +11,7 @@ const templateList = [MenuPageTemplateOne];
 
 export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ctx) => {
   try {
-    const { redirect, responseIndex } = await getServerSidePropsCommon(ctx, false, true);
+    const { redirect, responseIndex } = await getServerSidePropsCommon(ctx, false);
     if (redirect) return redirect;
 
     if (responseIndex?.siblings.length === 0) {

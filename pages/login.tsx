@@ -11,7 +11,7 @@ const templateList = [LoginPageTemplateOne];
 
 export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ctx) => {
   try {
-    const { redirect } = await getServerSidePropsCommon(ctx, false, true);
+    const { redirect } = await getServerSidePropsCommon(ctx, false);
     if (redirect) return redirect;
 
     return {

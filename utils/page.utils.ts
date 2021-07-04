@@ -6,12 +6,11 @@ import PyApiHttpGetIndex from '../http/pyapi/index/get.index.pyapi.http';
 import { updateAddress, updateShop, updateTimings } from '../redux/slices/index.slices.redux';
 import NodeApiHttpGetUser from '../http/nodeapi/user/get.user.nodeapi.http';
 
-export async function getServerSidePropsCommon(ctx: any, requiresLogin: boolean, isApiCall: boolean) {
+export async function getServerSidePropsCommon(ctx: any, requiresLogin: boolean) {
   try {
     const cookies = new Cookies(ctx.req, ctx.res);
     const bearerToken = cookies.get(COOKIE_BEARER_TOKEN);
     const restaurantName = cookies.get(COOKIE_SELECTED_RESTAURANT_NAME);
-    let responseIndex;
 
     /**
      * If hostname is localhost:3000 or newqa.felksa.de use the restaurant name given by the cookie otherwise use the actual host.
@@ -53,16 +52,12 @@ export async function getServerSidePropsCommon(ctx: any, requiresLogin: boolean,
       ctx.store.dispatch(updateCustomer(userData?.data.customer));
     }
 
-    console.log('request needed : ', isApiCall);
+    const responseIndex = await new PyApiHttpGetIndex(configuration).get();
+    if (!responseIndex?.shop.id) throw new Error('Shop id not found');
 
-    if (isApiCall) {
-      responseIndex = await new PyApiHttpGetIndex(configuration).get();
-      if (!responseIndex?.shop.id) throw new Error('Shop id not found');
-
-      ctx.store.dispatch(updateAddress(responseIndex?.address));
-      ctx.store.dispatch(updateShop(responseIndex?.shop));
-      ctx.store.dispatch(updateTimings(responseIndex?.timings));
-    }
+    ctx.store.dispatch(updateAddress(responseIndex?.address));
+    ctx.store.dispatch(updateShop(responseIndex?.shop));
+    ctx.store.dispatch(updateTimings(responseIndex?.timings));
 
     return {
       bearerToken,

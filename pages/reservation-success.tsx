@@ -8,7 +8,7 @@ const templateList = [ReservationSuccessPageTemplateOne];
 
 export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ctx) => {
   try {
-    const { redirect } = await getServerSidePropsCommon(ctx, true, false);
+    const { redirect } = await getServerSidePropsCommon(ctx, true);
     if (redirect) return redirect;
 
     return {
