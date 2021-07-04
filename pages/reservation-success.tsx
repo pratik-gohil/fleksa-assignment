@@ -1,13 +1,10 @@
-import dynamic from 'next/dynamic';
-import React from 'react';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import ReservationSuccessPageTemplateOne from '../templates/one/reservation-success.one.templates';
 import IndexStoreWrapper from '../redux/store.redux';
 import TemplateToShow from '../templates/template-to-show.templates';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { getServerSidePropsCommon } from '../utils/page.utils';
 
-const AccountPageTemplateOne = dynamic(import('../templates/one/account.one.templates'));
-
-const templateList = [AccountPageTemplateOne];
+const templateList = [ReservationSuccessPageTemplateOne];
 
 export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ctx) => {
   try {
@@ -21,12 +18,12 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ct
       },
     };
   } catch (error) {
-    console.error(error);
+    throw error;
   }
 });
 
-function Account({ templateNumber }: any) {
-  return <TemplateToShow templateList={templateList} templateNumber={templateNumber} />;
+function ReservationSuccess({ templateNumber }: any) {
+  return <TemplateToShow templateList={templateList} templateNumber={templateNumber} pageContainer={{ showFooter: false }} />;
 }
 
-export default Account;
+export default ReservationSuccess;

@@ -3,11 +3,16 @@ import React, { useState } from 'react';
 import PhoneInput from 'react-phone-input-2';
 import styled, { css } from 'styled-components';
 import NodeApiHttpPostRervation from '../../../../http/nodeapi/reservation/post.reservation.nodeapi.http';
-import { useAppSelector } from '../../../../redux/hooks.redux';
-import { selectConfiguration } from '../../../../redux/slices/configuration.slices.redux';
+import LoadingIndicator from '../../common/loadingIndicator/loading-indicator.common.templateOne.components';
+import LoginAllPages from '../../common/login/login.common.templateOne.components';
+
+import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
+import { updateError } from '../../../../redux/slices/common.slices.redux';
+import { selectConfiguration, updateShowLogin } from '../../../../redux/slices/configuration.slices.redux';
 import { selectShop } from '../../../../redux/slices/index.slices.redux';
 import { selectBearerToken } from '../../../../redux/slices/user.slices.redux';
 import { ILabelValue } from '../../../../utils/restaurant-timings.utils';
+import { useRouter } from 'next/router';
 
 const Wrapper = styled.div``;
 const InputBox = styled.div`
@@ -96,6 +101,9 @@ const ReservationButton = styled.button`
   outline: none;
   border-radius: 10px;
   margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   cursor: pointer;
   &:hover {
@@ -106,6 +114,8 @@ const ReservationButton = styled.button`
     width: 100%;
   }
 `;
+
+const ButtonText = styled.span``;
 
 interface IFormLeftInputsProps {
   date: string;
@@ -119,13 +129,24 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
   const [name, setName] = useState('');
   const [comment, setComment] = useState('');
   const [countryCode, setCountryCode] = useState<number>(49);
+  const [loading, setLoading] = useState(false);
 
   const bearerToken = useAppSelector(selectBearerToken);
   const configuration = useAppSelector(selectConfiguration);
   const shopData = useAppSelector(selectShop);
 
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+
   const handleReserveButtonClick = async () => {
     try {
+      if (!bearerToken) {
+        dispatch(updateShowLogin(true));
+        return;
+      } else dispatch(updateShowLogin(false));
+
+      setLoading(true);
+
       const response = await new NodeApiHttpPostRervation(configuration, bearerToken as any).post({
         countryCode: `${countryCode}`,
         phone: phone.substring(String(countryCode).length),
@@ -138,11 +159,39 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
       });
 
       if (!response.result) {
+        setLoading(false);
+
+        dispatch(
+          updateError({
+            show: true,
+            message: response.message,
+            severity: 'error',
+          }),
+        );
+        return;
       }
 
-      console.log('response : ', response);
+      setLoading(false);
+
+      // TODO: Resert inputs
+      setPhone('');
+      setEmail('');
+      setComment('');
+      setName('');
+      setCountryCode(49);
+
+      // TODO: Redirect to success page
+      router.push('/reservation-success');
     } catch (e) {
       console.log('error : ', e);
+      setLoading(false);
+      dispatch(
+        updateError({
+          show: true,
+          message: 'Ooops! Something went wrong.',
+          severity: 'error',
+        }),
+      );
     }
   };
 
@@ -185,7 +234,11 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
         By continuing, you agree to Fleksa's <LinkText href="#">Terms of use</LinkText> and <LinkText href="#">Privacy Policy</LinkText>
       </Acknowledgement>
 
-      <ReservationButton onClick={handleReserveButtonClick}>Reserve Now</ReservationButton>
+      <ReservationButton onClick={handleReserveButtonClick}>
+        {loading ? <LoadingIndicator width={20} /> : <ButtonText> Reserve Now </ButtonText>}
+      </ReservationButton>
+
+      <LoginAllPages path="/reservation" callback={handleReserveButtonClick} isRedirect={false} />
     </Wrapper>
   );
 };
