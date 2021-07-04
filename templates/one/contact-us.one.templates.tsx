@@ -1,92 +1,243 @@
-import { useTranslation } from "next-i18next";
-import React, { FunctionComponent } from "react";
-import { useState } from "react";
-import { Container, Row, Col } from "react-grid-system";
-import styled from "styled-components";
-import { ITimingsDay } from "../../interfaces/common/shop.common.interfaces";
-import { useAppSelector } from "../../redux/hooks.redux";
-import { selectAddress, selectShop, selectTimings } from "../../redux/slices/index.slices.redux";
+import { useTranslation } from 'next-i18next';
+import React, { FunctionComponent } from 'react';
+import { useState } from 'react';
+import { Container, Row, Col } from 'react-grid-system';
+import styled from 'styled-components';
+import { ITimingsDay } from '../../interfaces/common/shop.common.interfaces';
+import { useAppSelector } from '../../redux/hooks.redux';
+import { selectTimings } from '../../redux/slices/index.slices.redux';
 
+const Header = styled.div`
+  padding-top: 2em;
+  max-width: 700px;
+  margin: 0 auto;
+`;
 const Title = styled.h1`
-  font-size: 28px;
-`
+  font-size: 2rem;
+  font-weight: 700;
+  color: ${(p) => p.theme.textDarkColor};
+  margin-bottom: 0.1em;
+  text-align: left;
+
+  @media (max-width: 576px) {
+    text-align: center;
+  }
+`;
+const SubTitle = styled.h2`
+  font-size: 1rem;
+  font-weight: 400;
+  color: ${(p) => p.theme.textDarkColor};
+  text-align: left;
+  margin-bottom: 2em;
+
+  @media (max-width: 576px) {
+    text-align: center;
+  }
+`;
 
 const Form = styled.form`
-
-`
+  max-width: 700px;
+  margin: auto;
+  padding-bottom: 3rem;
+`;
 
 const Label = styled.label`
-
-`
+  color: ${(p) => p.theme.textDarkColor};
+  font-size: 1rem;
+  font-weight: 500;
+  padding-bottom: 0.5rem;
+  display: block;
+`;
 
 const Input = styled.input`
   width: 100%;
-  padding: ${props => props.theme.dimen.X4}px;
-  border: ${props => props.theme.border};
-  border-radius: ${props => props.theme.borderRadius}px;
-`
+  padding: ${(props) => props.theme.dimen.X4}px;
+  border: ${(props) => props.theme.border};
+  border-radius: ${(props) => props.theme.borderRadius}px;
+
+  display: inline-block;
+  font-size: 1rem;
+  padding: 1rem;
+  outline: none;
+  border-radius: 5px;
+  font-weight: 300;
+  color: ${(p) => p.theme.textDarkColor};
+  width: 100%;
+`;
 
 const Textarea = styled.textarea`
   width: 100%;
-  padding: ${props => props.theme.dimen.X4}px;
-  border: ${props => props.theme.border};
-  border-radius: ${props => props.theme.borderRadius}px;
-`
+  padding: ${(props) => props.theme.dimen.X4}px;
+  border: ${(props) => props.theme.border};
+  border-radius: ${(props) => props.theme.borderRadius}px;
+
+  display: inline-block;
+  font-size: 1rem;
+  padding: 1rem;
+  outline: none;
+  border-radius: 5px;
+  font-weight: 300;
+  color: ${(p) => p.theme.textDarkColor};
+  width: 100%;
+`;
+
+const BottomContainer = styled.div`
+  display: flex;
+
+  div {
+    width: 50%;
+  }
+`;
+
+const InputContainerFlex = styled.div`
+  display: flex;
+  column-gap: 1rem;
+
+  div {
+    width: 50%;
+  }
+`;
+const InputContainer = styled.div`
+  div {
+    width: 100%;
+    padding-right: 0.5rem;
+  }
+`;
+const InputBox = styled.div`
+  padding: 0.5rem 0;
+`;
+
+const ContactUsImage = styled.img`
+  max-height: 220px;
+  margin: auto;
+`;
+
+const AgreementBox = styled.div`
+  display: flex;
+  align-items: center;
+`;
+const Acknowledgement = styled.p`
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: ${(p) => p.theme.textDarkColor};
+  width: max-content;
+`;
+const Checkbox = styled.input`
+  margin-right: 0.5rem;
+`;
+const SendButton = styled.button`
+  max-width: 120px !important;
+  padding: 0.8em;
+  font-size: 1em;
+  font-weight: 600;
+  color: white;
+  background-color: ${(p) => p.theme.textDarkColor};
+  width: 100%;
+  max-width: 100px;
+  margin: 0 auto;
+  border: none;
+  outline: none;
+  border-radius: 10px;
+  cursor: pointer;
+
+  &:hover {
+    filter: brightness(1.3);
+  }
+
+  @media (min-width: 600px) {
+    max-width: 300px;
+    margin: 0;
+  }
+`;
 
 const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
-  const { t } = useTranslation("contact-us")
-  const [ name, setName ] = useState("")
-  const [ email, setEmail ] = useState("")
-  const [ subject, setSubject ] = useState("")
-  const [ message, setMessage ] = useState("")
-  const shopData = useAppSelector(selectShop)
-  const timings = useAppSelector(selectTimings)
-  const addressData = useAppSelector(selectAddress)
+  const { t } = useTranslation('contact-us');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [subject, setSubject] = useState('');
+  const [message, setMessage] = useState('');
+  // const shopData = useAppSelector(selectShop);
+  const timings = useAppSelector(selectTimings);
+  // const addressData = useAppSelector(selectAddress);
 
   const days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'].map((day) => {
-    if (timings === null) return
+    if (timings === null) return;
     return {
       dayName: t(`@${day}`),
       time: (timings[day] as ITimingsDay).shop?.timings?.map((t) => `${t.open} - ${t.close}`).join(', '),
       available: (timings[day] as ITimingsDay).shop.availability,
-    }
-  })
+    };
+  });
 
-  return <Container>
-    <Row>
-      <Col>
-        <Title>{t("@title")}</Title>
-        <Form>
-          <Label>{t("@name")}</Label>
-          <Input value={name} onChange={e => setName(e.target.value)} />
-          <Label>{t("@email")}</Label>
-          <Input value={email} onChange={e => setEmail(e.target.value)} />
-          <Label>{t("@subject")}</Label>
-          <Input value={subject} onChange={e => setSubject(e.target.value)} />
-          <Label>{t("@message")}</Label>
-          <Textarea value={message} onChange={e => setMessage(e.target.value)} />
-        </Form>
-      </Col>
-      <Col>
-        {days.map(day => <p key={day?.dayName}>{day?.dayName} - {day?.time}</p>)}
-      </Col>
-      <Col>
-        <iframe
-          src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY}&q=${shopData?.name.replace(
-            ' ',
-            '+',
-          )},${addressData?.city.replace(' ', '+')}+${addressData?.country.replace(' ', '+')}`}
-          title="Restaurant Map"
-          height="400"
-          frameBorder="0"
-          style={{ border: 0 }}
-          aria-hidden="false"
-          tabIndex={0}
-        ></iframe>
-      </Col>
-    </Row>
-  </Container>
+  return (
+    <Container fluid>
+      <Row nogutter>
+        <Col xl={8}>
+          <Header>
+            <Title>{t('@title')}</Title>
+            <SubTitle>{t('@sub_title')}</SubTitle>
+          </Header>
 
-}
+          <Form>
+            <InputContainerFlex>
+              <InputBox>
+                <Label>{t('@name')}</Label>
+                <Input value={name} onChange={(e) => setName(e.target.value)} />
+              </InputBox>
+              <InputBox>
+                <Label>{t('@email')}</Label>
+                <Input value={email} onChange={(e) => setEmail(e.target.value)} />
+              </InputBox>
+            </InputContainerFlex>
 
-export default ContactUsPageTemplateOne
+            <BottomContainer>
+              <InputContainer>
+                <InputBox>
+                  <Label>{t('@subject')}</Label>
+                  <Input value={subject} onChange={(e) => setSubject(e.target.value)} />
+                </InputBox>
+                <InputBox>
+                  <Label>{t('@message')}</Label>
+                  <Textarea value={message} onChange={(e) => setMessage(e.target.value)} />
+                </InputBox>
+              </InputContainer>
+              <ContactUsImage src="/assets/svg/contact_us_main_img.svg" />
+            </BottomContainer>
+
+            <AgreementBox>
+              <Checkbox type="checkbox" checked={false} />
+              <Acknowledgement>
+                Yes, I agree to the <a href="#">Terms of use</a> and <a href="#">Privacy Policy</a>
+              </Acknowledgement>
+            </AgreementBox>
+
+            <SendButton type="submit">Send</SendButton>
+          </Form>
+        </Col>
+
+        <Col xl={4}>
+          {days.map((day) => (
+            <p key={day?.dayName}>
+              {day?.dayName} - {day?.time}
+            </p>
+          ))}
+        </Col>
+
+        {/* <iframe
+            src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY}&q=${shopData?.name.replace(
+              ' ',
+              '+',
+            )},${addressData?.city.replace(' ', '+')}+${addressData?.country.replace(' ', '+')}`}
+            title="Restaurant Map"
+            height="400"
+            frameBorder="0"
+            style={{ border: 0 }}
+            aria-hidden="false"
+            tabIndex={0}
+          ></iframe> */}
+      </Row>
+    </Container>
+  );
+};
+
+export default ContactUsPageTemplateOne;
