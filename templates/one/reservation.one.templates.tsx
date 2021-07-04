@@ -3,6 +3,7 @@ import { Col, Container, Row } from 'react-grid-system';
 import Header from '../../components/templateOne/pages/reservation/header.reservation.pages.templateOne.components';
 import FormLeftInputs from '../../components/templateOne/pages/reservation/form-left.reservation.pages.templateOne.components';
 import FormRightInputs from '../../components/templateOne/pages/reservation/form-right.reservation.pages.templateOne.components';
+import { Snackbar } from '../../components/templateOne/common/snackbar/snackbar.error.pages.templateOne.components';
 
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../constants/grid-system-configuration';
@@ -92,7 +93,7 @@ const ReservationTemplateOne: FunctionComponent = ({}) => {
       </WidthFix>
 
       <CoupleImg src="/assets/svg/couple.svg" alt="couple" />
-      {/* <Snackbar message="test error message" /> */}
+      <Snackbar />
     </ReservationContainer>
   );
 };
