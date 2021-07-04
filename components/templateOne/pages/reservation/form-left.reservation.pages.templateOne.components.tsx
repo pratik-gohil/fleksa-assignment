@@ -159,6 +159,15 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
           }),
         );
       }
+
+      setLoading(false);
+
+      // TODO: Resert inputs
+      setPhone('');
+      setEmail('');
+      setComment('');
+      setName('');
+      setCountryCode(49);
     } catch (e) {
       console.log('error : ', e);
       setLoading(false);
