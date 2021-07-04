@@ -28,7 +28,7 @@ const Wrapper = styled.div<{
   display: ${(p) => (p.show ? 'flex' : 'none')};
   align-items: center;
   justify-content: space-between;
-  animation: bubble 0.5s cubic-bezier(0.17, 0.89, 0.32, 1.49);
+  animation: bubble 0.2s cubic-bezier(0.17, 0.89, 0.32, 1.49);
 
   @keyframes bubble {
     0% {
@@ -71,12 +71,12 @@ export const Snackbar = () => {
           show: false,
         }),
       );
-    }, error.duration);
+    }, error.duration || 3000);
 
     return () => {
       clearTimeout(viewTimer);
     };
-  }, []);
+  }, [error.show]);
 
   return (
     <Wrapper
