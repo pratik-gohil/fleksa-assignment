@@ -132,7 +132,7 @@ const Slot = styled.div<{
   }
 
   &:active {
-    animation: bubble 2s cubic-bezier(0.17, 0.89, 0.32, 1.49);
+    animation: zoomer 2s cubic-bezier(0.17, 0.89, 0.32, 1.49);
   }
 
   @media (max-width: 576px) {
@@ -140,7 +140,7 @@ const Slot = styled.div<{
     height: 40px;
   }
 
-  @keyframes bubble {
+  @keyframes zoomer {
     0% {
       transform: scale(0);
     }
