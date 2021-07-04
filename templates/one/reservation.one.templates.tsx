@@ -34,10 +34,11 @@ const FormContainer = styled.div`
 
 const CoupleImg = styled.img`
   position: absolute;
-  bottom: 0;
+  bottom: -2rem;
   left: 0;
   max-width: 40%;
   transform: scaleX(-1);
+  z-index: -1;
 
   @media (min-width: 992px) {
     max-width: 30%;

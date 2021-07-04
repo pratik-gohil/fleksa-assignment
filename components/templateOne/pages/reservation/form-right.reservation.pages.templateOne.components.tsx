@@ -89,7 +89,7 @@ const SlotContainer = styled.div`
   border: 1px solid rgba(0, 0, 0, 0.2);
   margin: 1rem 0 0.5rem 0;
   border-radius: 4px;
-  background: #fff;
+  background: transparent;
 `;
 const TimeSlots = styled.div`
   width: 100%;
@@ -120,6 +120,7 @@ const Slot = styled.div<{
   justify-content: center;
   align-items: center;
   margin: 0.5rem;
+  background: ${(p) => (p.active && !p.break ? 'rgba(0, 0, 0, 0)' : 'rgba(0,0,0,0.05)')};
 
   border-color: ${(p) => (p.active && !p.break ? 'rgba(0,0,0,1)' : 'rgba(0,0,0,0.2)')};
   cursor: ${(p) => (p.break ? 'not-allowed' : 'pointer')};
@@ -127,11 +128,28 @@ const Slot = styled.div<{
 
   &:hover {
     border-color: rgba(0, 0, 0, 1);
+    background: rgba(0, 0, 0, 0);
+  }
+
+  &:active {
+    animation: bubble 2s cubic-bezier(0.17, 0.89, 0.32, 1.49);
   }
 
   @media (max-width: 576px) {
     width: 50px;
     height: 40px;
+  }
+
+  @keyframes bubble {
+    0% {
+      transform: scale(0);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1);
+    }
   }
 `;
 
