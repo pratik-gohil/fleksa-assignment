@@ -20,6 +20,7 @@ const ListItemsContainer = styled.ul`
   list-style: none;
   display: flex;
   flex-direction: row;
+  align-items: center;
   position: relative;
   flex-wrap: nowrap;
   overflow-x: auto;
