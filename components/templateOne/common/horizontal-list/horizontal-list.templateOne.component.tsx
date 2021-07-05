@@ -12,6 +12,7 @@ type HorizontalListProps = {
 const ListWrapper = styled.div`
   display: flex;
   align-items: center;
+  justify-content: center;
 `;
 
 const ListItemsContainer = styled.ul`
@@ -85,7 +86,7 @@ const HorizontalList = ({ children, childCount }: HorizontalListProps) => {
   return (
     <ListWrapper>
       <ListItemsContainer ref={refHorizontalDrawer}>{children}</ListItemsContainer>
-      {childCount >= 3 && (
+      {childCount >= 4 && (
         <>
           <LeftButton onClick={scrollLeft}>
             <SvgPrevious />
