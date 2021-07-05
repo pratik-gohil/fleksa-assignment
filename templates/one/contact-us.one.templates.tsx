@@ -1,11 +1,10 @@
-import { useTranslation } from 'next-i18next';
 import React, { FunctionComponent } from 'react';
+import styled from 'styled-components';
+
+import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { Container, Row, Col } from 'react-grid-system';
-import styled from 'styled-components';
-import { ITimingsDay } from '../../interfaces/common/shop.common.interfaces';
-import { useAppSelector } from '../../redux/hooks.redux';
-import { selectTimings } from '../../redux/slices/index.slices.redux';
+import { BasicContactUsInformation } from '../../components/templateOne/pages/contact-us/basic-information.contact-us.pages.templateOne.components';
 
 const Header = styled.div`
   padding-top: 2em;
@@ -157,17 +156,7 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   // const shopData = useAppSelector(selectShop);
-  const timings = useAppSelector(selectTimings);
   // const addressData = useAppSelector(selectAddress);
-
-  const days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'].map((day) => {
-    if (timings === null) return;
-    return {
-      dayName: t(`@${day}`),
-      time: (timings[day] as ITimingsDay).shop?.timings?.map((t) => `${t.open} - ${t.close}`).join(', '),
-      available: (timings[day] as ITimingsDay).shop.availability,
-    };
-  });
 
   return (
     <Container fluid>
@@ -216,11 +205,7 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
         </Col>
 
         <Col xl={4}>
-          {days.map((day) => (
-            <p key={day?.dayName}>
-              {day?.dayName} - {day?.time}
-            </p>
-          ))}
+          <BasicContactUsInformation />
         </Col>
 
         {/* <iframe
