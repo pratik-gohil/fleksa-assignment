@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { FormEvent, useState } from 'react';
+import React, { useState } from 'react';
 import PhoneInput from 'react-phone-input-2';
 import styled, { css } from 'styled-components';
 import NodeApiHttpPostRervation from '../../../../http/nodeapi/reservation/post.reservation.nodeapi.http';
@@ -138,8 +138,7 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const handleReserveButtonClick = async (e: FormEvent) => {
-    e.preventDefault();
+  const handleReserveButtonClick = async () => {
     try {
       if (!bearerToken) {
         dispatch(updateShowLogin(true));
