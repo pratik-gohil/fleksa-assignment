@@ -12,6 +12,8 @@ export async function getServerSidePropsCommon(ctx: any, requiresLogin: boolean)
     const bearerToken = cookies.get(COOKIE_BEARER_TOKEN);
     const restaurantName = cookies.get(COOKIE_SELECTED_RESTAURANT_NAME);
 
+    console.log("host headers", ctx.req.headers, ctx.req.headers.host)
+
     /**
      * If hostname is localhost:3000 or newqa.felksa.de use the restaurant name given by the cookie otherwise use the actual host.
      * If above constraints are met but no restaurant name found in cookie, use roma.fleksa.com
