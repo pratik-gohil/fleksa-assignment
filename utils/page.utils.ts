@@ -18,8 +18,6 @@ export async function getServerSidePropsCommon(ctx: any, requiresLogin: boolean)
      * If restauant name includes ".fleksa." it will use production API's otherwise use testing API's
      */
     const host: string = (ctx.req.headers.host === 'localhost:3000') || (ctx.req.headers.host === 'newqa.fleksa.de') ? ( restaurantName || 'roma.fleksa.com' ) : ctx.req.headers.host;
-    console.log("host headers", ctx.req.headers.host)
-    console.log(ctx.req.headers.host === 'localhost:3000' || 'newqa.fleksa.de')
     const baseUrlPyApi = host.includes('.fleksa.') ? 'https://myqa.fleksa.com' : 'https://my.fleksa.com';
     const baseUrlNodeApi = host.includes('.fleksa.') ? 'https://orderqa.fleksa.com' : 'https://order.fleksa.com';
 
