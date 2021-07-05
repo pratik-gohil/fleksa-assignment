@@ -5,6 +5,9 @@ import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { Container, Row, Col } from 'react-grid-system';
 import { BasicContactUsInformation } from '../../components/templateOne/pages/contact-us/basic-information.contact-us.pages.templateOne.components';
+import { BREAKPOINTS } from '../../constants/grid-system-configuration';
+
+const ContactUsContainer = styled.div``;
 
 const Header = styled.div`
   padding-top: 2em;
@@ -18,7 +21,7 @@ const Title = styled.h1`
   margin-bottom: 0.1em;
   text-align: left;
 
-  @media (max-width: 576px) {
+  @media (max-width: ${BREAKPOINTS.sm}px) {
     text-align: center;
   }
 `;
@@ -37,7 +40,7 @@ const SubTitle = styled.h2`
 const Form = styled.form`
   max-width: 700px;
   margin: auto;
-  padding-bottom: 3rem;
+  padding: 1rem 1rem 3rem 1rem;
 `;
 
 const Label = styled.label`
@@ -85,6 +88,10 @@ const BottomContainer = styled.div`
 
   div {
     width: 50%;
+
+    @media (max-width: ${BREAKPOINTS.sm}px) {
+      width: 100%;
+    }
   }
 `;
 
@@ -94,6 +101,11 @@ const InputContainerFlex = styled.div`
 
   div {
     width: 50%;
+
+    @media (max-width: ${BREAKPOINTS.sm}px) {
+      width: 100%;
+      flex-wrap: wrap;
+    }
   }
 `;
 const InputContainer = styled.div`
@@ -109,6 +121,10 @@ const InputBox = styled.div`
 const ContactUsImage = styled.img`
   max-height: 220px;
   margin: auto;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    display: none;
+  }
 `;
 
 const AgreementBox = styled.div`
@@ -143,7 +159,7 @@ const SendButton = styled.button`
     filter: brightness(1.3);
   }
 
-  @media (min-width: 600px) {
+  @media (max-width: ${BREAKPOINTS.sm}px) {
     max-width: 300px;
     margin: 0;
   }
@@ -157,68 +173,63 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
   const [message, setMessage] = useState('');
 
   return (
-    <Container fluid>
-      <Row nogutter>
-        <Col xl={8}>
-          <Header>
-            <Title>{t('@title')}</Title>
-            <SubTitle>{t('@sub_title')}</SubTitle>
-          </Header>
+    <Container
+      fluid
+      style={{
+        padding: 0,
+        margin: 0,
+      }}
+    >
+      <ContactUsContainer>
+        <Row nogutter>
+          <Col xl={8}>
+            <Header>
+              <Title>{t('@title')}</Title>
+              <SubTitle>{t('@sub_title')}</SubTitle>
+            </Header>
 
-          <Form>
-            <InputContainerFlex>
-              <InputBox>
-                <Label>{t('@name')}</Label>
-                <Input value={name} onChange={(e) => setName(e.target.value)} />
-              </InputBox>
-              <InputBox>
-                <Label>{t('@email')}</Label>
-                <Input value={email} onChange={(e) => setEmail(e.target.value)} />
-              </InputBox>
-            </InputContainerFlex>
-
-            <BottomContainer>
-              <InputContainer>
+            <Form>
+              <InputContainerFlex>
                 <InputBox>
-                  <Label>{t('@subject')}</Label>
-                  <Input value={subject} onChange={(e) => setSubject(e.target.value)} />
+                  <Label>{t('@name')}</Label>
+                  <Input value={name} onChange={(e) => setName(e.target.value)} />
                 </InputBox>
                 <InputBox>
-                  <Label>{t('@message')}</Label>
-                  <Textarea value={message} onChange={(e) => setMessage(e.target.value)} />
+                  <Label>{t('@email')}</Label>
+                  <Input value={email} onChange={(e) => setEmail(e.target.value)} />
                 </InputBox>
-              </InputContainer>
-              <ContactUsImage src="/assets/svg/contact_us_main_img.svg" />
-            </BottomContainer>
+              </InputContainerFlex>
 
-            <AgreementBox>
-              <Checkbox type="checkbox" checked={false} />
-              <Acknowledgement>
-                Yes, I agree to the <a href="#">Terms of use</a> and <a href="#">Privacy Policy</a>
-              </Acknowledgement>
-            </AgreementBox>
+              <BottomContainer>
+                <InputContainer>
+                  <InputBox>
+                    <Label>{t('@subject')}</Label>
+                    <Input value={subject} onChange={(e) => setSubject(e.target.value)} />
+                  </InputBox>
+                  <InputBox>
+                    <Label>{t('@message')}</Label>
+                    <Textarea value={message} onChange={(e) => setMessage(e.target.value)} />
+                  </InputBox>
+                </InputContainer>
+                <ContactUsImage src="/assets/svg/contact_us_main_img.svg" />
+              </BottomContainer>
 
-            <SendButton type="submit">Send</SendButton>
-          </Form>
-        </Col>
+              <AgreementBox>
+                <Checkbox type="checkbox" checked={false} />
+                <Acknowledgement>
+                  Yes, I agree to the <a href="#">Terms of use</a> and <a href="#">Privacy Policy</a>
+                </Acknowledgement>
+              </AgreementBox>
 
-        <Col xl={4}>
-          <BasicContactUsInformation />
-        </Col>
+              <SendButton type="submit">Send</SendButton>
+            </Form>
+          </Col>
 
-        {/* <iframe
-            src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY}&q=${shopData?.name.replace(
-              ' ',
-              '+',
-            )},${addressData?.city.replace(' ', '+')}+${addressData?.country.replace(' ', '+')}`}
-            title="Restaurant Map"
-            height="400"
-            frameBorder="0"
-            style={{ border: 0 }}
-            aria-hidden="false"
-            tabIndex={0}
-          ></iframe> */}
-      </Row>
+          <Col xl={4}>
+            <BasicContactUsInformation />
+          </Col>
+        </Row>
+      </ContactUsContainer>
     </Container>
   );
 };

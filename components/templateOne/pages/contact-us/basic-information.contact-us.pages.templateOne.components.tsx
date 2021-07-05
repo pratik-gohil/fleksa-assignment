@@ -8,12 +8,17 @@ import { selectAddress, selectShop, selectTimings } from '../../../../redux/slic
 import ArrowIconPath from '../../../../public/assets/svg/next.svg';
 import MailIconPath from '../../../../public/assets/svg/email.svg';
 import PhoneIconpath from '../../../../public/assets/svg/call.svg';
+import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 
 const Wrapper = styled.div`
   padding: 2rem 1.5rem 0 1.5rem;
   height: 100%;
 
   border-left: 2px solid rgba(0, 0, 0, 0.1);
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    padding: 1rem;
+  }
 `;
 
 const DaysContainer = styled.div``;
@@ -79,6 +84,12 @@ const Phoneicon = styled(PhoneIconpath)`
 const Map = styled.div`
   display: flex;
   flex-direction: column;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    iframe {
+      height: 400px;
+    }
+  }
 `;
 
 export const BasicContactUsInformation = () => {
