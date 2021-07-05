@@ -17,7 +17,7 @@ const Wrapper = styled.div`
   border-left: 2px solid rgba(0, 0, 0, 0.1);
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    padding: 1rem;
+    padding: 0 1rem;
   }
 `;
 

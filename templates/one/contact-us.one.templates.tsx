@@ -4,12 +4,16 @@ import styled from 'styled-components';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { Container, Row, Col } from 'react-grid-system';
-import { BasicContactUsInformation } from '../../components/templateOne/pages/contact-us/basic-information.contact-us.pages.templateOne.components';
 import { BREAKPOINTS } from '../../constants/grid-system-configuration';
-import { useAppSelector } from '../../redux/hooks.redux';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks.redux';
 import { selectConfiguration } from '../../redux/slices/configuration.slices.redux';
-import NodeApiHttpPostContactUs from '../../http/nodeapi/contact-us/post.contact-us.nodeapi.http';
 import { selectShop } from '../../redux/slices/index.slices.redux';
+import { Snackbar } from '../../components/templateOne/common/snackbar/snackbar.error.pages.templateOne.components';
+import { updateError } from '../../redux/slices/common.slices.redux';
+import { BasicContactUsInformation } from '../../components/templateOne/pages/contact-us/basic-information.contact-us.pages.templateOne.components';
+
+import LoadingIndicator from '../../components/templateOne/common/loadingIndicator/loading-indicator.common.templateOne.components';
+import NodeApiHttpPostContactUs from '../../http/nodeapi/contact-us/post.contact-us.nodeapi.http';
 
 const ContactUsContainer = styled.div``;
 
@@ -46,7 +50,7 @@ const Form = styled.form`
   margin: auto;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    padding: 1rem 1rem 3rem 1rem;
+    padding: 1rem 1rem 2rem 1rem;
   }
 `;
 
@@ -108,10 +112,13 @@ const InputContainerFlex = styled.div`
 
   div {
     width: 50%;
+  }
 
-    @media (max-width: ${BREAKPOINTS.sm}px) {
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    display: block;
+
+    div {
       width: 100%;
-      flex-wrap: wrap;
     }
   }
 `;
@@ -178,13 +185,30 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
   const [email, setEmail] = useState('');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [checked, setChecked] = useState(false);
 
   const configuration = useAppSelector(selectConfiguration);
   const shopData = useAppSelector(selectShop);
+  const dispatch = useAppDispatch();
 
   const handleContactUsSendButtonClick = async (e: FormEvent) => {
     try {
       e.preventDefault();
+
+      if (!checked) {
+        dispatch(
+          updateError({
+            show: true,
+            message: 'Kindly accept our terms and service.',
+            severity: 'error',
+            duration: 400000,
+          }),
+        );
+        return;
+      }
+
+      setLoading(true);
 
       const response = await new NodeApiHttpPostContactUs(configuration).post({
         email,
@@ -194,7 +218,19 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
         shop_id: shopData?.id as unknown as number,
       });
 
+      console.log('res : ', response);
+
       if (!response.result) {
+        setLoading(false);
+
+        dispatch(
+          updateError({
+            show: true,
+            message: response.message,
+            severity: 'error',
+          }),
+        );
+
         return;
       }
 
@@ -203,8 +239,17 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
       setName('');
       setMessage('');
       setSubject('');
+      setChecked(false);
     } catch (e) {
       console.log(e);
+      setLoading(false);
+      dispatch(
+        updateError({
+          show: true,
+          message: 'Ooops! Something went wrong.',
+          severity: 'error',
+        }),
+      );
     }
   };
 
@@ -251,13 +296,13 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
               </BottomContainer>
 
               <AgreementBox>
-                <Checkbox type="checkbox" checked={false} />
+                <Checkbox type="checkbox" checked={checked} onChange={() => setChecked(!checked)} />
                 <Acknowledgement>
                   Yes, I agree to the <a href="#">Terms of use</a> and <a href="#">Privacy Policy</a>
                 </Acknowledgement>
               </AgreementBox>
 
-              <SendButton type="submit">Send</SendButton>
+              <SendButton type="submit">{loading ? <LoadingIndicator width={20} /> : 'Send'}</SendButton>
             </Form>
           </Col>
 
@@ -266,6 +311,8 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
           </Col>
         </Row>
       </ContactUsContainer>
+
+      <Snackbar />
     </Container>
   );
 };
