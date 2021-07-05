@@ -154,6 +154,7 @@ const Acknowledgement = styled.p`
 const Checkbox = styled.input`
   margin-right: 0.5rem;
 `;
+
 const SendButton = styled.button`
   max-width: 120px !important;
   padding: 0.8em;
@@ -163,11 +164,13 @@ const SendButton = styled.button`
   background-color: ${(p) => p.theme.textDarkColor};
   width: 100%;
   max-width: 100px;
-  margin: 0 auto;
   border: none;
   outline: none;
   border-radius: 10px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
     filter: brightness(1.3);
@@ -202,7 +205,6 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
             show: true,
             message: 'Kindly accept our terms and service.',
             severity: 'error',
-            duration: 400000,
           }),
         );
         return;
@@ -218,11 +220,9 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
         shop_id: shopData?.id as unknown as number,
       });
 
-      console.log('res : ', response);
+      setLoading(false);
 
       if (!response.result) {
-        setLoading(false);
-
         dispatch(
           updateError({
             show: true,
@@ -240,6 +240,14 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
       setMessage('');
       setSubject('');
       setChecked(false);
+
+      dispatch(
+        updateError({
+          show: true,
+          message: 'Successfully sent 👏 Thanks for contacting us.',
+          severity: 'success',
+        }),
+      );
     } catch (e) {
       console.log(e);
       setLoading(false);
@@ -273,11 +281,11 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
               <InputContainerFlex>
                 <InputBox>
                   <Label>{t('@name')}</Label>
-                  <Input value={name} onChange={(e) => setName(e.target.value)} />
+                  <Input type="text" value={name} onChange={(e) => setName(e.target.value)} required={true} />
                 </InputBox>
                 <InputBox>
                   <Label>{t('@email')}</Label>
-                  <Input value={email} onChange={(e) => setEmail(e.target.value)} />
+                  <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required={true} />
                 </InputBox>
               </InputContainerFlex>
 
@@ -285,11 +293,11 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
                 <InputContainer>
                   <InputBox>
                     <Label>{t('@subject')}</Label>
-                    <Input value={subject} onChange={(e) => setSubject(e.target.value)} />
+                    <Input type="text" value={subject} onChange={(e) => setSubject(e.target.value)} required={true} />
                   </InputBox>
                   <InputBox>
                     <Label>{t('@message')}</Label>
-                    <Textarea value={message} onChange={(e) => setMessage(e.target.value)} />
+                    <Textarea value={message} onChange={(e) => setMessage(e.target.value)} required={true} />
                   </InputBox>
                 </InputContainer>
                 <ContactUsImage src="/assets/svg/contact_us_main_img.svg" />

@@ -10,6 +10,7 @@ const snackbarColor = {
   warning: '#FFC107',
   error: '#DC3545',
   info: '#17a2b8',
+  success: '#28a745',
 } as const;
 
 const Wrapper = styled.div<{

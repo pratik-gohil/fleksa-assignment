@@ -8,7 +8,7 @@ import { RootState } from '../store.redux';
  */
 const SLICE_NAME = 'common';
 
-type ISnackbarType = 'warning' | 'error' | 'info';
+type ISnackbarType = 'warning' | 'error' | 'info' | 'success';
 
 export interface ICommonSliceState {
   error: {
