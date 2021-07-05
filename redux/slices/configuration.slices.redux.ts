@@ -19,6 +19,7 @@ export interface IIndexSliceState {
   language: LANGUAGES
   languageCode: string
   showLogin: boolean
+  showLoginOnLoginPath: string|null
   showCart: boolean
   configuration: IConfiguration
 }
@@ -27,6 +28,7 @@ const initialState: IIndexSliceState = {
   language: LANGUAGES.de,
   languageCode: "de",
   showLogin: false,
+  showLoginOnLoginPath: null,
   showCart: false,
   configuration: {
     host: '',
@@ -45,6 +47,9 @@ export const ConfigurationSlice = createSlice({
     },
     updateShowLogin(state, action) {
       state.showLogin = action.payload
+    },
+    updateShowLoginOnLoginPath(state, action) {
+      state.showLoginOnLoginPath = action.payload
     },
     updateShowCart(start, action) {
       start.showCart = action.payload
@@ -73,5 +78,6 @@ export const {
 export const selectLanguage = (state: RootState) => state.configuration.language
 export const selectLanguageCode = (state: RootState) => state.configuration.languageCode
 export const selectShowLogin = (state: RootState) => state.configuration.showLogin
+export const selectShowLoginOnLoginPath = (state: RootState) => state.configuration.showLoginOnLoginPath
 export const selectShowCart = (state: RootState) => state.configuration.showCart
 export const selectConfiguration = (state: RootState) => state.configuration.configuration

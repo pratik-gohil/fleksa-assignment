@@ -11,6 +11,7 @@ import CartAddRemoveButton from "./add-remove.cart.common.templateOne.components
 import SvgCartEmpty from "../../../../public/assets/svg/cart-empty.svg";
 import { useEffect } from "react";
 import { useState } from "react";
+import LoginAllPages from "../login/login.common.templateOne.components";
 
 const Wrapper = styled.div<{ showCart: boolean }>`
   position: fixed;
@@ -184,6 +185,8 @@ const Cart: FunctionComponent = ({}) => {
     </List>
 
     <OrderButton isActive={cartItemKeys.length > 0} onClick={onClickOrderButton}>ORDER</OrderButton>
+
+    <LoginAllPages callback={() => router.push("/checkout")} />
   </Wrapper>
 }
 

@@ -3,7 +3,6 @@ import Main from "./main/main.common.templateOne.components";
 import NavbarMobile from "./navbarMobile/navbar-mobile.common.templateOne.components";
 import NavbarDesktop from "./navbarDesktop/navbar-desktop.common.templateOne.components";
 import Footer from "./footer/footer.common.templateOne.components";
-import LoginAllPages from "./login/login.common.templateOne.components";
 import Cart from "./cart/cart.common.templateOne.components";
 import styled from "styled-components";
 import { BREAKPOINTS } from "../../../constants/grid-system-configuration";
@@ -34,8 +33,6 @@ const PageContainer: FunctionComponent<IPropsPageContainer> = ({ children, showF
     <AllPagesCartContainer>
       <Cart />
     </AllPagesCartContainer>
-
-    <LoginAllPages />
   </>
 
 }

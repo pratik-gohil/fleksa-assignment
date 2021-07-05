@@ -238,7 +238,7 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
         {loading ? <LoadingIndicator width={20} /> : <ButtonText> Reserve Now </ButtonText>}
       </ReservationButton>
 
-      <LoginAllPages path="/reservation" callback={handleReserveButtonClick} isRedirect={false} />
+      <LoginAllPages callback={handleReserveButtonClick} />
     </Wrapper>
   );
 };
