@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { useState } from 'react';
+import React, { FormEvent, useState } from 'react';
 import PhoneInput from 'react-phone-input-2';
 import styled, { css } from 'styled-components';
 import NodeApiHttpPostRervation from '../../../../http/nodeapi/reservation/post.reservation.nodeapi.http';
@@ -138,7 +138,8 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const handleReserveButtonClick = async () => {
+  const handleReserveButtonClick = async (e: FormEvent) => {
+    e.preventDefault();
     try {
       if (!bearerToken) {
         dispatch(updateShowLogin(true));
@@ -234,7 +235,7 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
         By continuing, you agree to Fleksa's <LinkText href="#">Terms of use</LinkText> and <LinkText href="#">Privacy Policy</LinkText>
       </Acknowledgement>
 
-      <ReservationButton onClick={handleReserveButtonClick}>
+      <ReservationButton onClick={handleReserveButtonClick} type="submit">
         {loading ? <LoadingIndicator width={20} /> : <ButtonText> Reserve Now </ButtonText>}
       </ReservationButton>
 
