@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FormEvent, FunctionComponent } from 'react';
 import styled from 'styled-components';
 
 import { useTranslation } from 'next-i18next';
@@ -6,6 +6,10 @@ import { useState } from 'react';
 import { Container, Row, Col } from 'react-grid-system';
 import { BasicContactUsInformation } from '../../components/templateOne/pages/contact-us/basic-information.contact-us.pages.templateOne.components';
 import { BREAKPOINTS } from '../../constants/grid-system-configuration';
+import { useAppSelector } from '../../redux/hooks.redux';
+import { selectConfiguration } from '../../redux/slices/configuration.slices.redux';
+import NodeApiHttpPostContactUs from '../../http/nodeapi/contact-us/post.contact-us.nodeapi.http';
+import { selectShop } from '../../redux/slices/index.slices.redux';
 
 const ContactUsContainer = styled.div``;
 
@@ -175,6 +179,35 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
 
+  const configuration = useAppSelector(selectConfiguration);
+  const shopData = useAppSelector(selectShop);
+
+  const handleContactUsSendButtonClick = async (e: FormEvent) => {
+    try {
+      e.preventDefault();
+
+      const response = await new NodeApiHttpPostContactUs(configuration).post({
+        email,
+        subject,
+        message,
+        name,
+        shop_id: shopData?.id as unknown as number,
+      });
+
+      if (!response.result) {
+        return;
+      }
+
+      // TODO: Reset inputs
+      setEmail('');
+      setName('');
+      setMessage('');
+      setSubject('');
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <Container
       fluid
@@ -191,7 +224,7 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
               <SubTitle>{t('@sub_title')}</SubTitle>
             </Header>
 
-            <Form>
+            <Form onSubmit={handleContactUsSendButtonClick}>
               <InputContainerFlex>
                 <InputBox>
                   <Label>{t('@name')}</Label>
