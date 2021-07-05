@@ -57,7 +57,12 @@ const NavbarDesktop: FunctionComponent = ({}) => {
 
   return (
     <WrapperHeader>
-      <Container fluid>
+      <Container
+        fluid
+        style={{
+          width: '80%',
+        }}
+      >
         <Row>
           <Col md={4}>
             <a href="/">{shopData?.logo && <Logo src={shopData?.logo} loading="lazy" />}</a>
