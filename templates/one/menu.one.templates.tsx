@@ -53,24 +53,19 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
 
   function initMap(): void {
     map = new google.maps.Map(document.getElementById("map") as HTMLElement, {
-      center: new google.maps.LatLng(-33.91722, 151.23064),
       zoom: 16,
     });
+    const latlngbounds = new google.maps.LatLngBounds();
   
-    const features = [
-      {
-        position: new google.maps.LatLng(-33.91721, 151.2263),
+    const features = siblingsData.map(sibling => {
+      latlngbounds.extend(new google.maps.LatLng(sibling.address.lat, sibling.address.lon));
+      return {
+        position: new google.maps.LatLng(sibling.address.lat, sibling.address.lon),
         type: "info",
-      },
-      {
-        position: new google.maps.LatLng(-33.91539, 151.2282),
-        type: "info",
-      },
-      {
-        position: new google.maps.LatLng(-33.91747, 151.22912),
-        type: "info",
-      },
-    ];
+      }
+    });
+
+    map.fitBounds(latlngbounds)
   
     // Create markers.
     for (let i = 0; i < features.length; i++) {
