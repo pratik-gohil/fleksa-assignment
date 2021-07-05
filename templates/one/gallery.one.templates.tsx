@@ -5,6 +5,8 @@ import styled from 'styled-components';
 import { BREAKPOINTS } from '../../constants/grid-system-configuration';
 import { useAppSelector } from '../../redux/hooks.redux';
 import { selectImages, selectShop } from '../../redux/slices/index.slices.redux';
+import SvgPrevious from '../../public/assets/svg/previous.svg';
+import SvgNext from '../../public/assets/svg/next.svg';
 
 const getConfig = (index: number) => {
   const val = (index % 5) + 1;
@@ -149,6 +151,46 @@ const ModalImage = styled.img`
   cursor: zoom-out;
 `;
 
+const LeftButton = styled.div`
+  width: 48px;
+  height: 48px;
+  position: absolute;
+  left: 100px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  cursor: pointer;
+  transition: 0.3s;
+
+  svg {
+    transition: 0.3s;
+    fill: rgba(0, 0, 0, 0.4);
+  }
+  &:hover svg {
+    fill: rgba(0, 0, 0, 1);
+  }
+`;
+
+const RightButton = styled.div`
+  width: 48px;
+  height: 48px;
+  position: absolute;
+  right: 100px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  cursor: pointer;
+  transition: 0.3s;
+
+  svg {
+    transition: 0.3s;
+    fill: rgba(0, 0, 0, 0.4);
+  }
+  &:hover svg {
+    fill: rgba(0, 0, 0, 1);
+  }
+`;
+
 const GalleryPageTemplateOne: FunctionComponent = ({}) => {
   const [showModal, setShowModal] = useState(false);
   const [currentImg, setCurrentImg] = useState('');
@@ -162,6 +204,9 @@ const GalleryPageTemplateOne: FunctionComponent = ({}) => {
     setCurrentImg(imagesData[index]);
     setShowModal(true);
   };
+
+  const handleLeftArrowClick = async () => {};
+  const handleRightArrowClick = async () => {};
 
   return (
     <>
@@ -197,7 +242,15 @@ const GalleryPageTemplateOne: FunctionComponent = ({}) => {
           }}
         >
           <Close>&#10006;</Close>
+          <LeftButton onClick={handleLeftArrowClick}>
+            <SvgPrevious />
+          </LeftButton>
+
           <ModalImage src={currentImg} alt="modal" />
+
+          <RightButton onClick={handleRightArrowClick}>
+            <SvgNext />
+          </RightButton>
         </ModalImageContainer>
       </Container>
     </>
