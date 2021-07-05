@@ -4,6 +4,7 @@ import { BREAKPOINTS } from "../../constants/grid-system-configuration";
 import { useAppSelector } from "../../redux/hooks.redux";
 import { useEffect } from "react";
 import { selectSiblings } from "../../redux/slices/index.slices.redux";
+import { selectLanguage } from "../../redux/slices/configuration.slices.redux";
 
 const ColumnContainer = styled.div`
   display: flex;
@@ -34,11 +35,39 @@ const FullHeightColumnRight = styled(FullHeightColumn)`
 `
 
 const List = styled.ul`
-
+  padding: 0 ${props => props.theme.dimen.X4}px;
 `
 
 const ListItem = styled.li`
+  border: ${props => props.theme.border};
+  border-radius: ${props => props.theme.borderRadius}px;
+  margin: ${props => props.theme.dimen.X4}px 0;
+`
 
+const ListItemLink = styled.a`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`
+
+const ItemImage = styled.img`
+  width: 60px;
+  height: 60px;
+  padding: 6px;
+`
+
+const Title = styled.h2`
+  font-size: 16px;
+  padding: 0;
+  margin: 4px 0 0 0;
+  line-height: 1.2;
+`
+
+const Description = styled.p`
+  font-size: 16px;
+  padding: 0;
+  margin: 0 0 4px 0;
+  line-height: 1.2;
 `
 
 const MapContainer = styled.div`
@@ -49,6 +78,7 @@ const MapContainer = styled.div`
 let map: google.maps.Map;
 
 const MenuPageTemplateOne: FunctionComponent = ({}) => {
+  const language = useAppSelector(selectLanguage)
   const siblingsData = useAppSelector(selectSiblings)
 
   function initMap(): void {
@@ -85,10 +115,14 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
     <FullHeightColumnLeft>
       <List>
         {siblingsData.map(sibling => {
-          return <ListItem>
-            <a href={`/menu/${sibling.id}`}>
-              <p>{sibling.name}</p>
-            </a>
+          return <ListItem id={`${sibling.id}`}>
+            <ListItemLink href={`/menu/${sibling.id}`}>
+              <ItemImage src={sibling.logo} />
+              <div>
+                <Title>{sibling.name}</Title>
+                <Description>{sibling.category_json[language]}</Description>
+              </div>
+            </ListItemLink>
           </ListItem>
         })}
       </List>
