@@ -155,8 +155,6 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
   const [email, setEmail] = useState('');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
-  // const shopData = useAppSelector(selectShop);
-  // const addressData = useAppSelector(selectAddress);
 
   return (
     <Container fluid>
