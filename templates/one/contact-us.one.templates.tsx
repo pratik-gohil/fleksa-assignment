@@ -18,7 +18,6 @@ import NodeApiHttpPostContactUs from '../../http/nodeapi/contact-us/post.contact
 const ContactUsContainer = styled.div``;
 
 const Header = styled.div`
-  padding-top: 2em;
   max-width: 700px;
   margin: 0 auto;
 `;
@@ -26,8 +25,10 @@ const Title = styled.h1`
   font-size: 2rem;
   font-weight: 700;
   color: ${(p) => p.theme.textDarkColor};
-  margin-bottom: 0.1em;
   text-align: left;
+  margin: 0;
+  padding: 0;
+  padding-top: 2em;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     text-align: center;
@@ -38,7 +39,8 @@ const SubTitle = styled.h2`
   font-weight: 400;
   color: ${(p) => p.theme.textDarkColor};
   text-align: left;
-  margin-bottom: 2em;
+  padding: 0;
+  margin: 0 0 2em 0;
 
   @media (max-width: 576px) {
     text-align: center;
@@ -51,6 +53,7 @@ const Form = styled.form`
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     padding: 1rem 1rem 2rem 1rem;
+    background-color: ${(p) => p.theme.primaryColor};
   }
 `;
 
@@ -272,12 +275,12 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
       <ContactUsContainer>
         <Row nogutter>
           <Col xl={8}>
-            <Header>
-              <Title>{t('@title')}</Title>
-              <SubTitle>{t('@sub_title')}</SubTitle>
-            </Header>
-
             <Form onSubmit={handleContactUsSendButtonClick}>
+              <Header>
+                <Title>{t('@title')}</Title>
+                <SubTitle>{t('@sub_title')}</SubTitle>
+              </Header>
+
               <InputContainerFlex>
                 <InputBox>
                   <Label>{t('@name')}</Label>

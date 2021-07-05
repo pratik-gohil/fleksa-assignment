@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'next-i18next';
 import { ITimingsDay } from '../../../../interfaces/common/shop.common.interfaces';
@@ -9,6 +9,7 @@ import ArrowIconPath from '../../../../public/assets/svg/next.svg';
 import MailIconPath from '../../../../public/assets/svg/email.svg';
 import PhoneIconpath from '../../../../public/assets/svg/call.svg';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
+import moment from 'moment';
 
 const Wrapper = styled.div`
   padding: 2rem 1.5rem 0 1.5rem;
@@ -17,7 +18,7 @@ const Wrapper = styled.div`
   border-left: 2px solid rgba(0, 0, 0, 0.1);
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    padding: 0 1rem;
+    padding: 1rem;
   }
 `;
 
@@ -29,7 +30,12 @@ const Day = styled.div`
   padding: 0.3rem 0;
   font-size: 1.2rem;
 `;
-const DayName = styled.span``;
+const DayName = styled.span<{
+  selected: boolean;
+}>`
+  text-decoration: ${(p) => p.selected && 'underline'};
+  font-weight: ${(p) => p.selected && 'bold'};
+`;
 const DayTime = styled.span`
   font-weight: 600;
 `;
@@ -92,9 +98,12 @@ const Map = styled.div`
   }
 `;
 
-export const BasicContactUsInformation = () => {
-  const { t } = useTranslation('contact-us');
+const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 
+export const BasicContactUsInformation = () => {
+  const [currentDay] = useState(capitalize(moment().format('dddd')));
+
+  const { t } = useTranslation('contact-us');
   const timings = useAppSelector(selectTimings);
   const addressData = useAppSelector(selectAddress);
   const shopData = useAppSelector(selectShop);
@@ -103,7 +112,9 @@ export const BasicContactUsInformation = () => {
     if (timings === null) return;
     return {
       dayName: t(`@${day}`),
-      time: (timings[day] as ITimingsDay).shop?.timings?.map((t) => `${t.open} - ${t.close}`).join(', '),
+      time: (timings[day] as ITimingsDay).shop?.timings?.map((t) => `${t.open} - ${t.close}`).join(', ') || (
+        <span style={{ color: 'red', fontWeight: 500 }}>Closed</span>
+      ),
       available: (timings[day] as ITimingsDay).shop.availability,
     };
   });
@@ -113,39 +124,46 @@ export const BasicContactUsInformation = () => {
       <DaysContainer>
         {days.map((day) => (
           <Day key={day?.dayName}>
-            <DayName>{day?.dayName}</DayName> <DayTime>{day?.time}</DayTime>
+            <DayName selected={currentDay === day?.dayName}>{day?.dayName}</DayName> <DayTime>{day?.time}</DayTime>
           </Day>
         ))}
 
-        <Item>
-          <MainArea>
-            <MailIcon />
+        {!!addressData?.email && (
+          <Item>
+            <MainArea>
+              <MailIcon />
 
-            <Text>{'test@gmail.com'}</Text>
-          </MainArea>
+              <Text>{addressData.email}</Text>
+            </MainArea>
 
-          <LinkArea>
-            <StyledLink href={`mailto:${'#'}`}>
-              Email
-              <ArrowIcon />
-            </StyledLink>
-          </LinkArea>
-        </Item>
+            <LinkArea>
+              <StyledLink href={`mailto:${addressData.email}`}>
+                Email
+                <ArrowIcon />
+              </StyledLink>
+            </LinkArea>
+          </Item>
+        )}
 
-        <Item>
-          <MainArea>
-            <Phoneicon />
+        {addressData?.country_code && addressData?.phone && (
+          <Item>
+            <MainArea>
+              <Phoneicon />
 
-            <Text>{'+49 129345 23423'}</Text>
-          </MainArea>
+              <Text>
+                +{addressData.country_code}
+                {addressData.phone}
+              </Text>
+            </MainArea>
 
-          <LinkArea>
-            <StyledLink href={`tel:+${'#'}`}>
-              Phone
-              <ArrowIcon />
-            </StyledLink>
-          </LinkArea>
-        </Item>
+            <LinkArea>
+              <StyledLink href={`tel:+${addressData.country_code}${addressData.phone}`}>
+                Phone
+                <ArrowIcon />
+              </StyledLink>
+            </LinkArea>
+          </Item>
+        )}
       </DaysContainer>
 
       <Map>
