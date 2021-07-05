@@ -1,6 +1,7 @@
 import React from 'react';
 import { useEffect } from 'react';
 import styled from 'styled-components';
+import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import XCrossIcon from '../../../../public/assets/svg/x-circle.svg';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { selectError, updateError } from '../../../../redux/slices/common.slices.redux';
@@ -9,6 +10,7 @@ const snackbarColor = {
   warning: '#FFC107',
   error: '#DC3545',
   info: '#17a2b8',
+  success: '#28a745',
 } as const;
 
 const Wrapper = styled.div<{
@@ -24,7 +26,7 @@ const Wrapper = styled.div<{
     rgba(0, 0, 0, 0.07) 0px 16px 16px;
   padding: 0.5rem 1rem;
   width: max-content;
-  z-index: 1;
+  z-index: 99;
   display: ${(p) => (p.show ? 'flex' : 'none')};
   align-items: center;
   justify-content: space-between;
@@ -38,18 +40,31 @@ const Wrapper = styled.div<{
       transform: scaleY(1) translateX(-50%);
     }
   }
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    max-width: 300px;
+  }
 `;
 
 const Message = styled.p`
-  padding: 0;
+  padding: 0.5rem;
   margin: 0;
   color: #fff;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    width: 90%;
+    padding: 0 0.5rem;
+  }
 `;
 
 const CrossIcon = styled(XCrossIcon)`
   margin: 0 0 0 0.5rem;
   color: #000;
   cursor: pointer;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    width: 10%;
+  }
 `;
 
 export const Snackbar = () => {
