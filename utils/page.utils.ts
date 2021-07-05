@@ -12,14 +12,14 @@ export async function getServerSidePropsCommon(ctx: any, requiresLogin: boolean)
     const bearerToken = cookies.get(COOKIE_BEARER_TOKEN);
     const restaurantName = cookies.get(COOKIE_SELECTED_RESTAURANT_NAME);
 
-    console.log("host headers", ctx.req.headers, ctx.req.headers.host)
-
     /**
      * If hostname is localhost:3000 or newqa.felksa.de use the restaurant name given by the cookie otherwise use the actual host.
      * If above constraints are met but no restaurant name found in cookie, use roma.fleksa.com
      * If restauant name includes ".fleksa." it will use production API's otherwise use testing API's
      */
-    const host: string = ctx.req.headers.host === 'localhost:3000' || 'newqa.fleksa.de' ? restaurantName || 'roma.fleksa.com' : ctx.req.headers.host;
+    const host: string = (ctx.req.headers.host === 'localhost:3000') || (ctx.req.headers.host === 'newqa.fleksa.de') ? ( restaurantName || 'roma.fleksa.com' ) : ctx.req.headers.host;
+    console.log("host headers", ctx.req.headers.host)
+    console.log(ctx.req.headers.host === 'localhost:3000' || 'newqa.fleksa.de')
     const baseUrlPyApi = host.includes('.fleksa.') ? 'https://myqa.fleksa.com' : 'https://my.fleksa.com';
     const baseUrlNodeApi = host.includes('.fleksa.') ? 'https://orderqa.fleksa.com' : 'https://order.fleksa.com';
 
