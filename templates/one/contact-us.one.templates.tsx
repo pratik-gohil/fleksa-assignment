@@ -153,6 +153,10 @@ const Acknowledgement = styled.p`
   font-weight: 400;
   color: ${(p) => p.theme.textDarkColor};
   width: max-content;
+
+  a {
+    text-decoration: underline;
+  }
 `;
 const Checkbox = styled.input`
   margin-right: 0.5rem;
