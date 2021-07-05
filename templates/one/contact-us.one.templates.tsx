@@ -40,7 +40,10 @@ const SubTitle = styled.h2`
 const Form = styled.form`
   max-width: 700px;
   margin: auto;
-  padding: 1rem 1rem 3rem 1rem;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    padding: 1rem 1rem 3rem 1rem;
+  }
 `;
 
 const Label = styled.label`
