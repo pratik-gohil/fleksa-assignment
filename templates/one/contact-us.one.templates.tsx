@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
-import { Container, Row, Col } from 'react-grid-system';
+import { Row, Col } from 'react-grid-system';
 import { BREAKPOINTS } from '../../constants/grid-system-configuration';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks.redux';
 import { selectConfiguration } from '../../redux/slices/configuration.slices.redux';
@@ -15,7 +15,14 @@ import { BasicContactUsInformation } from '../../components/templateOne/pages/co
 import LoadingIndicator from '../../components/templateOne/common/loadingIndicator/loading-indicator.common.templateOne.components';
 import NodeApiHttpPostContactUs from '../../http/nodeapi/contact-us/post.contact-us.nodeapi.http';
 
-const ContactUsContainer = styled.div``;
+const ContactUsContainer = styled.div`
+  width: 80%;
+  margin: auto;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    width: 100%;
+  }
+`;
 
 const Header = styled.div`
   max-width: 700px;
@@ -28,7 +35,7 @@ const Title = styled.h1`
   text-align: left;
   margin: 0;
   padding: 0;
-  padding-top: 2em;
+  padding-top: 2rem;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     text-align: center;
@@ -269,13 +276,7 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
   };
 
   return (
-    <Container
-      fluid
-      style={{
-        padding: 0,
-        margin: 0,
-      }}
-    >
+    <>
       <ContactUsContainer>
         <Row nogutter>
           <Col xl={8}>
@@ -328,7 +329,7 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
       </ContactUsContainer>
 
       <Snackbar />
-    </Container>
+    </>
   );
 };
 

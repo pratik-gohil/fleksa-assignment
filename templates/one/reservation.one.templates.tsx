@@ -28,7 +28,7 @@ const WidthFix = styled.div`
   }
 `;
 
-const FormContainer = styled.div`
+const FormContainer = styled.form`
   border-top: 2px solid rgba(0, 0, 0, 0.1);
   padding: 1rem 0;
 `;
@@ -63,7 +63,7 @@ const ReservationTemplateOne: FunctionComponent = ({}) => {
       <WidthFix>
         <Container fluid>
           <Row justify="center" nogutter nowrap>
-            <Col sm={8} lg={10}>
+            <Col sm={8} lg={9}>
               <Row>
                 <Col sm={12}>
                   <Header />

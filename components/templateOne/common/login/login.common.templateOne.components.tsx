@@ -30,7 +30,7 @@ const WidthFix = styled.div`
 `;
 
 interface ILoginAllPagesProps {
-  callback?: () => void;
+  callback?: () => void | Promise<void>;
 }
 
 const LoginAllPages: FunctionComponent<ILoginAllPagesProps> = ({ callback }) => {

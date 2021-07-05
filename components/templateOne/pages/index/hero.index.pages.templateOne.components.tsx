@@ -41,7 +41,7 @@ const ContentContainer = styled.div`
 
   div {
     align-self: center;
-    width: 90%;
+    width: 80%;
   }
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
@@ -57,7 +57,7 @@ const Title = styled.h1`
   padding: 0;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    font-weight: 500;
+    font-weight: 600;
     line-height: 1.2;
   }
 `;
@@ -97,6 +97,26 @@ const OrderButton = styled.a`
   }
 `;
 
+const LogoLink = styled.a`
+  display: none;
+  height: 120px;
+  width: 120px;
+  border-radius: 50%;
+  background-color: white;
+  overflow: hidden;
+  margin-bottom: 1em;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    display: grid;
+    place-items: center;
+  }
+`;
+
+const Logo = styled.img`
+  width: 100%;
+  height: 100%;
+`;
+
 const IndexPageHero: FunctionComponent = ({}) => {
   const language = useAppSelector(selectLanguage);
   const shopData = useAppSelector(selectShop);
@@ -115,6 +135,8 @@ const IndexPageHero: FunctionComponent = ({}) => {
                 margin: 0,
               }}
             >
+              <LogoLink href="/">{!!shopData?.logo && <Logo src={shopData?.logo} loading="lazy" />}</LogoLink>
+
               <Title>{shopData?.name}</Title>
               <SubTitle>{shopData?.category_json[language]}</SubTitle>
               <OrderButton href="/menu">{t('@order-online')}</OrderButton>

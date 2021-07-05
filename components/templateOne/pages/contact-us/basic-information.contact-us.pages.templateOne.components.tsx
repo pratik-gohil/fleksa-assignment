@@ -35,9 +35,13 @@ const DayName = styled.span<{
 }>`
   text-decoration: ${(p) => p.selected && 'underline'};
   font-weight: ${(p) => p.selected && 'bold'};
+  width: 50%;
 `;
 const DayTime = styled.span`
   font-weight: 600;
+  font-size: clamp(1rem, 1.1rem, 2vw);
+  width: 50%;
+  text-align: right;
 `;
 
 const Item = styled.div`
@@ -173,7 +177,7 @@ export const BasicContactUsInformation = () => {
             '+',
           )},${addressData?.city.replace(' ', '+')}+${addressData?.country.replace(' ', '+')}`}
           title="Restaurant Map"
-          height="400"
+          height="350"
           frameBorder="0"
           style={{ border: 0 }}
           aria-hidden="false"
