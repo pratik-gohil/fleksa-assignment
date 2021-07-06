@@ -6,9 +6,10 @@ import PencilIconPath from '../../../../public/assets/svg/pencil.svg';
 import PhoneInput from 'react-phone-input-2';
 
 const Wrapper = styled.div`
+  position: relative;
   width: 70%;
   padding: 3rem 0;
-  position: relative;
+  height: calc(100vh - ${(p) => p.theme.navDesktop.height}px);
 
   ::before {
     content: '';
@@ -75,7 +76,7 @@ const UpdateButton = styled.button`
 `;
 const CancelButton = styled.button`
   ${Button}
-  background-color: #DD0000
+  background-color: #DD0000;
 `;
 
 const InputValue = styled.input`
