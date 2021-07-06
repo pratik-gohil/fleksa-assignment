@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
-import { useAppSelector } from '../../../../redux/hooks.redux';
+import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { selectCustomer } from '../../../../redux/slices/user.slices.redux';
 import styled, { css } from 'styled-components';
 import PencilIconPath from '../../../../public/assets/svg/pencil.svg';
 import PhoneInput from 'react-phone-input-2';
+import LoadingIndicator from '../../common/loadingIndicator/loading-indicator.common.templateOne.components';
+import NodeApiHttpPatchAccountProfileRequest from '../../../../http/nodeapi/account/patch.account.nodeapi.http';
+import { selectBearerToken } from '../../../../redux/slices/user.slices.redux';
+import { selectConfiguration } from '../../../../redux/slices/configuration.slices.redux';
+import { updateError } from '../../../../redux/slices/common.slices.redux';
 
 const Wrapper = styled.div`
   width: 70%;
@@ -66,6 +71,9 @@ const Button = css`
 const UpdateButton = styled.button`
   ${Button}
   background-color: ${(p) => p.theme.textDarkColor};
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const InputValue = styled.input<{ readOnly: boolean }>`
@@ -137,6 +145,45 @@ export const MyAccountRightSection = () => {
   const [isNameReadOnly, setIsNameReadOnly] = useState(true);
   const [phone, setPhone] = useState(`${customerData.country_code + '' + customerData.phone}`);
   const [countryCode, setCountryCode] = useState<number>(customerData.country_code || 49);
+  const [loading, setLoading] = useState(false);
+
+  const bearerToken = useAppSelector(selectBearerToken);
+  const configuration = useAppSelector(selectConfiguration);
+  const dispatch = useAppDispatch();
+
+  const hanldeUpdateButtonClick = async () => {
+    try {
+      setLoading(true);
+
+      const response = await new NodeApiHttpPatchAccountProfileRequest(configuration, bearerToken as any).patch({
+        email,
+        name,
+      });
+
+      if (!response.result) {
+        setLoading(false);
+
+        dispatch(
+          updateError({
+            show: true,
+            message: response.message,
+            severity: 'error',
+          }),
+        );
+        return;
+      }
+    } catch (e) {
+      console.log('e : ', e);
+      setLoading(false);
+      dispatch(
+        updateError({
+          show: true,
+          message: 'Ooops! Something went wrong.',
+          severity: 'error',
+        }),
+      );
+    }
+  };
 
   return (
     <Wrapper>
@@ -194,7 +241,7 @@ export const MyAccountRightSection = () => {
 
       <Content>
         <ButtonContainer>
-          <UpdateButton>Update</UpdateButton>
+          <UpdateButton onClick={hanldeUpdateButtonClick}>{loading ? <LoadingIndicator width={20} /> : 'Update'}</UpdateButton>
         </ButtonContainer>
       </Content>
     </Wrapper>
