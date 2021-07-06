@@ -54,6 +54,10 @@ const Link = styled.a<{ active: boolean }>`
   letter-spacing: 1.5px;
 
   padding: 1rem 0 0 0;
+
+  &:hover {
+    color: ${(p) => p.theme.primaryColor};
+  }
 `;
 
 const LougoutButton = styled.button`
