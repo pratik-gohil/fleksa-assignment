@@ -213,6 +213,11 @@ const GalleryPageTemplateOne: FunctionComponent = ({}) => {
     setRightArrowVisible(true);
   };
 
+  const handleKeyPressClick = async (e: any) => {
+    if (e.keyCode === 37) await handleLeftArrowClick();
+    else if (e.keyCode === 39) await handleRightArrowClick();
+  };
+
   const handleLeftArrowClick = async () => {
     currentIndex.current -= 1;
 
@@ -226,7 +231,6 @@ const GalleryPageTemplateOne: FunctionComponent = ({}) => {
 
   const handleRightArrowClick = async () => {
     currentIndex.current += 1;
-    console.log('i ', currentIndex.current);
 
     if (imagesData[currentIndex.current]) {
       setCurrentImg(imagesData[currentIndex.current]);
@@ -257,7 +261,14 @@ const GalleryPageTemplateOne: FunctionComponent = ({}) => {
             const config = getConfig(index);
             return (
               <Col key={imageSrc} {...config}>
-                <Img src={imageSrc} alt={`gallery-${index}`} loading="lazy" onClick={handleImageClick} />
+                <Img
+                  src={imageSrc}
+                  alt={`gallery-${index}`}
+                  loading="lazy"
+                  onClick={handleImageClick}
+                  onKeyDown={handleKeyPressClick}
+                  tabIndex={-1}
+                />
               </Col>
             );
           })}
