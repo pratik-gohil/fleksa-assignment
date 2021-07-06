@@ -1,11 +1,11 @@
-import React from "react"
-import styled from "styled-components"
-import { useAppSelector } from "../../../../redux/hooks.redux"
-import { selectCustomer } from "../../../../redux/slices/user.slices.redux"
+import React from 'react';
+import styled from 'styled-components';
+import { useAppSelector } from '../../../../redux/hooks.redux';
+import { selectCustomer } from '../../../../redux/slices/user.slices.redux';
 
 const FlagContainer = styled.div`
-  padding: 0 ${props => props.theme.dimen.X4}px;
-`
+  padding: 0 ${(props) => props.theme.dimen.X4}px;
+`;
 
 const FlagImage = styled.p`
   width: 36px;
@@ -17,18 +17,26 @@ const FlagImage = styled.p`
   justify-content: center;
   align-items: center;
   font-weight: 600;
-  color: ${props => props.theme.primaryColor};
+  color: ${(props) => props.theme.primaryColor};
   background-color: #444;
-`
+  text-transform: uppercase;
+`;
 
 const NavUserProfile = ({}) => {
-  const customerData = useAppSelector(selectCustomer)
-  
-  return <a href="/account">
-    <FlagContainer>
-      <FlagImage>{customerData.name.split(" ").map(i => i[0]).join("")}</FlagImage>
-    </FlagContainer>
-  </a>
-}
+  const customerData = useAppSelector(selectCustomer);
 
-export default NavUserProfile
+  return (
+    <a href="/account">
+      <FlagContainer>
+        <FlagImage>
+          {customerData.name
+            .split(' ')
+            .map((i) => i[0])
+            .join('')}
+        </FlagImage>
+      </FlagContainer>
+    </a>
+  );
+};
+
+export default NavUserProfile;
