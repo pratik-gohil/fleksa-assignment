@@ -1,7 +1,7 @@
 export interface ICustomer {
   name: string;
   email?: string;
-  country_code?: string;
+  country_code?: number;
   phone?: string;
   email_verified: boolean;
   phone_verified: boolean;

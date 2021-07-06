@@ -3,6 +3,7 @@ import { useAppSelector } from '../../../../redux/hooks.redux';
 import { selectCustomer } from '../../../../redux/slices/user.slices.redux';
 import styled, { css } from 'styled-components';
 import PencilIconPath from '../../../../public/assets/svg/pencil.svg';
+import PhoneInput from 'react-phone-input-2';
 
 const Wrapper = styled.div`
   width: 70%;
@@ -39,13 +40,12 @@ const Title = styled.h1`
   font-weight: 550;
   padding: 0;
   margin: 0;
+  position: relative;
 `;
 
 const TextContainer = styled.div`
   margin: 1rem 0;
 `;
-
-// const ChangeButtonContainer = styled.div``;
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -75,7 +75,7 @@ const UpdateButton = styled.button`
 `;
 const CancelButton = styled.button`
   ${Button}
-  background-color: ${(p) => p.theme.primaryColorRed};
+  background-color: #DD0000
 `;
 
 const InputValue = styled.input`
@@ -83,24 +83,38 @@ const InputValue = styled.input`
   border: 1px solid #dddddd;
   border-radius: 0.5rem;
 
-  padding: 0.5rem 1rem;
+  padding: 1rem;
   width: 100%;
   font-size: 1.2rem;
+  &:hover,
+  &:active,
+  &:focus {
+    border: 1px solid ${(p) => p.theme.textDarkActiveColor};
+  }
 `;
 
-// const ChangeButton = styled.div`
-//   border-radius: 50%;
-//   width: 40px;
-//   height: 40px;
-//   display: grid;
-//   place-items: center;
-//   border: 1px solid rgba(0, 0, 0, 0.4);
-//   cursor: pointer;
+const TextEmailContainer = styled(TextContainer)`
+  position: relative;
+`;
+const EmailInputValue = styled(InputValue)``;
 
-//   &:hover {
-//     background-color: rgba(0, 0, 0, 0.05);
-//   }
-// `;
+const VerifyButton = styled.button`
+  position: absolute;
+  width: 120px;
+  height: 100%;
+  right: 0;
+  border-top-right-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  background: ${(p) => p.theme.textDarkColor};
+  color: ${(p) => p.theme.textLightActiveColor};
+  font-weight: 600;
+  font-size: 1.2rem;
+  cursor: pointer;
+
+  &:hover {
+    filter: brightness(1.3);
+  }
+`;
 
 const IconContainer = styled.div`
   border-radius: 50%;
@@ -122,6 +136,8 @@ export const MyAccountRightSection = () => {
 
   const [email, setEmail] = useState(customerData.email);
   const [name, setName] = useState(customerData.name);
+  const [phone, setPhone] = useState(`${customerData.country_code + '' + customerData.phone}`);
+  const [countryCode, setCountryCode] = useState<number>(customerData.country_code || 49);
 
   return (
     <Wrapper>
@@ -144,9 +160,11 @@ export const MyAccountRightSection = () => {
             <PencilIcon />
           </IconContainer>
         </TitleContainer>
-        <TextContainer>
-          <InputValue type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        </TextContainer>
+
+        <TextEmailContainer>
+          <EmailInputValue type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <VerifyButton>Verify</VerifyButton>
+        </TextEmailContainer>
       </Content>
 
       <Content>
@@ -154,7 +172,21 @@ export const MyAccountRightSection = () => {
           <Title>Phone Number</Title>
         </TitleContainer>
 
-        <TextContainer></TextContainer>
+        <TextContainer>
+          <PhoneInput
+            country={'de'}
+            value={phone}
+            enableSearch
+            specialLabel=""
+            onChange={(ph, data) => {
+              if ((data as any).dialCode !== countryCode) {
+                setCountryCode((data as any).dialCode);
+              }
+              setPhone(ph);
+            }}
+            inputStyle={{ width: '100%' }}
+          />
+        </TextContainer>
       </Content>
 
       <Content>
