@@ -7,6 +7,7 @@ import { useAppSelector } from '../../redux/hooks.redux';
 import { selectImages, selectShop } from '../../redux/slices/index.slices.redux';
 import SvgPrevious from '../../public/assets/svg/previous.svg';
 import SvgNext from '../../public/assets/svg/next.svg';
+import { useRef } from 'react';
 
 const getConfig = (index: number) => {
   const val = (index % 5) + 1;
@@ -151,7 +152,7 @@ const ModalImage = styled.img`
   cursor: zoom-out;
 `;
 
-const LeftButton = styled.div`
+const LeftButton = styled.div<{ leftVisible: boolean }>`
   width: 48px;
   height: 48px;
   position: absolute;
@@ -161,6 +162,7 @@ const LeftButton = styled.div`
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
   cursor: pointer;
   transition: 0.3s;
+  display: ${(p) => (p.leftVisible ? 'block' : 'none')};
 
   svg {
     transition: 0.3s;
@@ -171,7 +173,7 @@ const LeftButton = styled.div`
   }
 `;
 
-const RightButton = styled.div`
+const RightButton = styled.div<{ rightVisible: boolean }>`
   width: 48px;
   height: 48px;
   position: absolute;
@@ -181,6 +183,7 @@ const RightButton = styled.div`
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
   cursor: pointer;
   transition: 0.3s;
+  display: ${(p) => (p.rightVisible ? 'block' : 'none')};
 
   svg {
     transition: 0.3s;
@@ -193,20 +196,45 @@ const RightButton = styled.div`
 
 const GalleryPageTemplateOne: FunctionComponent = ({}) => {
   const [showModal, setShowModal] = useState(false);
+  const [leftArrowVisible, setLeftArrowVisible] = useState(false);
+  const [rightArrowVisible, setRightArrowVisible] = useState(false);
   const [currentImg, setCurrentImg] = useState('');
+  let currentIndex = useRef(0);
 
   const { t } = useTranslation('header');
   const shopData = useAppSelector(selectShop);
   const imagesData = useAppSelector(selectImages);
 
   const handleImageClick = async (e: any) => {
-    const index = e.target.alt.split('-')[1];
-    setCurrentImg(imagesData[index]);
+    currentIndex.current = +e.target.alt.split('-')[1];
+    setCurrentImg(imagesData[currentIndex.current]);
     setShowModal(true);
+    setLeftArrowVisible(true);
+    setRightArrowVisible(true);
   };
 
-  const handleLeftArrowClick = async () => {};
-  const handleRightArrowClick = async () => {};
+  const handleLeftArrowClick = async () => {
+    currentIndex.current -= 1;
+
+    if (imagesData[currentIndex.current]) {
+      setCurrentImg(imagesData[currentIndex.current]);
+
+      if (!imagesData[currentIndex.current - 1]) setLeftArrowVisible(false);
+      else setRightArrowVisible(true);
+    }
+  };
+
+  const handleRightArrowClick = async () => {
+    currentIndex.current += 1;
+    console.log('i ', currentIndex.current);
+
+    if (imagesData[currentIndex.current]) {
+      setCurrentImg(imagesData[currentIndex.current]);
+
+      if (!imagesData[currentIndex.current + 1]) setRightArrowVisible(false);
+      else setLeftArrowVisible(true);
+    }
+  };
 
   return (
     <>
@@ -234,21 +262,22 @@ const GalleryPageTemplateOne: FunctionComponent = ({}) => {
             );
           })}
         </Row>
-        <ModalImageContainer
-          visible={showModal}
-          onClick={() => {
-            setCurrentImg('');
-            setShowModal(false);
-          }}
-        >
-          <Close>&#10006;</Close>
-          <LeftButton onClick={handleLeftArrowClick}>
+        <ModalImageContainer visible={showModal}>
+          <Close
+            onClick={() => {
+              setCurrentImg('');
+              setShowModal(false);
+            }}
+          >
+            &#10006;
+          </Close>
+          <LeftButton onClick={handleLeftArrowClick} leftVisible={leftArrowVisible}>
             <SvgPrevious />
           </LeftButton>
 
           <ModalImage src={currentImg} alt="modal" />
 
-          <RightButton onClick={handleRightArrowClick}>
+          <RightButton onClick={handleRightArrowClick} rightVisible={rightArrowVisible}>
             <SvgNext />
           </RightButton>
         </ModalImageContainer>
