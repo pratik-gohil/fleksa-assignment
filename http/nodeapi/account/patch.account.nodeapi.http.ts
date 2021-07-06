@@ -8,7 +8,7 @@ import NetNodeApi from '../net.nodeapi.http';
 export default class NodeApiHttpPatchAccountProfileRequest extends ApiHttpCommon {
   public async patch({ email, name }: INodeApiHttpPatchAccountProfileRequestData) {
     try {
-      const response = await new NetNodeApi(this.configuration).post<INodeApiHttpPatchAccountProfileResponseData>({
+      const response = await new NetNodeApi(this.configuration).patch<INodeApiHttpPatchAccountProfileResponseData>({
         path: 'customer/update/profile',
         body: {
           email: email || '',

@@ -1,70 +1,84 @@
 export enum ContentType {
-  APPLICATION_JSON = "application/json"
+  APPLICATION_JSON = 'application/json',
 }
 
-export interface IQuery extends Record<string, string|number|boolean> { }
+export interface IQuery extends Record<string, string | number | boolean> {}
 
-export interface IHeaders extends Record<string, string> { }
+export interface IHeaders extends Record<string, string> {}
 
-export interface IBody extends Record<string, string|string[]|number|number[]|boolean|boolean[]|IBody|IBody[]> { }
+export interface IBody extends Record<string, string | string[] | number | number[] | boolean | boolean[] | IBody | IBody[]> {}
 
 export interface IGet {
-  path?: string,
-  query?: IQuery,
-  headers?: Array<IHeaders>
+  path?: string;
+  query?: IQuery;
+  headers?: Array<IHeaders>;
 }
 
 export interface IPost extends IGet {
-  body?: IBody
+  body?: IBody;
 }
 
 export interface INetConstructor {
-  bearerToken?: string
-  additionalHeaders?: IHeaders
+  bearerToken?: string;
+  additionalHeaders?: IHeaders;
 }
 
 export default abstract class Net {
-  protected readonly defaultHeaders: IHeaders = {}
+  protected readonly defaultHeaders: IHeaders = {};
 
   constructor({ bearerToken, additionalHeaders }: INetConstructor) {
     this.defaultHeaders = {
-      "Content-Type": ContentType.APPLICATION_JSON
-    }
+      'Content-Type': ContentType.APPLICATION_JSON,
+    };
     if (bearerToken) {
-      this.defaultHeaders["Authorization"] = `Bearer ${bearerToken}`
+      this.defaultHeaders['Authorization'] = `Bearer ${bearerToken}`;
     }
     this.defaultHeaders = {
       ...this.defaultHeaders,
-      ...additionalHeaders
-    }
+      ...additionalHeaders,
+    };
   }
 
-  public async get<T>({path, query, headers}: IGet): Promise<T> {
+  public async get<T>({ path, query, headers }: IGet): Promise<T> {
     try {
       const response = await fetch(this.getUrl(path, query), {
         method: 'get',
-        headers: { ...this.defaultHeaders, headers} as unknown as HeadersInit|undefined,
-      })
-      const responseJson = await response.json() as unknown as T
-      return responseJson
+        headers: { ...this.defaultHeaders, headers } as unknown as HeadersInit | undefined,
+      });
+      const responseJson = (await response.json()) as unknown as T;
+      return responseJson;
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 
-  public async post<T>({path, query, headers, body}: IPost): Promise<T> {
+  public async post<T>({ path, query, headers, body }: IPost): Promise<T> {
     try {
       const response = await fetch(this.getUrl(path, query), {
-        method: "post",
+        method: 'post',
         body: JSON.stringify(body),
-        headers: { ...this.defaultHeaders, headers} as unknown as HeadersInit|undefined,
-      })
-      const responseJson = await response.json() as unknown as T
-      return responseJson
+        headers: { ...this.defaultHeaders, headers } as unknown as HeadersInit | undefined,
+      });
+      const responseJson = (await response.json()) as unknown as T;
+      return responseJson;
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 
-  public abstract getUrl(postfix?: string, query?: IQuery): string
+  public async patch<T>({ path, query, headers, body }: IPost): Promise<T> {
+    try {
+      const response = await fetch(this.getUrl(path, query), {
+        method: 'patch',
+        body: JSON.stringify(body),
+        headers: { ...this.defaultHeaders, headers } as unknown as HeadersInit | undefined,
+      });
+      const responseJson = (await response.json()) as unknown as T;
+      return responseJson;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public abstract getUrl(postfix?: string, query?: IQuery): string;
 }
