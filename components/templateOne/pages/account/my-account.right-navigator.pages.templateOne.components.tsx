@@ -6,20 +6,10 @@ import PencilIconPath from '../../../../public/assets/svg/pencil.svg';
 import PhoneInput from 'react-phone-input-2';
 
 const Wrapper = styled.div`
-  position: relative;
   width: 70%;
   padding: 3rem 0;
   height: calc(100vh - ${(p) => p.theme.navDesktop.height}px);
-
-  ::before {
-    content: '';
-    width: 2rem;
-    height: 100%;
-    position: absolute;
-    background: ${(p) => p.theme.primaryColor};
-    top: 0;
-    left: 0;
-  }
+  overflow: hidden;
 `;
 
 const Content = styled.div`

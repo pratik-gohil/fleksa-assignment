@@ -4,7 +4,7 @@ import { MyAccountLeftSection } from './my-account.left-navigator.pages.template
 import { MyAccountRightSection } from './my-account.right-navigator.pages.templateOne.components';
 
 const WrapperSection = styled.section`
-  border-bottom: ${(props) => props.theme.border};
+  overflow: hidden;
 `;
 
 const Row = styled.div`
