@@ -26,7 +26,15 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ct
 });
 
 function Account({ templateNumber }: any) {
-  return <TemplateToShow templateList={templateList} templateNumber={templateNumber} />;
+  return (
+    <TemplateToShow
+      templateList={templateList}
+      templateNumber={templateNumber}
+      pageContainer={{
+        showFooter: false,
+      }}
+    />
+  );
 }
 
 export default Account;
