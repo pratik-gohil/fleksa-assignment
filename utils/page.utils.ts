@@ -21,7 +21,7 @@ export async function getServerSidePropsCommon(
     const bearerToken = cookies.get(COOKIE_BEARER_TOKEN);
     const restaurantName = cookies.get(COOKIE_SELECTED_RESTAURANT_NAME);
     const selectedMenu = cookies.get(COOKIE_SELECTED_MENU_ID);
-    ctx.store.dispatch(updateSelectedMenu(selectedMenu||null));
+    ctx.store.dispatch(updateSelectedMenu(selectedMenu || null));
 
     /**
      * If hostname is localhost:3000 or newqa.felksa.de use the restaurant name given by the cookie otherwise use the actual host.
