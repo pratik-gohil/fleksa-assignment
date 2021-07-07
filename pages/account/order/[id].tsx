@@ -11,7 +11,7 @@ const templateList = [AccountPageTemplateOne];
 
 export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ctx) => {
   try {
-    const { redirect } = await getServerSidePropsCommon(ctx, true);
+    const { redirect } = await getServerSidePropsCommon(ctx, true, { particularOrder: true });
     if (redirect) return redirect;
 
     return {

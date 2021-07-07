@@ -116,7 +116,7 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
     <Container>
       <TextContainer>
         <Left>
-          <OrderId href={`/order/${order.id}`}>Order #{order.id}</OrderId>
+          <OrderId href={`/account/order/${order.id}`}>Order #{order.id}</OrderId>
           <Type>{order.order_type}</Type>
           <Quantity>{order.no_of_products} items</Quantity>
           {/* <Status>{order.payment_status ? order.payment_status :  'UNPAID' }</Status> */}
@@ -135,7 +135,7 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
       </TextContainer>
 
       <ButtonContainer>
-        <Button href={`/order/${order.id}`}>Review Now</Button>
+        <Button href={`/account/order/${order.id}`}>Review Now</Button>
         <Receipt target="_blank" rel="noopener noreferrer" back="fill" href={order.pdf_url}>
           View Receipt
         </Receipt>

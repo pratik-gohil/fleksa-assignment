@@ -6,12 +6,14 @@ import PyApiHttpGetIndex from '../http/pyapi/index/get.index.pyapi.http';
 import { updateAddress, updateShop, updateTimings } from '../redux/slices/index.slices.redux';
 import NodeApiHttpGetUser from '../http/nodeapi/user/get.user.nodeapi.http';
 import NodeApiHttpGetUserOrderHistory from '../http/nodeapi/account/get.account.order-history.nodeapi.http';
+import NodeApiHttpGetUserParticularOrder from '../http/nodeapi/account/get.order-view-by-id.nodeapi.http';
 
 export async function getServerSidePropsCommon(
   ctx: any,
   requiresLogin: boolean,
   options?: {
     orderHistory?: boolean;
+    particularOrder?: boolean;
   },
 ) {
   try {
@@ -72,6 +74,13 @@ export async function getServerSidePropsCommon(
 
         if (orderHistory?.result) ctx.store.dispatch(updateCustomer({ ...userData?.data.customer, orders: orderHistory.data.orders }));
         else ctx.store.dispatch(updateCustomer({ ...userData?.data.customer, orders: [] }));
+      }
+
+      if (options?.particularOrder && bearerToken) {
+        const particularOrder = await new NodeApiHttpGetUserParticularOrder(configuration, bearerToken).get({
+          order_id: ctx.query.id,
+        });
+        ctx.store.dispatch(updateCustomer({ ...userData?.data.customer, orders: [], current_order: particularOrder?.data.order }));
       }
     }
 
