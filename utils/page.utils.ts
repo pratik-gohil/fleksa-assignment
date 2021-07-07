@@ -5,8 +5,15 @@ import { updateBearerToken, updateCustomer } from '../redux/slices/user.slices.r
 import PyApiHttpGetIndex from '../http/pyapi/index/get.index.pyapi.http';
 import { updateAddress, updateShop, updateTimings } from '../redux/slices/index.slices.redux';
 import NodeApiHttpGetUser from '../http/nodeapi/user/get.user.nodeapi.http';
+import NodeApiHttpGetUserOrderHistory from '../http/nodeapi/account/get.account.order-history.nodeapi.http';
 
-export async function getServerSidePropsCommon(ctx: any, requiresLogin: boolean) {
+export async function getServerSidePropsCommon(
+  ctx: any,
+  requiresLogin: boolean,
+  options?: {
+    orderHistory?: boolean;
+  },
+) {
   try {
     const cookies = new Cookies(ctx.req, ctx.res);
     const bearerToken = cookies.get(COOKIE_BEARER_TOKEN);
@@ -17,7 +24,10 @@ export async function getServerSidePropsCommon(ctx: any, requiresLogin: boolean)
      * If above constraints are met but no restaurant name found in cookie, use roma.fleksa.com
      * If restauant name includes ".fleksa." it will use production API's otherwise use testing API's
      */
-    const host: string = (ctx.req.headers.host === 'localhost:3000') || (ctx.req.headers.host === 'newqa.fleksa.de') ? ( restaurantName || 'roma.fleksa.com' ) : ctx.req.headers.host;
+    const host: string =
+      ctx.req.headers.host === 'localhost:3000' || ctx.req.headers.host === 'newqa.fleksa.de'
+        ? restaurantName || 'roma.fleksa.com'
+        : ctx.req.headers.host;
     const baseUrlPyApi = host.includes('.fleksa.') ? 'https://myqa.fleksa.com' : 'https://my.fleksa.com';
     const baseUrlNodeApi = host.includes('.fleksa.') ? 'https://orderqa.fleksa.com' : 'https://order.fleksa.com';
 
@@ -28,6 +38,9 @@ export async function getServerSidePropsCommon(ctx: any, requiresLogin: boolean)
       baseUrlNodeApi,
     };
     ctx.store.dispatch(updateConfiguration(configuration));
+
+    const responseIndex = await new PyApiHttpGetIndex(configuration).get();
+    if (!responseIndex?.shop.id) throw new Error('Shop id not found');
 
     /**
      * If page requires login but bearer token is not present
@@ -50,10 +63,17 @@ export async function getServerSidePropsCommon(ctx: any, requiresLogin: boolean)
       ctx.store.dispatch(updateBearerToken(bearerToken));
       const userData = await new NodeApiHttpGetUser(configuration, bearerToken).get({});
       ctx.store.dispatch(updateCustomer(userData?.data.customer));
-    }
 
-    const responseIndex = await new PyApiHttpGetIndex(configuration).get();
-    if (!responseIndex?.shop.id) throw new Error('Shop id not found');
+      // * Make page addition request if it's needed
+
+      // TODO: Request order order history page
+      if (options?.orderHistory && bearerToken) {
+        const orderHistory = await new NodeApiHttpGetUserOrderHistory(configuration, bearerToken).get({ shop_id: responseIndex?.shop.id });
+
+        if (orderHistory?.result) ctx.store.dispatch(updateCustomer({ ...userData?.data.customer, orders: orderHistory.data.orders }));
+        else ctx.store.dispatch(updateCustomer({ ...userData?.data.customer, orders: [] }));
+      }
+    }
 
     ctx.store.dispatch(updateAddress(responseIndex?.address));
     ctx.store.dispatch(updateShop(responseIndex?.shop));

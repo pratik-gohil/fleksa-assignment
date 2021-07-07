@@ -11,7 +11,7 @@ const templateList = [AccountOrderHistoryPageTemplateOne];
 
 export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ctx) => {
   try {
-    const { redirect } = await getServerSidePropsCommon(ctx, true);
+    const { redirect } = await getServerSidePropsCommon(ctx, true, { orderHistory: true });
     if (redirect) return redirect;
 
     return {
