@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useAppSelector } from '../../../../redux/hooks.redux';
 import { selectCustomer } from '../../../../redux/slices/user.slices.redux';
-import { MyAccountOrder } from './partials/my-account.order.partials.account.templateOne.components';
+import { MyAccountOrder } from './partials/my-account.order-history.partials.account.templateOne.components';
 
 const Wrapper = styled.div`
   overflow: hidden;
