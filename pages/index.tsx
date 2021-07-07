@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic';
 import React from 'react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { updateImages, updateProducts, updateReviews } from '../redux/slices/index.slices.redux';
+import { updateProducts, updateReviews } from '../redux/slices/index.slices.redux';
 import IndexStoreWrapper from '../redux/store.redux';
 import TemplateToShow from '../templates/template-to-show.templates';
 import { getServerSidePropsCommon } from '../utils/page.utils';
@@ -17,7 +17,6 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ct
 
     ctx.store.dispatch(updateProducts(responseIndex?.products));
     ctx.store.dispatch(updateReviews(responseIndex?.reviews));
-    ctx.store.dispatch(updateImages(responseIndex?.images));
 
     return {
       props: {
