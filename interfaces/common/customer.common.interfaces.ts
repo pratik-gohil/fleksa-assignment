@@ -3,6 +3,6 @@ export interface ICustomer {
   email?: string;
   country_code?: number;
   phone?: string;
-  email_verified: boolean;
-  phone_verified: boolean;
+  email_verified: number;
+  phone_verified: number;
 }

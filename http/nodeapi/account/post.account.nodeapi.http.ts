@@ -1,7 +1,7 @@
 import {
   INodeApiHttpPatchAccountProfileRequestData,
   INodeApiHttpPatchAccountProfileResponseData,
-} from '../../../interfaces/http/nodeapi/account/patch.account.nodeapi.http';
+} from '../../../interfaces/http/nodeapi/account/post.account.nodeapi.http';
 import { ApiHttpCommon } from '../../base.http';
 import NetNodeApi from '../net.nodeapi.http';
 

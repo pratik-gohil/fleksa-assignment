@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
-import { selectCustomer } from '../../../../redux/slices/user.slices.redux';
+import { selectCustomer, updateCustomerName, updateCustomerEmail } from '../../../../redux/slices/user.slices.redux';
 import styled, { css } from 'styled-components';
 import PencilIconPath from '../../../../public/assets/svg/pencil.svg';
 import PhoneInput from 'react-phone-input-2';
@@ -175,6 +175,12 @@ export const MyAccountRightSection = () => {
         return;
       }
 
+      dispatch(updateCustomerName(name));
+      dispatch(updateCustomerEmail(email));
+
+      setIsEmailReadOnly(true);
+      setIsNameReadOnly(true);
+
       dispatch(
         updateError({
           show: true,
@@ -222,7 +228,7 @@ export const MyAccountRightSection = () => {
         <TextEmailContainer readOnly={isEmailReadOnly}>
           <EmailInputValue type="email" value={email} onChange={(e) => setEmail(e.target.value)} readOnly={isEmailReadOnly} />
 
-          {!!customerData.email_verified && <VerifyButton>Verify</VerifyButton>}
+          {!customerData.email_verified && <VerifyButton>Verify</VerifyButton>}
         </TextEmailContainer>
       </Content>
 
