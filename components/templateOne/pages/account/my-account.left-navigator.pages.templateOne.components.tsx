@@ -4,6 +4,7 @@ import { useAppSelector } from '../../../../redux/hooks.redux';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { selectCustomer } from '../../../../redux/slices/user.slices.redux';
 import PencilIconPath from '../../../../public/assets/svg/pencil.svg';
+import { useRouter } from 'next/router';
 
 const Wrapper = styled.div`
   background: ${(p) => p.theme.textDarkColor};
@@ -130,6 +131,7 @@ const IconContainer = styled.a`
 
 export const MyAccountLeftSection = () => {
   const customerData = useAppSelector(selectCustomer);
+  const router = useRouter();
 
   return (
     <Wrapper>
@@ -145,13 +147,13 @@ export const MyAccountLeftSection = () => {
           </IconContainer>
         </FlagImage>
 
-        <Link href="#" active={true}>
+        <Link href="/account" active={router.pathname === '/account'}>
           Profile
-          <ActiveUnderline active={true} />
+          <ActiveUnderline active={router.pathname === '/account'} />
         </Link>
-        <Link href="#" active={false}>
+        <Link href="/account/order-history" active={router.pathname === '/account/order-history'}>
           My Orders
-          <ActiveUnderline active={false} />
+          <ActiveUnderline active={router.pathname === '/account/order-history'} />
         </Link>
         <Link href="#" active={false}>
           Address
