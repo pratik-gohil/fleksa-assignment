@@ -30,9 +30,15 @@ export interface IDeliveryAddress {
   state: string;
 }
 
-export interface IParticularOrder {
+export interface IParticularProduct {
   id: number;
-  name?: string;
+  name: Array<{
+    name: {
+      english: string;
+      german: string;
+    };
+    isRoot?: boolean;
+  }>;
   price: number;
   type: string;
   sku?: string;
@@ -48,6 +54,7 @@ export interface IParticularOrderBriefInfo {
   quantity: number;
   discount: number;
   want_at: string;
+  created_at: string;
   updated_at: string;
   delivered_at: string;
   description: string;
@@ -74,5 +81,5 @@ export interface IParticularOrderBriefInfo {
     logo: string;
     address: IDeliveryAddress;
   };
-  products: Array<IParticularOrder>;
+  products: Array<IParticularProduct>;
 }
