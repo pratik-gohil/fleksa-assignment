@@ -162,9 +162,9 @@ export const MyAccountRightSection = () => {
         },
       });
 
-      if (!response.result) {
-        setLoading(false);
+      setLoading(false);
 
+      if (!response.result) {
         dispatch(
           updateError({
             show: true,
@@ -174,6 +174,14 @@ export const MyAccountRightSection = () => {
         );
         return;
       }
+
+      dispatch(
+        updateError({
+          show: true,
+          message: 'Updated successfully 🙌',
+          severity: 'success',
+        }),
+      );
     } catch (e) {
       console.log('e : ', e);
       setLoading(false);

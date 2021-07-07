@@ -158,9 +158,8 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
         guests_count: totalGuest,
       });
 
+      setLoading(false);
       if (!response.result) {
-        setLoading(false);
-
         dispatch(
           updateError({
             show: true,
@@ -170,8 +169,6 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
         );
         return;
       }
-
-      setLoading(false);
 
       // TODO: Resert inputs
       setPhone('');
