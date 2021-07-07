@@ -9,19 +9,31 @@ import NodeApiHttpPatchAccountProfileRequest from '../../../../http/nodeapi/acco
 import { selectBearerToken } from '../../../../redux/slices/user.slices.redux';
 import { selectConfiguration } from '../../../../redux/slices/configuration.slices.redux';
 import { updateError } from '../../../../redux/slices/common.slices.redux';
+import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 
 const Wrapper = styled.div`
   width: 100%;
   padding: 3rem 0;
-  height: calc(100vh - ${(p) => p.theme.navDesktop.height}px);
   overflow: hidden;
+  margin: 0.5rem 0 0 8rem;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    height: calc(100vh - ${(p) => p.theme.navMobile.height}px);
+    margin: 0;
+    padding: 2rem 0.5rem;
+  }
 `;
 
 const Content = styled.div`
   display: flex;
   flex-direction: column;
   max-width: 500px;
-  margin: 0.5rem 0 0 8rem;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    max-width: 100%;
+
+    margin: 1rem 0.5rem;
+  }
 `;
 
 const TitleContainer = styled.div`
@@ -37,11 +49,19 @@ const Title = styled.h1`
   padding: 0;
   margin: 0;
   position: relative;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    font-size: 1.2rem;
+  }
 `;
 
 const TextContainer = styled.div<{ readOnly: boolean }>`
   margin: 1rem 0;
   cursor: ${(p) => (p.readOnly ? 'not-allowed' : 'none')};
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    margin: 0.5rem 0;
+  }
 `;
 
 const ButtonContainer = styled.div`
@@ -91,6 +111,11 @@ const InputValue = styled.input<{ readOnly: boolean }>`
   &:focus {
     border: ${(p) => (!p.readOnly ? `1px solid ${p.theme.textDarkActiveColor}` : '1px solid #dddddd')};
   }
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    padding: 1rem;
+    font-size: 1rem;
+  }
 `;
 
 const TextEmailContainer = styled(TextContainer)`
@@ -113,6 +138,11 @@ const VerifyButton = styled.button`
 
   &:hover {
     filter: brightness(1.3);
+  }
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    font-size: 1rem;
+    width: 90px;
   }
 `;
 

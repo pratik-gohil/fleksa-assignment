@@ -1,7 +1,8 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { MyAccountRightSection } from './my-account.right-navigator.pages.templateOne.components';
+import { useRouter } from 'next/router';
 
 const WrapperSection = styled.section`
   overflow: hidden;
@@ -21,6 +22,12 @@ const RightContainer = styled.div`
 `;
 
 const AccountPageMyEditAccount: FunctionComponent = ({}) => {
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!window.matchMedia('(max-width: 576px)').matches) router.push('/account');
+  }, []);
+
   return (
     <WrapperSection>
       <Row>

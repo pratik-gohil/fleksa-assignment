@@ -109,7 +109,7 @@ const PencilIcon = styled(PencilIconPath)`
   color: ${(p) => p.theme.textDarkColor};
 `;
 
-const IconContainer = styled.div`
+const IconContainer = styled.a`
   border-radius: 50%;
   width: 34px;
   height: 34px;
@@ -140,7 +140,7 @@ export const MyAccountLeftSection = () => {
             .map((i) => i[0])
             .join('')}
 
-          <IconContainer>
+          <IconContainer href="/account/edit">
             <PencilIcon />
           </IconContainer>
         </FlagImage>
