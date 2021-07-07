@@ -31,7 +31,7 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ct
 });
 
 function Home({ templateNumber }: any) {
-  return <TemplateToShow templateList={templateList} templateNumber={templateNumber} />;
+  return <TemplateToShow templateList={templateList} templateNumber={templateNumber} />
 }
 
 export default Home;
