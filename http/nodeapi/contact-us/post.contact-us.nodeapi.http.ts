@@ -8,7 +8,7 @@ import NetNodeApi from '../net.nodeapi.http';
 export default class NodeApiHttpPostContactUs extends ApiHttpCommon {
   public async post({ email, name, shop_id, message, subject }: INodeApiHttpPostContactUsRequestData) {
     try {
-      const response = await new NetNodeApi(this.configuration).post<INodeApiHttpPostContactUsResponse>({
+      const response = await new NetNodeApi(this.configuration, this.bearerToken).post<INodeApiHttpPostContactUsResponse>({
         path: 'customer/create/query',
         body: {
           email,

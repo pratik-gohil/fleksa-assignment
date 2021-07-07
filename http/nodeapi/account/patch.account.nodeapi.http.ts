@@ -6,13 +6,12 @@ import { ApiHttpCommon } from '../../base.http';
 import NetNodeApi from '../net.nodeapi.http';
 
 export default class NodeApiHttpPatchAccountProfileRequest extends ApiHttpCommon {
-  public async patch({ email, name }: INodeApiHttpPatchAccountProfileRequestData) {
+  public async patch({ updating_values }: INodeApiHttpPatchAccountProfileRequestData) {
     try {
-      const response = await new NetNodeApi(this.configuration).patch<INodeApiHttpPatchAccountProfileResponseData>({
+      const response = await new NetNodeApi(this.configuration, this.bearerToken).patch<INodeApiHttpPatchAccountProfileResponseData>({
         path: 'customer/update/profile',
         body: {
-          email: email || '',
-          name,
+          updating_values,
         },
       });
       return response;

@@ -156,8 +156,10 @@ export const MyAccountRightSection = () => {
       setLoading(true);
 
       const response = await new NodeApiHttpPatchAccountProfileRequest(configuration, bearerToken as any).patch({
-        email,
-        name,
+        updating_values: {
+          email,
+          name,
+        },
       });
 
       if (!response.result) {

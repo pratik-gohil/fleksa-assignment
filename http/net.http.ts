@@ -67,11 +67,12 @@ export default abstract class Net {
   }
 
   public async patch<T>({ path, query, headers, body }: IPost): Promise<T> {
+    console.log({ ...this.defaultHeaders, headers });
     try {
       const response = await fetch(this.getUrl(path, query), {
         method: 'patch',
         body: JSON.stringify(body),
-        headers: { ...this.defaultHeaders, headers } as unknown as HeadersInit | undefined,
+        headers: { ...this.defaultHeaders } as unknown as HeadersInit | undefined,
       });
       const responseJson = (await response.json()) as unknown as T;
       return responseJson;

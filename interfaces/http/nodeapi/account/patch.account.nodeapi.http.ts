@@ -1,6 +1,8 @@
 export interface INodeApiHttpPatchAccountProfileRequestData {
-  name: string;
-  email?: string;
+  updating_values: {
+    name?: string;
+    email?: string;
+  };
 }
 
 export interface INodeApiHttpPatchAccountProfileResponseData {

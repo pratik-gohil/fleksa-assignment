@@ -8,7 +8,7 @@ import NetNodeApi from '../net.nodeapi.http';
 export default class NodeApiHttpPostRervation extends ApiHttpCommon {
   public async post({ countryCode, phone, guests_count, email, name, date_time, description, shop_id }: INodeApiHttpReservationRequestData) {
     try {
-      const response = await new NetNodeApi(this.configuration).post<INodeApiHttpReservationResponseData>({
+      const response = await new NetNodeApi(this.configuration, this.bearerToken).post<INodeApiHttpReservationResponseData>({
         path: 'customer/book/table',
         body: {
           country_code: countryCode,
