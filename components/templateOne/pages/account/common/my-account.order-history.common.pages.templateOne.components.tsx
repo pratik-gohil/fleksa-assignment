@@ -1,8 +1,8 @@
 import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
-import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
-import { MyAccountLeftSection } from './my-account.left-navigator.pages.templateOne.components';
-import { MyAccountRightSection } from './my-account.right-navigator.pages.templateOne.components';
+import { BREAKPOINTS } from '../../../../../constants/grid-system-configuration';
+import { MyAccountLeftSection } from '../my-account.left-navigator.pages.templateOne.components';
+import { MyAccountAllOrderHistory } from '../my-account.order-history.pages.templateOne.components';
 
 const WrapperSection = styled.section`
   overflow: hidden;
@@ -27,7 +27,7 @@ const AccountPageMyAccount: FunctionComponent = ({}) => {
         <MyAccountLeftSection />
 
         <RightContainer>
-          <MyAccountRightSection />
+          <MyAccountAllOrderHistory />
         </RightContainer>
       </Row>
     </WrapperSection>

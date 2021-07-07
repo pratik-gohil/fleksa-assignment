@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useEffect } from 'react';
 import styled from 'styled-components';
-import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
-import { MyAccountRightSection } from './my-account.right-navigator.pages.templateOne.components';
+import { BREAKPOINTS } from '../../../../../constants/grid-system-configuration';
+import { MyAccountRightSection } from '../my-account.right-navigator.pages.templateOne.components';
 import { useRouter } from 'next/router';
 
 const WrapperSection = styled.section`
