@@ -5,7 +5,7 @@ import styled, { css } from 'styled-components';
 import PencilIconPath from '../../../../public/assets/svg/pencil.svg';
 import PhoneInput from 'react-phone-input-2';
 import LoadingIndicator from '../../common/loadingIndicator/loading-indicator.common.templateOne.components';
-import NodeApiHttpPatchAccountProfileRequest from '../../../../http/nodeapi/account/patch.account.nodeapi.http';
+import NodeApiHttpPatchAccountProfileRequest from '../../../../http/nodeapi/account/post.account.nodeapi.http';
 import { selectBearerToken } from '../../../../redux/slices/user.slices.redux';
 import { selectConfiguration } from '../../../../redux/slices/configuration.slices.redux';
 import { updateError } from '../../../../redux/slices/common.slices.redux';
@@ -155,7 +155,7 @@ export const MyAccountRightSection = () => {
     try {
       setLoading(true);
 
-      const response = await new NodeApiHttpPatchAccountProfileRequest(configuration, bearerToken as any).patch({
+      const response = await new NodeApiHttpPatchAccountProfileRequest(configuration, bearerToken as any).post({
         updating_values: {
           email,
           name,
