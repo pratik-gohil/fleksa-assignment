@@ -45,12 +45,12 @@ const Reduce = styled.div`
 const QuantityCount = styled.div``
 
 const CartAddRemoveButton: FunctionComponent<IPropsCartAddRemoveButton> = ({ cartItem }) => {
-  const dispach = useAppDispatch()
+  const dispatch = useAppDispatch()
 
   return <Wrapper>
-    <Reduce onClick={() => dispach(updateReduceProduct({ cartId: cartItem.cartId }))}>-</Reduce>
+    <Reduce onClick={() => dispatch(updateReduceProduct({ cartId: cartItem.cartId }))}>-</Reduce>
     <QuantityCount>{cartItem.quantity}</QuantityCount>
-    <Add onClick={() => dispach(updateAddProduct({ cartId: cartItem.cartId }))}>+</Add>
+    <Add onClick={() => dispatch(updateAddProduct({ cartId: cartItem.cartId }))}>+</Add>
   </Wrapper>
 }
 

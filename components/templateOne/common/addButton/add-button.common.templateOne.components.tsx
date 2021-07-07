@@ -20,7 +20,7 @@ interface IPropsWrapperButton {
 
 const WrapperButton = styled.div<IPropsWrapperButton>`
   display: flex;
-  z-index: 1;
+  z-index: 0;
   ${props => !props.hasImage && css`
     flex: 1 1 auto;
   `}
@@ -68,7 +68,7 @@ const AddButton: FunctionComponent<IPropsAddButton> = ({ product, canOpen, hasIm
   const [ lastCartId, setLastCartId ] = useState<string|null>(null)
   const selectionData = useAppSelector(state => selectItemSelectionByTopProductId(state, product.id))
   const cartData = useAppSelector(state => selectCartItemByCartId(state, lastCartId))  
-  const dispach = useAppDispatch()
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
     if (selectionData?.cartId) {
@@ -80,7 +80,7 @@ const AddButton: FunctionComponent<IPropsAddButton> = ({ product, canOpen, hasIm
 
   function addItemToCart() {
     if ((canOpen && isOpen) && selectionData) {
-      dispach(updateAddProduct({
+      dispatch(updateAddProduct({
         topProductId: product.id,
         cartId: selectionData.cartId,
         productId: selectionData.productId,
@@ -92,7 +92,7 @@ const AddButton: FunctionComponent<IPropsAddButton> = ({ product, canOpen, hasIm
         totalCost: selectionData.totalCost,
       }))
     } if (!canOpen) {
-      dispach(updateAddProduct({
+      dispatch(updateAddProduct({
         topProductId: product.id,
         cartId: `${product.id}||`,
         productId: product.id,
@@ -107,7 +107,7 @@ const AddButton: FunctionComponent<IPropsAddButton> = ({ product, canOpen, hasIm
 
   function reduceItemFromCart() {
     if ((!canOpen || (canOpen && isOpen)) && lastCartId) {
-      dispach(updateReduceProduct({ cartId: lastCartId }))
+      dispatch(updateReduceProduct({ cartId: lastCartId }))
     }
   }
 

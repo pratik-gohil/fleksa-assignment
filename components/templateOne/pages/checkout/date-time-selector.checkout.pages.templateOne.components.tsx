@@ -61,7 +61,7 @@ const Done = styled.button`
 const timings = new RestaurantTimingUtils();
 
 const CheckoutDateTime: FunctionComponent = ({}) => {
-  const dispach = useAppDispatch();
+  const dispatch = useAppDispatch();
   const wantAtData = useAppSelector(selectWantAt);
   const addressData = useAppSelector(selectAddress);
   const timingsData = useAppSelector(selectTimings);
@@ -99,11 +99,11 @@ const CheckoutDateTime: FunctionComponent = ({}) => {
           <Select
             value={wantAtData?.time || null}
             options={timeList}
-            onChange={(value) => dispach(updateWantAt({ date: selectedDate, time: value }))}
+            onChange={(value) => dispatch(updateWantAt({ date: selectedDate, time: value }))}
           />
         </Item>
         <Item>
-          <Done onClick={() => dispach(updateShowDateTimeSelect(false))}>DONE</Done>
+          <Done onClick={() => dispatch(updateShowDateTimeSelect(false))}>DONE</Done>
         </Item>
       </ContentContainerView>
     </Wrapper>

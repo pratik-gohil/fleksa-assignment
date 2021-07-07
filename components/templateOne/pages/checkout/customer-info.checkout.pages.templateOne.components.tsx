@@ -45,7 +45,7 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
   const userData = useAppSelector(selectCustomer)
   const [ editableName, setEditableName ] = useState(false)
   const [ editableEmail, setEditableEmail ] = useState(false)
-  const dispach = useAppDispatch()
+  const dispatch = useAppDispatch()
 
   return <StyledCheckoutCard>
     <StyledCheckoutTitle>How can we reach you?</StyledCheckoutTitle>
@@ -56,7 +56,7 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
           type="text"
           placeholder="Name"
           value={userData.name}
-          onChange={e => dispach(updateCustomerName(e.target.value))}
+          onChange={e => dispatch(updateCustomerName(e.target.value))}
         />
       ): (
         <StyledCheckoutText>{userData.name}</StyledCheckoutText>
@@ -70,7 +70,7 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
           type="text"
           placeholder="Email"
           value={userData.email || ""}
-          onChange={e => dispach(updateCustomerEmail(e.target.value))}
+          onChange={e => dispatch(updateCustomerEmail(e.target.value))}
         />
       ): (
         <StyledCheckoutText>{userData.email}</StyledCheckoutText>

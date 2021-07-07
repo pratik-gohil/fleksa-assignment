@@ -52,13 +52,13 @@ const TipOptionsItem = styled.div<{ isSelected: boolean }>`
 const CheckoutPageTip: FunctionComponent = ({}) => {
   const tipData = useAppSelector(selectTip)
   const cartData = useAppSelector(selectCart)
-  const dispach = useAppDispatch()
+  const dispatch = useAppDispatch()
   const [ otherTip, setOtherTip ] = useState(false)
 
   const tipOptions = [5, 10, 20].map(percent => Math.floor((cartData.cartCost * percent) / 100))
 
   function onChangeTip(amount: number|null) {
-    dispach(updateTip(amount))
+    dispatch(updateTip(amount))
   }
 
   return <StyledCheckoutCard>

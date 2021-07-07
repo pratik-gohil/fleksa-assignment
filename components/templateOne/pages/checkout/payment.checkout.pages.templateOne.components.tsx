@@ -82,7 +82,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   const shopData = useAppSelector(selectShop)
   const cartData = useAppSelector(selectCart)
   const tipData = useAppSelector(selectTip)
-  const dispach = useAppDispatch()
+  const dispatch = useAppDispatch()
 
   async function createOrder() {
     try {
@@ -180,7 +180,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
           {(["CASH", "STRIPE", "PAYPAL"] as Array<ICheckoutPaymentMethods>).map(method => {
             return <PaymentMethodItems
               isActive={paymentMethodData === method}
-              onClick={() => dispach(updatePaymentMethod(method))}
+              onClick={() => dispatch(updatePaymentMethod(method))}
             >{method}</PaymentMethodItems>
           })}
         </PaymentMethodList>

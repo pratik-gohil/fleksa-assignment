@@ -139,7 +139,7 @@ const Cart: FunctionComponent = ({}) => {
   const language = useAppSelector(selectLanguage)
   const cartData = useAppSelector(selectCart)
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn)
-  const dispach = useAppDispatch()
+  const dispatch = useAppDispatch()
   
   useEffect(() => {
     setCartItemKeys(cartData.items? Object.keys(cartData.items): [])
@@ -147,7 +147,7 @@ const Cart: FunctionComponent = ({}) => {
 
   function onClickOrderButton() {
     if (cartItemKeys.length > 0) {
-      isLoggedIn? router.push("/checkout"): dispach(updateShowLogin(true))
+      isLoggedIn? router.push("/checkout"): dispatch(updateShowLogin(true))
     }
   }
 

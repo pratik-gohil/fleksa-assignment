@@ -31,11 +31,11 @@ export interface IPropsMenuPageCategoryListItem {
 
 const MenuPageMultipleChoiceList: FunctionComponent<IPropsMenuPageCategoryListItem> = ({ mainName, isOpen, choice, topProductId, selectedOption, setSelectedOption, getNextIndex }) => {
   const [ selectionMultipleId, setSelectionMultipleId ] = useState<number>(choice.choice[0])
-  const dispach = useAppDispatch()
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
     if (isOpen) {
-      dispach(updateItemSelectionNewItem({
+      dispatch(updateItemSelectionNewItem({
         topProductId,
         productId: selectionMultipleId,
         type: "MULTIPLE",

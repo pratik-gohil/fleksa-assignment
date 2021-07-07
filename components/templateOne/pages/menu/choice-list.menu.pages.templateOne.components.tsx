@@ -18,7 +18,7 @@ export interface IPropsMenuPageCategoryListItem {
 }
 
 const MenuPageChoiceList: FunctionComponent<IPropsMenuPageCategoryListItem> = ({ product, isOpen, choiceIndex, choice, selectedOption, setSelectedOption, getNextIndex }) => {
-  const dispach = useAppDispatch()
+  const dispatch = useAppDispatch()
   
   if (product.type_ === "MULTIPLE") {
     return <MenuPageMultipleChoiceList
@@ -33,7 +33,7 @@ const MenuPageChoiceList: FunctionComponent<IPropsMenuPageCategoryListItem> = ({
   } else {
     useEffect(() => {
       if (isOpen) {
-        dispach(updateItemSelectionNewItem({
+        dispatch(updateItemSelectionNewItem({
           topProductId: product.id,
           productId: product.id,
           type: "SINGLE",

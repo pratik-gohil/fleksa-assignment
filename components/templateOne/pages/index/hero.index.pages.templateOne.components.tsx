@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useAppSelector } from '../../../../redux/hooks.redux';
 import { selectShop } from '../../../../redux/slices/index.slices.redux';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
-import { selectLanguage } from '../../../../redux/slices/configuration.slices.redux';
+import { selectLanguage, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
 import { useTranslation } from 'react-i18next';
 
 const WrapperSection = styled.section`
@@ -120,6 +120,7 @@ const Logo = styled.img`
 const IndexPageHero: FunctionComponent = ({}) => {
   const language = useAppSelector(selectLanguage);
   const shopData = useAppSelector(selectShop);
+  const selectedMenuId = useAppSelector(selectSelectedMenu)
   const { t } = useTranslation('page-index');
 
   return (
@@ -139,7 +140,7 @@ const IndexPageHero: FunctionComponent = ({}) => {
 
               <Title>{shopData?.name}</Title>
               <SubTitle>{shopData?.category_json[language]}</SubTitle>
-              <OrderButton href="/menu">{t('@order-online')}</OrderButton>
+              <OrderButton href={selectedMenuId? `/menu/${selectedMenuId}`: "/menu"}>{t('@order-online')}</OrderButton>
             </Col>
           </Row>
         </Container>
