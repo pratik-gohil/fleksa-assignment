@@ -35,10 +35,10 @@ interface ILoginAllPagesProps {
 
 const LoginAllPages: FunctionComponent<ILoginAllPagesProps> = ({ callback }) => {
   const showLogin = useAppSelector(selectShowLogin);
-  const dispach = useAppDispatch();
+  const dispatch = useAppDispatch();
 
   return (
-    <LoginContainer showLogin={showLogin} onClick={() => dispach(updateShowLogin(!showLogin))}>
+    <LoginContainer showLogin={showLogin} onClick={() => dispatch(updateShowLogin(!showLogin))}>
       <WidthFix>
         <Container>
           <Row justify="center">

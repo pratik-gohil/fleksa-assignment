@@ -8,6 +8,8 @@ import PyApiHttpGetMenu from "../../http/pyapi/menu/get.menu.index.pyapi.http";
 import { getServerSidePropsCommon } from "../../utils/page.utils";
 import Cookies from "cookies";
 import { COOKIE_SELECTED_MENU_ID } from "../../constants/keys-cookies.constants";
+import { updateSelectedMenu } from "../../redux/slices/configuration.slices.redux";
+import { updateSiblings } from "../../redux/slices/index.slices.redux";
 
 const MenuByIdPageTemplateOne = dynamic(import("../../templates/one/menu/menu-by-id.menu.one.templates"))
 
@@ -17,7 +19,7 @@ const templateList = [
 
 export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async ctx => {
   try {
-    const { redirect, configuration } = await getServerSidePropsCommon(ctx, false)
+    const { redirect, configuration, responseIndex } = await getServerSidePropsCommon(ctx, false)
     if (redirect) return redirect
 
     const cookies = new Cookies(ctx.req, ctx.res)
@@ -26,6 +28,8 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async ctx
       maxAge: 365*24*60*60*1000,
       sameSite: "strict"
     })
+    ctx.store.dispatch(updateSelectedMenu(ctx.query.id as string));
+    ctx.store.dispatch(updateSiblings(responseIndex?.siblings))
 
     const shopId = Number(ctx.query.id)
 

@@ -42,7 +42,7 @@ const SearchInput = styled.input`
 const MenuSearch: FunctionComponent = () => {
   const [ searchOpen, setSearchOpen ] = useState(false)
   const searchQuery = useAppSelector(selectSearchQuery)
-  const dispach = useAppDispatch()
+  const dispatch = useAppDispatch()
 
   const node = useRef<HTMLDivElement>(null);
 
@@ -64,10 +64,9 @@ const MenuSearch: FunctionComponent = () => {
   return <SearchContainer ref={node} searchOpen={searchOpen}>
     <SvgSearch />
     <SearchInput
-      autoFocus
       placeholder="Search Here"
       value={searchQuery}
-      onChange={ev => dispach(updateSearchQuery(ev.target.value.toLowerCase()))}
+      onChange={ev => dispatch(updateSearchQuery(ev.target.value.toLowerCase()))}
     />
   </SearchContainer>
 }

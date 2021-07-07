@@ -20,7 +20,7 @@ const MenuPageSides: FunctionComponent<IPropsMenuPageCategoryListItem> = ({ prod
   const language = useAppSelector(selectLanguage)
   const sidesList = useAppSelector(state => selectSidesArray(state, sideProduct.option_ids))
   const selectedSides = useAppSelector(state => selectItemSelectionSideProduct(state, productId))
-  const dispach = useAppDispatch()
+  const dispatch = useAppDispatch()
   const [ optionKey ] = useState(getNextIndex())
 
   const isOptionOpen = selectedOption === optionKey
@@ -35,9 +35,9 @@ const MenuPageSides: FunctionComponent<IPropsMenuPageCategoryListItem> = ({ prod
       <StyledOptionsList>
         {sidesList.map(option => <StyledOptionsListItem key={option.name_json.english} onClick={() => {
           if (selectedSides && selectedSides[option.id]) {
-            dispach(updateItemSelectionRemoveSideProduct(option.id))
+            dispatch(updateItemSelectionRemoveSideProduct(option.id))
           } else {
-            dispach(updateItemSelectionAddSideProduct({
+            dispatch(updateItemSelectionAddSideProduct({
               id: option.id,
               data: {
                 price: option.price,

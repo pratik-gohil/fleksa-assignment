@@ -6,7 +6,7 @@ import SvgCart from "../../../../public/assets/svg/cart.svg";
 import SvgHome from "../../../../public/assets/svg/home.svg";
 import SvgOptions from "../../../../public/assets/svg/options.svg";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
-import { selectShowCart, updateShowCart } from "../../../../redux/slices/configuration.slices.redux";
+import { selectSelectedMenu, selectShowCart, updateShowCart } from "../../../../redux/slices/configuration.slices.redux";
 import { useRouter } from "next/dist/client/router";
 import { useState } from "react";
 import NavbarMobileOptions from "./navbar-mobile-options.common.templateOne.components";
@@ -83,10 +83,11 @@ const Link = styled.a`
 const NavbarMobile: FunctionComponent = ({ }) => {
   const router = useRouter()
   const [ showOptions, setShowOptions ] = useState(false)
+  const selectedMenuId = useAppSelector(selectSelectedMenu)
   const showCart = useAppSelector(selectShowCart)
-  const dispach = useAppDispatch()
+  const dispatch = useAppDispatch()
   
-  const toggleCart = () => dispach(updateShowCart(!showCart))
+  const toggleCart = () => dispatch(updateShowCart(!showCart))
   const toggleOptions = () => setShowOptions(!showOptions) 
 
   return <WrapperHeader>
@@ -98,9 +99,9 @@ const NavbarMobile: FunctionComponent = ({ }) => {
         isActive: !showOptions && !showCart && router.pathname === "/",
       }, {
         title: "Menu",
-        link: "/menu",
+        link: selectedMenuId? `/menu/${selectedMenuId}`: "/menu",
         icon: SvgMenu,
-        isActive: !showOptions && !showCart && router.pathname === "/menu",
+        isActive: !showOptions && !showCart && router.pathname.startsWith("/menu"),
       }, {
         title: "Cart",
         button: toggleCart,

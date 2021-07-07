@@ -1,9 +1,9 @@
 import Cookies from 'cookies';
-import { IConfiguration, updateConfiguration, updateLanguage } from '../redux/slices/configuration.slices.redux';
-import { COOKIE_BEARER_TOKEN, COOKIE_SELECTED_RESTAURANT_NAME } from '../constants/keys-cookies.constants';
+import { IConfiguration, updateConfiguration, updateLanguage, updateSelectedMenu } from '../redux/slices/configuration.slices.redux';
+import { COOKIE_BEARER_TOKEN, COOKIE_SELECTED_MENU_ID, COOKIE_SELECTED_RESTAURANT_NAME } from '../constants/keys-cookies.constants';
 import { updateBearerToken, updateCustomer } from '../redux/slices/user.slices.redux';
 import PyApiHttpGetIndex from '../http/pyapi/index/get.index.pyapi.http';
-import { updateAddress, updateShop, updateTimings } from '../redux/slices/index.slices.redux';
+import { updateAddress, updateImages, updateShop, updateTimings } from '../redux/slices/index.slices.redux';
 import NodeApiHttpGetUser from '../http/nodeapi/user/get.user.nodeapi.http';
 import NodeApiHttpGetUserOrderHistory from '../http/nodeapi/account/get.account.order-history.nodeapi.http';
 import NodeApiHttpGetUserParticularOrder from '../http/nodeapi/account/get.order-view-by-id.nodeapi.http';
@@ -20,6 +20,8 @@ export async function getServerSidePropsCommon(
     const cookies = new Cookies(ctx.req, ctx.res);
     const bearerToken = cookies.get(COOKIE_BEARER_TOKEN);
     const restaurantName = cookies.get(COOKIE_SELECTED_RESTAURANT_NAME);
+    const selectedMenu = cookies.get(COOKIE_SELECTED_MENU_ID);
+    ctx.store.dispatch(updateSelectedMenu(selectedMenu||null));
 
     /**
      * If hostname is localhost:3000 or newqa.felksa.de use the restaurant name given by the cookie otherwise use the actual host.
@@ -87,6 +89,7 @@ export async function getServerSidePropsCommon(
     ctx.store.dispatch(updateAddress(responseIndex?.address));
     ctx.store.dispatch(updateShop(responseIndex?.shop));
     ctx.store.dispatch(updateTimings(responseIndex?.timings));
+    ctx.store.dispatch(updateImages(responseIndex?.images));
 
     return {
       bearerToken,

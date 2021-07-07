@@ -68,12 +68,12 @@ export const StyledOptionsRadioButtonContainer = styled.div`
 const MenuPageOptionsList: FunctionComponent<IPropsMenuPageCategoryListItem> = ({ productId, choiceIndex, getNextIndex, choice, selectedOption, setSelectedOption }) => {
   const language = useAppSelector(selectLanguage)
   const optionData = useAppSelector(state => selectItemSelectionChoice(state, productId))
-  const dispach = useAppDispatch()
+  const dispatch = useAppDispatch()
   const [ optionKey ] = useState(getNextIndex())
 
   const selectedIndex = optionData && optionData[choiceIndex]
   if (optionData && !selectedIndex && choice.options) {
-    dispach(updateItemSelectionChoice({
+    dispatch(updateItemSelectionChoice({
       id: choiceIndex,
       data: {
         product_index: 0,
@@ -93,7 +93,7 @@ const MenuPageOptionsList: FunctionComponent<IPropsMenuPageCategoryListItem> = (
     <StyledOptionsListContainer isOptionOpen={isOptionOpen}>
       <StyledOptionsList>
         {choice.options?.map((option, index) => <StyledOptionsListItem key={option.name_json.english} onClick={() => {
-          dispach(updateItemSelectionChoice({
+          dispatch(updateItemSelectionChoice({
             id: choiceIndex,
             data: {
               product_index: index,

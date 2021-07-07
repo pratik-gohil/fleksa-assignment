@@ -15,7 +15,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
   const wantAtData = useAppSelector(selectWantAt)
   const showSelectOrderType = useAppSelector(selectShowOrderTypeSelect)
   const showDateTimeSelect = useAppSelector(selectShowDateTimeSelect)
-  const dispach = useAppDispatch()
+  const dispatch = useAppDispatch()
 
   return <StyledCheckoutCard>
     <StyledCheckoutTitle>SUMMARY</StyledCheckoutTitle>
@@ -23,11 +23,11 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
       <Col xs={12}>
         <EditContainer>
           <StyledCheckoutText>{orderTypeData}</StyledCheckoutText>
-          <EditButton onClick={() => dispach(updateShowOrderTypeSelect(true))} />
+          <EditButton onClick={() => dispatch(updateShowOrderTypeSelect(true))} />
         </EditContainer>
         <EditContainer>
           <StyledCheckoutText>{wantAtData?.date.label} ({wantAtData?.time.label})</StyledCheckoutText>
-          <EditButton onClick={() => dispach(updateShowDateTimeSelect(true))} />
+          <EditButton onClick={() => dispatch(updateShowDateTimeSelect(true))} />
         </EditContainer>
       </Col>
     </Row>

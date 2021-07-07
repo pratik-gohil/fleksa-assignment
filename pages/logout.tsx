@@ -30,12 +30,12 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async ctx
 
 function Logout({ templateNumber }: any) {
   const router = useRouter()
-  const dispach = useAppDispatch()
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      dispach(updateClearCart())
-      dispach(updateClearCheckout())
+      dispatch(updateClearCart())
+      dispatch(updateClearCheckout())
       setTimeout(() => {
         router.push("/")
       }, 300);

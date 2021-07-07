@@ -10,6 +10,7 @@ import { BREAKPOINTS } from "../../../constants/grid-system-configuration";
 import { useAppSelector } from "../../../redux/hooks.redux";
 import { selectOrderType } from "../../../redux/slices/checkout.slices.redux";
 import { selectShowOrderTypeSelect } from "../../../redux/slices/menu.slices.redux";
+import MenuFeatures from "../../../components/templateOne/pages/menu/feature.menu.pages.templateOne.components";
 
 const SideViewLeft = styled.div`
   position: sticky;
@@ -32,6 +33,7 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
 
   return <>
     <MenuPageBanner />
+    <MenuFeatures />
     <Container>
       <Row>
         <Col sm={12} md={12} lg={3} xxl={3}>
@@ -39,10 +41,10 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
             <MenuPageCategorySidebar />
           </SideViewLeft>
         </Col>
-        <Col sm={12} md={12} lg={5} xxl={6}>
+        <Col sm={12} md={12} lg={5} xxl={5}>
           <MenuPageCategoryList />
         </Col>
-        <Col sm={12} md={12} lg={4} xxl={3}>
+        <Col sm={12} md={12} lg={4} xxl={4}>
           <SideViewRight>
             <Cart />
           </SideViewRight>

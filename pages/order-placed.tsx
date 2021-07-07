@@ -30,11 +30,11 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ct
 
 function Checkout({ templateNumber }: any) {
   const router = useRouter();
-  const dispach = useAppDispatch();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      dispach(updateClearCart());
+      dispatch(updateClearCart());
     }
   }, [router]);
   return <TemplateToShow templateList={templateList} templateNumber={templateNumber} pageContainer={{ showFooter: false }} />;

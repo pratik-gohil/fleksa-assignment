@@ -100,21 +100,21 @@ const SelectedTick = styled.div`
 
 const OrderTypeManager: FunctionComponent = () => {
   const orderType = useAppSelector(selectOrderType)
-  const dispach = useAppDispatch()
+  const dispatch = useAppDispatch()
 
   function onClickDelivery(orderType: ICheckoutOrderTypes) {
-    dispach(updateOrderType(orderType))
-    dispach(updateShowOrderTypeSelect(false))
+    dispatch(updateOrderType(orderType))
+    dispatch(updateShowOrderTypeSelect(false))
   }
 
   function onClickTakeaway(orderType: ICheckoutOrderTypes) {
-    dispach(updateOrderType(orderType))
-    dispach(updateShowOrderTypeSelect(false))
+    dispatch(updateOrderType(orderType))
+    dispatch(updateShowOrderTypeSelect(false))
   }
 
   function onClickDineIn(orderType: ICheckoutOrderTypes) {
-    dispach(updateOrderType(orderType))
-    dispach(updateShowOrderTypeSelect(false))
+    dispatch(updateOrderType(orderType))
+    dispatch(updateShowOrderTypeSelect(false))
   }
 
   return <Wrapper>
