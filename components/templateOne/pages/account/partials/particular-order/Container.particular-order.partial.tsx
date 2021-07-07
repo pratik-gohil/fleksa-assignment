@@ -1,7 +1,8 @@
 import React from 'react'
+import { FunctionComponent } from 'react'
 import styled from 'styled-components'
 
-const Container = ({ children }) => <StyledContianer>{children}</StyledContianer>
+const Container: FunctionComponent = ({ children }) => <StyledContianer>{children}</StyledContianer>
 
 const StyledContianer = styled.div`
     display: flex;
