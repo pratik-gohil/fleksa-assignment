@@ -1,11 +1,11 @@
 import dynamic from 'next/dynamic';
 import React from 'react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import IndexStoreWrapper from '../redux/store.redux';
-import TemplateToShow from '../templates/template-to-show.templates';
-import { getServerSidePropsCommon } from '../utils/page.utils';
+import IndexStoreWrapper from '../../redux/store.redux';
+import TemplateToShow from '../../templates/template-to-show.templates';
+import { getServerSidePropsCommon } from '../../utils/page.utils';
 
-const AccountPageTemplateOne = dynamic(import('../templates/one/account.one.templates'));
+const AccountPageTemplateOne = dynamic(import('../../templates/one/account/account.one.templates'));
 
 const templateList = [AccountPageTemplateOne];
 

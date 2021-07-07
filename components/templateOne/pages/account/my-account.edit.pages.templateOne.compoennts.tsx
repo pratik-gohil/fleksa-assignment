@@ -1,7 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
-import { MyAccountLeftSection } from './my-account.left-navigator.pages.templateOne.components';
 import { MyAccountRightSection } from './my-account.right-navigator.pages.templateOne.components';
 
 const WrapperSection = styled.section`
@@ -13,19 +12,18 @@ const Row = styled.div`
 `;
 
 const RightContainer = styled.div`
-  width: 70%;
+  display: none;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    display: none;
+    display: block;
+    width: 100%;
   }
 `;
 
-const AccountPageMyAccount: FunctionComponent = ({}) => {
+const AccountPageMyEditAccount: FunctionComponent = ({}) => {
   return (
     <WrapperSection>
       <Row>
-        <MyAccountLeftSection />
-
         <RightContainer>
           <MyAccountRightSection />
         </RightContainer>
@@ -34,4 +32,4 @@ const AccountPageMyAccount: FunctionComponent = ({}) => {
   );
 };
 
-export default AccountPageMyAccount;
+export default AccountPageMyEditAccount;
