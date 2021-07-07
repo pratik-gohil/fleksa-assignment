@@ -9,12 +9,17 @@ import NodeApiHttpPatchAccountProfileRequest from '../../../../http/nodeapi/acco
 import { selectBearerToken } from '../../../../redux/slices/user.slices.redux';
 import { selectConfiguration } from '../../../../redux/slices/configuration.slices.redux';
 import { updateError } from '../../../../redux/slices/common.slices.redux';
+import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 
 const Wrapper = styled.div`
   width: 70%;
   padding: 3rem 0;
   height: calc(100vh - ${(p) => p.theme.navDesktop.height}px);
   overflow: hidden;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    display: none;
+  }
 `;
 
 const Content = styled.div`

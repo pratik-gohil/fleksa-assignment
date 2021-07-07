@@ -1,7 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useAppSelector } from '../../../../redux/hooks.redux';
+import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { selectCustomer } from '../../../../redux/slices/user.slices.redux';
+import PencilIconPath from '../../../../public/assets/svg/pencil.svg';
 
 const Wrapper = styled.div`
   background: ${(p) => p.theme.textDarkColor};
@@ -18,6 +20,16 @@ const Wrapper = styled.div`
     top: 0;
     right: 0;
   }
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    width: 100%;
+    height: calc(100vh - ${(p) => p.theme.navMobile.height}px);
+
+    ::after {
+      width: 1.5rem;
+      left: 0;
+    }
+  }
 `;
 
 const LinkContainer = styled.div`
@@ -29,6 +41,10 @@ const LinkContainer = styled.div`
 
   width: calc(100% - 3rem);
   height: 100%;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    width: 100%;
+  }
 `;
 
 const FlagImage = styled.p`
@@ -41,6 +57,7 @@ const FlagImage = styled.p`
   justify-content: center;
   align-items: center;
   font-weight: 600;
+  position: relative;
   color: ${(props) => props.theme.primaryColor};
   background-color: #444;
   text-transform: uppercase;
@@ -62,7 +79,7 @@ const Link = styled.a<{ active: boolean }>`
 
 const LougoutButton = styled.button`
   color: ${(props) => props.theme.textLightActiveColor};
-  padding: 1rem;
+  padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   outline: none;
   border: 0.1px solid rgba(255, 255, 255, 0.1);
@@ -87,6 +104,30 @@ const ActiveUnderline = styled.span<{ active: boolean }>`
   border-radius: 3px;
 `;
 
+const PencilIcon = styled(PencilIconPath)`
+  font-size: 1.2rem;
+  color: ${(p) => p.theme.textDarkColor};
+`;
+
+const IconContainer = styled.div`
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  border: 1px solid #dddddd;
+  display: none;
+  place-items: center;
+  cursor: pointer;
+  background: #fff;
+
+  position: absolute;
+  right: -0.5rem;
+  bottom: 0;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    display: grid;
+  }
+`;
+
 export const MyAccountLeftSection = () => {
   const customerData = useAppSelector(selectCustomer);
 
@@ -98,6 +139,10 @@ export const MyAccountLeftSection = () => {
             .split(' ')
             .map((i) => i[0])
             .join('')}
+
+          <IconContainer>
+            <PencilIcon />
+          </IconContainer>
         </FlagImage>
 
         <Link href="#" active={true}>
