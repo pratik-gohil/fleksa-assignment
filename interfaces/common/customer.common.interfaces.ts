@@ -17,6 +17,7 @@ export interface IParticularOrder {
   created_at: string;
   payment_method: string;
   no_of_products: number;
+  pdf_url?: string;
 }
 
 export interface IDeliveryAddress {
