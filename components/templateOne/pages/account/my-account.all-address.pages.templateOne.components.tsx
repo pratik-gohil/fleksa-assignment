@@ -8,29 +8,41 @@ import { selectCustomer } from '../../../../redux/slices/user.slices.redux';
 
 const HomeIconPath = '/assets/svg/account/home.svg';
 const WorkIconPath = '/assets/svg/account/work.svg';
-// const MapIconPath = '/assets/svg/account/map.svg';
+const MapIconPath = '/assets/svg/account/map.svg';
 
 const Wrapper = styled.section`
   height: calc(100vh - ${(p) => p.theme.navDesktop.height}px);
   display: flex;
   flex-direction: column;
-  margin: auto 4rem;
+  margin: auto 2rem;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     height: calc(100vh - ${(p) => p.theme.navMobile.height}px);
   }
 `;
 
+const LeftWrapper = styled.div`
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: stretch;
+  width: 50%;
+  flex-direction: column;
+  padding: 0 1rem;
+`;
+const RightWrapper = styled.div``;
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 50%;
+  width: 100%;
   min-height: 400px;
 `;
 
 const Header = styled.div`
   margin-top: 3rem;
+  width: 100%;
 `;
 
 const Title = styled.h2`
@@ -38,7 +50,9 @@ const Title = styled.h2`
   margin: 0;
 `;
 
-const AddressContainer = styled.div``;
+const AddressContainer = styled.div`
+  width: 100%;
+`;
 
 const Address = styled.div`
   display: flex;
@@ -72,18 +86,11 @@ const IconContainer = styled.div`
   height: 48px;
 `;
 
-const HomeIcon = styled.img`
+const TypeIcon = styled.img`
   height: 100%;
   width: 100%;
 `;
-const WorkIcon = styled.img`
-  height: 100%;
-  width: 100%;
-`;
-// const MapIcon = styled.img`
-//   height: 100%;
-//   width: 100%;
-// `;
+
 const EditIcon = styled(EditIconPath)``;
 const PlusIcon = styled(PlusIconPath)``;
 
@@ -125,53 +132,48 @@ const Text = styled.span`
 `;
 
 const AccountPageAllAddress: FunctionComponent = ({}) => {
-  const order = useAppSelector(selectCustomer);
+  const addressess = useAppSelector(selectCustomer).all_address;
 
   return (
     <Wrapper>
-      <Header>
-        <Title>My Addresses</Title>
-      </Header>
+      <LeftWrapper>
+        <Header>
+          <Title>My Addresses</Title>
+        </Header>
 
-      <Container>
-        <AddressContainer>
-          <Address>
-            <IconContainer>
-              <HomeIcon src={HomeIconPath} />
-            </IconContainer>
+        <Container>
+          <AddressContainer>
+            {addressess?.map((address) => (
+              <Address>
+                <IconContainer>
+                  {address.address_type === 'HOME' && <TypeIcon src={HomeIconPath} />}
+                  {address.address_type === 'WORK' && <TypeIcon src={WorkIconPath} />}
+                  {address.address_type === 'OTHER' && <TypeIcon src={MapIconPath} />}
+                </IconContainer>
 
-            <Content>
-              <Label>OTHER</Label>
-              <Value>Bieberer Straße , Mühlheim am Main </Value>
-            </Content>
+                <Content>
+                  <Label>{address.address_type}</Label>
+                  <Value>
+                    {address.address}, {address.city}
+                  </Value>
+                </Content>
 
-            <EditButton>
-              <EditIcon />
-            </EditButton>
-          </Address>
+                <EditButton>
+                  <EditIcon />
+                </EditButton>
+              </Address>
+            ))}
+          </AddressContainer>
 
-          <Address>
-            <IconContainer>
-              <WorkIcon src={WorkIconPath} />
-            </IconContainer>
+          <AddNewAddressButton>
+            <PlusIcon />
 
-            <Content>
-              <Label>OTHER</Label>
-              <Value>Bieberer Straße , Mühlheim am Main </Value>
-            </Content>
+            <Text>New Address</Text>
+          </AddNewAddressButton>
+        </Container>
+      </LeftWrapper>
 
-            <EditButton>
-              <EditIcon />
-            </EditButton>
-          </Address>
-        </AddressContainer>
-
-        <AddNewAddressButton>
-          <PlusIcon />
-
-          <Text>New Address</Text>
-        </AddNewAddressButton>
-      </Container>
+      <RightWrapper></RightWrapper>
     </Wrapper>
   );
 };
