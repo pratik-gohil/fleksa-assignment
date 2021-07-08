@@ -154,9 +154,9 @@ export const MyAccountLeftSection = () => {
           My Orders
           <ActiveUnderline active={router.pathname === '/account/order-history'} />
         </Link>
-        <Link href="#" active={false}>
+        <Link href="/account/addresses" active={router.pathname === '/account/addresses'}>
           Address
-          <ActiveUnderline active={false} />
+          <ActiveUnderline active={router.pathname === '/account/addresses'} />
         </Link>
 
         <LougoutButton>Log out</LougoutButton>
