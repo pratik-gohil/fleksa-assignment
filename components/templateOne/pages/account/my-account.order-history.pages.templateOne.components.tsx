@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { useAppSelector } from '../../../../redux/hooks.redux';
 import { selectCustomer } from '../../../../redux/slices/user.slices.redux';
 import { MyAccountOrder } from './partials/my-account.order-history.partials.account.templateOne.components';
@@ -7,6 +8,10 @@ import { MyAccountOrder } from './partials/my-account.order-history.partials.acc
 const Wrapper = styled.div`
   overflow: hidden;
   height: calc(100vh - ${(p) => p.theme.navDesktop.height}px);
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    height: calc(100vh - ${(p) => p.theme.navMobile.height}px);
+  }
 `;
 
 const InnerWrapper = styled.div`

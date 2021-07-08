@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { IParticularOrder } from '../../../../../interfaces/common/customer.common.interfaces';
 import styled from 'styled-components';
+import { BREAKPOINTS } from '../../../../../constants/grid-system-configuration';
 
 const Container = styled.div`
   max-width: 500px;
@@ -10,6 +11,10 @@ const Container = styled.div`
 
   @media (min-width: 850px) {
     max-width: 700px;
+  }
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    margin: 1rem 0.5rem;
   }
 `;
 const TextContainer = styled.div`

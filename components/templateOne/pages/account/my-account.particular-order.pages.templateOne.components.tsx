@@ -4,11 +4,16 @@ import styled from 'styled-components';
 import { useAppSelector } from '../../../../redux/hooks.redux';
 import { selectCustomer } from '../../../../redux/slices/user.slices.redux';
 import ArrowIconPath from '../../../../public/assets/svg/back-arrow.svg';
+import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 
 const Wrapper = styled.section`
   height: calc(100vh - ${(p) => p.theme.navDesktop.height}px);
   display: flex;
   flex-direction: column;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    height: calc(100vh - ${(p) => p.theme.navMobile.height}px);
+  }
 `;
 
 const HeaderSection = styled.div`
@@ -18,6 +23,10 @@ const HeaderSection = styled.div`
   max-height: 50px;
   padding: 2.5rem 2rem;
   align-items: center;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    padding: 2.5rem 1rem;
+  }
 `;
 
 const OrderId = styled.h3`
@@ -29,6 +38,8 @@ const BackButton = styled.a`
   border: none;
   outline: none;
   cursor: pointer;
+  display: grid;
+  place-items: center;
 `;
 const ArrowIcon = styled(ArrowIconPath)``;
 
@@ -46,6 +57,10 @@ const MainSection = styled.div`
     width: 0;
     height: 0;
   }
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    margin: 0 0.5rem;
+  }
 `;
 
 const Container = styled.div`
@@ -60,6 +75,10 @@ const Container = styled.div`
     & > * {
       flex: 1;
     }
+  }
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    padding: 1rem;
   }
 `;
 
@@ -77,6 +96,10 @@ const Label = styled.label`
   font-size: 1.3rem;
   font-weight: 600;
   width: 50%;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    font-size: 1rem;
+  }
 `;
 const Value = styled.p`
   text-align: right;
@@ -95,10 +118,14 @@ const ProductName = styled.div`
 const ProductQuantity = styled.div`
   padding: 0.5rem 1rem;
   width: 15%;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    padding: 0.5rem;
+  }
 `;
 const ProductPrice = styled.div`
   padding: 0.5rem 0;
-  width: 20%;
+  width: 25%;
   text-align: right;
 `;
 
@@ -183,8 +210,8 @@ const AccountPageParticularOrder: FunctionComponent = ({}) => {
             <SetGap />
 
             <ProductContainer>
-              {order?.products.map((product) => (
-                <Product>
+              {order?.products.map((product, index) => (
+                <Product key={index}>
                   <ProductName>
                     <MainName>{product.name.map((p) => (p.isRoot ? `${p.name.german} ` : ''))}</MainName>
                     <SubName>{product.name.map((p) => (!p.isRoot ? p.name.german : '').toString())}</SubName>

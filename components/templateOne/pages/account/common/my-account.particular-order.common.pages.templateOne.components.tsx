@@ -5,7 +5,7 @@ import { MyAccountLeftSection } from '../my-account.left-navigator.pages.templat
 import AccountPageParticularOrder from '../my-account.particular-order.pages.templateOne.components';
 
 const WrapperSection = styled.section`
-  overflow: hidden;
+  overflow-x: hidden;
 `;
 
 const Row = styled.div`
@@ -16,6 +16,14 @@ const RightContainer = styled.div`
   width: 70%;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
+    width: 100%;
+  }
+`;
+
+const LeftContainer = styled.div`
+  width: 30%;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
     display: none;
   }
 `;
@@ -24,7 +32,9 @@ const AccountPageMyAccount: FunctionComponent = ({}) => {
   return (
     <WrapperSection>
       <Row>
-        <MyAccountLeftSection />
+        <LeftContainer>
+          <MyAccountLeftSection />
+        </LeftContainer>
 
         <RightContainer>
           <AccountPageParticularOrder />

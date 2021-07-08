@@ -8,7 +8,6 @@ import { useRouter } from 'next/router';
 
 const Wrapper = styled.div`
   background: ${(p) => p.theme.textDarkColor};
-  width: 30%;
   height: calc(100vh - ${(p) => p.theme.navDesktop.height}px);
   position: relative;
 
