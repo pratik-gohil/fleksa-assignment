@@ -7,6 +7,7 @@ import { updateAddress, updateImages, updateShop, updateTimings } from '../redux
 import NodeApiHttpGetUser from '../http/nodeapi/user/get.user.nodeapi.http';
 import NodeApiHttpGetUserOrderHistory from '../http/nodeapi/account/get.account.order-history.nodeapi.http';
 import NodeApiHttpGetUserParticularOrder from '../http/nodeapi/account/get.order-view-by-id.nodeapi.http';
+import NodeApiHttpGetUserAllAddress from '../http/nodeapi/account/get.account.all-address.nodeapi.http';
 
 export async function getServerSidePropsCommon(
   ctx: any,
@@ -14,6 +15,7 @@ export async function getServerSidePropsCommon(
   options?: {
     orderHistory?: boolean;
     particularOrder?: boolean;
+    getAllAddress?: boolean;
   },
 ) {
   try {
@@ -78,11 +80,18 @@ export async function getServerSidePropsCommon(
         else ctx.store.dispatch(updateCustomer({ ...userData?.data.customer, orders: [] }));
       }
 
+      // TODO: Request for particular order page
       if (options?.particularOrder && bearerToken) {
         const particularOrder = await new NodeApiHttpGetUserParticularOrder(configuration, bearerToken).get({
           order_id: ctx.query.id,
         });
-        ctx.store.dispatch(updateCustomer({ ...userData?.data.customer, orders: [], current_order: particularOrder?.data.order }));
+        ctx.store.dispatch(updateCustomer({ ...userData?.data.customer, current_order: particularOrder?.data.order }));
+      }
+
+      // TODO: Request for all address order page
+      if (options?.getAllAddress && bearerToken) {
+        const response = await new NodeApiHttpGetUserAllAddress(configuration, bearerToken).get({});
+        ctx.store.dispatch(updateCustomer({ ...userData?.data.customer, all_address: response?.data.customer_address }));
       }
     }
 

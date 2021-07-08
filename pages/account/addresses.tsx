@@ -11,7 +11,9 @@ const templateList = [AccountAddressesPageTemplateOne];
 
 export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ctx) => {
   try {
-    const { redirect } = await getServerSidePropsCommon(ctx, true);
+    const { redirect } = await getServerSidePropsCommon(ctx, true, {
+      getAllAddress: true,
+    });
     if (redirect) return redirect;
 
     return {
