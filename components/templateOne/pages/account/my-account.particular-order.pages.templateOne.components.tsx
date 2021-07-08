@@ -24,7 +24,7 @@ const OrderId = styled.h3`
   padding: 0;
   margin: 0 0 0 1rem;
 `;
-const BackButton = styled.button`
+const BackButton = styled.a`
   background: transparent;
   border: none;
   outline: none;
@@ -66,7 +66,6 @@ const Container = styled.div`
 const RightContainer = styled.div`
   display: flex;
   flex-direction: column;
-  /* justify-content: space-between; */
 `;
 const LeftContainer = styled.div``;
 const Content = styled.div`
@@ -131,7 +130,7 @@ const PriceValue = styled(Value)`
   font-size: 1rem;
   font-weight: 500;
 `;
-const ReceiptButton = styled.button`
+const ReceiptButton = styled.a`
   background: ${(p) => p.theme.textDarkColor};
   color: ${(p) => p.theme.textLightActiveColor};
   width: 100%;
@@ -162,14 +161,16 @@ const AccountPageParticularOrder: FunctionComponent = ({}) => {
   return (
     <Wrapper>
       <HeaderSection>
-        <BackButton>
+        <BackButton href="/account/order-history">
           <ArrowIcon />
         </BackButton>
-        <OrderId>Order #18234</OrderId>
+        <OrderId>Order #{order?.id}</OrderId>
       </HeaderSection>
 
       <MainSection>
-        <ReceiptButton>View Receipt</ReceiptButton>
+        <ReceiptButton href={order?.pdf_url} target="_blank" rel="noopener noreferrer">
+          View Receipt
+        </ReceiptButton>
         <Container>
           <LeftContainer>
             <Content>
@@ -182,14 +183,16 @@ const AccountPageParticularOrder: FunctionComponent = ({}) => {
             <SetGap />
 
             <ProductContainer>
-              <Product>
-                <ProductName>
-                  <MainName>Pizza Mittagsangebot</MainName>
-                  <SubName>Pizza Peperoniwurstmit Ananasmit Artischocken</SubName>
-                </ProductName>
-                <ProductQuantity>x3</ProductQuantity>
-                <ProductPrice>23,40 €</ProductPrice>
-              </Product>
+              {order?.products.map((product) => (
+                <Product>
+                  <ProductName>
+                    <MainName>{product.name.map((p) => (p.isRoot ? `${p.name.german} ` : ''))}</MainName>
+                    <SubName>{product.name.map((p) => (!p.isRoot ? p.name.german : '').toString())}</SubName>
+                  </ProductName>
+                  <ProductQuantity>X{product.quantity}</ProductQuantity>
+                  <ProductPrice>{(product.quantity * product.price).toFixed(2).replace('.', ',')} &euro;</ProductPrice>
+                </Product>
+              ))}
             </ProductContainer>
 
             <SetGap />

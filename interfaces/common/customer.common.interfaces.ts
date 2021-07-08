@@ -16,7 +16,6 @@ export interface IParticularOrder {
   amount: number;
   created_at: string;
   payment_method: string;
-  pdf_url?: string;
   no_of_products: number;
 }
 
@@ -38,6 +37,7 @@ export interface IParticularProduct {
       german: string;
     };
     isRoot?: boolean;
+    type: string;
   }>;
   price: number;
   type: string;
@@ -62,6 +62,7 @@ export interface IParticularOrderBriefInfo {
   is_delivery: boolean;
   delivery_address?: IDeliveryAddress;
   payment_method: string;
+  pdf_url?: string;
   price: {
     tip: number;
     total_amount: number;
