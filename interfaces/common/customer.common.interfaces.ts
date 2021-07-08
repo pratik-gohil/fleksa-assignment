@@ -7,6 +7,7 @@ export interface ICustomer {
   phone_verified: number;
   orders?: Array<IParticularOrder>;
   current_order?: IParticularOrderBriefInfo;
+  all_address?: Array<IParticularAddress>;
 }
 
 export interface IParticularOrder {
@@ -85,4 +86,9 @@ export interface IParticularOrderBriefInfo {
     address: IDeliveryAddress;
   };
   products: Array<IParticularProduct>;
+}
+
+export interface IParticularAddress extends IDeliveryAddress {
+  id: number;
+  address_type: string;
 }

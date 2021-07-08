@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import EditIconPath from '../../../../public/assets/svg/pencil.svg';
 import PlusIconPath from '../../../../public/assets/svg/account/plus.svg';
+import { useAppSelector } from '../../../../redux/hooks.redux';
+import { selectCustomer } from '../../../../redux/slices/user.slices.redux';
 
 const HomeIconPath = '/assets/svg/account/home.svg';
 const WorkIconPath = '/assets/svg/account/work.svg';
@@ -123,6 +125,8 @@ const Text = styled.span`
 `;
 
 const AccountPageAllAddress: FunctionComponent = ({}) => {
+  const order = useAppSelector(selectCustomer);
+
   return (
     <Wrapper>
       <Header>
