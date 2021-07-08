@@ -49,7 +49,7 @@ export interface IParticularProduct {
 export interface IParticularOrderBriefInfo {
   id: number;
   name?: string;
-  type: string;
+  order_type: string;
   sku?: string;
   quantity: number;
   discount: number;
@@ -61,6 +61,7 @@ export interface IParticularOrderBriefInfo {
   status: string;
   is_delivery: boolean;
   delivery_address?: IDeliveryAddress;
+  payment_method: string;
   price: {
     tip: number;
     total: number;
