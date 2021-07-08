@@ -53,7 +53,7 @@ const NavbarList = styled.ul`
 const NavbarDesktop: FunctionComponent = ({}) => {
   const { t } = useTranslation('header');
   const shopData = useAppSelector(selectShop);
-  const selectedMenuId = useAppSelector(selectSelectedMenu)
+  const selectedMenuId = useAppSelector(selectSelectedMenu);
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
   const router = useRouter();
 
@@ -68,7 +68,11 @@ const NavbarDesktop: FunctionComponent = ({}) => {
           <Col md={8}>
             <Navbar>
               <NavbarList>
-                <NavLink title={t('@menu')} path={selectedMenuId? `/menu/${selectedMenuId}`: "/menu"} isActive={router.pathname.startsWith("/menu")} />
+                <NavLink
+                  title={t('@menu')}
+                  path={selectedMenuId ? `/menu/${selectedMenuId}` : '/menu'}
+                  isActive={router.pathname.startsWith('/menu')}
+                />
                 <NavLink title={t('@reservation')} path="/reservation" isActive={router.pathname === '/reservation'} />
                 <NavLink title={t('@gallery')} path="/gallery" isActive={router.pathname === '/gallery'} />
                 <NavLink title={t('@contact')} path="/contact-us" isActive={router.pathname === '/contact-us'} />

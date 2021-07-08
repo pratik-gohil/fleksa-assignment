@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 
 import EditIconPath from '../../../../../public/assets/svg/pencil.svg';
@@ -10,7 +10,9 @@ const HomeIconPath = '/assets/svg/account/home.svg';
 const WorkIconPath = '/assets/svg/account/work.svg';
 const MapIconPath = '/assets/svg/account/map.svg';
 
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+  margin-left: 5rem;
+`;
 
 const Container = styled.div`
   display: flex;
@@ -111,7 +113,11 @@ const Text = styled.span`
   padding: 0 1rem;
 `;
 
-const MyAccountAllAddressLeftSide = () => {
+interface IMyAccountAllAddressLeftSideProps {
+  handleShowNewAddressModal: () => void;
+}
+
+const MyAccountAllAddressLeftSide: FunctionComponent<IMyAccountAllAddressLeftSideProps> = ({ handleShowNewAddressModal }) => {
   const addressess = useAppSelector(selectCustomer).all_address;
 
   return (
@@ -144,7 +150,7 @@ const MyAccountAllAddressLeftSide = () => {
           ))}
         </AddressContainer>
 
-        <AddNewAddressButton>
+        <AddNewAddressButton onClick={handleShowNewAddressModal}>
           <PlusIcon />
 
           <Text>New Address</Text>

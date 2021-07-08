@@ -1,12 +1,15 @@
 import React, { FunctionComponent } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import MyAccountAllAddressLeftSide from './partials/my-account.all-address.left.partials.account.pages.templateOne.components';
+import MyAccountAllAddressRightSide from './partials/my-account.all-address.right.partials.account.pages.templateOne.components';
 
 const Wrapper = styled.section`
   height: calc(100vh - ${(p) => p.theme.navDesktop.height}px);
   display: flex;
   margin: auto 1rem;
+  overflow: hidden;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     height: calc(100vh - ${(p) => p.theme.navMobile.height}px);
@@ -23,14 +26,23 @@ const LeftWrapper = styled.div`
   padding: 0 2rem 0 1rem;
 `;
 
-const RightWrapper = styled.div`
-  position: relative;
-  height: 100%;
-  background: red;
+const RightWrapper = styled.div<{ show: boolean }>`
+  position: fixed;
+  height: 100vh;
+  width: 400px;
+  padding: 0 1rem 0 2rem;
+  animation: slider 0.3s ease-in;
+  top: 0;
+  right: 0;
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 0px 16px;
+  z-index: 999999;
+  background: #fff;
+  transition: transform 0.3s cubic-bezier(0, 0.52, 0, 1);
 
+  transform: ${(p) => (p.show ? 'translate3d(0, 0, 0)' : 'translate3d(100vw, 0, 0)')};
   ::after {
     content: '';
-    width: 1rem;
+    width: 0.5rem;
     height: 100%;
     position: absolute;
     background: ${(p) => p.theme.primaryColor};
@@ -38,16 +50,31 @@ const RightWrapper = styled.div`
     left: 0;
     z-index: 1;
   }
+
+  @keyframes slider {
+    from {
+      right: -400px;
+    }
+    to {
+      right: 0;
+    }
+  }
 `;
 
 const AccountPageAllAddress: FunctionComponent = ({}) => {
+  const [show, setShow] = useState(false);
+
+  const handleShowNewAddressModal = () => setShow(!show);
+
   return (
     <Wrapper>
       <LeftWrapper>
-        <MyAccountAllAddressLeftSide />
+        <MyAccountAllAddressLeftSide handleShowNewAddressModal={handleShowNewAddressModal} />
       </LeftWrapper>
 
-      <RightWrapper></RightWrapper>
+      <RightWrapper show={show}>
+        <MyAccountAllAddressRightSide handleShowNewAddressModal={handleShowNewAddressModal} />
+      </RightWrapper>
     </Wrapper>
   );
 };
