@@ -28,6 +28,7 @@ const BackButton = styled.button`
   background: transparent;
   border: none;
   outline: none;
+  cursor: pointer;
 `;
 const ArrowIcon = styled(ArrowIconPath)``;
 
@@ -65,7 +66,7 @@ const Container = styled.div`
 const RightContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  /* justify-content: space-between; */
 `;
 const LeftContainer = styled.div``;
 const Content = styled.div`
@@ -83,11 +84,6 @@ const Value = styled.p`
   padding: 0;
   margin: 0;
   width: 50%;
-`;
-const SetGap = styled.hr`
-  height: 0rem;
-  border: none;
-  outline: none;
 `;
 
 const ProductContainer = styled.div``;
@@ -154,8 +150,14 @@ const ReceiptButton = styled.button`
   }
 `;
 
+const SetGap = styled.hr`
+  height: 0.5rem;
+  border: none;
+  outline: none;
+`;
+
 const AccountPageParticularOrder: FunctionComponent = ({}) => {
-  const customerData = useAppSelector(selectCustomer);
+  const order = useAppSelector(selectCustomer).current_order;
 
   return (
     <Wrapper>
@@ -173,8 +175,7 @@ const AccountPageParticularOrder: FunctionComponent = ({}) => {
             <Content>
               <Label>Placed On</Label>
               <Value>
-                {moment(new Date(`${customerData.current_order?.created_at}`)).format('ll')} at{' '}
-                {moment(new Date(`${customerData.current_order?.created_at}`)).format('HH:mm')}
+                {moment(new Date(`${order?.created_at}`)).format('ll')} at {moment(new Date(`${order?.created_at}`)).format('HH:mm')}
               </Value>
             </Content>
 
@@ -194,19 +195,23 @@ const AccountPageParticularOrder: FunctionComponent = ({}) => {
             <SetGap />
 
             <PriceContainer>
-              <BasePrice>
-                <PriceLabel>Tip</PriceLabel>
-                <PriceValue>2,00 €</PriceValue>
-              </BasePrice>
+              {!!order?.price.tip && (
+                <BasePrice>
+                  <PriceLabel>Tip</PriceLabel>
+                  <PriceValue>{order?.price.tip.toFixed(2).replace('.', ',')} €</PriceValue>
+                </BasePrice>
+              )}
 
-              <BasePrice>
-                <PriceLabel>Delivery Fee</PriceLabel>
-                <PriceValue>1,00 €</PriceValue>
-              </BasePrice>
+              {!!order?.price.delivery_fee && (
+                <BasePrice>
+                  <PriceLabel>Delivery Fee</PriceLabel>
+                  <PriceValue>{order?.price.delivery_fee.toFixed(2).replace('.', ',')} €</PriceValue>
+                </BasePrice>
+              )}
 
               <BasePrice>
                 <PriceLabel>Subtotal</PriceLabel>
-                <PriceValue>23,40 €</PriceValue>
+                <PriceValue>{order?.price.sub_total.toFixed(2).replace('.', ',')} €</PriceValue>
               </BasePrice>
 
               <BasePrice>
@@ -223,36 +228,47 @@ const AccountPageParticularOrder: FunctionComponent = ({}) => {
                     fontWeight: 600,
                   }}
                 >
-                  25,40 €
+                  {order?.price.total_amount.toFixed(2).replace('.', ',')} €
                 </PriceValue>
               </BasePrice>
             </PriceContainer>
           </LeftContainer>
+
           <RightContainer>
             <Content>
               <Label>Order Type</Label>
-              <Value>{customerData.current_order?.order_type}</Value>
+              <Value>{order?.order_type}</Value>
             </Content>
 
             <SetGap />
 
-            <Content>
-              <Label>Delivery Address</Label>
-              <Value>Gerberstraße ,Offenbach am Main</Value>
-            </Content>
+            {order?.is_delivery && (
+              <>
+                <Content>
+                  <Label>Delivery Address</Label>
+                  <Value>
+                    {order?.delivery_address?.address}, {order?.delivery_address?.city}
+                  </Value>
+                </Content>
+                <SetGap />
+              </>
+            )}
 
-            <SetGap />
-
-            <Content>
-              <Label>Delivery Time</Label>
-              <Value>May 13, 2021 at ca. 23:15</Value>
-            </Content>
-
-            <SetGap />
+            {order?.is_delivery && (
+              <>
+                <Content>
+                  <Label>Delivery Time</Label>
+                  <Value>
+                    {moment(new Date(`${order?.delivered_at}`)).format('ll')} at {moment(new Date(`${order?.delivered_at}`)).format('HH:mm')}
+                  </Value>
+                </Content>
+                <SetGap />
+              </>
+            )}
 
             <Content>
               <Label>Payment Method</Label>
-              <Value>{customerData.current_order?.payment_method}</Value>
+              <Value>{order?.payment_method}</Value>
             </Content>
           </RightContainer>
         </Container>

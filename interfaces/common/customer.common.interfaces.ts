@@ -64,7 +64,7 @@ export interface IParticularOrderBriefInfo {
   payment_method: string;
   price: {
     tip: number;
-    total: number;
+    total_amount: number;
     sub_total: number;
     delivery_fee: number;
     tax: number;
