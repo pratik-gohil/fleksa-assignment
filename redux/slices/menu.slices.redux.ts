@@ -12,6 +12,7 @@ export interface IMenuSliceState {
   sides: Record<number, IMenuSide>
   parts: Record<number, IMenuPart>
   searchQuery: string
+  showAddAddress: boolean
   showOrderTypeSelect: boolean
 }
 
@@ -20,6 +21,7 @@ const initialState: IMenuSliceState = {
   sides: {},
   parts: {},
   searchQuery: "",
+  showAddAddress: false,
   showOrderTypeSelect: false,
 }
 
@@ -54,6 +56,9 @@ export const MenuSlice = createSlice({
     updateSearchQuery(state, action) {
       state.searchQuery = action.payload
     },
+    updateShowAddAddress(state, action) {
+      state.showAddAddress = action.payload
+    },
     updateShowOrderTypeSelect(state, action) {
       state.showOrderTypeSelect = action.payload
     },
@@ -73,6 +78,7 @@ export const {
   updateParts,
   updateSides,
   updateSearchQuery,
+  updateShowAddAddress,
   updateShowOrderTypeSelect
 } = MenuSlice.actions
 
@@ -108,4 +114,5 @@ export const selectParts = (state: RootState, idList: Array<number>) => {
 export const selectSide = (state: RootState, id: number) => state.menu.sides[id]
 export const selectSidesArray = (state: RootState, idList: Array<number>) => idList.map(i => state.menu.sides[i]).filter(i => i)
 export const selectSearchQuery = (state: RootState) => state.menu.searchQuery
+export const selectShowAddress = (state: RootState) => state.menu.showAddAddress
 export const selectShowOrderTypeSelect = (state: RootState) => state.menu.showOrderTypeSelect

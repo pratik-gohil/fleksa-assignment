@@ -9,8 +9,9 @@ import OrderTypeManager from "../../../components/templateOne/common/orderType/o
 import { BREAKPOINTS } from "../../../constants/grid-system-configuration";
 import { useAppSelector } from "../../../redux/hooks.redux";
 import { selectOrderType } from "../../../redux/slices/checkout.slices.redux";
-import { selectShowOrderTypeSelect } from "../../../redux/slices/menu.slices.redux";
+import { selectShowAddress, selectShowOrderTypeSelect } from "../../../redux/slices/menu.slices.redux";
 import MenuFeatures from "../../../components/templateOne/pages/menu/feature.menu.pages.templateOne.components";
+import AddressAdd from "../../../components/templateOne/common/addresses/address-add.common.templateOne.components";
 
 const SideViewLeft = styled.div`
   position: sticky;
@@ -29,7 +30,10 @@ const SideViewRight = styled(SideViewLeft)`
 
 const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
   const orderType = useAppSelector(selectOrderType)
+  const showAddAddress = useAppSelector(selectShowAddress)
   const showSelectOrderType = useAppSelector(selectShowOrderTypeSelect)
+
+  console.log(showAddAddress)
 
   return <>
     <MenuPageBanner />
@@ -51,8 +55,8 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
         </Col>
       </Row>
     </Container>
-    {(showSelectOrderType || orderType === null) && <OrderTypeManager key="key-ajkndalkwdmalkwmdlkw" />}
-    {/* <AddressAdd /> */}
+    {((showSelectOrderType || orderType === null) && !showAddAddress) && <OrderTypeManager key="key-ajkndalkwdmalkwmdlkw" />}
+    {(showAddAddress) && <AddressAdd />}
   </>
 }
 

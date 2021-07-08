@@ -16,5 +16,8 @@
   "@yourAddress": "ADRESSE",
   "@streetAndNumber": "STRAßE UND NUMMER",
   "@save": "SPEICHERN",
-  "@deliveryAddress": "Lieferadresse"
+  "@deliveryAddress": "Lieferadresse",
+  "@addressPart1": "Leider bieten wir derzeit keine Lieferung an Ihren Standort an.",
+  "@addressPart2": "das Restaurant für weitere Informationen.",
+  "@contact": "Bitte kontaktieren Sie"
 }
