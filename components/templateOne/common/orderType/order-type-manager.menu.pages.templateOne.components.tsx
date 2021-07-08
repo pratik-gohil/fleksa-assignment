@@ -7,7 +7,7 @@ import SvgDelivery from "../../../../public/assets/svg/delivery.svg";
 import SvgPickup from "../../../../public/assets/svg/pickup.svg";
 import SvgDinein from "../../../../public/assets/svg/dinein.svg";
 import SvgTick from "../../../../public/assets/svg/tick.svg";
-import { updateShowOrderTypeSelect } from "../../../../redux/slices/menu.slices.redux";
+import { updateShowAddAddress, updateShowOrderTypeSelect } from "../../../../redux/slices/menu.slices.redux";
 
 const Wrapper = styled.div`
   position: fixed;
@@ -104,7 +104,7 @@ const OrderTypeManager: FunctionComponent = () => {
 
   function onClickDelivery(orderType: ICheckoutOrderTypes) {
     dispatch(updateOrderType(orderType))
-    dispatch(updateShowOrderTypeSelect(false))
+    dispatch(updateShowAddAddress(true))
   }
 
   function onClickTakeaway(orderType: ICheckoutOrderTypes) {
