@@ -3,7 +3,7 @@ import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import { useAppSelector } from '../../../../redux/hooks.redux';
 import { selectCustomer } from '../../../../redux/slices/user.slices.redux';
-import ArrowIconPath from '../../../../public/assets/svg/back-arrow.svg';
+import ArrowIconPath from '../../../../public/assets/svg/account/back-arrow.svg';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 
 const Wrapper = styled.section`

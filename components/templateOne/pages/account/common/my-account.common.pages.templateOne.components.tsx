@@ -20,11 +20,21 @@ const RightContainer = styled.div`
   }
 `;
 
+const LeftContainer = styled.div`
+  width: 30%;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    width: 100%;
+  }
+`;
+
 const AccountPageMyAccount: FunctionComponent = ({}) => {
   return (
     <WrapperSection>
       <Row>
-        <MyAccountLeftSection />
+        <LeftContainer>
+          <MyAccountLeftSection />
+        </LeftContainer>
 
         <RightContainer>
           <MyAccountRightSection />
