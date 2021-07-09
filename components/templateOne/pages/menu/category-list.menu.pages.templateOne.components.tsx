@@ -35,7 +35,7 @@ const MenuPageCategoryList: FunctionComponent = ({}) => {
   return <List>
     {categories.map((category, index) => {
       if (category.products.length === 0) return <Fragment key={index} />
-      return <ListItem key={index} id={category.name_json.english.toLowerCase().split(" ").join("-")}>
+      return <ListItem key={index} id={category.name_json.english.toLowerCase().replace(/[^A-Za-z0-9]/g,"").split(" ").join("-")}>
         <CategoryTitle>{category.name_json[language]}</CategoryTitle>
         <List>
           {category.products.map(product => <MenuPageProductListItem

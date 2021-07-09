@@ -33,8 +33,6 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
   const showAddAddress = useAppSelector(selectShowAddress)
   const showSelectOrderType = useAppSelector(selectShowOrderTypeSelect)
 
-  console.log(showAddAddress)
-
   return <>
     <MenuPageBanner />
     <MenuFeatures />

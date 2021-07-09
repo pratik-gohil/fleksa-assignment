@@ -1,6 +1,6 @@
 import Cookies from 'cookies';
 import { IConfiguration, updateConfiguration, updateLanguage, updateSelectedMenu } from '../redux/slices/configuration.slices.redux';
-import { COOKIE_BEARER_TOKEN, COOKIE_SELECTED_MENU_ID, COOKIE_SELECTED_RESTAURANT_NAME } from '../constants/keys-cookies.constants';
+import { COOKIE_BEARER_TOKEN, COOKIE_SELECTED_MENU_ID, COOKIE_SELECTED_RESTAURANT_DOMAIN } from '../constants/keys-cookies.constants';
 import { updateBearerToken, updateCustomer } from '../redux/slices/user.slices.redux';
 import PyApiHttpGetIndex from '../http/pyapi/index/get.index.pyapi.http';
 import { updateAddress, updateImages, updateShop, updateTimings } from '../redux/slices/index.slices.redux';
@@ -8,6 +8,12 @@ import NodeApiHttpGetUser from '../http/nodeapi/user/get.user.nodeapi.http';
 import NodeApiHttpGetUserOrderHistory from '../http/nodeapi/account/get.account.order-history.nodeapi.http';
 import NodeApiHttpGetUserParticularOrder from '../http/nodeapi/account/get.order-view-by-id.nodeapi.http';
 import NodeApiHttpGetUserAllAddress from '../http/nodeapi/account/get.account.all-address.nodeapi.http';
+
+const testingDomains = [
+  '127.0.0.1:3000',
+  'localhost:3000',
+  'newqa.fleksa.de',
+]
 
 export async function getServerSidePropsCommon(
   ctx: any,
@@ -21,19 +27,20 @@ export async function getServerSidePropsCommon(
   try {
     const cookies = new Cookies(ctx.req, ctx.res);
     const bearerToken = cookies.get(COOKIE_BEARER_TOKEN);
-    const restaurantName = cookies.get(COOKIE_SELECTED_RESTAURANT_NAME);
+    const restaurantDomain = cookies.get(COOKIE_SELECTED_RESTAURANT_DOMAIN);
     const selectedMenu = cookies.get(COOKIE_SELECTED_MENU_ID);
     ctx.store.dispatch(updateSelectedMenu(selectedMenu || null));
+
+    console.log("SERVER PROPS bearerToken", bearerToken)
 
     /**
      * If hostname is localhost:3000 or newqa.felksa.de use the restaurant name given by the cookie otherwise use the actual host.
      * If above constraints are met but no restaurant name found in cookie, use roma.fleksa.com
      * If restauant name includes ".fleksa." it will use production API's otherwise use testing API's
      */
-    const host: string =
-      ctx.req.headers.host === 'localhost:3000' || ctx.req.headers.host === 'newqa.fleksa.de'
-        ? restaurantName || 'roma.fleksa.com'
-        : ctx.req.headers.host;
+    const host: string = testingDomains.includes(ctx.req.headers.host) 
+      ? restaurantDomain || 'roma.fleksa.com'
+      : ctx.req.headers.host;
     const baseUrlPyApi = host.includes('.fleksa.') ? 'https://myqa.fleksa.com' : 'https://my.fleksa.com';
     const baseUrlNodeApi = host.includes('.fleksa.') ? 'https://orderqa.fleksa.com' : 'https://order.fleksa.com';
 
@@ -106,6 +113,7 @@ export async function getServerSidePropsCommon(
       configuration,
     };
   } catch (error) {
+    console.log(error)
     throw error;
   }
 }
