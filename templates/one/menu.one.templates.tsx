@@ -102,7 +102,7 @@ const ItemImage = styled.img`
 const Title = styled.h2`
   font-size: 16px;
   padding: 0;
-  margin: 4px 0 0 0;
+  margin: ${props => props.theme.dimen.X4}px 0 0 0;
   line-height: 1.2;
 `
 
@@ -124,6 +124,7 @@ const TimingContainerHolder = styled.div`
   display: flex;
   flex-direction: row;
   flex: 1;
+  margin: 0 0 ${props => props.theme.dimen.X4}px 0;
 `
 
 const TimingContainer = styled.div`
@@ -139,6 +140,26 @@ const TimingContainerTitle = styled.div`
 
 const TimingContainerTiming = styled.div`
   
+`
+
+const InfoWithOrderButton = styled.div`
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  align-items: flex-start;
+`
+
+const InfoContainer = styled.div`
+
+`
+
+const OrderButton = styled.div`
+  font-weight: 700;
+  border-radius: ${props => props.theme.borderRadius}px;
+  border: ${props => props.theme.border};
+  margin: ${props => props.theme.dimen.X4}px;
+  padding: ${props => props.theme.dimen.X}px ${props => props.theme.dimen.X4}px;
+  background: ${props => props.theme.primaryColor};
 `
 
 let map: google.maps.Map;
@@ -204,12 +225,17 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
             <ListItemLink href={`/menu/${sibling.id}`}>
               <ItemImage src={sibling.logo} />
               <ContentContatiner>
-                <Title>{sibling.name}</Title>
-                {/* <Description>{sibling.category_json[language]}</Description> */}
-                <Address>
-                  <p>{area}{address}</p>
-                  <p>{postalCode} {city}</p>
-                </Address>
+                <InfoWithOrderButton>
+                  <InfoContainer>
+                    <Title>{sibling.name}</Title>
+                    {/* <Description>{sibling.category_json[language]}</Description> */}
+                    <Address>
+                      <p>{area}{address}</p>
+                      <p>{postalCode} {city}</p>
+                    </Address>
+                  </InfoContainer>
+                  <OrderButton>ORDER</OrderButton>
+                </InfoWithOrderButton>
                 <TimingContainerHolder>
                   <TimingContainer>
                     <TimingContainerTitle>STORE HOURS</TimingContainerTitle>
