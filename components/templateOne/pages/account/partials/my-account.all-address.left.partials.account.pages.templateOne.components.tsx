@@ -28,11 +28,19 @@ const Container = styled.div`
   justify-content: space-between;
   width: 100%;
   min-height: 400px;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    min-height: 450px;
+  }
 `;
 
 const Header = styled.div`
   margin-top: 3rem;
   width: 100%;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    margin-top: 1rem;
+  }
 `;
 
 const Title = styled.h2`

@@ -11,6 +11,8 @@ import { updateError } from '../../../../../redux/slices/common.slices.redux';
 import { IParticularAddress } from '../../../../../interfaces/common/customer.common.interfaces';
 import NodeApiHttpPostUpdateAddressRequest from '../../../../../http/nodeapi/account/post.update-address.nodeapi.http';
 import { useEffect } from 'react';
+import { BREAKPOINTS } from '../../../../../constants/grid-system-configuration';
+import ArrowIconPath from '../../../../../public/assets/svg/account/back-arrow.svg';
 
 const HomeIconPath = '/assets/svg/account/home.svg';
 const WorkIconPath = '/assets/svg/account/work.svg';
@@ -21,6 +23,10 @@ const Wrapper = styled.div``;
 const Header = styled.div`
   margin-top: 3rem;
   width: 100%;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    margin-top: 1.5rem;
+  }
 `;
 
 const Title = styled.h2`
@@ -39,6 +45,10 @@ const FormContainer = styled.form`
 
 const InputBox = styled.div`
   padding: 0 0 1rem 0;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    padding: 0 0 0 0;
+  }
 `;
 
 const InputBoxFlex1 = styled.div`
@@ -160,6 +170,23 @@ const SaveAddressButton = styled.button`
     background: #575757;
   }
 `;
+
+const BackButton = styled.button`
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  display: none;
+  padding: 1rem 0;
+  margin: 0;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    display: block;
+  }
+`;
+const ArrowIcon = styled(ArrowIconPath)``;
 
 interface IMyAccountAllAddressRightSideProps {
   handleShowNewAddressModal: (isEdit: boolean) => void;
@@ -337,6 +364,10 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
 
   return (
     <Wrapper>
+      <BackButton onClick={() => handleShowNewAddressModal(false)}>
+        <ArrowIcon />
+      </BackButton>
+
       <Header>
         <Title>Add New Address</Title>
       </Header>

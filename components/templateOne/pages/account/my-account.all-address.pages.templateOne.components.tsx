@@ -64,7 +64,7 @@ const RightWrapper = styled.div<{ show: boolean }>`
   }
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    display: none;
+    width: 100vw;
   }
 `;
 
