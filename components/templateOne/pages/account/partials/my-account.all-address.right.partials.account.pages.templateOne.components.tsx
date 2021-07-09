@@ -189,6 +189,9 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
 
     if (isEditMode) await updateAddressRequest();
     else await addNewAddressRequest();
+
+    // TODO: Close modal
+    handleShowNewAddressModal(false);
   };
 
   // TODO: For creating a new address
@@ -241,9 +244,6 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
     }
 
     await clearLocalState();
-
-    // TODO: Close the modal
-    handleShowNewAddressModal(false);
   }
 
   // TODO: For Updating a existing address
@@ -264,6 +264,8 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
           address_type: type,
         },
       });
+
+      setLoading(false);
 
       if (!response.result) {
         dispatch(

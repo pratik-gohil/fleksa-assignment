@@ -9,7 +9,7 @@ export default class NodeApiHttpPostUpdateAddressRequest extends ApiHttpCommon {
   public async post({ customer_address_id, updating_values }: INodeApiHttpPostUpdateAddressRequestData) {
     try {
       const response = await new NetNodeApi(this.configuration, this.bearerToken).post<INodeApiHttpPostUpdateAddressResponseData>({
-        path: 'customer/create/address',
+        path: 'customer/update/address',
         body: {
           customer_address_id,
           updating_values: {
