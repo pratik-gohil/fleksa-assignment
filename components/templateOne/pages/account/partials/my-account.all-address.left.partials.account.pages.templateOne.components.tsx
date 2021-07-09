@@ -3,14 +3,20 @@ import styled from 'styled-components';
 
 import EditIconPath from '../../../../../public/assets/svg/pencil.svg';
 import PlusIconPath from '../../../../../public/assets/svg/account/plus.svg';
-import { useAppSelector } from '../../../../../redux/hooks.redux';
-import { selectCustomer } from '../../../../../redux/slices/user.slices.redux';
+// import DeleteIconPath from '../../../../../public/assets/svg/account/delete.svg';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks.redux';
+import { selectBearerToken, selectCustomer } from '../../../../../redux/slices/user.slices.redux';
 import { IParticularAddress } from '../../../../../interfaces/common/customer.common.interfaces';
 import { BREAKPOINTS } from '../../../../../constants/grid-system-configuration';
+import NodeApiHttpPostDeleteAddressRequest from '../../../../../http/nodeapi/account/post.delete-address.nodeapi.http';
+import { selectConfiguration } from '../../../../../redux/slices/configuration.slices.redux';
+import { updateError } from '../../../../../redux/slices/common.slices.redux';
+import { deleteCustomerAddress } from '../../../../../redux/slices/user.slices.redux';
 
 const HomeIconPath = '/assets/svg/account/home.svg';
 const WorkIconPath = '/assets/svg/account/work.svg';
 const MapIconPath = '/assets/svg/account/map.svg';
+const DeleteIconPath = '/assets/svg/account/delete.svg';
 
 const Wrapper = styled.div`
   margin-left: 5rem;
@@ -27,10 +33,10 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: space-between;
   width: 100%;
-  min-height: 400px;
+  /* min-height: 400px; */
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    min-height: 450px;
+    /* min-height: 450px; */
   }
 `;
 
@@ -75,6 +81,10 @@ const Address = styled.div`
 const Content = styled.div`
   padding: 0 0.5rem;
   width: 75%;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    width: 50%;
+  }
 `;
 
 const Label = styled.h3`
@@ -115,7 +125,14 @@ const TypeIcon = styled.img`
   width: 100%;
 `;
 
+const OptionIconContainer = styled.div`
+  display: flex;
+`;
 const EditIcon = styled(EditIconPath)``;
+const DeleteIcon = styled.img`
+  width: 100%;
+  height: 100%;
+`;
 const PlusIcon = styled(PlusIconPath)``;
 
 const EditButton = styled.button`
@@ -127,6 +144,7 @@ const EditButton = styled.button`
   place-items: center;
   cursor: pointer;
   background: #fff;
+  margin-left: 0.5rem;
 
   &:hover {
     background: #eeecec;
@@ -174,6 +192,9 @@ const MyAccountAllAddressLeftSide: FunctionComponent<IMyAccountAllAddressLeftSid
   handleSetExistAddress,
 }) => {
   const addressess = useAppSelector(selectCustomer).all_address;
+  const bearerToken = useAppSelector(selectBearerToken);
+  const configuration = useAppSelector(selectConfiguration);
+  const dispatch = useAppDispatch();
 
   const handleUpdateAddressButton = async (_e: React.MouseEvent<HTMLButtonElement, MouseEvent>, address: IParticularAddress) => {
     // TODO: Open up the modal
@@ -184,6 +205,49 @@ const MyAccountAllAddressLeftSide: FunctionComponent<IMyAccountAllAddressLeftSid
 
     // TODO: Set exist address
     handleSetExistAddress(address);
+  };
+
+  const handleDeleteAddressButton = async (_e: any, id: number) => {
+    if (!confirm('Are you sure ?')) return;
+
+    try {
+      const response = await new NodeApiHttpPostDeleteAddressRequest(configuration, bearerToken as any).post({
+        customer_address_id: id,
+        updating_values: {
+          is_active: false,
+        },
+      });
+
+      if (!response.result) {
+        dispatch(
+          updateError({
+            show: true,
+            message: response.message,
+            severity: 'error',
+          }),
+        );
+        return;
+      }
+
+      dispatch(
+        updateError({
+          show: true,
+          message: 'Removed Successfully!',
+          severity: 'success',
+        }),
+      );
+
+      dispatch(deleteCustomerAddress(id));
+    } catch (e) {
+      console.log('error : ', e);
+      dispatch(
+        updateError({
+          show: true,
+          message: 'Ooops! Something went wrong.',
+          severity: 'error',
+        }),
+      );
+    }
   };
 
   return (
@@ -209,9 +273,14 @@ const MyAccountAllAddressLeftSide: FunctionComponent<IMyAccountAllAddressLeftSid
                 </Value>
               </Content>
 
-              <EditButton onClick={async (e) => await handleUpdateAddressButton(e, address)}>
-                <EditIcon />
-              </EditButton>
+              <OptionIconContainer>
+                <EditButton onClick={async (e) => await handleUpdateAddressButton(e, address)}>
+                  <EditIcon />
+                </EditButton>
+                <EditButton onClick={async (e) => await handleDeleteAddressButton(e, address.id)}>
+                  <DeleteIcon src={DeleteIconPath} />
+                </EditButton>
+              </OptionIconContainer>
             </Address>
           ))}
         </AddressContainer>

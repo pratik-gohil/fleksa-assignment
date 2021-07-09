@@ -18,7 +18,7 @@ const LeftWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: stretch;
-  width: 50%;
+  width: 70%;
   flex-direction: column;
   padding: 0 2rem 0 1rem;
 
