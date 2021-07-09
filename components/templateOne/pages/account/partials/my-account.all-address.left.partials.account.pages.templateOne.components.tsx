@@ -129,7 +129,7 @@ const MyAccountAllAddressLeftSide: FunctionComponent<IMyAccountAllAddressLeftSid
       <Container>
         <AddressContainer>
           {addressess?.map((address) => (
-            <Address>
+            <Address key={address.id}>
               <IconContainer>
                 {address.address_type === 'HOME' && <TypeIcon src={HomeIconPath} />}
                 {address.address_type === 'WORK' && <TypeIcon src={WorkIconPath} />}
