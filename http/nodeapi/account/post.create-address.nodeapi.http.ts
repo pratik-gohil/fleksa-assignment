@@ -15,7 +15,7 @@ export default class NodeApiHttpPostCreateNewAddressRequest extends ApiHttpCommo
           address,
           address_type,
           city,
-          country,
+          country: country || '',
           postal_code,
           proximity: proximity || '',
           state: state || '',
