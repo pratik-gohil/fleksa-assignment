@@ -5,6 +5,7 @@ import EditIconPath from '../../../../../public/assets/svg/pencil.svg';
 import PlusIconPath from '../../../../../public/assets/svg/account/plus.svg';
 import { useAppSelector } from '../../../../../redux/hooks.redux';
 import { selectCustomer } from '../../../../../redux/slices/user.slices.redux';
+import { IParticularAddress } from '../../../../../interfaces/common/customer.common.interfaces';
 
 const HomeIconPath = '/assets/svg/account/home.svg';
 const WorkIconPath = '/assets/svg/account/work.svg';
@@ -114,12 +115,30 @@ const Text = styled.span`
 `;
 
 interface IMyAccountAllAddressLeftSideProps {
-  handleShowNewAddressModal: () => void;
+  handleShowNewAddressModal: (isEdit: boolean) => void;
+  handleChangeEditMode: () => void;
   show: boolean;
+  handleSetExistAddress: (address: IParticularAddress) => void;
 }
 
-const MyAccountAllAddressLeftSide: FunctionComponent<IMyAccountAllAddressLeftSideProps> = ({ handleShowNewAddressModal, show }) => {
+const MyAccountAllAddressLeftSide: FunctionComponent<IMyAccountAllAddressLeftSideProps> = ({
+  handleShowNewAddressModal,
+  show,
+  handleChangeEditMode,
+  handleSetExistAddress,
+}) => {
   const addressess = useAppSelector(selectCustomer).all_address;
+
+  const handleUpdateAddressButton = async (_e: React.MouseEvent<HTMLButtonElement, MouseEvent>, address: IParticularAddress) => {
+    // TODO: Open up the modal
+    handleShowNewAddressModal(true);
+
+    // TODO: Change Address modal into Edit mode
+    handleChangeEditMode();
+
+    // TODO: Set exist address
+    handleSetExistAddress(address);
+  };
 
   return (
     <Wrapper>
@@ -144,7 +163,7 @@ const MyAccountAllAddressLeftSide: FunctionComponent<IMyAccountAllAddressLeftSid
                 </Value>
               </Content>
 
-              <EditButton>
+              <EditButton onClick={async (e) => await handleUpdateAddressButton(e, address)}>
                 <EditIcon />
               </EditButton>
             </Address>
@@ -152,7 +171,7 @@ const MyAccountAllAddressLeftSide: FunctionComponent<IMyAccountAllAddressLeftSid
         </AddressContainer>
 
         {!show && (
-          <AddNewAddressButton onClick={handleShowNewAddressModal}>
+          <AddNewAddressButton onClick={() => handleShowNewAddressModal(false)}>
             <PlusIcon />
 
             <Text>New Address</Text>

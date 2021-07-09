@@ -2,6 +2,7 @@ import React, { FunctionComponent } from 'react';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
+import { IParticularAddress } from '../../../../interfaces/common/customer.common.interfaces';
 import MyAccountAllAddressLeftSide from './partials/my-account.all-address.left.partials.account.pages.templateOne.components';
 import MyAccountAllAddressRightSide from './partials/my-account.all-address.right.partials.account.pages.templateOne.components';
 
@@ -73,19 +74,31 @@ const InvisibleLayer = styled.div<{ show: boolean }>`
 
 const AccountPageAllAddress: FunctionComponent = ({}) => {
   const [show, setShow] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [existAddress, setExistAddress] = useState<IParticularAddress | null>(null);
 
-  const handleShowNewAddressModal = () => setShow(!show);
+  const handleShowNewAddressModal = (isEditMode: boolean) => {
+    setShow(!show);
+    setIsEditMode(isEditMode);
+  };
+  const handleChangeEditMode = () => setIsEditMode(!isEditMode);
+  const handleSetExistAddress = (address: IParticularAddress) => setExistAddress(address);
 
   return (
     <Wrapper>
       <LeftWrapper>
-        <MyAccountAllAddressLeftSide handleShowNewAddressModal={handleShowNewAddressModal} show={show} />
+        <MyAccountAllAddressLeftSide
+          handleShowNewAddressModal={handleShowNewAddressModal}
+          show={show}
+          handleChangeEditMode={handleChangeEditMode}
+          handleSetExistAddress={handleSetExistAddress}
+        />
       </LeftWrapper>
 
       <RightWrapper show={show}>
-        <MyAccountAllAddressRightSide handleShowNewAddressModal={handleShowNewAddressModal} />
+        <MyAccountAllAddressRightSide handleShowNewAddressModal={handleShowNewAddressModal} isEditMode={isEditMode} existAddress={existAddress} />
       </RightWrapper>
-      <InvisibleLayer onClick={handleShowNewAddressModal} show={show} />
+      <InvisibleLayer onClick={() => handleShowNewAddressModal(false)} show={show} />
     </Wrapper>
   );
 };

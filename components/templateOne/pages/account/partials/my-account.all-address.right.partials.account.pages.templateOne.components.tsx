@@ -8,6 +8,9 @@ import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks.redux
 import { selectConfiguration } from '../../../../../redux/slices/configuration.slices.redux';
 import { selectBearerToken, updateNewCustomerAddress } from '../../../../../redux/slices/user.slices.redux';
 import { updateError } from '../../../../../redux/slices/common.slices.redux';
+import { IParticularAddress } from '../../../../../interfaces/common/customer.common.interfaces';
+import NodeApiHttpPostUpdateAddressRequest from '../../../../../http/nodeapi/account/post.update-address.nodeapi.http';
+import { useEffect } from 'react';
 
 const HomeIconPath = '/assets/svg/account/home.svg';
 const WorkIconPath = '/assets/svg/account/work.svg';
@@ -159,10 +162,16 @@ const SaveAddressButton = styled.button`
 `;
 
 interface IMyAccountAllAddressRightSideProps {
-  handleShowNewAddressModal: () => void;
+  handleShowNewAddressModal: (isEdit: boolean) => void;
+  existAddress: IParticularAddress | null;
+  isEditMode: boolean;
 }
 
-const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightSideProps> = ({ handleShowNewAddressModal }) => {
+const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightSideProps> = ({
+  handleShowNewAddressModal,
+  existAddress,
+  isEditMode,
+}) => {
   const [address, setAddress] = useState('');
   const [floor, setFloor] = useState('');
   const [city, setCity] = useState('');
@@ -178,6 +187,12 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
   const handleCreateNewAddressFormRequest = async (e: FormEvent) => {
     e.preventDefault();
 
+    if (isEditMode) await updateAddressRequest();
+    else await addNewAddressRequest();
+  };
+
+  // TODO: For creating a new address
+  async function addNewAddressRequest() {
     try {
       setLoading(true);
 
@@ -235,8 +250,70 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
     setProximity('');
 
     // TODO: Close the modal
-    handleShowNewAddressModal();
-  };
+    handleShowNewAddressModal(false);
+  }
+
+  // TODO: For Updating a existing address
+  async function updateAddressRequest() {
+    if (!existAddress) return;
+
+    try {
+      setLoading(true);
+
+      const response = await new NodeApiHttpPostUpdateAddressRequest(configuration, bearerToken as any).post({
+        customer_address_id: existAddress.id,
+        updating_values: {
+          city,
+          postal_code: postalCode,
+          address,
+          floor,
+          area: proximity,
+          address_type: type,
+        },
+      });
+
+      if (!response.result) {
+        dispatch(
+          updateError({
+            show: true,
+            message: response.message,
+            severity: 'error',
+          }),
+        );
+        return;
+      }
+
+      dispatch(
+        updateError({
+          show: true,
+          message: 'Updated Successfully!',
+          severity: 'success',
+        }),
+      );
+    } catch (e) {
+      console.log('error : ', e);
+      setLoading(false);
+      dispatch(
+        updateError({
+          show: true,
+          message: 'Ooops! Something went wrong.',
+          severity: 'error',
+        }),
+      );
+    }
+  }
+
+  useEffect(() => {
+    if (!isEditMode && !existAddress) return;
+
+    // TODO: Update the input by exist values
+    setAddress(existAddress?.address || '');
+    setFloor(existAddress?.floor || '');
+    setCity(existAddress?.city || '');
+    setPostalCode(existAddress?.postal_code || '');
+    setType(existAddress?.address_type || '');
+    setProximity(existAddress?.area || '');
+  }, [isEditMode]);
 
   return (
     <Wrapper>
@@ -287,7 +364,9 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
           </IconContainer>
         </AddressTypeContainer>
 
-        <SaveAddressButton type="submit">{loading ? <LoadingIndicator width={20} /> : 'Save Address'}</SaveAddressButton>
+        <SaveAddressButton type="submit">
+          {loading ? <LoadingIndicator width={20} /> : isEditMode ? 'Update Address' : 'Save Address'}
+        </SaveAddressButton>
       </FormContainer>
     </Wrapper>
   );
