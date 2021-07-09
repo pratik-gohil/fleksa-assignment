@@ -11,7 +11,9 @@ import MenuSearch from "./search.menu.pages.templateOne.components";
 const List = styled.ul`
   display: flex;
   overflow: auto;
+  padding-left: 15px;
   @media (min-width: ${BREAKPOINTS.lg}px) {
+    padding-left: 0;
     flex-direction: column;
   }
 `

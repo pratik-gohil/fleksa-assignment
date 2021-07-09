@@ -1,5 +1,4 @@
 import { FunctionComponent } from "react"
-import { Col, Container, Row } from "react-grid-system";
 import styled from "styled-components"
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
 import SvgDelivery from "../../../../public/assets/svg/delivery.svg";
@@ -10,33 +9,10 @@ import { updateShowOrderTypeSelect } from "../../../../redux/slices/menu.slices.
 import { selectSiblings } from "../../../../redux/slices/index.slices.redux";
 
 const Wrapper = styled.div`
-  margin-top: -60px;
-`
-
-const WrapperContent = styled.div`
-  height: 120px;
-  background: #fff;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  border: ${props => props.theme.border};
-  border-radius: ${props => props.theme.borderRadius}px;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
-`
-
-const Left = styled.div`
   display: flex;
   flex: 1;
   flex-direction: row;
-  align-items: center;
-`
-
-const Right = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-end;
+  margin-top: ${props => props.theme.dimen.X4*3}px;
 `
 
 const ChangeRestaurantButton = styled.a`
@@ -50,6 +26,7 @@ const ChangeRestaurantButton = styled.a`
   padding: 0 ${props => props.theme.dimen.X4}px;
   margin: 0 ${props => props.theme.dimen.X4}px;
   background: #f9f9f9;
+  color: #222;
 `
 
 const OrderTypeContainer = styled.div`
@@ -60,7 +37,6 @@ const OrderTypeContainer = styled.div`
   align-items: center;
   cursor: pointer;
   padding: 0 ${props => props.theme.dimen.X4}px;
-  margin: 0 ${props => props.theme.dimen.X4}px;
   background: #f9f9f9;
   svg {
     width: auto;
@@ -113,25 +89,13 @@ const MenuFeatures: FunctionComponent = () => {
   }
 
   return <Wrapper>
-    <Container>
-      <Row>
-        <Col>
-          <WrapperContent>
-            <Left>
-              <OrderTypeView>
-                {(selectedOrderType && orderTypeData) && <OrderTypeContainer onClick={onClickOrderType}>
-                  <orderTypeData.logo />
-                  <p>{orderTypeData.title}</p>
-                </OrderTypeContainer>}
-              </OrderTypeView>
-            </Left>
-            <Right>
-              {siblingsData.length > 0 && <ChangeRestaurantButton href="/menu">Change Store</ChangeRestaurantButton>}
-            </Right>
-          </WrapperContent>
-        </Col>
-      </Row>
-    </Container>
+    <OrderTypeView>
+      {(selectedOrderType && orderTypeData) && <OrderTypeContainer onClick={onClickOrderType}>
+        <orderTypeData.logo />
+        <p>{orderTypeData.title}</p>
+      </OrderTypeContainer>}
+    </OrderTypeView>
+    {siblingsData.length > 0 && <ChangeRestaurantButton href="/menu">CHANGE STORE</ChangeRestaurantButton>}
   </Wrapper>
 }
 

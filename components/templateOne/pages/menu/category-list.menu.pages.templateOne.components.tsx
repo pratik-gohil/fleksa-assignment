@@ -8,21 +8,34 @@ import { selectCategoriesSearch, selectSearchQuery } from "../../../../redux/sli
 import MenuPageProductListItem from "./product-list-item.menu.pages.templateOne.components";
 
 const List = styled.ul`
-  
+
 `
 
 const ListItem = styled.li`
-
+  position: relative;
+  z-index: 0;
 `
 
 const CategoryTitle = styled.h3`
   font-size: 26px;
-  margin: 0;
+  margin: -2px -15px;
   text-align: center;
+  position: sticky;
+  top: 50px;
+  left: 0;
+  right: 0;
+  background: #fff;
+  z-index: 1;
   padding: ${props => props.theme.dimen.X4}px 0 ${props => props.theme.dimen.X4}px;
   @media (min-width: ${BREAKPOINTS.lg}px) {
+    top: 10px;
     padding: ${props => props.theme.dimen.X4*6}px 0 ${props => props.theme.dimen.X4}px;
   }
+`
+
+const Space = styled.div`
+  width: 100%;
+  height: 4px;
 `
 
 const MenuPageCategoryList: FunctionComponent = ({}) => {
@@ -35,17 +48,20 @@ const MenuPageCategoryList: FunctionComponent = ({}) => {
   return <List>
     {categories.map((category, index) => {
       if (category.products.length === 0) return <Fragment key={index} />
-      return <ListItem key={index} id={category.name_json.english.toLowerCase().replace(/[^A-Za-z0-9]/g,"").split(" ").join("-")}>
-        <CategoryTitle>{category.name_json[language]}</CategoryTitle>
-        <List>
-          {category.products.map(product => <MenuPageProductListItem
-            key={product.id}
-            product={product}
-            isOpen={product.id === openItemId}
-            setOpenItemId={setOpenItemId}
-          />)}
-        </List>
-      </ListItem>
+      return <Fragment key={index}>
+        <Space />
+        <ListItem id={category.name_json.english.toLowerCase().replace(/[^A-Za-z0-9]/g,"").split(" ").join("-")}>
+          <CategoryTitle>{category.name_json[language]}</CategoryTitle>
+          <List>
+            {category.products.map(product => <MenuPageProductListItem
+              key={product.id}
+              product={product}
+              isOpen={product.id === openItemId}
+              setOpenItemId={setOpenItemId}
+            />)}
+          </List>
+        </ListItem>
+      </Fragment>
     })}
   </List>
 }

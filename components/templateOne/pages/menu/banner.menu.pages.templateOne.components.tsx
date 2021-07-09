@@ -5,6 +5,7 @@ import { useAppSelector } from "../../../../redux/hooks.redux";
 import { selectShop } from "../../../../redux/slices/index.slices.redux";
 import { Col, Container, Row } from "react-grid-system";
 import { selectLanguage } from "../../../../redux/slices/configuration.slices.redux";
+import MenuFeatures from "./feature.menu.pages.templateOne.components";
 
 const BannerContainer = styled.section`
   height: 400px;
@@ -51,6 +52,7 @@ const MenuPageBanner: FunctionComponent = ({}) => {
             <Col>
               <Title>{shopData?.name}</Title>
               <SubTitle>{shopData?.category_json[language]}</SubTitle>
+              <MenuFeatures />
             </Col>
           </Row>
         </Container>

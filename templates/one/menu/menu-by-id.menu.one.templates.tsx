@@ -10,14 +10,28 @@ import { BREAKPOINTS } from "../../../constants/grid-system-configuration";
 import { useAppSelector } from "../../../redux/hooks.redux";
 import { selectOrderType } from "../../../redux/slices/checkout.slices.redux";
 import { selectShowAddress, selectShowOrderTypeSelect } from "../../../redux/slices/menu.slices.redux";
-import MenuFeatures from "../../../components/templateOne/pages/menu/feature.menu.pages.templateOne.components";
 import AddressAdd from "../../../components/templateOne/common/addresses/address-add.common.templateOne.components";
 
 const SideViewLeft = styled.div`
+  display: none;
   position: sticky;
   top: ${props => props.theme.navDesktop.height}px;
   @media (min-width: ${BREAKPOINTS.lg}px) {
+    display: block;
     margin-top: ${props => props.theme.dimen.X4*5}px;
+  }
+`
+
+const SideViewLeftMobile = styled.div`
+  position: sticky;
+  top: -20px;
+  background: #fff;
+  z-index: 1;
+  height: 70px;
+  border-bottom: ${props => props.theme.border};
+  overflow: hidden;
+  @media (min-width: ${BREAKPOINTS.lg}px) {
+    display: none;
   }
 `
 
@@ -35,7 +49,9 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
 
   return <>
     <MenuPageBanner />
-    <MenuFeatures />
+    <SideViewLeftMobile>
+      <MenuPageCategorySidebar />
+    </SideViewLeftMobile>
     <Container>
       <Row>
         <Col sm={12} md={12} lg={3} xxl={3}>
