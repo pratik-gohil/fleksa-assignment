@@ -21,13 +21,14 @@ const CategoryTitle = styled.h3`
   margin: -2px -15px;
   text-align: center;
   position: sticky;
-  top: 0;
+  top: 50px;
   left: 0;
   right: 0;
   background: #fff;
   z-index: 1;
   padding: ${props => props.theme.dimen.X4}px 0 ${props => props.theme.dimen.X4}px;
   @media (min-width: ${BREAKPOINTS.lg}px) {
+    top: 10px;
     padding: ${props => props.theme.dimen.X4*6}px 0 ${props => props.theme.dimen.X4}px;
   }
 `
@@ -47,9 +48,9 @@ const MenuPageCategoryList: FunctionComponent = ({}) => {
   return <List>
     {categories.map((category, index) => {
       if (category.products.length === 0) return <Fragment key={index} />
-      return <>
+      return <Fragment key={index}>
         <Space />
-        <ListItem key={index} id={category.name_json.english.toLowerCase().replace(/[^A-Za-z0-9]/g,"").split(" ").join("-")}>
+        <ListItem id={category.name_json.english.toLowerCase().replace(/[^A-Za-z0-9]/g,"").split(" ").join("-")}>
           <CategoryTitle>{category.name_json[language]}</CategoryTitle>
           <List>
             {category.products.map(product => <MenuPageProductListItem
@@ -60,7 +61,7 @@ const MenuPageCategoryList: FunctionComponent = ({}) => {
             />)}
           </List>
         </ListItem>
-      </>
+      </Fragment>
     })}
   </List>
 }
