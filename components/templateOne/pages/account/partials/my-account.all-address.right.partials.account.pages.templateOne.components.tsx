@@ -219,6 +219,8 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
 
     // TODO: Close modal
     handleShowNewAddressModal(false);
+
+    await clearLocalState(); // ? Clear the local state
   };
 
   // TODO: For creating a new address
@@ -269,8 +271,6 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
         }),
       );
     }
-
-    await clearLocalState();
   }
 
   // TODO: For Updating a existing address
@@ -324,8 +324,6 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
           floor,
         }),
       );
-
-      await clearLocalState();
     } catch (e) {
       console.log('error : ', e);
       setLoading(false);
@@ -339,16 +337,19 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
     }
   }
 
+  // * For reset and fill up input fields
   useEffect(() => {
-    if (!isEditMode && !existAddress) return;
-
-    // TODO: Update the input by exist values
-    setAddress(existAddress?.address || '');
-    setFloor(existAddress?.floor || '');
-    setCity(existAddress?.city || '');
-    setPostalCode(existAddress?.postal_code || '');
-    setType(existAddress?.address_type || '');
-    setProximity(existAddress?.area || '');
+    if (isEditMode) {
+      // TODO: Update the input by exist values
+      setAddress(existAddress?.address || '');
+      setFloor(existAddress?.floor || '');
+      setCity(existAddress?.city || '');
+      setPostalCode(existAddress?.postal_code || '');
+      setType(existAddress?.address_type || '');
+      setProximity(existAddress?.area || '');
+    }
+    // TODO: clear the input
+    else clearLocalState();
   }, [isEditMode]);
 
   async function clearLocalState() {
@@ -369,7 +370,7 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
       </BackButton>
 
       <Header>
-        <Title>Add New Address</Title>
+        <Title>{isEditMode ? 'Update Your Address' : 'Add New Address'}</Title>
       </Header>
 
       <FormContainer onSubmit={handleCreateNewAddressFormRequest}>
