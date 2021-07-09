@@ -29,10 +29,7 @@ const NavUserProfile = ({}) => {
     <a href="/account">
       <FlagContainer>
         <FlagImage>
-          {customerData.name
-            .split(' ')
-            .map((i) => i[0])
-            .join('')}
+          {customerData.name.split(' ').map((i) => i[0]).slice(0, 2).join('')}
         </FlagImage>
       </FlagContainer>
     </a>

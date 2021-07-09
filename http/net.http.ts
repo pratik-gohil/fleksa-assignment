@@ -66,8 +66,7 @@ export default abstract class Net {
     }
   }
 
-  public async patch<T>({ path, query, headers, body }: IPost): Promise<T> {
-    console.log({ ...this.defaultHeaders, headers });
+  public async patch<T>({ path, query, body }: IPost): Promise<T> {
     try {
       const response = await fetch(this.getUrl(path, query), {
         method: 'patch',
