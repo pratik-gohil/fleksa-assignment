@@ -70,9 +70,9 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
         </Col>
       </Row>
     </Container>
+    <MenuPageCartSummary />
     {((showSelectOrderType || orderType === null) && !showAddAddress) && <OrderTypeManager key="key-ajkndalkwdmalkwmdlkw" />}
     {(showAddAddress) && <AddressAdd />}
-    <MenuPageCartSummary />
   </>
 }
 

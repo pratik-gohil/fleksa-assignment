@@ -1,11 +1,12 @@
 import React, { FunctionComponent } from "react";
 import styled from "styled-components";
 import { BREAKPOINTS } from "../../constants/grid-system-configuration";
-import { useAppSelector } from "../../redux/hooks.redux";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks.redux";
 import { useEffect } from "react";
 import { selectSiblings } from "../../redux/slices/index.slices.redux";
 import { useState } from "react";
 import { ITimingsDay } from "../../interfaces/common/shop.common.interfaces";
+import { ICheckoutOrderTypes, updateOrderType } from "../../redux/slices/checkout.slices.redux";
 
 type Filters = "has_pickup"|"has_delivery"|"has_dinein"
 
@@ -165,9 +166,10 @@ const OrderButton = styled.div`
 let map: google.maps.Map;
 
 const MenuPageTemplateOne: FunctionComponent = ({}) => {
+  const dispatch = useAppDispatch()
   const siblingsData = useAppSelector(selectSiblings)
 
-  const [ filterName, setFilterName ] = useState<Filters>("has_pickup")
+  const [ filterName, setFilterName ] = useState<Filters>("has_delivery")
 
   function initMap(): void {
     map = new google.maps.Map(document.getElementById("map") as HTMLElement, {
@@ -195,23 +197,42 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
     }
   }
 
+  function setFilterAndOrderType(filter: Filters) {
+    setFilterName(filter)
+    let orderType: ICheckoutOrderTypes|null = null
+    switch(filter) {
+      case "has_delivery":
+        orderType = "DELIVERY"
+        break
+      case "has_dinein":
+        orderType = "DINE_IN"
+        break
+      case "has_pickup":
+        orderType = "PICKUP"
+        break
+    }
+    dispatch(updateOrderType(orderType))
+    console.log("orderType", orderType)
+  }
+
   useEffect(() => {
     initMap()
+    setFilterAndOrderType("has_delivery")
   }, [ ])
 
   return <ColumnContainer>
     <FullHeightColumnLeft>
       <SelectionContainer>
         {[{
-          filter: "has_pickup" as Filters,
-          title: "PICKUP"
-        }, {
           filter: "has_delivery" as Filters,
           title: "DELIVERY"
         }, {
+          filter: "has_pickup" as Filters,
+          title: "TAKEAWAY"
+        }, {
           filter: "has_dinein" as Filters,
           title: "DINE-IN"
-        }].map(item => <SelectionItem key={item.filter} active={filterName === item.filter} onClick={() => setFilterName(item.filter)}>{item.title}</SelectionItem>)}
+        }].map(item => <SelectionItem key={item.filter} active={filterName === item.filter} onClick={() => setFilterAndOrderType(item.filter)}>{item.title}</SelectionItem>)}
       </SelectionContainer>
       <List>
         {siblingsData.filter(sibling => sibling.address.availability[filterName]).map(sibling => {
