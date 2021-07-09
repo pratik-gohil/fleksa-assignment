@@ -11,6 +11,7 @@ import { useAppSelector } from "../../../redux/hooks.redux";
 import { selectOrderType } from "../../../redux/slices/checkout.slices.redux";
 import { selectShowAddress, selectShowOrderTypeSelect } from "../../../redux/slices/menu.slices.redux";
 import AddressAdd from "../../../components/templateOne/common/addresses/address-add.common.templateOne.components";
+import MenuPageCartSummary from "../../../components/templateOne/pages/menu/cart-summary.pages.templateOne.components";
 
 const SideViewLeft = styled.div`
   display: none;
@@ -71,6 +72,7 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
     </Container>
     {((showSelectOrderType || orderType === null) && !showAddAddress) && <OrderTypeManager key="key-ajkndalkwdmalkwmdlkw" />}
     {(showAddAddress) && <AddressAdd />}
+    <MenuPageCartSummary />
   </>
 }
 
