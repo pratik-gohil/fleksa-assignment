@@ -7,7 +7,7 @@ export interface ICustomer {
   phone_verified: number;
   orders?: Array<IParticularOrder>;
   current_order?: IParticularOrderBriefInfo;
-  all_address?: Array<IParticularAddress>;
+  all_address: Array<IParticularAddress>;
 }
 
 export interface IParticularOrder {

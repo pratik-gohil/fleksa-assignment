@@ -6,7 +6,7 @@ import LoadingIndicator from '../../../common/loadingIndicator/loading-indicator
 import { Allowed_address_type } from '../../../../../interfaces/http/nodeapi/account/post.create-address.nodeapi.http';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks.redux';
 import { selectConfiguration } from '../../../../../redux/slices/configuration.slices.redux';
-import { selectBearerToken, updateNewCustomerAddress } from '../../../../../redux/slices/user.slices.redux';
+import { selectBearerToken, updateExistCustomerAddress, updateNewCustomerAddress } from '../../../../../redux/slices/user.slices.redux';
 import { updateError } from '../../../../../redux/slices/common.slices.redux';
 import { IParticularAddress } from '../../../../../interfaces/common/customer.common.interfaces';
 import NodeApiHttpPostUpdateAddressRequest from '../../../../../http/nodeapi/account/post.update-address.nodeapi.http';
@@ -240,14 +240,7 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
       );
     }
 
-    // TODO: clear the input
-    setAddress('');
-    setFloor('');
-    setCity('');
-    setPostalCode('');
-    setType('');
-    setType('HOME');
-    setProximity('');
+    await clearLocalState();
 
     // TODO: Close the modal
     handleShowNewAddressModal(false);
@@ -290,6 +283,20 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
           severity: 'success',
         }),
       );
+
+      dispatch(
+        updateExistCustomerAddress({
+          ...existAddress,
+          address,
+          city,
+          area: proximity,
+          postal_code: postalCode,
+          address_type: type,
+          floor,
+        }),
+      );
+
+      await clearLocalState();
     } catch (e) {
       console.log('error : ', e);
       setLoading(false);
@@ -314,6 +321,17 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
     setType(existAddress?.address_type || '');
     setProximity(existAddress?.area || '');
   }, [isEditMode]);
+
+  async function clearLocalState() {
+    // TODO: clear the input
+    setAddress('');
+    setFloor('');
+    setCity('');
+    setPostalCode('');
+    setType('');
+    setType('HOME');
+    setProximity('');
+  }
 
   return (
     <Wrapper>

@@ -19,6 +19,7 @@ const initialState: IUserSliceState = {
     phone: '',
     email_verified: 0,
     phone_verified: 0,
+    all_address: [],
   },
 };
 
@@ -41,6 +42,13 @@ export const UserSlice = createSlice({
     updateNewCustomerAddress(state, action) {
       state.customer.all_address?.push(action.payload);
     },
+    updateExistCustomerAddress(state, action) {
+      const index = state.customer.all_address?.findIndex((id) => action.payload.id === id);
+
+      if (typeof index !== 'undefined' && index !== -1) {
+        state.customer.all_address[index] = action.payload;
+      }
+    },
   },
   extraReducers: {
     [HYDRATE]: (state, action) => {
@@ -52,7 +60,8 @@ export const UserSlice = createSlice({
   },
 });
 
-export const { updateBearerToken, updateCustomer, updateCustomerName, updateCustomerEmail, updateNewCustomerAddress } = UserSlice.actions;
+export const { updateBearerToken, updateCustomer, updateCustomerName, updateCustomerEmail, updateNewCustomerAddress, updateExistCustomerAddress } =
+  UserSlice.actions;
 
 export const selectIsUserLoggedIn = (state: RootState) => state.user.bearerToken !== null;
 export const selectBearerToken = (state: RootState) => state.user.bearerToken;
