@@ -9,7 +9,7 @@ const Wrapper = styled.div`
   position: fixed;
   left: 0;
   right: 0;
-  bottom: ${props => props.theme.navMobile.height}px;;
+  bottom: ${props => props.theme.navMobile.height}px;
   width: 100%;
   display: flex;
   justify-content: space-between;
