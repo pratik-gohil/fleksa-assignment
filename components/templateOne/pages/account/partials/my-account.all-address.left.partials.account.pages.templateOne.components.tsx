@@ -6,6 +6,7 @@ import PlusIconPath from '../../../../../public/assets/svg/account/plus.svg';
 import { useAppSelector } from '../../../../../redux/hooks.redux';
 import { selectCustomer } from '../../../../../redux/slices/user.slices.redux';
 import { IParticularAddress } from '../../../../../interfaces/common/customer.common.interfaces';
+import { BREAKPOINTS } from '../../../../../constants/grid-system-configuration';
 
 const HomeIconPath = '/assets/svg/account/home.svg';
 const WorkIconPath = '/assets/svg/account/work.svg';
@@ -13,6 +14,12 @@ const MapIconPath = '/assets/svg/account/map.svg';
 
 const Wrapper = styled.div`
   margin-left: 5rem;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    margin-left: 0;
+    min-height: calc(100vh - ${(p) => p.theme.navMobile.height}px);
+    width: 100%;
+  }
 `;
 
 const Container = styled.div`
@@ -31,6 +38,12 @@ const Header = styled.div`
 const Title = styled.h2`
   margin: 0;
   padding: 0 1rem;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    font-size: 1.5rem;
+    padding: 0;
+    text-align: center;
+  }
 `;
 
 const AddressContainer = styled.div`
@@ -38,6 +51,10 @@ const AddressContainer = styled.div`
   max-height: 400px;
   overflow-x: hidden;
   padding: 0 1rem;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    padding: 0;
+  }
 `;
 
 const Address = styled.div`
@@ -55,6 +72,10 @@ const Content = styled.div`
 const Label = styled.h3`
   padding: 0;
   margin: 0;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    font-size: 1rem;
+  }
 `;
 const Value = styled.p`
   padding: 0;
@@ -65,11 +86,20 @@ const Value = styled.p`
   /* Required for text-overflow to do anything */
   white-space: nowrap;
   overflow: hidden;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    font-size: 1rem;
+  }
 `;
 
 const IconContainer = styled.div`
   width: 48px;
   height: 48px;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    width: 24px;
+    height: 24px;
+  }
 `;
 
 const TypeIcon = styled.img`
@@ -92,6 +122,11 @@ const EditButton = styled.button`
 
   &:hover {
     background: #eeecec;
+  }
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    width: 34px;
+    height: 34px;
   }
 `;
 
