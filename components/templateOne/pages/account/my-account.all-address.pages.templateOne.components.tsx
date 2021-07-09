@@ -11,10 +11,6 @@ const Wrapper = styled.section`
   display: flex;
   margin: auto 1rem;
   overflow: hidden;
-
-  @media (max-width: ${BREAKPOINTS.sm}px) {
-    height: calc(100vh - ${(p) => p.theme.navMobile.height}px);
-  }
 `;
 
 const LeftWrapper = styled.div`
@@ -25,6 +21,12 @@ const LeftWrapper = styled.div`
   width: 50%;
   flex-direction: column;
   padding: 0 2rem 0 1rem;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    padding: 0;
+
+    width: 100%;
+  }
 `;
 
 const RightWrapper = styled.div<{ show: boolean }>`
@@ -60,6 +62,10 @@ const RightWrapper = styled.div<{ show: boolean }>`
       right: 0;
     }
   }
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    width: 100vw;
+  }
 `;
 
 const InvisibleLayer = styled.div<{ show: boolean }>`
@@ -70,6 +76,10 @@ const InvisibleLayer = styled.div<{ show: boolean }>`
   bottom: 0;
   background: transparent;
   display: ${(p) => (p.show ? 'block' : 'none')};
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    display: none;
+  }
 `;
 
 const AccountPageAllAddress: FunctionComponent = ({}) => {
