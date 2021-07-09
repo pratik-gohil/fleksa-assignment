@@ -12,7 +12,6 @@ type Filters = "has_pickup"|"has_delivery"|"has_dinein"
 const ColumnContainer = styled.div`
   display: flex;
   flex-direction: column-reverse;
-  height: calc(100vh - ${props => props.theme.navMobile.height}px);
   @media (min-width: ${BREAKPOINTS.lg}px) {
     flex-direction: row;
     height: calc(100vh - ${props => props.theme.navDesktop.height}px);
@@ -36,7 +35,7 @@ const FullHeightColumnLeft = styled(FullHeightColumn)`
 const FullHeightColumnRight = styled(FullHeightColumn)`
   position: relative;
   width: 100%;
-  height: 40%;
+  height: 300px;
   @media (min-width: ${BREAKPOINTS.lg}px) {
     width: 60%;
     height: 100%;
@@ -53,7 +52,7 @@ const SelectionContainer = styled.div`
   display: flex;
   flex-direction: row;
   flex: 1;
-  position: absolute;
+  position: sticky;
   left: 0;
   top: 0;
   right: 0;
@@ -75,10 +74,11 @@ const SelectionItem = styled.p<{ active: boolean }>`
 `
 
 const List = styled.ul`
-  overflow: auto;
   padding: 0 ${props => props.theme.dimen.X4}px;
-  padding-top: 60px;
-  height: 100%;
+  @media (min-width: ${BREAKPOINTS.lg}px) {
+    height: calc(100% - 56px);
+    overflow: auto;
+  }
 `
 
 const ListItem = styled.li`
@@ -105,13 +105,6 @@ const Title = styled.h2`
   margin: 4px 0 0 0;
   line-height: 1.2;
 `
-
-// const Description = styled.p`
-//   font-size: 16px;
-//   padding: 0;
-//   margin: 0 0 4px 0;
-//   line-height: 1.2;
-// `
 
 const MapContainer = styled.div`
   width: 100%;
@@ -151,7 +144,6 @@ const TimingContainerTiming = styled.div`
 let map: google.maps.Map;
 
 const MenuPageTemplateOne: FunctionComponent = ({}) => {
-  // const language = useAppSelector(selectLanguage)
   const siblingsData = useAppSelector(selectSiblings)
 
   const [ filterName, setFilterName ] = useState<Filters>("has_pickup")
