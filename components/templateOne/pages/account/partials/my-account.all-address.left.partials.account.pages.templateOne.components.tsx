@@ -115,9 +115,10 @@ const Text = styled.span`
 
 interface IMyAccountAllAddressLeftSideProps {
   handleShowNewAddressModal: () => void;
+  show: boolean;
 }
 
-const MyAccountAllAddressLeftSide: FunctionComponent<IMyAccountAllAddressLeftSideProps> = ({ handleShowNewAddressModal }) => {
+const MyAccountAllAddressLeftSide: FunctionComponent<IMyAccountAllAddressLeftSideProps> = ({ handleShowNewAddressModal, show }) => {
   const addressess = useAppSelector(selectCustomer).all_address;
 
   return (
@@ -150,11 +151,13 @@ const MyAccountAllAddressLeftSide: FunctionComponent<IMyAccountAllAddressLeftSid
           ))}
         </AddressContainer>
 
-        <AddNewAddressButton onClick={handleShowNewAddressModal}>
-          <PlusIcon />
+        {!show && (
+          <AddNewAddressButton onClick={handleShowNewAddressModal}>
+            <PlusIcon />
 
-          <Text>New Address</Text>
-        </AddNewAddressButton>
+            <Text>New Address</Text>
+          </AddNewAddressButton>
+        )}
       </Container>
     </Wrapper>
   );

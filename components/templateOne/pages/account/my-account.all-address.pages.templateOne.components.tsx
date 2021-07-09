@@ -34,7 +34,7 @@ const RightWrapper = styled.div<{ show: boolean }>`
   animation: slider 0.3s ease-in;
   top: 0;
   right: 0;
-  box-shadow: rgba(17, 17, 26, 0.1) 0px 0px 16px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px, rgba(0, 0, 0, 0.1) 0px 2px 4px 0px, rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
   z-index: 999999;
   background: #fff;
   transition: transform 0.3s cubic-bezier(0, 0.52, 0, 1);
@@ -61,6 +61,16 @@ const RightWrapper = styled.div<{ show: boolean }>`
   }
 `;
 
+const InvisibleLayer = styled.div<{ show: boolean }>`
+  position: fixed;
+  height: 100vh;
+  width: calc(100vw - 400px);
+  left: 0;
+  bottom: 0;
+  background: transparent;
+  display: ${(p) => (p.show ? 'block' : 'none')};
+`;
+
 const AccountPageAllAddress: FunctionComponent = ({}) => {
   const [show, setShow] = useState(false);
 
@@ -69,12 +79,13 @@ const AccountPageAllAddress: FunctionComponent = ({}) => {
   return (
     <Wrapper>
       <LeftWrapper>
-        <MyAccountAllAddressLeftSide handleShowNewAddressModal={handleShowNewAddressModal} />
+        <MyAccountAllAddressLeftSide handleShowNewAddressModal={handleShowNewAddressModal} show={show} />
       </LeftWrapper>
 
       <RightWrapper show={show}>
         <MyAccountAllAddressRightSide handleShowNewAddressModal={handleShowNewAddressModal} />
       </RightWrapper>
+      <InvisibleLayer onClick={handleShowNewAddressModal} show={show} />
     </Wrapper>
   );
 };
