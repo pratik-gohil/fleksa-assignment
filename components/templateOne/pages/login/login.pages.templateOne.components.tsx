@@ -10,13 +10,12 @@ import NodeApiHttpPostLogin from '../../../../http/nodeapi/login/post.login.node
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import LoadingIndicator from '../../common/loadingIndicator/loading-indicator.common.templateOne.components';
 import NodeApiHttpPostVerify from '../../../../http/nodeapi/verify/post.verify.nodeapi.http';
-import { useRouter } from 'next/dist/client/router';
 import { COOKIE_BEARER_TOKEN } from '../../../../constants/keys-cookies.constants';
 import { updateBearerToken } from '../../../../redux/slices/user.slices.redux';
 import { selectConfiguration } from '../../../../redux/slices/configuration.slices.redux';
 
 export interface IPropsLoginComponent {
-  onLogin?(): void;
+  onLogin(): void;
 }
 
 const LoginContainer = styled.div`
@@ -96,7 +95,6 @@ const SendOtpButtonText = styled.p`
 `;
 
 const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) => {
-  const router = useRouter();
   const [, setCookie] = useCookies([COOKIE_BEARER_TOKEN]);
   const shopData = useAppSelector(selectShop);
   const configuration = useAppSelector(selectConfiguration);
@@ -108,8 +106,9 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
   const [customerId, setCustomerId] = useState<number | undefined>();
 
   async function finishLogin(bearerToken: string) {
-    await dispatch(updateBearerToken(bearerToken));
+    dispatch(updateBearerToken(bearerToken));
     setCookie(COOKIE_BEARER_TOKEN, bearerToken, {
+      path: "/",
       maxAge: 365 * 24 * 60 * 60 * 1000,
       sameSite: 'strict',
     });
@@ -145,8 +144,8 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
         });
         if (response?.token) {
           await finishLogin(response.token);
-          // on login callback is present call it, otherwise send the user to account page
-          onLogin ? onLogin() : router.push('/account');
+          console.log("Login finished")
+          onLogin()
         }
       }
     } catch (error) {

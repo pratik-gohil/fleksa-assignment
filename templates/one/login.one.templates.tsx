@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import React, { FunctionComponent } from "react";
 import { Col, Container, Row } from "react-grid-system";
 
@@ -23,12 +24,14 @@ const WidthFix = styled.div`
 `
 
 const LoginPageTemplateOne: FunctionComponent = ({}) => {
+  const router = useRouter()
+
   return <LoginContainer>
     <WidthFix>
       <Container>
         <Row justify="center" >
           <Col xl={8}>
-            <LoginComponent />
+            <LoginComponent onLogin={() => router.push('/account')} />
           </Col>
         </Row>
       </Container>

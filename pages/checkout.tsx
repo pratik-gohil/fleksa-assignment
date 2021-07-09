@@ -12,6 +12,7 @@ const templateList = [CheckoutPageTemplateOne];
 export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ctx) => {
   try {
     const { redirect } = await getServerSidePropsCommon(ctx, true);
+    console.log("Login finished checkout ", redirect)
     if (redirect) return redirect;
 
     return {

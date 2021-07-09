@@ -37,10 +37,10 @@ const CheckoutPageTemplateOne: FunctionComponent = ({}) => {
     <Container>
       <Row>
         <Col lg={6}>
-          <CheckoutPageCustomerInfo />
           <CartContainerSmall>
             <CheckoutPageCart />
           </CartContainerSmall>
+          <CheckoutPageCustomerInfo />
           <CheckoutPageSummary />
           <CheckoutPageComments />
           <CheckoutPageTip />
