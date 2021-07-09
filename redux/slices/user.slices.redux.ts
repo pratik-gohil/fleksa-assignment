@@ -43,9 +43,9 @@ export const UserSlice = createSlice({
       state.customer.all_address?.push(action.payload);
     },
     updateExistCustomerAddress(state, action) {
-      const index = state.customer.all_address?.findIndex((id) => action.payload.id === id);
+      const index = state.customer.all_address?.findIndex((address) => action.payload.id === address.id);
 
-      if (typeof index !== 'undefined' && index !== -1) {
+      if (index !== -1) {
         state.customer.all_address[index] = action.payload;
       }
     },

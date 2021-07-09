@@ -29,12 +29,15 @@ const Header = styled.div`
 `;
 
 const Title = styled.h2`
-  padding: 0;
   margin: 0;
+  padding: 0 1rem;
 `;
 
 const AddressContainer = styled.div`
   width: 100%;
+  max-height: 400px;
+  overflow-x: hidden;
+  padding: 0 1rem;
 `;
 
 const Address = styled.div`
