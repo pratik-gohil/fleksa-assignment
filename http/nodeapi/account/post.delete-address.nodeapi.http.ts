@@ -9,7 +9,7 @@ export default class NodeApiHttpPostDeleteAddressRequest extends ApiHttpCommon {
   public async post({ customer_address_id, updating_values }: INodeApiHttpPostDeleteAddressRequestData) {
     try {
       const response = await new NetNodeApi(this.configuration, this.bearerToken).post<INodeApiHttpPostDeleteAddressResponseData>({
-        path: 'customer/create/address',
+        path: 'customer/delete/address',
         body: {
           customer_address_id,
           updating_values: {
