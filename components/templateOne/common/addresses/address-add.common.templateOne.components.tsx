@@ -14,6 +14,11 @@ import { selectIsUserLoggedIn } from "../../../../redux/slices/user.slices.redux
 // import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
 // import { selectLanguageCode } from "../../../../redux/slices/configuration.slices.redux";
 
+import SvgHome from "../../../../public/assets/svg/address/home.svg";
+import SvgWork from "../../../../public/assets/svg/address/work.svg";
+import SvgMap from "../../../../public/assets/svg/address/map.svg";
+import { AddressTypes } from "./address-manager.common.templateOne.components";
+
 
 const Wrapper = styled.div`
   position: fixed;
@@ -38,7 +43,7 @@ const ContentContainer = styled.div`
   flex: 1;
   flex-direction: column;
   max-width: 500px;
-  max-height: 80%;
+  max-height: 90%;
   background-color: #fff;
   overflow: auto;
   border-radius: ${props => props.theme.borderRadius}px;
@@ -64,9 +69,21 @@ const Title = styled.h3`
 
 const InputContainer = styled.div`
   display: flex;
+  flex: 1;
   flex-direction: row;
   justify-content: center;
   margin: 0 ${props => props.theme.dimen.X4}px;
+`
+
+const InputItem = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  margin: ${props => props.theme.dimen.X4}px;
+`
+
+const Label = styled.label`
+  font-weight: 700;
 `
 
 const Input = styled.input`
@@ -74,6 +91,14 @@ const Input = styled.input`
   border: ${props => props.theme.border};
   border-radius: ${props => props.theme.borderRadius}px;
   padding: ${props => props.theme.dimen.X4}px;
+  font-family: inherit;
+`
+
+const InputSubmit = styled(Input)`
+  font-weight: 700;
+  cursor: pointer;
+  background: #333;
+  color: #fff;
   margin: ${props => props.theme.dimen.X4}px;
 `
 
@@ -82,12 +107,58 @@ const Error = styled.p`
   margin: 0 ${props => props.theme.dimen.X4}px;
 `
 
+const AddressTypeContainer = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: ${props => props.theme.dimen.X4}px;
+  label {
+    padding: 0 ${props => props.theme.dimen.X4}px;
+  }
+`
+
+const AddressTypeItemContainer = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+`
+
+const AddressTypeItem = styled.div<{ active: boolean }>`
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border: ${props => props.theme.border};
+  margin: ${props => props.theme.dimen.X4}px;
+  padding: ${props => props.theme.dimen.X4}px 0;
+  border-radius: ${props => props.theme.borderRadius}px;
+  background: ${props => props.active? "#222": "#fff"};
+  svg {
+    fill: ${props => props.active? "#fff": "#222"};
+    width: 48px;
+    height: 48px;
+  }
+  p {
+    color: ${props => props.active? "#fff": "#222"};
+    margin: 0;
+    padding-top: 6px;
+  }
+`
+
+const AddressTypeName = styled.p`
+  font-size: 14px;
+  font-weight: 500;
+`
+
 const AddressAdd: FunctionComponent = () => {
   const { t } = useTranslation("add-address")
   const refAddressInput = useRef<HTMLInputElement>(null)
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn)
   const configuration = useAppSelector(selectConfiguration)
   const shopData = useAppSelector(selectShop)
+  const [ addressType, setAddressType ] = useState<AddressTypes>("HOME")
   // const languageCode = useAppSelector(selectLanguageCode)
   // const dispatch = useAppDispatch()
 
@@ -137,7 +208,7 @@ const AddressAdd: FunctionComponent = () => {
         city: addressCity,
         floor: addressFloor,
         address: addressMain,
-        addressType: "HOME",
+        addressType: addressType,
         urlpath: shopData?.urlpath,
         postalCode: Number(addressPostalCode)
       })
@@ -158,35 +229,68 @@ const AddressAdd: FunctionComponent = () => {
     <ContentContainer>
       <Title>{t("@addNewAddress")}</Title>
       <InputContainer>
-        <Input ref={refAddressInput} placeholder={""} />
+        <InputItem>
+          <Label>{t("@streetAddress")}</Label>
+          <Input ref={refAddressInput} placeholder={t("@streetAddress")} />
+        </InputItem>
       </InputContainer>
       <InputContainer>
-        <Input
-          placeholder={"Additional Delivery Info"}
-          value={addressFloor}
-          onChange={e => setAddressFloor(e.target.value)}
-        />
+        <InputItem>
+          <Label>{t("@additionalDeliveryInfo")}</Label>
+          <Input
+            placeholder={t("@additionalDeliveryInfo")}
+            value={addressFloor}
+            onChange={e => setAddressFloor(e.target.value)}
+          />
+        </InputItem>
       </InputContainer>
 
       <InputContainer>
-        <Input
-          placeholder={"City"}
-          value={addressCity}
-          onChange={e => setAddressCity(e.target.value)}
+        <InputItem>
+          <Label>{t("@city")}</Label>
+          <Input
+            placeholder={t("@city")}
+            value={addressCity}
+            onChange={e => setAddressCity(e.target.value)}
           />
-        <Input
-          placeholder={"Postal Code"}
-          value={addressPostalCode}
-          onChange={e => setAddressPostalCode(e.target.value)}
-        />
+        </InputItem>
+        <InputItem>
+          <Label>{t("@postalCode")}</Label>
+          <Input
+            placeholder={t("@postalCode")}
+            value={addressPostalCode}
+            onChange={e => setAddressPostalCode(e.target.value)}
+          />
+        </InputItem>
       </InputContainer>
+
+      <AddressTypeContainer>
+        <Label>{t("@addressType")}</Label>
+        <AddressTypeItemContainer>
+          {[{
+            title: "HOME" as AddressTypes,
+            icon: SvgHome
+          }, {
+            title: "WORK" as AddressTypes,
+            icon: SvgWork
+          }, {
+            title: "OTHER" as AddressTypes,
+            icon: SvgMap
+          }].map(item => {
+            return <AddressTypeItem active={addressType === item.title} onClick={() => setAddressType(item.title)}>
+              <item.icon />
+              <AddressTypeName>{item.title}</AddressTypeName>
+            </AddressTypeItem>
+          })}
+        </AddressTypeItemContainer>
+      </AddressTypeContainer>
       
       {errorMessage && <InputContainer>
         <Error>{t("@addressPart1")}<a href="/contact-us"> {t("@contact")} </a>{t("@addressPart2")}</Error>
       </InputContainer>}
 
       <InputContainer>
-        <Input type="submit" value="SUBMIT" onClick={onClickSubmit} />
+        <InputSubmit type="submit" value="SAVE ADDRESS" onClick={onClickSubmit} />
       </InputContainer>
     </ContentContainer>
   </Wrapper>
