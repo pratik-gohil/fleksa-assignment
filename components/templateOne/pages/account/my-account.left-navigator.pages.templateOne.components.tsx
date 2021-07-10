@@ -11,7 +11,7 @@ const Wrapper = styled.div`
   height: calc(100vh - ${(p) => p.theme.navDesktop.height}px);
   position: relative;
 
-  ::after {
+  /* ::after {
     content: '';
     width: 3rem;
     height: 100%;
@@ -19,7 +19,7 @@ const Wrapper = styled.div`
     background: ${(p) => p.theme.primaryColor};
     top: 0;
     right: 0;
-  }
+  } */
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     width: 100%;

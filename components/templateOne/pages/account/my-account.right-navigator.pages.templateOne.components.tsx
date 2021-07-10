@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { selectCustomer, updateCustomerName, updateCustomerEmail } from '../../../../redux/slices/user.slices.redux';
 import styled, { css } from 'styled-components';
-import PencilIconPath from '../../../../public/assets/svg/pencil.svg';
 import PhoneInput from 'react-phone-input-2';
 import LoadingIndicator from '../../common/loadingIndicator/loading-indicator.common.templateOne.components';
 import NodeApiHttpPatchAccountProfileRequest from '../../../../http/nodeapi/account/post.account.nodeapi.http';
@@ -10,6 +9,8 @@ import { selectBearerToken } from '../../../../redux/slices/user.slices.redux';
 import { selectConfiguration } from '../../../../redux/slices/configuration.slices.redux';
 import { updateError } from '../../../../redux/slices/common.slices.redux';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
+import PencilIconPath from '../../../../public/assets/svg/pencil.svg';
+import InfoRedIconPath from '../../../../public/assets/svg/account/info_red.svg';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -28,6 +29,7 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
   max-width: 500px;
+  margin: 1rem 0.5rem;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     max-width: 100%;
@@ -56,7 +58,7 @@ const Title = styled.h1`
 `;
 
 const TextContainer = styled.div<{ readOnly: boolean }>`
-  margin: 1rem 0;
+  /* margin: 1rem 0; */
   cursor: ${(p) => (p.readOnly ? 'not-allowed' : 'none')};
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
@@ -98,19 +100,14 @@ const UpdateButton = styled.button`
 
 const InputValue = styled.input<{ readOnly: boolean }>`
   outline: none;
-  border: 1px solid #dddddd;
+  border: ${(p) => (!p.readOnly ? '1px solid #dddddd' : 'none')};
   border-radius: 0.5rem;
+  margin-top: ${(p) => (!p.readOnly ? '1rem' : '0')};
 
-  padding: 1rem;
+  padding: ${(p) => (p.readOnly ? '1rem 1rem 1rem 0' : '1rem')};
   width: 100%;
   font-size: 1.2rem;
   cursor: ${(p) => (p.readOnly ? 'not-allowed' : 'text')};
-
-  &:hover,
-  &:active,
-  &:focus {
-    border: ${(p) => (!p.readOnly ? `1px solid ${p.theme.textDarkActiveColor}` : '1px solid #dddddd')};
-  }
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     padding: 1rem;
@@ -123,10 +120,10 @@ const TextEmailContainer = styled(TextContainer)`
 `;
 const EmailInputValue = styled(InputValue)``;
 
-const VerifyButton = styled.button`
+const VerifyButton = styled.button<{ readOnly: boolean }>`
   position: absolute;
   width: 120px;
-  height: 100%;
+  height: calc(100% - 1rem);
   right: 0;
   border-top-right-radius: 0.5rem;
   border-bottom-right-radius: 0.5rem;
@@ -135,6 +132,8 @@ const VerifyButton = styled.button`
   font-weight: 600;
   font-size: 1.2rem;
   cursor: pointer;
+  visibility: ${(p) => (p.readOnly ? 'hidden' : 'visible')};
+  margin-top: ${(p) => (!p.readOnly ? '1rem' : '0')};
 
   &:hover {
     filter: brightness(1.3);
@@ -164,6 +163,27 @@ const IconContainer = styled.div<{ readOnly: boolean }>`
 const PencilIcon = styled(PencilIconPath)`
   font-size: 1.2rem;
   color: ${(p) => p.theme.textDarkColor};
+`;
+
+const TitleHeader = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const InfoRedIcon = styled(InfoRedIconPath)`
+  margin-left: 0.5rem;
+`;
+
+const NotVerifyIndigator = styled.div<{ readOnly: boolean; isEmailVerify: boolean }>`
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  display: ${(p) => (p.readOnly && !p.isEmailVerify ? 'flex' : 'none')};
+`;
+
+const NotVerifyText = styled.p`
+  color: #ff0000;
+  font-size: 0.8rem;
 `;
 
 export const MyAccountRightSection = () => {
@@ -248,7 +268,13 @@ export const MyAccountRightSection = () => {
 
       <Content>
         <TitleContainer>
-          <Title>Email</Title>
+          <TitleHeader>
+            <Title>Email</Title>
+            <NotVerifyIndigator readOnly={isEmailReadOnly} isEmailVerify={!!customerData.email_verified}>
+              <NotVerifyText>Not Verified</NotVerifyText>
+              <InfoRedIcon />
+            </NotVerifyIndigator>
+          </TitleHeader>
 
           <IconContainer onClick={() => setIsEmailReadOnly(!isEmailReadOnly)} readOnly={isEmailReadOnly}>
             <PencilIcon />
@@ -258,7 +284,7 @@ export const MyAccountRightSection = () => {
         <TextEmailContainer readOnly={isEmailReadOnly}>
           <EmailInputValue type="email" value={email} onChange={(e) => setEmail(e.target.value)} readOnly={isEmailReadOnly} />
 
-          {!customerData.email_verified && <VerifyButton>Verify</VerifyButton>}
+          {!customerData.email_verified && <VerifyButton readOnly={isEmailReadOnly}>Verify</VerifyButton>}
         </TextEmailContainer>
       </Content>
 
@@ -280,7 +306,7 @@ export const MyAccountRightSection = () => {
               }
               setPhone(ph);
             }}
-            inputStyle={{ width: '100%' }}
+            inputStyle={{ border: 'none' }}
           />
         </TextContainer>
       </Content>
