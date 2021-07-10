@@ -23,7 +23,7 @@ const Wrapper = styled.div`
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     margin-left: 0;
-    min-height: calc(100vh - ${(p) => p.theme.navMobile.height}px);
+    /* height: calc(100vh - ${(p) => p.theme.navMobile.height}px); */
     width: 100%;
   }
 `;

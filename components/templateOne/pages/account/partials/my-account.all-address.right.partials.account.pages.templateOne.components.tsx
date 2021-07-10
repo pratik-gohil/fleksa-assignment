@@ -12,26 +12,28 @@ import { IParticularAddress } from '../../../../../interfaces/common/customer.co
 import NodeApiHttpPostUpdateAddressRequest from '../../../../../http/nodeapi/account/post.update-address.nodeapi.http';
 import { useEffect } from 'react';
 import { BREAKPOINTS } from '../../../../../constants/grid-system-configuration';
-import ArrowIconPath from '../../../../../public/assets/svg/account/back-arrow.svg';
 
 const HomeIconPath = '/assets/svg/account/home.svg';
 const WorkIconPath = '/assets/svg/account/work.svg';
 const MapIconPath = '/assets/svg/account/map.svg';
 
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+  padding: 1rem;
+  border-radius: 0.5rem;
+`;
 
 const Header = styled.div`
-  margin-top: 3rem;
+  text-align: center;
   width: 100%;
-
-  @media (max-width: ${BREAKPOINTS.sm}px) {
-    margin-top: 1.5rem;
-  }
 `;
 
 const Title = styled.h2`
   padding: 0;
   margin: 0;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    font-size: 1.3rem;
+  }
 `;
 
 const FormContainer = styled.form`
@@ -47,7 +49,7 @@ const InputBox = styled.div`
   padding: 0 0 1rem 0;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    padding: 0 0 0 0;
+    padding-bottom: 0.5rem;
   }
 `;
 
@@ -144,12 +146,21 @@ const AddressType = styled.button<{ active: boolean }>`
   &:hover {
     background: rgba(0, 0, 0, 0.1);
   }
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    width: 48px;
+    height: 48px;
+  }
 `;
 
 const IconContainer = styled.div`
   display: flex;
   justify-content: stretch;
   align-items: center;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    justify-content: center;
+  }
 `;
 
 const SaveAddressButton = styled.button`
@@ -169,24 +180,16 @@ const SaveAddressButton = styled.button`
   &:hover {
     background: #575757;
   }
-`;
-
-const BackButton = styled.button`
-  background: transparent;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  display: grid;
-  place-items: center;
-  display: none;
-  padding: 1rem 0;
-  margin: 0;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    display: block;
+    padding: 0.5rem;
   }
 `;
-const ArrowIcon = styled(ArrowIconPath)``;
+
+const CloseIcon = styled.img`
+  color: #000;
+  fill: red;
+`;
 
 interface IMyAccountAllAddressRightSideProps {
   handleShowNewAddressModal: (isEdit: boolean) => void;
@@ -365,12 +368,9 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
 
   return (
     <Wrapper>
-      <BackButton onClick={() => handleShowNewAddressModal(false)}>
-        <ArrowIcon />
-      </BackButton>
-
       <Header>
         <Title>{isEditMode ? 'Update Your Address' : 'Add New Address'}</Title>
+        {/* <CloseIcon src={'/assets/svg/x-circle.svg'} /> */}
       </Header>
 
       <FormContainer onSubmit={handleCreateNewAddressFormRequest}>
