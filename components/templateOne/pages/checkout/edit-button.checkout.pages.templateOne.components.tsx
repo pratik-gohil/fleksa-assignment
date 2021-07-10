@@ -8,9 +8,11 @@ export interface IPropsEditButton {
 }
 
 const Wrapper = styled.div<{ disabled: boolean|undefined }>`
+  min-width: 36px;
   width: 36px;
   height: 36px;
   display: flex;
+  flex: 0 0 auto;
   justify-content: center;
   align-items: center;
   border: ${props => props.theme.border};

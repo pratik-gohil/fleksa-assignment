@@ -9,6 +9,9 @@ import EditContainer from "./edit-container.checkout.pages.templateOne.component
 
 
 export const StyledCheckoutCard = styled.div`
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
   border: ${props => props.theme.border};
   border-radius: ${props => props.theme.borderRadius}px;
   padding: ${props => props.theme.dimen.X4}px;
@@ -24,21 +27,24 @@ export const StyledCheckoutTitle = styled.h3`
 
 export const StyledCheckoutInput = styled.input`
   flex: 2;
-  width: 100%;
+  max-width: 100%;
   border: ${props => props.theme.border};
   border-radius: ${props => props.theme.borderRadius}px;
   padding: ${props => props.theme.dimen.X4}px;
 `
 
 export const StyledCheckoutText = styled.p`
-  flex: 2;
-  width: 100%;
+  display: flex;
+  flex: 2 0 0;
+  max-width: 100%;
   padding: ${props => props.theme.dimen.X4}px 0;
   margin: 0;
+  word-wrap: break-word;
 `
 
 const Text = styled.p`
   flex: 1;
+  min-width: 60px;
 `
 
 const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {

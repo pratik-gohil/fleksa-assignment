@@ -9,7 +9,7 @@ import NodeApiHttpPostOrder from "../../../../http/nodeapi/order/post.order.node
 import { IMakeOrderProducts } from "../../../../interfaces/http/nodeapi/order/post.order.nodeapi.http";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
 import { selectCart } from "../../../../redux/slices/cart.slices.redux";
-import { selectPaymentMethod, updatePaymentMethod, ICheckoutPaymentMethods, selectTip, selectComment, selectOrderType, ICheckoutOrderTypes, selectWantAt } from "../../../../redux/slices/checkout.slices.redux";
+import { selectPaymentMethod, updatePaymentMethod, ICheckoutPaymentMethods, selectTip, selectComment, selectOrderType, ICheckoutOrderTypes, selectWantAt, selectSelectedAddressId } from "../../../../redux/slices/checkout.slices.redux";
 import { selectConfiguration } from "../../../../redux/slices/configuration.slices.redux";
 import { selectShop } from "../../../../redux/slices/index.slices.redux";
 import { selectBearerToken, selectCustomer } from "../../../../redux/slices/user.slices.redux";
@@ -73,6 +73,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   const [ orderButtonLoading, setOrderButtonLoading ] = useState(false)
   const [ orderCanBePlaced, setOrderCanBePlaced ] = useState(false)
   const paymentMethodData = useAppSelector(selectPaymentMethod)
+  const addressId = useAppSelector(selectSelectedAddressId)
   const configuration = useAppSelector(selectConfiguration)
   const bearerToken = useAppSelector(selectBearerToken)
   const customerData = useAppSelector(selectCustomer)
@@ -115,7 +116,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
           phone: customerData.phone as any,
           country_code: customerData.country_code as any,
           is_delivery: orderType === "DELIVERY",
-          customer_address_id: undefined, ///////////////////////////////////////
+          customer_address_id: addressId || undefined,
           want_at: moment(`${wantAtData?.date.value as string} ${wantAtData?.time.value as string}`).toString(),
           products,
           payment_method: paymentMethodData,
@@ -179,6 +180,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
         <PaymentMethodList>
           {(["CASH", "STRIPE", "PAYPAL"] as Array<ICheckoutPaymentMethods>).map(method => {
             return <PaymentMethodItems
+              key={method}
               isActive={paymentMethodData === method}
               onClick={() => dispatch(updatePaymentMethod(method))}
             >{method}</PaymentMethodItems>

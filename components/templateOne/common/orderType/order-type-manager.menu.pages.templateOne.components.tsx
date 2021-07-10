@@ -2,7 +2,7 @@ import { FunctionComponent } from "react";
 import styled from "styled-components";
 import { BREAKPOINTS } from "../../../../constants/grid-system-configuration";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
-import { ICheckoutOrderTypes, selectOrderType, updateOrderType } from "../../../../redux/slices/checkout.slices.redux";
+import { ICheckoutOrderTypes, selectOrderType, updateOrderType, updateSelectedAddressId } from "../../../../redux/slices/checkout.slices.redux";
 import SvgDelivery from "../../../../public/assets/svg/delivery.svg";
 import SvgPickup from "../../../../public/assets/svg/pickup.svg";
 import SvgDinein from "../../../../public/assets/svg/dinein.svg";
@@ -104,7 +104,9 @@ const OrderTypeManager: FunctionComponent = () => {
 
   function onClickDelivery(orderType: ICheckoutOrderTypes) {
     dispatch(updateOrderType(orderType))
+    dispatch(updateShowOrderTypeSelect(false))
     dispatch(updateShowAddAddress(true))
+    dispatch(updateSelectedAddressId(null))
   }
 
   function onClickTakeaway(orderType: ICheckoutOrderTypes) {

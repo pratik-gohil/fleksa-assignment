@@ -7,10 +7,10 @@ import styled from "styled-components";
 
 import { BREAKPOINTS } from "../../../../constants/grid-system-configuration";
 import PyApiHttpPostAddress from "../../../../http/pyapi/address/post.address.pyapi.http";
-import { useAppSelector } from "../../../../redux/hooks.redux";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
 import { selectConfiguration } from "../../../../redux/slices/configuration.slices.redux";
 import { selectShop } from "../../../../redux/slices/index.slices.redux";
-import { selectIsUserLoggedIn } from "../../../../redux/slices/user.slices.redux";
+import { selectAddressByType, selectBearerToken, selectIsUserLoggedIn, updateExistCustomerAddress, updateNewCustomerAddress } from "../../../../redux/slices/user.slices.redux";
 // import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
 // import { selectLanguageCode } from "../../../../redux/slices/configuration.slices.redux";
 
@@ -18,7 +18,20 @@ import SvgHome from "../../../../public/assets/svg/address/home.svg";
 import SvgWork from "../../../../public/assets/svg/address/work.svg";
 import SvgMap from "../../../../public/assets/svg/address/map.svg";
 import { AddressTypes } from "./address-manager.common.templateOne.components";
+import NodeApiHttpPostCreateNewAddressRequest from "../../../../http/nodeapi/account/post.create-address.nodeapi.http";
+import NodeApiHttpPostUpdateAddressRequest from "../../../../http/nodeapi/account/post.update-address.nodeapi.http";
+import { LS_GUEST_USER_ADDRESS } from "../../../../constants/keys-local-storage.constants";
+import { updateError } from "../../../../redux/slices/common.slices.redux";
+import { updateSelectedAddressId } from "../../../../redux/slices/checkout.slices.redux";
+import { updateShowAddAddress } from "../../../../redux/slices/menu.slices.redux";
 
+export interface IGuestAddress {
+  floor: string
+  address: string
+  address_type: AddressTypes
+  city: string
+  postal_code: string
+}
 
 const Wrapper = styled.div`
   position: fixed;
@@ -152,25 +165,27 @@ const AddressTypeName = styled.p`
   font-weight: 500;
 `
 
+let autoComplete: google.maps.places.Autocomplete
+
 const AddressAdd: FunctionComponent = () => {
   const { t } = useTranslation("add-address")
+  const dispatch = useAppDispatch()
   const refAddressInput = useRef<HTMLInputElement>(null)
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn)
+  const bearerToken = useAppSelector(selectBearerToken)
   const configuration = useAppSelector(selectConfiguration)
   const shopData = useAppSelector(selectShop)
   const [ addressType, setAddressType ] = useState<AddressTypes>("HOME")
-  // const languageCode = useAppSelector(selectLanguageCode)
-  // const dispatch = useAppDispatch()
+  const addressByType = useAppSelector(state => selectAddressByType(state, addressType))
 
   const [ errorMessage, setErrorMessage ] = useState<string>()
+  const [ addressId, setAddressId ] = useState<number|null>(null)
   const [ addressMain, setAddressMain ] = useState("")
   const [ addressStreet, setAddressStreet ] = useState("")
   const [ addressArea, setAddressArea] = useState("")
   const [ addressCity, setAddressCity] = useState("")
   const [ addressPostalCode, setAddressPostalCode] = useState("")
   const [ addressFloor, setAddressFloor ] = useState("")
-
-  let autoComplete: google.maps.places.Autocomplete
 
   function onAddressChange() {
     console.log(autoComplete.getPlace())
@@ -191,6 +206,26 @@ const AddressAdd: FunctionComponent = () => {
   }
 
   useEffect(() => {
+    setErrorMessage(undefined)
+    if (addressByType) {
+      console.log(addressByType)
+      setAddressId(addressByType.id)
+      setAddressMain(addressByType.address || "")
+      setAddressCity(addressByType.city)
+      setAddressArea(addressByType.area || "")
+      setAddressFloor(addressByType.floor || "")
+      setAddressPostalCode(addressByType.postal_code)
+    } else {
+      setAddressId(null)
+      setAddressMain("")
+      setAddressCity("")
+      setAddressArea("")
+      setAddressFloor("")
+      setAddressPostalCode("")
+    }
+  }, [ addressByType ])
+
+  useEffect(() => {
     if (window !== "undefined" && refAddressInput.current) {
       autoComplete = new google.maps.places.Autocomplete(refAddressInput.current, {
         types: ['geocode'],
@@ -201,6 +236,7 @@ const AddressAdd: FunctionComponent = () => {
   }, [ refAddressInput ])
   
   async function onClickSubmit() {
+    setErrorMessage(undefined)
     if (shopData?.urlpath) {
       const response = await new PyApiHttpPostAddress(configuration).post({
         area: addressArea,
@@ -214,15 +250,77 @@ const AddressAdd: FunctionComponent = () => {
       })
 
       if (response?.can_deliver) {
-        if (isLoggedIn) {
-
+        if (isLoggedIn && bearerToken) {
+          if (addressId) {
+            await updateExistingAddress(bearerToken, addressId)
+          } else {
+            await addNewAddress(bearerToken)
+          }
         } else {
-
+          const guestAddress: IGuestAddress = {
+            floor: addressFloor,
+            address: addressMain,
+            address_type: addressType,
+            city: addressCity,
+            postal_code: addressPostalCode
+          }
+          // save the address to local storage. Add on server when checkout opens
+          window.localStorage.setItem(LS_GUEST_USER_ADDRESS, JSON.stringify(guestAddress))
         }
       } else {
         setErrorMessage(response?.description)
       }
     }
+  }
+
+  async function addNewAddress(bearerToken: string) {
+    if (!isLoggedIn) return 
+    const response = await new NodeApiHttpPostCreateNewAddressRequest(configuration, bearerToken).post({
+      floor: addressFloor,
+      address: addressMain,
+      address_type: addressType,
+      city: addressCity,
+      postal_code: addressPostalCode
+    })
+    if (!response.result) {
+      dispatch(
+        updateError({
+          show: true,
+          message: response.message,
+          severity: 'error',
+        }),
+      );
+      return;
+    }
+    console.log("response add address", response)
+    dispatch(updateNewCustomerAddress(response?.data?.address));
+    dispatch(updateSelectedAddressId(response.data?.address.id))
+    dispatch(updateShowAddAddress(false))
+  }
+
+  async function updateExistingAddress(bearerToken: string, addressId: number) {
+    if (!isLoggedIn) return 
+    const response = await new NodeApiHttpPostUpdateAddressRequest(configuration, bearerToken).post({
+      customer_address_id: addressId,
+      updating_values: {
+        floor: addressFloor,
+        address: addressMain,
+        address_type: addressType,
+        city: addressCity,
+        postal_code: addressPostalCode
+      }
+    })
+    dispatch(updateExistCustomerAddress({
+      ...addressByType,
+      floor: addressFloor,
+      address: addressMain,
+      address_type: addressType,
+      city: addressCity,
+      postal_code: addressPostalCode
+    }))
+    console.log("response update address", response)
+    dispatch(updateSelectedAddressId(addressId))
+    dispatch(updateShowAddAddress(false))
   }
 
   return <Wrapper>
@@ -231,7 +329,12 @@ const AddressAdd: FunctionComponent = () => {
       <InputContainer>
         <InputItem>
           <Label>{t("@streetAddress")}</Label>
-          <Input ref={refAddressInput} placeholder={t("@streetAddress")} />
+          <Input
+            value={addressMain}
+            onChange={e => setAddressMain(e.target.value)}
+            ref={refAddressInput}
+            placeholder={t("@streetAddress")}
+          />
         </InputItem>
       </InputContainer>
       <InputContainer>
