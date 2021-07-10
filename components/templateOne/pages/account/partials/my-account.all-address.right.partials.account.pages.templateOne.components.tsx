@@ -186,11 +186,6 @@ const SaveAddressButton = styled.button`
   }
 `;
 
-const CloseIcon = styled.img`
-  color: #000;
-  fill: red;
-`;
-
 interface IMyAccountAllAddressRightSideProps {
   handleShowNewAddressModal: (isEdit: boolean) => void;
   existAddress: IParticularAddress | null;
