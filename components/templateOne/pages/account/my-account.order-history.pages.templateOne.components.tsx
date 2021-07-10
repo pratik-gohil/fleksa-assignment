@@ -4,7 +4,7 @@ import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { useAppSelector } from '../../../../redux/hooks.redux';
 import { selectCustomer } from '../../../../redux/slices/user.slices.redux';
 import { MyAccountOrder } from './partials/my-account.order-history.partials.account.templateOne.components';
-import ArrowIconPath from '../../../../public/assets/svg/account/back-arrow.svg';
+import MobileBackButton from '../../common/backButton/backButton.common.templateOne.components';
 
 const Wrapper = styled.div`
   overflow: hidden;
@@ -14,28 +14,6 @@ const Wrapper = styled.div`
     height: calc(100vh - ${(p) => p.theme.navMobile.height}px);
   }
 `;
-
-const HeaderSection = styled.div`
-  flex: 1;
-  display: none;
-  width: 100%;
-  max-height: 50px;
-  margin: 1rem;
-
-  align-items: center;
-
-  @media (max-width: ${BREAKPOINTS.sm}px) {
-    display: flex;
-  }
-`;
-
-const BackButton = styled.a`
-  background: transparent;
-  border: none;
-  outline: none;
-  cursor: pointer;
-`;
-const ArrowIcon = styled(ArrowIconPath)``;
 
 const InnerWrapper = styled.div`
   overflow-x: hidden;
@@ -48,11 +26,7 @@ export const MyAccountAllOrderHistory = () => {
   return (
     <Wrapper>
       <InnerWrapper>
-        <HeaderSection>
-          <BackButton href="/account">
-            <ArrowIcon />
-          </BackButton>
-        </HeaderSection>
+        <MobileBackButton path="/account" />
 
         {customerData.orders?.map((order) => (
           <MyAccountOrder key={order.id} order={order} />

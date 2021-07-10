@@ -11,7 +11,7 @@ import { updateError } from '../../../../redux/slices/common.slices.redux';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import PencilIconPath from '../../../../public/assets/svg/pencil.svg';
 import InfoRedIconPath from '../../../../public/assets/svg/account/info_red.svg';
-import ArrowIconPath from '../../../../public/assets/svg/account/back-arrow.svg';
+import MobileBackButton from '../../common/backButton/backButton.common.templateOne.components';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -25,29 +25,6 @@ const Wrapper = styled.div`
     padding: 2rem 0.5rem;
   }
 `;
-
-const HeaderSection = styled.div`
-  flex: 1;
-  width: 100%;
-  max-height: 50px;
-  padding: 0 0.5rem;
-  align-items: center;
-  display: none;
-
-  @media (max-width: ${BREAKPOINTS.sm}px) {
-    display: flex;
-  }
-`;
-
-const BackButton = styled.a`
-  background: transparent;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  display: grid;
-  place-items: center;
-`;
-const ArrowIcon = styled(ArrowIconPath)``;
 
 const ContentContainer = styled.div`
   @media (max-width: ${BREAKPOINTS.sm}px) {
@@ -88,12 +65,7 @@ const Title = styled.h1`
 `;
 
 const TextContainer = styled.div<{ readOnly: boolean }>`
-  /* margin: 1rem 0; */
   cursor: ${(p) => (p.readOnly ? 'not-allowed' : 'none')};
-
-  @media (max-width: ${BREAKPOINTS.sm}px) {
-    /* margin: 0.5rem 0; */
-  }
 `;
 
 const ButtonContainer = styled.div`
@@ -283,11 +255,7 @@ export const MyAccountRightSection = () => {
 
   return (
     <Wrapper>
-      <HeaderSection>
-        <BackButton href="/account">
-          <ArrowIcon />
-        </BackButton>
-      </HeaderSection>
+      <MobileBackButton path="/account" />
 
       <ContentContainer>
         <Content>

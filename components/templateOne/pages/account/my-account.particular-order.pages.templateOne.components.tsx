@@ -5,6 +5,7 @@ import { useAppSelector } from '../../../../redux/hooks.redux';
 import { selectCustomer } from '../../../../redux/slices/user.slices.redux';
 import ArrowIconPath from '../../../../public/assets/svg/account/back-arrow.svg';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
+import MobileBackButton from '../../common/backButton/backButton.common.templateOne.components';
 
 const Wrapper = styled.section`
   height: calc(100vh - ${(p) => p.theme.navDesktop.height}px);
@@ -15,33 +16,6 @@ const Wrapper = styled.section`
     height: calc(100vh - ${(p) => p.theme.navMobile.height}px);
   }
 `;
-
-const HeaderSection = styled.div`
-  flex: 1;
-  display: flex;
-  width: 100%;
-  max-height: 50px;
-  padding: 2.5rem 2rem;
-  align-items: center;
-
-  @media (max-width: ${BREAKPOINTS.sm}px) {
-    padding: 2.5rem 1rem;
-  }
-`;
-
-const OrderId = styled.h3`
-  padding: 0;
-  margin: 0 0 0 1rem;
-`;
-const BackButton = styled.a`
-  background: transparent;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  display: grid;
-  place-items: center;
-`;
-const ArrowIcon = styled(ArrowIconPath)``;
 
 const MainSection = styled.div`
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
@@ -187,12 +161,7 @@ const AccountPageParticularOrder: FunctionComponent = ({}) => {
 
   return (
     <Wrapper>
-      <HeaderSection>
-        <BackButton href="/account/order-history">
-          <ArrowIcon />
-        </BackButton>
-        <OrderId>Order #{order?.id}</OrderId>
-      </HeaderSection>
+      <MobileBackButton path="/account/order-history" title={`Order #${order?.id}`} />
 
       <MainSection>
         <ReceiptButton href={order?.pdf_url} target="_blank" rel="noopener noreferrer">
