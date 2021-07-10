@@ -212,7 +212,6 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
         break
     }
     dispatch(updateOrderType(orderType))
-    console.log("orderType", orderType)
   }
 
   useEffect(() => {

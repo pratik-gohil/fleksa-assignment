@@ -92,19 +92,21 @@ const MenuPageCategorySidebar: FunctionComponent = ({}) => {
         (top + height) > window.pageYOffset &&
         (left + width) > window.pageXOffset
       );
+      if (!sections[current].getAttribute) break
       setActiveId(sections[current].getAttribute("id") as string)
       if (visible) break
     }
   }
 
-  function scrollTracker() {
+  useEffect(() => {
+    let sections: NodeListOf<Element>;
     if (window !== "undefined") {
-      const sections = document.querySelectorAll(idList.join(","));
-      window.addEventListener("scroll", () => navHighlighter(sections));
+      sections = document.querySelectorAll(idList.join(","))
+      window.addEventListener("scroll", navHighlighter.bind(null, sections));
+      
     }
-  }
-
-  useEffect(scrollTracker, [ ])
+    return () => window.removeEventListener("scroll", navHighlighter.bind(null, sections));
+  }, [ ])
 
   return <List>
     <ListItem key="search">
