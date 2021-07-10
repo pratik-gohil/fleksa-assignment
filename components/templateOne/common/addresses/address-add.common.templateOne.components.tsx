@@ -14,6 +14,7 @@ import { selectAddressByType, selectBearerToken, selectIsUserLoggedIn, updateExi
 import SvgHome from "../../../../public/assets/svg/address/home.svg";
 import SvgWork from "../../../../public/assets/svg/address/work.svg";
 import SvgMap from "../../../../public/assets/svg/address/map.svg";
+import SvgCross from "../../../../public/assets/svg/cross.svg";
 import { AddressTypes } from "./address-manager.common.templateOne.components";
 import NodeApiHttpPostCreateNewAddressRequest from "../../../../http/nodeapi/account/post.create-address.nodeapi.http";
 import NodeApiHttpPostUpdateAddressRequest from "../../../../http/nodeapi/account/post.update-address.nodeapi.http";
@@ -60,12 +61,29 @@ const ContentContainer = styled.div`
   padding: 0 0 ${props => props.theme.dimen.X4}px 0;
 `
 
-const Title = styled.h3`
-  margin: 0 0 ${props => props.theme.dimen.X4}px 0;
-  padding: ${props => props.theme.dimen.X4*2}px 0;
-  text-align: center;
-  line-height: 1;
+const TitleContainer = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  justify-content: space-between;
   border-bottom: ${props => props.theme.border};
+  margin: 0 0 ${props => props.theme.dimen.X4}px 0;
+  padding: ${props => props.theme.dimen.X4*2}px;
+`
+
+const Title = styled.h3`
+  margin: 0;
+  line-height: 1;
+`
+
+const CloseButton = styled.div`
+  padding: 12px;
+  svg {
+    width: 32px;
+    height: 32px;
+    fill: #222;
+    cursor: pointer;
+  }
 `
 
 const InputContainer = styled.div`
@@ -314,7 +332,12 @@ const AddressAdd: FunctionComponent = () => {
 
   return <Wrapper>
     <ContentContainer>
-      <Title>{t("@addNewAddress")}</Title>
+      <TitleContainer>
+        <Title>{t("@addNewAddress")}</Title>
+        <CloseButton>
+          <SvgCross />
+        </CloseButton>
+      </TitleContainer>
       <InputContainer>
         <InputItem>
           <Label>{t("@streetAddress")}</Label>
