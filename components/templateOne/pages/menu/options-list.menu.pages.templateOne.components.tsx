@@ -101,6 +101,7 @@ const MenuPageOptionsList: FunctionComponent<IPropsMenuPageCategoryListItem> = (
               name: option.name_json
             }
           }))
+          setSelectedOption(optionKey+1)
         }}>
           <StyledOptionsRadioButtonContainer>
             <StyledOptionsRadioButton multiselect={false} selected={index === selectedIndex?.product_index} />
