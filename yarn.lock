@@ -3192,6 +3192,11 @@
   "resolved" "https://registry.npmjs.org/lodash.debounce/-/lodash.debounce-4.0.8.tgz"
   "version" "4.0.8"
 
+"lodash.isequal@^4.5.0":
+  "integrity" "sha1-QVxEePK8wwEgwizhDtMib30+GOA="
+  "resolved" "https://registry.npmjs.org/lodash.isequal/-/lodash.isequal-4.5.0.tgz"
+  "version" "4.5.0"
+
 "lodash.memoize@^4.1.2":
   "integrity" "sha1-vMbEmkKihA7Zl/Mj6tpezRguC/4="
   "resolved" "https://registry.npmjs.org/lodash.memoize/-/lodash.memoize-4.1.2.tgz"
@@ -3814,6 +3819,13 @@
   "version" "6.0.2"
   dependencies:
     "inherits" "~2.0.3"
+
+"quill-delta-to-html@^0.12.0":
+  "integrity" "sha512-Yy6U2e7ov+ZlrFbj5/GbqOBCRjyNu+vuphy0Pk+7668zIMTVHJglZY2JNa++1/zkSiqptPBmP/CpsDzC4Wznsw=="
+  "resolved" "https://registry.npmjs.org/quill-delta-to-html/-/quill-delta-to-html-0.12.0.tgz"
+  "version" "0.12.0"
+  dependencies:
+    "lodash.isequal" "^4.5.0"
 
 "randombytes@^2.0.0", "randombytes@^2.0.1", "randombytes@^2.0.5", "randombytes@^2.1.0":
   "integrity" "sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ=="

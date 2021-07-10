@@ -3,7 +3,7 @@ import { IConfiguration, updateConfiguration, updateLanguage, updateSelectedMenu
 import { COOKIE_BEARER_TOKEN, COOKIE_SELECTED_MENU_ID, COOKIE_SELECTED_RESTAURANT_DOMAIN } from '../constants/keys-cookies.constants';
 import { updateBearerToken, updateCustomer } from '../redux/slices/user.slices.redux';
 import PyApiHttpGetIndex from '../http/pyapi/index/get.index.pyapi.http';
-import { updateAddress, updateImages, updateOffers, updateShop, updateTimings } from '../redux/slices/index.slices.redux';
+import { updateAddress, updateContents, updateImages, updateOffers, updateShop, updateTimings } from '../redux/slices/index.slices.redux';
 import NodeApiHttpGetUser from '../http/nodeapi/user/get.user.nodeapi.http';
 import NodeApiHttpGetUserOrderHistory from '../http/nodeapi/account/get.account.order-history.nodeapi.http';
 import NodeApiHttpGetUserParticularOrder from '../http/nodeapi/account/get.order-view-by-id.nodeapi.http';
@@ -101,6 +101,7 @@ export async function getServerSidePropsCommon(
     ctx.store.dispatch(updateTimings(responseIndex?.timings));
     ctx.store.dispatch(updateImages(responseIndex?.images));
     ctx.store.dispatch(updateOffers(responseIndex?.offers));
+    ctx.store.dispatch(updateContents(responseIndex?.contents));
 
     return {
       bearerToken,

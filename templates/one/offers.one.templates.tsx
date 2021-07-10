@@ -1,10 +1,10 @@
 import { useTranslation } from 'next-i18next';
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-grid-system';
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../constants/grid-system-configuration';
 import { useAppSelector } from '../../redux/hooks.redux';
-import { selectShop } from '../../redux/slices/index.slices.redux';
+import { selectContents, selectShop } from '../../redux/slices/index.slices.redux';
 
 const Wrapper = styled.div`
   height: calc(100vh - ${(props) => props.theme.navMobile.height}px);
@@ -21,10 +21,6 @@ const HeroContainer = styled.section`
   overflow: hidden;
   height: 200px;
   margin-bottom: ${(props) => props.theme.dimen.X4}px;
-
-  @media (min-width: ${BREAKPOINTS.md}px) {
-    /* height: 400px; */
-  }
 `;
 const HeroContentContainer = styled.div`
   position: absolute;
@@ -57,6 +53,7 @@ const HeroImage = styled.img`
 const OffersPageTemplateOne: FunctionComponent = ({}) => {
   const shopData = useAppSelector(selectShop);
   const { t } = useTranslation('header');
+  const contents = useAppSelector(selectContents);
 
   return (
     <Wrapper>
@@ -72,6 +69,8 @@ const OffersPageTemplateOne: FunctionComponent = ({}) => {
           </Container>
         </HeroContentContainer>
       </HeroContainer>
+
+      {/* <div dangerouslySetInnerHTML={{ __html: html }} /> */}
     </Wrapper>
   );
 };

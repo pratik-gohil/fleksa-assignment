@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { HYDRATE } from 'next-redux-wrapper';
 import { IAddress } from '../../interfaces/common/address.common.interfaces';
+import { IContent } from '../../interfaces/common/index.common.interfaces';
 import { IOffer } from '../../interfaces/common/offer.common.interfaces';
 import { IProduct } from '../../interfaces/common/product.common.interfaces';
 import { IReview } from '../../interfaces/common/review.common.interfaces';
@@ -19,6 +20,7 @@ export interface IIndexSliceState {
   timings: ITimings | null;
   siblings: Array<ISibling>;
   offers: Array<IOffer>;
+  contents: Array<IContent>;
 }
 
 const initialState: IIndexSliceState = {
@@ -30,6 +32,7 @@ const initialState: IIndexSliceState = {
   timings: null,
   siblings: [],
   offers: [],
+  contents: [],
 };
 
 export const IndexSlice = createSlice({
@@ -60,6 +63,9 @@ export const IndexSlice = createSlice({
     updateOffers: (state, action) => {
       state.offers = action.payload;
     },
+    updateContents: (state, action) => {
+      state.contents = action.payload;
+    },
   },
   extraReducers: {
     [HYDRATE]: (state, action) => {
@@ -71,7 +77,7 @@ export const IndexSlice = createSlice({
   },
 });
 
-export const { updateAddress, updateShop, updateProducts, updateReviews, updateImages, updateTimings, updateSiblings, updateOffers } =
+export const { updateAddress, updateShop, updateProducts, updateReviews, updateImages, updateTimings, updateSiblings, updateOffers, updateContents } =
   IndexSlice.actions;
 
 export const selectAddress = (state: RootState) => state.index.address;
@@ -82,3 +88,4 @@ export const selectImages = (state: RootState) => state.index.images;
 export const selectTimings = (state: RootState) => state.index.timings;
 export const selectSiblings = (state: RootState) => state.index.siblings;
 export const selectOffers = (state: RootState) => state.index.offers;
+export const selectContents = (state: RootState) => state.index.contents;
