@@ -77,8 +77,9 @@ export async function getServerSidePropsCommon(
       if (options?.orderHistory && bearerToken) {
         const orderHistory = await new NodeApiHttpGetUserOrderHistory(configuration, bearerToken).get({ shop_id: responseIndex?.shop.id });
 
-        if (orderHistory?.result) ctx.store.dispatch(updateCustomer({ ...userData?.data.customer, orders: orderHistory.data.orders }));
-        else ctx.store.dispatch(updateCustomer({ ...userData?.data.customer, orders: [] }));
+        if (orderHistory?.result) {
+          ctx.store.dispatch(updateCustomer({ ...userData?.data.customer, orders: orderHistory.data.orders?.sort((a, b) => b.id - a.id) }));
+        } else ctx.store.dispatch(updateCustomer({ ...userData?.data.customer, orders: [] }));
       }
 
       // TODO: Request for particular order page
