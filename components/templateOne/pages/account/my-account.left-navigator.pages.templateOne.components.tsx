@@ -77,7 +77,7 @@ const Link = styled.a<{ active: boolean }>`
   }
 `;
 
-const LougoutButton = styled.button`
+const LougoutButton = styled.a`
   color: ${(props) => props.theme.textLightActiveColor};
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
@@ -159,7 +159,7 @@ export const MyAccountLeftSection = () => {
           <ActiveUnderline active={router.pathname === '/account/addresses'} />
         </Link>
 
-        <LougoutButton>Log out</LougoutButton>
+        <LougoutButton href="/logout">Log out</LougoutButton>
       </LinkContainer>
     </Wrapper>
   );
