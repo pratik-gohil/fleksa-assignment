@@ -11,6 +11,7 @@ import { updateError } from '../../../../redux/slices/common.slices.redux';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import PencilIconPath from '../../../../public/assets/svg/pencil.svg';
 import InfoRedIconPath from '../../../../public/assets/svg/account/info_red.svg';
+import ArrowIconPath from '../../../../public/assets/svg/account/back-arrow.svg';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -25,6 +26,35 @@ const Wrapper = styled.div`
   }
 `;
 
+const HeaderSection = styled.div`
+  flex: 1;
+  width: 100%;
+  max-height: 50px;
+  padding: 0 0.5rem;
+  align-items: center;
+  display: none;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    display: flex;
+  }
+`;
+
+const BackButton = styled.a`
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+`;
+const ArrowIcon = styled(ArrowIconPath)``;
+
+const ContentContainer = styled.div`
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    margin: 2rem 0.5rem;
+  }
+`;
+
 const Content = styled.div`
   display: flex;
   flex-direction: column;
@@ -34,7 +64,7 @@ const Content = styled.div`
   @media (max-width: ${BREAKPOINTS.sm}px) {
     max-width: 100%;
 
-    margin: 1rem 0.5rem;
+    margin: 1rem 0;
   }
 `;
 
@@ -62,7 +92,7 @@ const TextContainer = styled.div<{ readOnly: boolean }>`
   cursor: ${(p) => (p.readOnly ? 'not-allowed' : 'none')};
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    margin: 0.5rem 0;
+    /* margin: 0.5rem 0; */
   }
 `;
 
@@ -110,7 +140,7 @@ const InputValue = styled.input<{ readOnly: boolean }>`
   cursor: ${(p) => (p.readOnly ? 'not-allowed' : 'text')};
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    padding: 1rem;
+    /* padding: 1rem; */
     font-size: 1rem;
   }
 `;
@@ -253,69 +283,77 @@ export const MyAccountRightSection = () => {
 
   return (
     <Wrapper>
-      <Content>
-        <TitleContainer>
-          <Title>Name</Title>
-          <IconContainer onClick={() => setIsNameReadOnly(!isNameReadOnly)} readOnly={isNameReadOnly}>
-            <PencilIcon />
-          </IconContainer>
-        </TitleContainer>
+      <HeaderSection>
+        <BackButton href="/account">
+          <ArrowIcon />
+        </BackButton>
+      </HeaderSection>
 
-        <TextContainer readOnly={isNameReadOnly}>
-          <InputValue type="text" value={name} onChange={(e) => setName(e.target.value)} readOnly={isNameReadOnly} />
-        </TextContainer>
-      </Content>
+      <ContentContainer>
+        <Content>
+          <TitleContainer>
+            <Title>Name</Title>
+            <IconContainer onClick={() => setIsNameReadOnly(!isNameReadOnly)} readOnly={isNameReadOnly}>
+              <PencilIcon />
+            </IconContainer>
+          </TitleContainer>
 
-      <Content>
-        <TitleContainer>
-          <TitleHeader>
-            <Title>Email</Title>
-            <NotVerifyIndigator readOnly={isEmailReadOnly} isEmailVerify={!!customerData.email_verified}>
-              <NotVerifyText>Not Verified</NotVerifyText>
-              <InfoRedIcon />
-            </NotVerifyIndigator>
-          </TitleHeader>
+          <TextContainer readOnly={isNameReadOnly}>
+            <InputValue type="text" value={name} onChange={(e) => setName(e.target.value)} readOnly={isNameReadOnly} />
+          </TextContainer>
+        </Content>
 
-          <IconContainer onClick={() => setIsEmailReadOnly(!isEmailReadOnly)} readOnly={isEmailReadOnly}>
-            <PencilIcon />
-          </IconContainer>
-        </TitleContainer>
+        <Content>
+          <TitleContainer>
+            <TitleHeader>
+              <Title>Email</Title>
+              <NotVerifyIndigator readOnly={isEmailReadOnly} isEmailVerify={!!customerData.email_verified}>
+                <NotVerifyText>Not Verified</NotVerifyText>
+                <InfoRedIcon />
+              </NotVerifyIndigator>
+            </TitleHeader>
 
-        <TextEmailContainer readOnly={isEmailReadOnly}>
-          <EmailInputValue type="email" value={email} onChange={(e) => setEmail(e.target.value)} readOnly={isEmailReadOnly} />
+            <IconContainer onClick={() => setIsEmailReadOnly(!isEmailReadOnly)} readOnly={isEmailReadOnly}>
+              <PencilIcon />
+            </IconContainer>
+          </TitleContainer>
 
-          {!customerData.email_verified && <VerifyButton readOnly={isEmailReadOnly}>Verify</VerifyButton>}
-        </TextEmailContainer>
-      </Content>
+          <TextEmailContainer readOnly={isEmailReadOnly}>
+            <EmailInputValue type="email" value={email} onChange={(e) => setEmail(e.target.value)} readOnly={isEmailReadOnly} />
 
-      <Content>
-        <TitleContainer>
-          <Title>Phone Number</Title>
-        </TitleContainer>
+            {!customerData.email_verified && <VerifyButton readOnly={isEmailReadOnly}>Verify</VerifyButton>}
+          </TextEmailContainer>
+        </Content>
 
-        <TextContainer readOnly={true}>
-          <PhoneInput
-            country={'de'}
-            value={phone}
-            enableSearch
-            specialLabel=""
-            disabled
-            onChange={(ph, data) => {
-              if ((data as any).dialCode !== countryCode) {
-                setCountryCode((data as any).dialCode);
-              }
-              setPhone(ph);
-            }}
-            inputStyle={{ border: 'none' }}
-          />
-        </TextContainer>
-      </Content>
+        <Content>
+          <TitleContainer>
+            <Title>Phone Number</Title>
+          </TitleContainer>
 
-      <Content>
-        <ButtonContainer>
-          <UpdateButton onClick={hanldeUpdateButtonClick}>{loading ? <LoadingIndicator width={20} /> : 'Update'}</UpdateButton>
-        </ButtonContainer>
-      </Content>
+          <TextContainer readOnly={true}>
+            <PhoneInput
+              country={'de'}
+              value={phone}
+              enableSearch
+              specialLabel=""
+              disabled
+              onChange={(ph, data) => {
+                if ((data as any).dialCode !== countryCode) {
+                  setCountryCode((data as any).dialCode);
+                }
+                setPhone(ph);
+              }}
+              inputStyle={{ border: 'none' }}
+            />
+          </TextContainer>
+        </Content>
+
+        <Content>
+          <ButtonContainer>
+            <UpdateButton onClick={hanldeUpdateButtonClick}>{loading ? <LoadingIndicator width={20} /> : 'Update'}</UpdateButton>
+          </ButtonContainer>
+        </Content>
+      </ContentContainer>
     </Wrapper>
   );
 };

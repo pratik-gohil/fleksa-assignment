@@ -3,23 +3,14 @@ import styled from 'styled-components';
 import { useAppSelector } from '../../../../redux/hooks.redux';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { selectCustomer } from '../../../../redux/slices/user.slices.redux';
-import PencilIconPath from '../../../../public/assets/svg/pencil.svg';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { useState } from 'react';
 
 const Wrapper = styled.div`
   background: ${(p) => p.theme.textDarkColor};
   height: calc(100vh - ${(p) => p.theme.navDesktop.height}px);
   position: relative;
-
-  /* ::after {
-    content: '';
-    width: 3rem;
-    height: 100%;
-    position: absolute;
-    background: ${(p) => p.theme.primaryColor};
-    top: 0;
-    right: 0;
-  } */
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     width: 100%;
@@ -37,7 +28,7 @@ const LinkContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
-  padding: 2rem 0;
+  max-height: 500px;
 
   width: calc(100% - 3rem);
   height: 100%;
@@ -69,8 +60,6 @@ const Link = styled.a<{ active: boolean }>`
   font-size: 1.8rem;
   font-weight: 600;
   letter-spacing: 1.5px;
-
-  padding: 1rem 0 0 0;
 
   &:hover {
     color: ${(p) => p.theme.primaryColor};
@@ -104,33 +93,14 @@ const ActiveUnderline = styled.span<{ active: boolean }>`
   border-radius: 3px;
 `;
 
-const PencilIcon = styled(PencilIconPath)`
-  font-size: 1.2rem;
-  color: ${(p) => p.theme.textDarkColor};
-`;
-
-const IconContainer = styled.a`
-  border-radius: 50%;
-  width: 34px;
-  height: 34px;
-  border: 1px solid #dddddd;
-  display: none;
-  place-items: center;
-  cursor: pointer;
-  background: #fff;
-
-  position: absolute;
-  right: -0.5rem;
-  bottom: 0;
-
-  @media (max-width: ${BREAKPOINTS.sm}px) {
-    display: grid;
-  }
-`;
-
 export const MyAccountLeftSection = () => {
   const customerData = useAppSelector(selectCustomer);
   const router = useRouter();
+  const [dynamicLink, setDynamicLink] = useState('/account');
+
+  useEffect(() => {
+    if (window.matchMedia('(max-width: 576px)').matches) setDynamicLink('/account/edit');
+  }, []);
 
   return (
     <Wrapper>
@@ -140,13 +110,9 @@ export const MyAccountLeftSection = () => {
             .split(' ')
             .map((i) => i[0])
             .join('')}
-
-          <IconContainer href="/account/edit">
-            <PencilIcon />
-          </IconContainer>
         </FlagImage>
 
-        <Link href="/account" active={router.pathname === '/account'}>
+        <Link href={dynamicLink} active={router.pathname === '/account'}>
           Profile
           <ActiveUnderline active={router.pathname === '/account'} />
         </Link>
