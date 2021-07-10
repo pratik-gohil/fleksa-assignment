@@ -40,6 +40,6 @@ export type IPyApiHttpPostAddressResponse = {
   result: boolean
 } & ( IPyApiHttpPostAddressResponseCanDeliver | IPyApiHttpPostAddressResponseCannotDeliver )
 
-export type IPyApiHttpPostAddressAllResponse {
+export type IPyApiHttpPostAddressAllResponse = {
 
 }
