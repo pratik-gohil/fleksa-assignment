@@ -14,6 +14,7 @@ import { useRouter } from 'next/dist/client/router';
 import { COOKIE_BEARER_TOKEN } from '../../../../constants/keys-cookies.constants';
 import { updateBearerToken } from '../../../../redux/slices/user.slices.redux';
 import { selectConfiguration } from '../../../../redux/slices/configuration.slices.redux';
+import { updateError } from '../../../../redux/slices/common.slices.redux';
 
 export interface IPropsLoginComponent {
   onLogin?(): void;
@@ -124,11 +125,28 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
         phone: phone.substring(String(countryCode).length),
         shopId: shopData?.id as unknown as number,
       });
-      if (response?.result) {
-        setCustomerId(response.customer_id);
+
+      if (!response?.result) {
+        dispatch(
+          updateError({
+            show: true,
+            message: response?.message,
+            severity: 'error',
+          }),
+        );
+        return;
       }
+
+      setCustomerId(response?.customer_id);
     } catch (error) {
       console.error(error);
+      dispatch(
+        updateError({
+          show: true,
+          message: 'Ooops! Something went wrong.',
+          severity: 'error',
+        }),
+      );
     } finally {
       setLoading(false);
     }
@@ -143,14 +161,31 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
           customerId,
           shopId: shopData?.id as unknown as number,
         });
-        if (response?.token) {
-          await finishLogin(response.token);
-          // on login callback is present call it, otherwise send the user to account page
-          onLogin ? onLogin() : router.push('/account');
+
+        if (!response?.result) {
+          dispatch(
+            updateError({
+              show: true,
+              message: response?.message,
+              severity: 'error',
+            }),
+          );
+          return;
         }
+
+        await finishLogin(response.token);
+        // on login callback is present call it, otherwise send the user to account page
+        onLogin ? onLogin() : router.push('/account');
       }
     } catch (error) {
       console.error(error);
+      dispatch(
+        updateError({
+          show: true,
+          message: 'Ooops! Something went wrong.',
+          severity: 'error',
+        }),
+      );
     } finally {
       setLoading(false);
     }
