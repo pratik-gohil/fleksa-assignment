@@ -31,7 +31,7 @@ const OrderPlacedPageTemplateOne: FunctionComponent = ({}) => {
       <Row>
         <Col style={{ display: "flex", alignItems: 'center', flexDirection: 'column'}}>
           <h2>Your order is placed successfully</h2>
-          <ViewManageButton href="/order-history">View or Manage Order</ViewManageButton>
+          <ViewManageButton href="/account/order-history">View or Manage Order</ViewManageButton>
         </Col>
       </Row>
     </Container>

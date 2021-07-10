@@ -39,6 +39,9 @@ const store = configureStore({
             paymentMethod: 'CASH',
             tip: null,
             comment: '',
+            wantAt: null,
+            showDateTimeSelect: false,
+            selectedAddressId: null,
           },
   },
   middleware: (getDefaultMiddleware) => {

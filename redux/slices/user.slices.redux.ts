@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { HYDRATE } from 'next-redux-wrapper';
+import { AddressTypes } from '../../components/templateOne/common/addresses/address-manager.common.templateOne.components';
 import { ICustomer } from '../../interfaces/common/customer.common.interfaces';
 import { RootState } from '../store.redux';
 
@@ -39,6 +40,9 @@ export const UserSlice = createSlice({
     updateCustomerEmail(state, action) {
       state.customer.email = action.payload;
     },
+    updateLoadAddressesList(state, action) {
+      state.customer.all_address = action.payload
+    },
     updateNewCustomerAddress(state, action) {
       state.customer.all_address?.push(action.payload);
     },
@@ -68,6 +72,7 @@ export const {
   updateCustomer,
   updateCustomerName,
   updateCustomerEmail,
+  updateLoadAddressesList,
   updateNewCustomerAddress,
   updateExistCustomerAddress,
   deleteCustomerAddress,
@@ -76,3 +81,4 @@ export const {
 export const selectIsUserLoggedIn = (state: RootState) => state.user.bearerToken !== null;
 export const selectBearerToken = (state: RootState) => state.user.bearerToken;
 export const selectCustomer = (state: RootState) => state.user.customer;
+export const selectAddressByType = (state: RootState, addressType: AddressTypes) => state.user.customer.all_address?.find(i => i.address_type === addressType);

@@ -1,10 +1,10 @@
 import { useTranslation } from 'next-i18next';
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, { FunctionComponent } from 'react';
 import { Col, Container, Row } from 'react-grid-system';
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../constants/grid-system-configuration';
 import { useAppSelector } from '../../redux/hooks.redux';
-import { selectContents, selectShop } from '../../redux/slices/index.slices.redux';
+import { selectShop } from '../../redux/slices/index.slices.redux';
 
 const Wrapper = styled.div`
   height: calc(100vh - ${(props) => props.theme.navMobile.height}px);
@@ -53,7 +53,6 @@ const HeroImage = styled.img`
 const OffersPageTemplateOne: FunctionComponent = ({}) => {
   const shopData = useAppSelector(selectShop);
   const { t } = useTranslation('header');
-  const contents = useAppSelector(selectContents);
 
   return (
     <Wrapper>

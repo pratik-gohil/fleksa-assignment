@@ -15,6 +15,7 @@ export interface ICheckoutSliceState {
   comment: string;
   wantAt: { date: ILabelValue; time: ILabelValue } | null;
   showDateTimeSelect: boolean;
+  selectedAddressId: number|null
 }
 
 const initialState: ICheckoutSliceState = {
@@ -24,6 +25,7 @@ const initialState: ICheckoutSliceState = {
   comment: '',
   wantAt: null,
   showDateTimeSelect: false,
+  selectedAddressId: null
 };
 
 export const CheckoutSlice = createSlice({
@@ -54,19 +56,29 @@ export const CheckoutSlice = createSlice({
       state.tip = null;
       state.comment = '';
     },
+    updateSelectedAddressId(state, action) {
+      state.selectedAddressId = action.payload;
+    },
   },
   extraReducers: {
     [HYDRATE]: (state) => {
       return {
         ...state,
-        // ...(action.payload)[SLICE_NAME],
       };
     },
   },
 });
 
-export const { updatePaymentMethod, updateTip, updateOrderType, updateComment, updateWantAt, updateClearCheckout, updateShowDateTimeSelect } =
-  CheckoutSlice.actions;
+export const {
+  updatePaymentMethod,
+  updateTip,
+  updateOrderType,
+  updateComment,
+  updateWantAt,
+  updateClearCheckout,
+  updateShowDateTimeSelect,
+  updateSelectedAddressId,
+} = CheckoutSlice.actions;
 
 export const selectPaymentMethod = (state: RootState) => state.checkout.paymentMethod;
 export const selectTip = (state: RootState) => state.checkout.tip;
@@ -74,3 +86,4 @@ export const selectOrderType = (state: RootState) => state.checkout.orderType;
 export const selectComment = (state: RootState) => state.checkout.comment;
 export const selectWantAt = (state: RootState) => state.checkout.wantAt;
 export const selectShowDateTimeSelect = (state: RootState) => state.checkout.showDateTimeSelect;
+export const selectSelectedAddressId = (state: RootState) => state.checkout.selectedAddressId;

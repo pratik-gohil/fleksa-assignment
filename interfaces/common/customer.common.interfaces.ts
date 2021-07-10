@@ -1,3 +1,5 @@
+import { AddressTypes } from "../../components/templateOne/common/addresses/address-manager.common.templateOne.components";
+
 export interface ICustomer {
   name: string;
   email?: string;
@@ -90,5 +92,5 @@ export interface IParticularOrderBriefInfo {
 
 export interface IParticularAddress extends IDeliveryAddress {
   id: number;
-  address_type: string;
+  address_type: AddressTypes;
 }

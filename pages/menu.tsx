@@ -40,7 +40,7 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async ctx
     })
     ctx.store.dispatch(updateSelectedMenu(null))
     ctx.store.dispatch(updateSiblings(responseIndex?.siblings))
-    
+
     return {
       props: {
         ...(await serverSideTranslations((ctx as any).locale, ['header', 'footer', 'add-address'])),

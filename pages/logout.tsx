@@ -10,6 +10,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useAppDispatch } from "../redux/hooks.redux";
 import { updateClearCart } from "../redux/slices/cart.slices.redux";
 import { updateClearCheckout } from "../redux/slices/checkout.slices.redux";
+import { LS_GUEST_USER_ADDRESS } from "../constants/keys-local-storage.constants";
 
 const Template: FunctionComponent = () => <></>
 
@@ -36,6 +37,7 @@ function Logout({ templateNumber }: any) {
     if (typeof window !== "undefined") {
       dispatch(updateClearCart())
       dispatch(updateClearCheckout())
+      window.localStorage.removeItem(LS_GUEST_USER_ADDRESS)
       setTimeout(() => {
         router.push("/")
       }, 300);

@@ -73,7 +73,8 @@ export default class MyDocument extends Document {
           <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
           <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700;800&display=swap" rel="stylesheet"></link>
 
-          {((this.props as any).pathname as string).startsWith("/menu") && <script src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY}&libraries=places`}></script>}
+          {(((this.props as any).pathname as string).startsWith("/menu") || (((this.props as any).pathname as string) === "/checkout"))
+            && <script src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY}&libraries=places`}></script>}
         </Head>
         <body>
           <Main />

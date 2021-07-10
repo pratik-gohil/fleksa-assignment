@@ -2,8 +2,9 @@ import React, { FunctionComponent } from "react";
 import { Row, Col } from "react-grid-system";
 
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
-import { selectOrderType, selectShowDateTimeSelect, selectWantAt, updateShowDateTimeSelect } from "../../../../redux/slices/checkout.slices.redux";
-import { selectShowOrderTypeSelect, updateShowOrderTypeSelect } from "../../../../redux/slices/menu.slices.redux";
+import { selectOrderType, selectSelectedAddressId, selectShowDateTimeSelect, selectWantAt, updateShowDateTimeSelect } from "../../../../redux/slices/checkout.slices.redux";
+import { selectShowAddress, selectShowOrderTypeSelect, updateShowOrderTypeSelect } from "../../../../redux/slices/menu.slices.redux";
+import AddressAdd from "../../common/addresses/address-add.common.templateOne.components";
 import OrderTypeManager from "../../common/orderType/order-type-manager.menu.pages.templateOne.components";
 import { StyledCheckoutCard, StyledCheckoutText, StyledCheckoutTitle } from "./customer-info.checkout.pages.templateOne.components";
 import CheckoutDateTime from "./date-time-selector.checkout.pages.templateOne.components";
@@ -11,8 +12,10 @@ import EditButton from "./edit-button.checkout.pages.templateOne.components";
 import EditContainer from "./edit-container.checkout.pages.templateOne.components";
 
 const CheckoutPageSummary: FunctionComponent = ({}) => {
-  const orderTypeData = useAppSelector(selectOrderType)
+  const orderType = useAppSelector(selectOrderType)
   const wantAtData = useAppSelector(selectWantAt)
+  const showAddAddress = useAppSelector(selectShowAddress)
+  const checkoutAddressId = useAppSelector(selectSelectedAddressId)
   const showSelectOrderType = useAppSelector(selectShowOrderTypeSelect)
   const showDateTimeSelect = useAppSelector(selectShowDateTimeSelect)
   const dispatch = useAppDispatch()
@@ -22,7 +25,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
     <Row>
       <Col xs={12}>
         <EditContainer>
-          <StyledCheckoutText>{orderTypeData}</StyledCheckoutText>
+          <StyledCheckoutText>{orderType}</StyledCheckoutText>
           <EditButton onClick={() => dispatch(updateShowOrderTypeSelect(true))} />
         </EditContainer>
         <EditContainer>
@@ -31,7 +34,8 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
         </EditContainer>
       </Col>
     </Row>
-    {(showSelectOrderType || orderTypeData === null) && <OrderTypeManager key="key-awdiokajdwma" />}
+    {((showSelectOrderType || orderType === null) && !showAddAddress) && <OrderTypeManager key="key-ajkndalkwdmalkwmdlkw" />}
+    {(showAddAddress || (orderType === "DELIVERY" && checkoutAddressId === null)) && <AddressAdd />}
     {showDateTimeSelect && <CheckoutDateTime />}
   </StyledCheckoutCard>
 }

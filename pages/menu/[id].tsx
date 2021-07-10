@@ -10,6 +10,8 @@ import Cookies from "cookies";
 import { COOKIE_SELECTED_MENU_ID } from "../../constants/keys-cookies.constants";
 import { updateSelectedMenu } from "../../redux/slices/configuration.slices.redux";
 import { updateSiblings } from "../../redux/slices/index.slices.redux";
+import NodeApiHttpGetUserAllAddress from "../../http/nodeapi/account/get.account.all-address.nodeapi.http";
+import { updateLoadAddressesList } from "../../redux/slices/user.slices.redux";
 
 const MenuByIdPageTemplateOne = dynamic(import("../../templates/one/menu/menu-by-id.menu.one.templates"))
 
@@ -19,7 +21,7 @@ const templateList = [
 
 export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async ctx => {
   try {
-    const { redirect, configuration, responseIndex } = await getServerSidePropsCommon(ctx, false)
+    const { redirect, configuration, responseIndex, bearerToken } = await getServerSidePropsCommon(ctx, false)
     if (redirect) return redirect
 
     const cookies = new Cookies(ctx.req, ctx.res)
@@ -38,6 +40,11 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async ctx
     ctx.store.dispatch(updateCategories(responseMenu?.categories))
     ctx.store.dispatch(updateSides(responseMenu?.sides))
     ctx.store.dispatch(updateParts(responseMenu?.parts))
+
+    if (bearerToken) {
+      const addressResponse = await new NodeApiHttpGetUserAllAddress(configuration, bearerToken).get({})
+      ctx.store.dispatch(updateLoadAddressesList(addressResponse?.data.customer_address))
+    }
 
     return {
       props: {
