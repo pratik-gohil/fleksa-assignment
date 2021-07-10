@@ -263,7 +263,7 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
         }),
       );
     } catch (e) {
-      console.log(e);
+      console.error(e);
       setLoading(false);
       dispatch(
         updateError({

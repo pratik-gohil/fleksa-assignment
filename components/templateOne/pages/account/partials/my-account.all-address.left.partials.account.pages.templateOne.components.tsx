@@ -239,7 +239,7 @@ const MyAccountAllAddressLeftSide: FunctionComponent<IMyAccountAllAddressLeftSid
 
       dispatch(deleteCustomerAddress(id));
     } catch (e) {
-      console.log('error : ', e);
+      console.error('error : ', e);
       dispatch(
         updateError({
           show: true,

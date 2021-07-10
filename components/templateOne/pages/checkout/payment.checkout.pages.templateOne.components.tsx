@@ -127,7 +127,6 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
           order_type: orderType as ICheckoutOrderTypes,
         }
       })
-      console.log(response)
       return response
     } catch (error) {
       throw error

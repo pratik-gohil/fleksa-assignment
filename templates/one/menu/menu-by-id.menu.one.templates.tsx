@@ -49,8 +49,6 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
   const checkoutAddressId = useAppSelector(selectSelectedAddressId)
   const showSelectOrderType = useAppSelector(selectShowOrderTypeSelect)
 
-  console.log(showAddAddress, orderType === "DELIVERY", checkoutAddressId)
-
   return <>
     <MenuPageBanner />
     <SideViewLeftMobile>

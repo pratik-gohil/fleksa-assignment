@@ -180,7 +180,7 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
       // TODO: Redirect to success page
       router.push('/reservation-success');
     } catch (e) {
-      console.log('error : ', e);
+      console.error('error : ', e);
       setLoading(false);
       dispatch(
         updateError({
