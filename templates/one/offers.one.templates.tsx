@@ -167,6 +167,7 @@ const RightButton = styled.div<{ rightVisible: boolean }>`
 
 const OffersPageTemplateOne: FunctionComponent = ({}) => {
   const shopData = useAppSelector(selectShop);
+  const contents = useAppSelector(selectContents);
   const { t } = useTranslation('header');
 
   const [leftArrowVisible, setLeftArrowVisible] = useState(false);
