@@ -11,6 +11,12 @@ export interface IPyApiHttpPostAddressRequestData {
   postalCode: number
 }
 
+export interface IPyApiHttpPostAddressAllRequestData {
+  shopId: number
+  area: string
+  postalCode: string
+}
+
 type IPyApiHttpPostAddressResponseCannotDeliver = {
   can_deliver: false
 }
@@ -33,3 +39,7 @@ export type IPyApiHttpPostAddressResponse = {
   description: string
   result: boolean
 } & ( IPyApiHttpPostAddressResponseCanDeliver | IPyApiHttpPostAddressResponseCannotDeliver )
+
+export type IPyApiHttpPostAddressAllResponse {
+
+}

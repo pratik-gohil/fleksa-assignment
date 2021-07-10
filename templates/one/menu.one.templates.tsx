@@ -1,13 +1,15 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useRef } from "react";
 import styled from "styled-components";
 import { BREAKPOINTS } from "../../constants/grid-system-configuration";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks.redux";
 import { useEffect } from "react";
-import { selectSiblings } from "../../redux/slices/index.slices.redux";
+import { selectShop, selectSiblings } from "../../redux/slices/index.slices.redux";
 import { useState } from "react";
 import { ITimingsDay } from "../../interfaces/common/shop.common.interfaces";
 import { ICheckoutOrderTypes, updateClearCheckout, updateOrderType } from "../../redux/slices/checkout.slices.redux";
 import { updateClearCart } from "../../redux/slices/cart.slices.redux";
+import PyApiHttpPostAddress from "../../http/pyapi/address/post.address.pyapi.http";
+import { selectConfiguration } from "../../redux/slices/configuration.slices.redux";
 
 type Filters = "has_pickup"|"has_delivery"|"has_dinein"
 
@@ -164,12 +166,28 @@ const OrderButton = styled.div`
   background: ${props => props.theme.primaryColor};
 `
 
+const Input = styled.input`
+  width: 100%;
+  border: ${props => props.theme.border};
+  border-radius: ${props => props.theme.borderRadius}px;
+  padding: ${props => props.theme.dimen.X4}px;
+  font-family: inherit;
+`
+
 let map: google.maps.Map;
+let autoComplete: google.maps.places.Autocomplete
 
 const MenuPageTemplateOne: FunctionComponent = ({}) => {
   const dispatch = useAppDispatch()
+  const shopData = useAppSelector(selectShop)
   const siblingsData = useAppSelector(selectSiblings)
+  const configuration = useAppSelector(selectConfiguration)
 
+  const refAddressInput = useRef<HTMLInputElement>(null)
+
+  const [ area, setAddressArea ] = useState<string>()
+  const [ postalCode, setAddressPostalCode ] = useState<string>()
+  const [ addressMain, setAddressMain ] = useState("")
   const [ filterName, setFilterName ] = useState<Filters>("has_delivery")
 
   function initMap(): void {
@@ -212,8 +230,6 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
         orderType = "PICKUP"
         break
     }
-
-    console.log("orderType", orderType)
     dispatch(updateOrderType(orderType))
   }
 
@@ -225,6 +241,48 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
       setFilterAndOrderType("has_delivery")
     }
   }, [ ])
+
+  async function getAvaibleBasedOnAdress() {
+    console.log(shopData?.id, area, postalCode)
+    if (shopData?.id && area && postalCode) {
+      const response = await new PyApiHttpPostAddress(configuration).postAll({
+        shopId: shopData?.id,
+        area,
+        postalCode
+      })
+      console.log(response)
+    }
+  }
+
+  useEffect(() => {
+    console.log(area, postalCode)
+    getAvaibleBasedOnAdress()
+  }, [ area, postalCode ])
+
+  function onAddressChange() {
+    const place = autoComplete.getPlace()
+    if (place.address_components) {
+      for (let component of place.address_components) {
+        if (component.types[0] === 'route') {
+          let temp = '';
+          for (let component2 of place.address_components) if (component2.types[0] === 'street_number') temp = component2.short_name;
+          setAddressMain(`${component.long_name} ${temp}`);
+        } else if (component.types.indexOf('sublocality') !== -1 || component.types.indexOf('sublocality_level_1') !== -1)
+          setAddressArea(component.long_name.includes('Innenstadt') ? 'Innenstadt' : component.long_name);
+        else if (component.types[0] === 'postal_code') setAddressPostalCode(component.short_name);
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (window !== "undefined" && refAddressInput.current) {
+      autoComplete = new google.maps.places.Autocomplete(refAddressInput.current, {
+        types: ['geocode'],
+      });
+      autoComplete.setFields(['address_component']);
+      autoComplete.addListener('place_changed', onAddressChange);
+    }
+  }, [ refAddressInput ])
 
   return <ColumnContainer>
     <FullHeightColumnLeft>
@@ -241,7 +299,13 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
         }].map(item => <SelectionItem key={item.filter} active={filterName === item.filter} onClick={() => setFilterAndOrderType(item.filter)}>{item.title}</SelectionItem>)}
       </SelectionContainer>
       <List>
-        {siblingsData.filter(sibling => sibling.address.availability[filterName]).map(sibling => {
+        <Input
+          value={addressMain}
+          onChange={e => setAddressMain(e.target.value)}
+          ref={refAddressInput}
+          placeholder={"Where to deliver?"}
+        />
+        {(filterName === "has_delivery"? siblingsData: siblingsData).filter(sibling => sibling.address.availability[filterName]).map(sibling => {
           const area = sibling.address?.area ? sibling.address?.area + ' ' : ''
           const address = sibling.address?.address || ''
           const city = sibling.address?.city || ''
@@ -255,7 +319,6 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
                 <InfoWithOrderButton>
                   <InfoContainer>
                     <Title>{sibling.name}</Title>
-                    {/* <Description>{sibling.category_json[language]}</Description> */}
                     <Address>
                       <p>{area}{address}</p>
                       <p>{postalCode} {city}</p>
