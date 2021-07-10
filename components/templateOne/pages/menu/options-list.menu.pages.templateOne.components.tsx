@@ -85,8 +85,6 @@ const MenuPageOptionsList: FunctionComponent<IPropsMenuPageCategoryListItem> = (
     }))
   }
 
-  console.log("optionData", optionData)
-
   const isOptionOpen = selectedOption === optionKey
   const toggle = () => setSelectedOption(isOptionOpen? optionKey+1: optionKey)
 

@@ -50,10 +50,6 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
   const checkoutAddressId = useAppSelector(selectSelectedAddressId)
   const showSelectOrderType = useAppSelector(selectShowOrderTypeSelect)
 
-  if (typeof window !== "undefined") {
-    console.log(window.localStorage.getItem(LS_GUEST_USER_ADDRESS))
-  }
-
   return <>
     <MenuPageBanner />
     <SideViewLeftMobile>

@@ -37,7 +37,6 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async ctx
       const siblingData = responseIndex?.siblings.find(i => i.id == Number(ctx.query.id))
       urlPath = siblingData?.urlpath
     }
-    console.log("urlPath", urlPath, responseIndex?.shop.id)
     cookies.set(COOKIE_SELECTED_MENU_URLPATH, urlPath as string, {
       httpOnly: true,
       maxAge: 365*24*60*60*1000,
