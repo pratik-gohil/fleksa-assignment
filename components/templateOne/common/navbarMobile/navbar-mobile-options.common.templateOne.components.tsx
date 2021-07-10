@@ -100,6 +100,10 @@ const NavbarMobileOptions: FunctionComponent<IPropsNavbarMobileOptions> = ({ isO
             icon: SvgGallery,
           },
           {
+            title: t('@offers'),
+            icon: SvgGallery,
+          },
+          {
             title: t('@contact'),
             icon: SvgContact,
           },

@@ -73,6 +73,7 @@ const NavbarDesktop: FunctionComponent = ({}) => {
                   path={selectedMenuId ? `/menu/${selectedMenuId}` : '/menu'}
                   isActive={router.pathname.startsWith('/menu')}
                 />
+                <NavLink title={t('@offers')} path="/offers" isActive={router.pathname === '/offers'} />
                 <NavLink title={t('@reservation')} path="/reservation" isActive={router.pathname === '/reservation'} />
                 <NavLink title={t('@gallery')} path="/gallery" isActive={router.pathname === '/gallery'} />
                 <NavLink title={t('@contact')} path="/contact-us" isActive={router.pathname === '/contact-us'} />
