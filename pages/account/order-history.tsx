@@ -11,13 +11,14 @@ const templateList = [AccountOrderHistoryPageTemplateOne];
 
 export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ctx) => {
   try {
-    const { redirect } = await getServerSidePropsCommon(ctx, true, { orderHistory: true });
+    const { redirect, responseIndex } = await getServerSidePropsCommon(ctx, true, { orderHistory: true });
     if (redirect) return redirect;
 
     return {
       props: {
         ...(await serverSideTranslations((ctx as any).locale, ['header', 'footer'])),
         templateNumber: 0,
+        meta: responseIndex?.meta
       },
     };
   } catch (error) {
@@ -25,9 +26,10 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ct
   }
 });
 
-function Account({ templateNumber }: any) {
+function Account({ templateNumber, meta }: any) {
   return (
     <TemplateToShow
+      meta={meta}
       templateList={templateList}
       templateNumber={templateNumber}
       pageContainer={{

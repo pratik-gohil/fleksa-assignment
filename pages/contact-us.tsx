@@ -11,13 +11,14 @@ const templateList = [ContactUsPageTemplateOne];
 
 export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ctx) => {
   try {
-    const { redirect } = await getServerSidePropsCommon(ctx, false);
+    const { redirect, responseIndex } = await getServerSidePropsCommon(ctx, false);
     if (redirect) return redirect;
 
     return {
       props: {
         ...(await serverSideTranslations((ctx as any).locale, ['header', 'footer', 'contact-us'])),
         templateNumber: 0,
+        meta: responseIndex?.meta
       },
     };
   } catch (error) {
@@ -25,8 +26,8 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ct
   }
 });
 
-function ContactUs({ templateNumber }: any) {
-  return <TemplateToShow templateList={templateList} templateNumber={templateNumber} />;
+function ContactUs({ templateNumber, meta }: any) {
+  return <TemplateToShow meta={meta} templateList={templateList} templateNumber={templateNumber} />;
 }
 
 export default ContactUs;

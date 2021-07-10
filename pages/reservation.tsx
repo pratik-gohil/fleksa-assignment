@@ -11,13 +11,14 @@ const templateList = [ReservationPageTemplateOne];
 
 export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ctx) => {
   try {
-    const { redirect } = await getServerSidePropsCommon(ctx, false);
+    const { redirect, responseIndex } = await getServerSidePropsCommon(ctx, false);
     if (redirect) return redirect;
 
     return {
       props: {
         ...(await serverSideTranslations((ctx as any).locale, ['header', 'footer', 'page-index'])),
         templateNumber: 0,
+        meta: responseIndex?.meta
       },
     };
   } catch (error) {
@@ -25,8 +26,8 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ct
   }
 });
 
-function Reservation({ templateNumber }: any) {
-  return <TemplateToShow templateList={templateList} templateNumber={templateNumber} pageContainer={{ showFooter: true }} />;
+function Reservation({ templateNumber, meta }: any) {
+  return <TemplateToShow meta={meta} templateList={templateList} templateNumber={templateNumber} pageContainer={{ showFooter: true }} />;
 }
 
 export default Reservation;

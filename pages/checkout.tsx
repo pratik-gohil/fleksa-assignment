@@ -13,7 +13,7 @@ const templateList = [CheckoutPageTemplateOne];
 
 export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ctx) => {
   try {
-    const { redirect, configuration, bearerToken } = await getServerSidePropsCommon(ctx, true);
+    const { redirect, configuration, bearerToken, responseIndex } = await getServerSidePropsCommon(ctx, true);
     if (redirect) return redirect;
 
     const addressResponse = await new NodeApiHttpGetUserAllAddress(configuration, bearerToken).get({})
@@ -23,6 +23,7 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ct
       props: {
         ...(await serverSideTranslations((ctx as any).locale, ['header', 'footer', 'add-address'])),
         templateNumber: 0,
+        meta: responseIndex?.meta
       },
     };
   } catch (error) {
@@ -30,8 +31,8 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ct
   }
 });
 
-function Checkout({ templateNumber }: any) {
-  return <TemplateToShow templateList={templateList} templateNumber={templateNumber} />;
+function Checkout({ templateNumber, meta }: any) {
+  return <TemplateToShow meta={meta} templateList={templateList} templateNumber={templateNumber} />;
 }
 
 export default Checkout;

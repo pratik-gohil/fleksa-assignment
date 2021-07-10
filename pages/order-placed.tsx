@@ -14,13 +14,14 @@ const templateList = [OrderPlacedPageTemplateOne];
 
 export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ctx) => {
   try {
-    const { redirect } = await getServerSidePropsCommon(ctx, true);
+    const { redirect, responseIndex } = await getServerSidePropsCommon(ctx, true);
     if (redirect) return redirect;
 
     return {
       props: {
         ...(await serverSideTranslations((ctx as any).locale, ['header', 'footer'])),
         templateNumber: 0,
+        meta: responseIndex?.meta
       },
     };
   } catch (error) {
@@ -28,7 +29,7 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ct
   }
 });
 
-function Checkout({ templateNumber }: any) {
+function Checkout({ templateNumber, meta }: any) {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -37,7 +38,7 @@ function Checkout({ templateNumber }: any) {
       dispatch(updateClearCart());
     }
   }, [router]);
-  return <TemplateToShow templateList={templateList} templateNumber={templateNumber} pageContainer={{ showFooter: false }} />;
+  return <TemplateToShow meta={meta} templateList={templateList} templateNumber={templateNumber} pageContainer={{ showFooter: false }} />;
 }
 
 export default Checkout;
