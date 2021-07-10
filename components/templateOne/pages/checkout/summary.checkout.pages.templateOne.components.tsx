@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { Row, Col } from "react-grid-system";
+import { LS_GUEST_USER_ADDRESS } from "../../../../constants/keys-local-storage.constants";
 
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
 import { selectOrderType, selectSelectedAddressId, selectShowDateTimeSelect, selectWantAt, updateShowDateTimeSelect } from "../../../../redux/slices/checkout.slices.redux";
@@ -35,7 +36,9 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
       </Col>
     </Row>
     {((showSelectOrderType || orderType === null) && !showAddAddress) && <OrderTypeManager key="key-ajkndalkwdmalkwmdlkw" />}
-    {(showAddAddress || (orderType === "DELIVERY" && checkoutAddressId === null)) && <AddressAdd />}
+    {(showAddAddress
+      || (orderType === "DELIVERY" && checkoutAddressId === null
+      && orderType === "DELIVERY" && window.localStorage.getItem(LS_GUEST_USER_ADDRESS) === undefined)) && <AddressAdd />}
     {showDateTimeSelect && <CheckoutDateTime />}
   </StyledCheckoutCard>
 }

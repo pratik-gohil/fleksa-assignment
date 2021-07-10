@@ -7,8 +7,8 @@ import { updateCategories, updateParts, updateSides } from "../../redux/slices/m
 import PyApiHttpGetMenu from "../../http/pyapi/menu/get.menu.index.pyapi.http";
 import { getServerSidePropsCommon } from "../../utils/page.utils";
 import Cookies from "cookies";
-import { COOKIE_SELECTED_MENU_ID } from "../../constants/keys-cookies.constants";
-import { updateSelectedMenu } from "../../redux/slices/configuration.slices.redux";
+import { COOKIE_SELECTED_MENU_ID, COOKIE_SELECTED_MENU_URLPATH } from "../../constants/keys-cookies.constants";
+import { updateSelectedMenu, updateSelectedMenuUrlpath } from "../../redux/slices/configuration.slices.redux";
 import { updateSiblings } from "../../redux/slices/index.slices.redux";
 import NodeApiHttpGetUserAllAddress from "../../http/nodeapi/account/get.account.all-address.nodeapi.http";
 import { updateLoadAddressesList } from "../../redux/slices/user.slices.redux";
@@ -30,7 +30,21 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async ctx
       maxAge: 365*24*60*60*1000,
       sameSite: "strict"
     })
+    let urlPath: string | undefined
+    if (responseIndex?.shop.id === Number(ctx.query.id)) {
+      urlPath = responseIndex?.shop.urlpath
+    } else {
+      const siblingData = responseIndex?.siblings.find(i => i.id == Number(ctx.query.id))
+      urlPath = siblingData?.urlpath
+    }
+    console.log("urlPath", urlPath, responseIndex?.shop.id)
+    cookies.set(COOKIE_SELECTED_MENU_URLPATH, urlPath as string, {
+      httpOnly: true,
+      maxAge: 365*24*60*60*1000,
+      sameSite: "strict"
+    })
     ctx.store.dispatch(updateSelectedMenu(ctx.query.id as string));
+    ctx.store.dispatch(updateSelectedMenuUrlpath(urlPath))
     ctx.store.dispatch(updateSiblings(responseIndex?.siblings))
 
     const shopId = Number(ctx.query.id)

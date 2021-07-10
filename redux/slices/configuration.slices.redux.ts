@@ -22,6 +22,7 @@ export interface IIndexSliceState {
   showLoginOnLoginPath: string|null
   showCart: boolean
   selectedMenu: number|null
+  selectedMenuUrlpath: string|null
   configuration: IConfiguration
 }
 
@@ -32,6 +33,7 @@ const initialState: IIndexSliceState = {
   showLoginOnLoginPath: null,
   showCart: false,
   selectedMenu: null,
+  selectedMenuUrlpath: null,
   configuration: {
     host: '',
     baseUrlPyApi: '',
@@ -53,11 +55,14 @@ export const ConfigurationSlice = createSlice({
     updateShowLoginOnLoginPath(state, action) {
       state.showLoginOnLoginPath = action.payload
     },
-    updateShowCart(start, action) {
-      start.showCart = action.payload
+    updateShowCart(state, action) {
+      state.showCart = action.payload
     },
-    updateSelectedMenu(start, action) {
-      start.selectedMenu = action.payload
+    updateSelectedMenu(state, action) {
+      state.selectedMenu = action.payload
+    },
+    updateSelectedMenuUrlpath(state, action) {
+      state.selectedMenuUrlpath = action.payload
     },
     updateConfiguration(state, action) {
       state.configuration = action.payload
@@ -79,6 +84,7 @@ export const {
   updateConfiguration,
   updateSelectedMenu,
   updateShowCart,
+  updateSelectedMenuUrlpath,
 } = ConfigurationSlice.actions
 
 export const selectLanguage = (state: RootState) => state.configuration.language
@@ -88,3 +94,4 @@ export const selectShowLoginOnLoginPath = (state: RootState) => state.configurat
 export const selectShowCart = (state: RootState) => state.configuration.showCart
 export const selectSelectedMenu = (state: RootState) => state.configuration.selectedMenu
 export const selectConfiguration = (state: RootState) => state.configuration.configuration
+export const selectSelectedMenuUrlpath = (state: RootState) => state.configuration.selectedMenuUrlpath

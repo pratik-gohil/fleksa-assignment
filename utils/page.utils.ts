@@ -98,6 +98,7 @@ export async function getServerSidePropsCommon(
     ctx.store.dispatch(updateIndex(responseIndex));
 
     return {
+      cookies,
       bearerToken,
       responseIndex,
       configuration,

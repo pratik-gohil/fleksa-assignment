@@ -8,11 +8,8 @@ import styled from "styled-components";
 import { BREAKPOINTS } from "../../../../constants/grid-system-configuration";
 import PyApiHttpPostAddress from "../../../../http/pyapi/address/post.address.pyapi.http";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
-import { selectConfiguration } from "../../../../redux/slices/configuration.slices.redux";
-import { selectShop } from "../../../../redux/slices/index.slices.redux";
+import { selectConfiguration, selectSelectedMenuUrlpath } from "../../../../redux/slices/configuration.slices.redux";
 import { selectAddressByType, selectBearerToken, selectIsUserLoggedIn, updateExistCustomerAddress, updateNewCustomerAddress } from "../../../../redux/slices/user.slices.redux";
-// import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
-// import { selectLanguageCode } from "../../../../redux/slices/configuration.slices.redux";
 
 import SvgHome from "../../../../public/assets/svg/address/home.svg";
 import SvgWork from "../../../../public/assets/svg/address/work.svg";
@@ -70,15 +67,6 @@ const Title = styled.h3`
   line-height: 1;
   border-bottom: ${props => props.theme.border};
 `
-
-// const SubTitle = styled.h4<{ selected: boolean }>`
-//   padding: 0;
-//   margin: 0;
-//   font-size: 16px;
-//   font-weight: 400;
-//   line-height: 1;
-//   color: ${props => props.selected? "rgb(25, 135, 84)": "#222"};
-// `
 
 const InputContainer = styled.div`
   display: flex;
@@ -174,9 +162,9 @@ const AddressAdd: FunctionComponent = () => {
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn)
   const bearerToken = useAppSelector(selectBearerToken)
   const configuration = useAppSelector(selectConfiguration)
-  const shopData = useAppSelector(selectShop)
   const [ addressType, setAddressType ] = useState<AddressTypes>("HOME")
   const addressByType = useAppSelector(state => selectAddressByType(state, addressType))
+  const selectedMenuUrlpath = useAppSelector(selectSelectedMenuUrlpath)
 
   const [ errorMessage, setErrorMessage ] = useState<string>()
   const [ addressId, setAddressId ] = useState<number|null>(null)
@@ -184,8 +172,12 @@ const AddressAdd: FunctionComponent = () => {
   const [ addressStreet, setAddressStreet ] = useState("")
   const [ addressArea, setAddressArea] = useState("")
   const [ addressCity, setAddressCity] = useState("")
-  const [ addressPostalCode, setAddressPostalCode] = useState("")
+  const [ addressPostalCode, setAddressPostalCode] = useState("456")
   const [ addressFloor, setAddressFloor ] = useState("")
+
+  useEffect(() => {
+    dispatch(updateShowAddAddress(true))
+  }, [ ])
 
   function onAddressChange() {
     const place = autoComplete.getPlace()
@@ -235,7 +227,7 @@ const AddressAdd: FunctionComponent = () => {
   
   async function onClickSubmit() {
     setErrorMessage(undefined)
-    if (shopData?.urlpath) {
+    if (selectedMenuUrlpath) {
       const response = await new PyApiHttpPostAddress(configuration).post({
         area: addressArea,
         street: addressStreet,
@@ -243,7 +235,7 @@ const AddressAdd: FunctionComponent = () => {
         floor: addressFloor,
         address: addressMain,
         addressType: addressType,
-        urlpath: shopData?.urlpath,
+        urlpath: selectedMenuUrlpath,
         postalCode: Number(addressPostalCode)
       })
 
@@ -264,6 +256,7 @@ const AddressAdd: FunctionComponent = () => {
           }
           // save the address to local storage. Add on server when checkout opens
           window.localStorage.setItem(LS_GUEST_USER_ADDRESS, JSON.stringify(guestAddress))
+          dispatch(updateShowAddAddress(false))
         }
       } else {
         setErrorMessage(response?.description)
