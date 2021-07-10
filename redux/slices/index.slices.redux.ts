@@ -21,6 +21,12 @@ export interface IIndexSliceState {
   siblings: Array<ISibling>;
   offers: Array<IOffer>;
   contents: Array<IContent>;
+  banner?: {
+    action: string;
+    background: string;
+    description: string;
+    title: string;
+  };
 }
 
 const initialState: IIndexSliceState = {
@@ -39,6 +45,10 @@ export const IndexSlice = createSlice({
   name: SLICE_NAME,
   initialState,
   reducers: {
+    updateIndex: (state, action) => {
+      state = action.payload;
+      return state;
+    },
     updateAddress: (state, action) => {
       state.address = action.payload;
     },
@@ -77,8 +87,18 @@ export const IndexSlice = createSlice({
   },
 });
 
-export const { updateAddress, updateShop, updateProducts, updateReviews, updateImages, updateTimings, updateSiblings, updateOffers, updateContents } =
-  IndexSlice.actions;
+export const {
+  updateAddress,
+  updateShop,
+  updateProducts,
+  updateReviews,
+  updateImages,
+  updateTimings,
+  updateSiblings,
+  updateOffers,
+  updateContents,
+  updateIndex,
+} = IndexSlice.actions;
 
 export const selectAddress = (state: RootState) => state.index.address;
 export const selectShop = (state: RootState) => state.index.shop;
@@ -89,3 +109,4 @@ export const selectTimings = (state: RootState) => state.index.timings;
 export const selectSiblings = (state: RootState) => state.index.siblings;
 export const selectOffers = (state: RootState) => state.index.offers;
 export const selectContents = (state: RootState) => state.index.contents;
+export const selectBanner = (state: RootState) => state.index.banner;
