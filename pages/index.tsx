@@ -22,6 +22,7 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ct
       props: {
         ...(await serverSideTranslations((ctx as any).locale, ['header', 'footer', 'page-index'])),
         templateNumber: 0,
+        meta: responseIndex?.meta
       },
     };
   } catch (error) {
@@ -29,8 +30,8 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ct
   }
 });
 
-function Home({ templateNumber }: any) {
-  return <TemplateToShow templateList={templateList} templateNumber={templateNumber} />
+function Home({ templateNumber, meta }: any) {
+  return <TemplateToShow meta={meta} templateList={templateList} templateNumber={templateNumber} />
 }
 
 export default Home;

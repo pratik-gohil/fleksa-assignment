@@ -202,7 +202,7 @@ export const MyAccountRightSection = () => {
         }),
       );
     } catch (e) {
-      console.log('e : ', e);
+      console.error('e : ', e);
       dispatch(
         updateError({
           show: true,

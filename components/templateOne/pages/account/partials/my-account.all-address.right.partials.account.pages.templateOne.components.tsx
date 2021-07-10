@@ -264,7 +264,7 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
       // TODO: Update the local state
       dispatch(updateNewCustomerAddress(response?.data?.address));
     } catch (e) {
-      console.log('error : ', e);
+      console.error('error : ', e);
       setLoading(false);
       dispatch(
         updateError({
@@ -328,7 +328,7 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
         }),
       );
     } catch (e) {
-      console.log('error : ', e);
+      console.error('error : ', e);
       setLoading(false);
       dispatch(
         updateError({

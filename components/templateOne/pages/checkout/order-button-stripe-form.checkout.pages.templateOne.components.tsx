@@ -72,7 +72,7 @@ const CheckoutPageOrderButtonStripeForm: FunctionComponent<IPropsCheckoutPageOrd
     });
 
     if (error) {
-      console.log('[error]', error);
+      console.error('[error]', error);
     } else if (paymentIntent?.id) {
       await onPaymentDone()
     }

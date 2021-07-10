@@ -188,7 +188,6 @@ const AddressAdd: FunctionComponent = () => {
   const [ addressFloor, setAddressFloor ] = useState("")
 
   function onAddressChange() {
-    console.log(autoComplete.getPlace())
     const place = autoComplete.getPlace()
     if (place.address_components) {
       for (let component of place.address_components) {
@@ -208,7 +207,6 @@ const AddressAdd: FunctionComponent = () => {
   useEffect(() => {
     setErrorMessage(undefined)
     if (addressByType) {
-      console.log(addressByType)
       setAddressId(addressByType.id)
       setAddressMain(addressByType.address || "")
       setAddressCity(addressByType.city)
@@ -292,7 +290,6 @@ const AddressAdd: FunctionComponent = () => {
       );
       return;
     }
-    console.log("response add address", response)
     dispatch(updateNewCustomerAddress(response?.data?.address));
     dispatch(updateSelectedAddressId(response.data?.address.id))
     dispatch(updateShowAddAddress(false))
@@ -300,7 +297,7 @@ const AddressAdd: FunctionComponent = () => {
 
   async function updateExistingAddress(bearerToken: string, addressId: number) {
     if (!isLoggedIn) return 
-    const response = await new NodeApiHttpPostUpdateAddressRequest(configuration, bearerToken).post({
+    await new NodeApiHttpPostUpdateAddressRequest(configuration, bearerToken).post({
       customer_address_id: addressId,
       updating_values: {
         floor: addressFloor,
@@ -318,7 +315,6 @@ const AddressAdd: FunctionComponent = () => {
       city: addressCity,
       postal_code: addressPostalCode
     }))
-    console.log("response update address", response)
     dispatch(updateSelectedAddressId(addressId))
     dispatch(updateShowAddAddress(false))
   }

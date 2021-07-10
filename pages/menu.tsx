@@ -45,6 +45,7 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async ctx
       props: {
         ...(await serverSideTranslations((ctx as any).locale, ['header', 'footer', 'add-address'])),
         templateNumber: 0,
+        meta: responseIndex?.meta
       },
     }
   } catch (error) {
@@ -52,7 +53,7 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async ctx
   }
 })
 
-function Menu({ templateNumber }: any) {
+function Menu({ templateNumber, meta }: any) {
   const dispatch = useAppDispatch()
   
   useEffect(() => {
@@ -62,7 +63,7 @@ function Menu({ templateNumber }: any) {
     }
   }, [ ])
 
-  return <TemplateToShow templateList={templateList} templateNumber={templateNumber} pageContainer={{ showFooter: false }} />
+  return <TemplateToShow meta={meta} templateList={templateList} templateNumber={templateNumber} pageContainer={{ showFooter: false }} />
 }
 
 export default Menu
