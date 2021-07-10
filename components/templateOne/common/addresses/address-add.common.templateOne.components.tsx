@@ -21,7 +21,7 @@ import NodeApiHttpPostUpdateAddressRequest from "../../../../http/nodeapi/accoun
 import { LS_GUEST_USER_ADDRESS } from "../../../../constants/keys-local-storage.constants";
 import { updateError } from "../../../../redux/slices/common.slices.redux";
 import { updateSelectedAddressId } from "../../../../redux/slices/checkout.slices.redux";
-import { updateShowAddAddress } from "../../../../redux/slices/menu.slices.redux";
+import { updateShowAddAddress, updateShowOrderTypeSelect } from "../../../../redux/slices/menu.slices.redux";
 
 export interface IGuestAddress {
   floor: string
@@ -66,9 +66,10 @@ const TitleContainer = styled.div`
   flex: 1;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
   border-bottom: ${props => props.theme.border};
   margin: 0 0 ${props => props.theme.dimen.X4}px 0;
-  padding: ${props => props.theme.dimen.X4*2}px;
+  padding: 0 ${props => props.theme.dimen.X4}px;
 `
 
 const Title = styled.h3`
@@ -77,12 +78,13 @@ const Title = styled.h3`
 `
 
 const CloseButton = styled.div`
-  padding: 12px;
+  padding: 16px;
+  cursor: pointer;
   svg {
-    width: 32px;
-    height: 32px;
+    display: block;
+    width: 16px;
+    height: 16px;
     fill: #222;
-    cursor: pointer;
   }
 `
 
@@ -306,6 +308,11 @@ const AddressAdd: FunctionComponent = () => {
     dispatch(updateShowAddAddress(false))
   }
 
+  function onClickClose() {
+    dispatch(updateShowOrderTypeSelect(true))
+    dispatch(updateShowAddAddress(false))
+  }
+
   async function updateExistingAddress(bearerToken: string, addressId: number) {
     if (!isLoggedIn) return 
     await new NodeApiHttpPostUpdateAddressRequest(configuration, bearerToken).post({
@@ -334,7 +341,7 @@ const AddressAdd: FunctionComponent = () => {
     <ContentContainer>
       <TitleContainer>
         <Title>{t("@addNewAddress")}</Title>
-        <CloseButton>
+        <CloseButton onClick={onClickClose}>
           <SvgCross />
         </CloseButton>
       </TitleContainer>
