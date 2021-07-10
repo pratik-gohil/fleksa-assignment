@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { selectCustomer, updateCustomerName, updateCustomerEmail } from '../../../../redux/slices/user.slices.redux';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import PhoneInput from 'react-phone-input-2';
-import LoadingIndicator from '../../common/loadingIndicator/loading-indicator.common.templateOne.components';
 import NodeApiHttpPatchAccountProfileRequest from '../../../../http/nodeapi/account/post.account.nodeapi.http';
 import { selectBearerToken } from '../../../../redux/slices/user.slices.redux';
 import { selectConfiguration } from '../../../../redux/slices/configuration.slices.redux';
@@ -68,38 +67,6 @@ const TextContainer = styled.div<{ readOnly: boolean }>`
   cursor: ${(p) => (p.readOnly ? 'not-allowed' : 'none')};
 `;
 
-const ButtonContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 1rem 0;
-`;
-
-const Button = css`
-  padding: 0.8em 1.5em;
-  font-size: 1rem;
-  font-weight: 600;
-  outline: none;
-  border: none;
-  color: white;
-  border-radius: 10px;
-  max-width: max-content;
-  cursor: pointer;
-
-  &:hover {
-    filter: brightness(1.3);
-  }
-`;
-
-const UpdateButton = styled.button`
-  ${Button}
-  background-color: ${(p) => p.theme.textDarkColor};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
 const InputValue = styled.input<{ readOnly: boolean }>`
   outline: none;
   border: ${(p) => (!p.readOnly ? '1px solid #dddddd' : 'none')};
@@ -112,7 +79,6 @@ const InputValue = styled.input<{ readOnly: boolean }>`
   cursor: ${(p) => (p.readOnly ? 'not-allowed' : 'text')};
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    /* padding: 1rem; */
     font-size: 1rem;
   }
 `;
@@ -197,7 +163,6 @@ export const MyAccountRightSection = () => {
   const [isNameReadOnly, setIsNameReadOnly] = useState(true);
   const [phone, setPhone] = useState(`${customerData.country_code + '' + customerData.phone}`);
   const [countryCode, setCountryCode] = useState<number>(customerData.country_code || 49);
-  const [loading, setLoading] = useState(false);
 
   const bearerToken = useAppSelector(selectBearerToken);
   const configuration = useAppSelector(selectConfiguration);
@@ -205,16 +170,12 @@ export const MyAccountRightSection = () => {
 
   const hanldeUpdateButtonClick = async () => {
     try {
-      setLoading(true);
-
       const response = await new NodeApiHttpPatchAccountProfileRequest(configuration, bearerToken as any).post({
         updating_values: {
           email,
           name,
         },
       });
-
-      setLoading(false);
 
       if (!response.result) {
         dispatch(
@@ -242,7 +203,6 @@ export const MyAccountRightSection = () => {
       );
     } catch (e) {
       console.log('e : ', e);
-      setLoading(false);
       dispatch(
         updateError({
           show: true,
@@ -261,7 +221,14 @@ export const MyAccountRightSection = () => {
         <Content>
           <TitleContainer>
             <Title>Name</Title>
-            <IconContainer onClick={() => setIsNameReadOnly(!isNameReadOnly)} readOnly={isNameReadOnly}>
+            <IconContainer
+              onClick={async () => {
+                setIsNameReadOnly(!isNameReadOnly);
+                if (!isNameReadOnly && customerData.name !== name) await hanldeUpdateButtonClick();
+              }}
+              readOnly={isNameReadOnly}
+              title="Click to Edit"
+            >
               <PencilIcon />
             </IconContainer>
           </TitleContainer>
@@ -281,7 +248,14 @@ export const MyAccountRightSection = () => {
               </NotVerifyIndigator>
             </TitleHeader>
 
-            <IconContainer onClick={() => setIsEmailReadOnly(!isEmailReadOnly)} readOnly={isEmailReadOnly}>
+            <IconContainer
+              onClick={async () => {
+                setIsEmailReadOnly(!isEmailReadOnly);
+                if (!isEmailReadOnly && customerData.email !== email) await hanldeUpdateButtonClick();
+              }}
+              readOnly={isEmailReadOnly}
+              title="Click to Edit"
+            >
               <PencilIcon />
             </IconContainer>
           </TitleContainer>
@@ -314,12 +288,6 @@ export const MyAccountRightSection = () => {
               inputStyle={{ border: 'none' }}
             />
           </TextContainer>
-        </Content>
-
-        <Content>
-          <ButtonContainer>
-            <UpdateButton onClick={hanldeUpdateButtonClick}>{loading ? <LoadingIndicator width={20} /> : 'Update'}</UpdateButton>
-          </ButtonContainer>
         </Content>
       </ContentContainer>
     </Wrapper>
