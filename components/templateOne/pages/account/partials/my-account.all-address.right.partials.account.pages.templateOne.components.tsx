@@ -99,6 +99,11 @@ const BaseInputStyle = css`
   font-weight: 300;
   color: ${(p) => p.theme.textDarkColor};
   width: 100%;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    font-size: 0.8rem;
+    padding: 0.8rem;
+  }
 `;
 
 const Input = styled.input`

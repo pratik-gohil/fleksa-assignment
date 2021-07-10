@@ -54,6 +54,8 @@ const Message = styled.p`
   @media (max-width: ${BREAKPOINTS.sm}px) {
     width: 90%;
     padding: 0 0.5rem;
+
+    font-size: 1rem;
   }
 `;
 
