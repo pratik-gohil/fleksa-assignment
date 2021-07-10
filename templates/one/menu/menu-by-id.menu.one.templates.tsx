@@ -73,10 +73,11 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
       </Row>
     </Container>
     <MenuPageCartSummary />
-    {((showSelectOrderType || orderType === null) && !showAddAddress) && <OrderTypeManager key="key-ajkndalkwdmalkwmdlkw" />}
-    {(showAddAddress
-      || (orderType === "DELIVERY" && checkoutAddressId === null
-      && orderType === "DELIVERY" && window.localStorage.getItem(LS_GUEST_USER_ADDRESS) === undefined)) && <AddressAdd />}
+    {((showSelectOrderType || orderType === null) && !showAddAddress)
+      ? <OrderTypeManager key="key-ajkndalkwdmalkwmdlkw" />
+      : (showAddAddress
+        || (orderType === "DELIVERY" && checkoutAddressId === null
+        && orderType === "DELIVERY" && !window.localStorage.getItem(LS_GUEST_USER_ADDRESS))) && <AddressAdd />}
   </>
 }
 

@@ -35,10 +35,11 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
         </EditContainer>
       </Col>
     </Row>
-    {((showSelectOrderType || orderType === null) && !showAddAddress) && <OrderTypeManager key="key-ajkndalkwdmalkwmdlkw" />}
-    {(showAddAddress
-      || (orderType === "DELIVERY" && checkoutAddressId === null
-      && orderType === "DELIVERY" && window.localStorage.getItem(LS_GUEST_USER_ADDRESS) === undefined)) && <AddressAdd />}
+    {((showSelectOrderType || orderType === null) && !showAddAddress)
+      ? <OrderTypeManager key="key-ajkndalkwdmalkwmdlkw" />
+      : (showAddAddress
+        || (orderType === "DELIVERY" && checkoutAddressId === null
+        && orderType === "DELIVERY" && !window.localStorage.getItem(LS_GUEST_USER_ADDRESS))) && <AddressAdd />}
     {showDateTimeSelect && <CheckoutDateTime />}
   </StyledCheckoutCard>
 }

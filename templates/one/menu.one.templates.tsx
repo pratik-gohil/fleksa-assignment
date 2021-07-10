@@ -6,7 +6,8 @@ import { useEffect } from "react";
 import { selectSiblings } from "../../redux/slices/index.slices.redux";
 import { useState } from "react";
 import { ITimingsDay } from "../../interfaces/common/shop.common.interfaces";
-import { ICheckoutOrderTypes, updateOrderType } from "../../redux/slices/checkout.slices.redux";
+import { ICheckoutOrderTypes, updateClearCheckout, updateOrderType } from "../../redux/slices/checkout.slices.redux";
+import { updateClearCart } from "../../redux/slices/cart.slices.redux";
 
 type Filters = "has_pickup"|"has_delivery"|"has_dinein"
 
@@ -211,12 +212,18 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
         orderType = "PICKUP"
         break
     }
+
+    console.log("orderType", orderType)
     dispatch(updateOrderType(orderType))
   }
 
   useEffect(() => {
     initMap()
-    setFilterAndOrderType("has_delivery")
+    if (typeof window !== "undefined") {
+      dispatch(updateClearCart())
+      dispatch(updateClearCheckout())
+      setFilterAndOrderType("has_delivery")
+    }
   }, [ ])
 
   return <ColumnContainer>
