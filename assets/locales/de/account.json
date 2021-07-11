@@ -16,16 +16,13 @@
   "@city": "Stadt",
   "@postal-code": "Postleitzahl",
   "@address-type": "Adresstyp",
-
   "@order": "Auftrag",
   "@review-now": "Jetzt bewerten",
   "@view-receipt": "Quittung anzeigen",
-
   "@profile": "Profil",
   "@my-orders": "meine Bestellungen",
   "@address": "Adressen",
   "@logout": "Ausloggen",
-
   "@placed-on": "Platziert auf",
   "@at": "beim",
   "@payment-method": "Zahlungsmethode",
@@ -36,12 +33,9 @@
   "@total": "Gesamt",
   "@subtotal": "Zwischensumme",
   "@tip": "Trinkgeld",
-
   "@update-success": "Erfolgreich aktualisiert 🙌",
   "@remove-success": "Erfolgreich entfernt 🙌",
   "@add-success": "Wohoo 🎉 Erfolgreich hinzugefügt!",
-
   "@oops-error": "Oops! Something went wrong.",
-
   "@confirmation": "Bist du sicher?"
 }

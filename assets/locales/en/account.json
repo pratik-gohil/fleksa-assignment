@@ -16,16 +16,13 @@
   "@city": "City",
   "@postal-code": "Postal Code",
   "@address-type": "Address Type",
-
   "@order": "Order",
   "@review-now": "Review Now",
   "@view-receipt": "View Receipt",
-
   "@profile": "Profile",
   "@my-orders": "My Orders",
   "@address": "Addresses",
   "@logout": "Log out",
-
   "@placed-on": "Placed On",
   "@at": "at",
   "@payment-method": "Payment Method",
@@ -36,12 +33,9 @@
   "@total": "Total",
   "@subtotal": "Subtotal",
   "@tip": "Tip",
-
   "@update-success": "Updated successfully 🙌",
   "@remove-success": "Removed successfully 🙌",
   "@add-success": "Wohoo 🎉 Successfully added!",
-
   "@oops-error": "Oops! Something went wrong.",
-
   "@confirmation": "Are you sure?"
 }
