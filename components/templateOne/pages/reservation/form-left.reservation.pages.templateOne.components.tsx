@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PhoneInput from 'react-phone-input-2';
 import styled, { css } from 'styled-components';
 import NodeApiHttpPostRervation from '../../../../http/nodeapi/reservation/post.reservation.nodeapi.http';
@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { updateError } from '../../../../redux/slices/common.slices.redux';
 import { selectConfiguration, updateShowLogin } from '../../../../redux/slices/configuration.slices.redux';
 import { selectShop } from '../../../../redux/slices/index.slices.redux';
-import { selectBearerToken } from '../../../../redux/slices/user.slices.redux';
+import { selectBearerToken, selectCustomer, selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
 import { ILabelValue } from '../../../../utils/restaurant-timings.utils';
 import { useRouter } from 'next/router';
 
@@ -124,19 +124,20 @@ interface IFormLeftInputsProps {
 }
 
 const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
+  const bearerToken = useAppSelector(selectBearerToken);
+  const configuration = useAppSelector(selectConfiguration);
+  const shopData = useAppSelector(selectShop);
+  const customerData = useAppSelector(selectCustomer);
+  const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [comment, setComment] = useState('');
   const [countryCode, setCountryCode] = useState<number>(49);
   const [loading, setLoading] = useState(false);
-
-  const bearerToken = useAppSelector(selectBearerToken);
-  const configuration = useAppSelector(selectConfiguration);
-  const shopData = useAppSelector(selectShop);
-
-  const dispatch = useAppDispatch();
-  const router = useRouter();
 
   const handleReserveButtonClick = async () => {
     try {
@@ -191,6 +192,15 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
       );
     }
   };
+
+  // TODO: Pre filling if logged in user
+  useEffect(() => {
+    if (isLoggedIn) {
+      setPhone(`${customerData.country_code}${customerData.phone}`);
+      setEmail(customerData?.email || '');
+      setName(customerData.name);
+    }
+  }, []);
 
   return (
     <Wrapper>
