@@ -97,7 +97,7 @@ const InfoContainerCenter = styled.div`
 const LogoContainer = styled.div`
   width: 50px;
   height: 40px;
-  margin-right: 1rem;
+  margin-right: 0.5rem;
 `;
 
 const Logo = styled.img`
