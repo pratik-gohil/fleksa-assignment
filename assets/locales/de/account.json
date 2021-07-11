@@ -4,9 +4,44 @@
   "@phone": "Telefonnummer",
   "@click-to-edit": "Zum Bearbeiten anklicken",
   "@not-verified": "Nicht verifiziert",
+  "@verify": "Überprüfen",
+  "@address-title": "Meine Adresse",
+  "@add-new-address": "Neue Adresse",
+  "@update-your-address": "Aktualisieren Sie Ihre Adresse",
+  "@update-address": "Adresse aktualisieren",
+  "@save-address": "Adresse speichern",
+  "@add-your-address": "Neue Adresse hinzufügen",
+  "@street": "Straße und Hausnummer",
+  "@details": "Details(Tür, Wohnung, Anzahl)",
+  "@city": "Stadt",
+  "@postal-code": "Postleitzahl",
+  "@address-type": "Adresstyp",
 
-  "@update-success": "Erfolgreich aktualisiert",
-  "@oops-error": "Hoppla! Etwas ist schief gelaufen.",
+  "@order": "Auftrag",
+  "@review-now": "Jetzt bewerten",
+  "@view-receipt": "Quittung anzeigen",
 
-  "@confirmation": "Are you sure?"
+  "@profile": "Profil",
+  "@my-orders": "meine Bestellungen",
+  "@address": "Adressen",
+  "@logout": "Ausloggen",
+
+  "@placed-on": "Platziert auf",
+  "@at": "beim",
+  "@payment-method": "Zahlungsmethode",
+  "@delivery-time": "Lieferzeit",
+  "@delivery-address": "Lieferadresse",
+  "@delivery-fee": "Liefergebühr",
+  "@order-type": "Auftragsart",
+  "@total": "Gesamt",
+  "@subtotal": "Zwischensumme",
+  "@tip": "Trinkgeld",
+
+  "@update-success": "Erfolgreich aktualisiert 🙌",
+  "@remove-success": "Erfolgreich entfernt 🙌",
+  "@add-success": "Wohoo 🎉 Erfolgreich hinzugefügt!",
+
+  "@oops-error": "Oops! Something went wrong.",
+
+  "@confirmation": "Bist du sicher?"
 }
