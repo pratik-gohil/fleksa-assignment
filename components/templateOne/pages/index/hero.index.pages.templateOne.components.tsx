@@ -28,9 +28,9 @@ const ImageContainer = styled.div`
 
 const ContentContainer = styled.div`
   position: absolute;
-  left: 0;
+  left: -12rem;
   right: 0;
-  top: -7rem;
+  top: -5rem;
   bottom: 0;
   background: rgb(0, 0, 0);
   background: linear-gradient(90deg, rgba(0, 0, 0, 0.4962359943977591) 0%, rgba(255, 255, 255, 0) 100%);
@@ -41,10 +41,10 @@ const ContentContainer = styled.div`
 
   div {
     align-self: center;
-    width: 80%;
   }
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
+    left: 0;
     div {
       width: 100%;
     }
@@ -120,7 +120,7 @@ const Logo = styled.img`
 const IndexPageHero: FunctionComponent = ({}) => {
   const language = useAppSelector(selectLanguage);
   const shopData = useAppSelector(selectShop);
-  const selectedMenuId = useAppSelector(selectSelectedMenu)
+  const selectedMenuId = useAppSelector(selectSelectedMenu);
   const { t } = useTranslation('page-index');
 
   return (
@@ -128,19 +128,14 @@ const IndexPageHero: FunctionComponent = ({}) => {
       <ImageContainer>{shopData?.cover && <Image src={shopData?.cover} layout="fill" loading="eager" objectFit="cover" />}</ImageContainer>
 
       <ContentContainer>
-        <Container fluid>
+        <Container>
           <Row>
-            <Col
-              style={{
-                padding: 0,
-                margin: 0,
-              }}
-            >
+            <Col>
               <LogoLink href="/">{!!shopData?.logo && <Logo src={shopData?.logo} loading="lazy" />}</LogoLink>
 
               <Title>{shopData?.name}</Title>
               <SubTitle>{shopData?.category_json[language]}</SubTitle>
-              <OrderButton href={selectedMenuId? `/menu/${selectedMenuId}`: "/menu"}>{t('@order-online')}</OrderButton>
+              <OrderButton href={selectedMenuId ? `/menu/${selectedMenuId}` : '/menu'}>{t('@order-online')}</OrderButton>
             </Col>
           </Row>
         </Container>

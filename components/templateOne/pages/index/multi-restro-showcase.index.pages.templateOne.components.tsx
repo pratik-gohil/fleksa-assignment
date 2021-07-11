@@ -108,15 +108,15 @@ const Logo = styled.img`
 const responsive: IResponsive = {
   sm: {
     width: 300,
-    height: 460,
+    height: 370,
   },
   md: {
     width: 300,
-    height: 460,
+    height: 370,
   },
   lg: {
     width: 300,
-    height: 420,
+    height: 370,
   },
   xl: {
     width: 300,
@@ -124,7 +124,7 @@ const responsive: IResponsive = {
   },
   xxl: {
     width: 360,
-    height: 480,
+    height: 370,
   },
 };
 
