@@ -1,0 +1,9 @@
+{
+  "@name": "Name",
+  "@email": "Email",
+  "@phone": "Phone Number",
+  "@click-to-edit": "Click to Edit",
+  "@not-verified": "Not Verified",
+  "@update-success": "Updated successfully 🙌",
+  "@oops-error": "Oops! Something went wrong."
+}

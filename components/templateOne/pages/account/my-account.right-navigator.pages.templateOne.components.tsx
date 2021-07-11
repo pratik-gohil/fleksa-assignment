@@ -11,6 +11,7 @@ import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import PencilIconPath from '../../../../public/assets/svg/pencil.svg';
 import InfoRedIconPath from '../../../../public/assets/svg/account/info_red.svg';
 import MobileBackButton from '../../common/backButton/backButton.common.templateOne.components';
+import { useTranslation } from 'next-i18next';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -156,6 +157,7 @@ const NotVerifyText = styled.p`
 
 export const MyAccountRightSection = () => {
   const customerData = useAppSelector(selectCustomer);
+  const { t } = useTranslation('account-profile');
 
   const [email, setEmail] = useState(customerData.email);
   const [isEmailReadOnly, setIsEmailReadOnly] = useState(true);
@@ -197,7 +199,7 @@ export const MyAccountRightSection = () => {
       dispatch(
         updateError({
           show: true,
-          message: 'Updated successfully 🙌',
+          message: t('@update-success'),
           severity: 'success',
         }),
       );
@@ -206,7 +208,7 @@ export const MyAccountRightSection = () => {
       dispatch(
         updateError({
           show: true,
-          message: 'Ooops! Something went wrong.',
+          message: t('@oops-error'),
           severity: 'error',
         }),
       );
@@ -220,14 +222,14 @@ export const MyAccountRightSection = () => {
       <ContentContainer>
         <Content>
           <TitleContainer>
-            <Title>Name</Title>
+            <Title>{t('@name')}</Title>
             <IconContainer
               onClick={async () => {
                 setIsNameReadOnly(!isNameReadOnly);
                 if (!isNameReadOnly && customerData.name !== name) await hanldeUpdateButtonClick();
               }}
               readOnly={isNameReadOnly}
-              title="Click to Edit"
+              title={t('@click-to-edit')}
             >
               <PencilIcon />
             </IconContainer>
@@ -241,9 +243,9 @@ export const MyAccountRightSection = () => {
         <Content>
           <TitleContainer>
             <TitleHeader>
-              <Title>Email</Title>
+              <Title>{t('@email')}</Title>
               <NotVerifyIndigator readOnly={isEmailReadOnly} isEmailVerify={!!customerData.email_verified}>
-                <NotVerifyText>Not Verified</NotVerifyText>
+                <NotVerifyText>{t('@not-verified')}</NotVerifyText>
                 <InfoRedIcon />
               </NotVerifyIndigator>
             </TitleHeader>
@@ -269,7 +271,7 @@ export const MyAccountRightSection = () => {
 
         <Content>
           <TitleContainer>
-            <Title>Phone Number</Title>
+            <Title>{t('@phone')}</Title>
           </TitleContainer>
 
           <TextContainer readOnly={true}>
