@@ -6,6 +6,7 @@ import { selectCustomer } from '../../../../redux/slices/user.slices.redux';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useState } from 'react';
+import { useTranslation } from 'next-i18next';
 
 const Wrapper = styled.div`
   background: ${(p) => p.theme.textDarkColor};
@@ -96,6 +97,8 @@ const ActiveUnderline = styled.span<{ active: boolean }>`
 export const MyAccountLeftSection = () => {
   const customerData = useAppSelector(selectCustomer);
   const router = useRouter();
+  const { t } = useTranslation('account');
+
   const [dynamicLink, setDynamicLink] = useState('/account');
 
   useEffect(() => {
@@ -113,19 +116,19 @@ export const MyAccountLeftSection = () => {
         </FlagImage>
 
         <Link href={dynamicLink} active={router.pathname === '/account'}>
-          Profile
+          {t('@profile')}
           <ActiveUnderline active={router.pathname === '/account'} />
         </Link>
         <Link href="/account/order-history" active={router.pathname === '/account/order-history'}>
-          My Orders
+          {t('@my-orders')}
           <ActiveUnderline active={router.pathname === '/account/order-history'} />
         </Link>
         <Link href="/account/addresses" active={router.pathname === '/account/addresses'}>
-          Address
+          {t('@address')}
           <ActiveUnderline active={router.pathname === '/account/addresses'} />
         </Link>
 
-        <LougoutButton href="/logout">Log out</LougoutButton>
+        <LougoutButton href="/logout">{t('@logout')}</LougoutButton>
       </LinkContainer>
     </Wrapper>
   );

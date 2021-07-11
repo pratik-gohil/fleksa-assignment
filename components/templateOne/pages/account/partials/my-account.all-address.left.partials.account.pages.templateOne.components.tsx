@@ -12,6 +12,7 @@ import NodeApiHttpPostDeleteAddressRequest from '../../../../../http/nodeapi/acc
 import { selectConfiguration } from '../../../../../redux/slices/configuration.slices.redux';
 import { updateError } from '../../../../../redux/slices/common.slices.redux';
 import { deleteCustomerAddress } from '../../../../../redux/slices/user.slices.redux';
+import { useTranslation } from 'next-i18next';
 
 const HomeIconPath = '/assets/svg/account/home.svg';
 const WorkIconPath = '/assets/svg/account/work.svg';
@@ -194,6 +195,7 @@ const MyAccountAllAddressLeftSide: FunctionComponent<IMyAccountAllAddressLeftSid
   const addressess = useAppSelector(selectCustomer).all_address;
   const bearerToken = useAppSelector(selectBearerToken);
   const configuration = useAppSelector(selectConfiguration);
+  const { t } = useTranslation('account');
   const dispatch = useAppDispatch();
 
   const handleUpdateAddressButton = async (_e: React.MouseEvent<HTMLButtonElement, MouseEvent>, address: IParticularAddress) => {
@@ -208,7 +210,7 @@ const MyAccountAllAddressLeftSide: FunctionComponent<IMyAccountAllAddressLeftSid
   };
 
   const handleDeleteAddressButton = async (_e: any, id: number) => {
-    if (!confirm('Are you sure ?')) return;
+    if (!confirm(t('@confirmation'))) return;
 
     try {
       const response = await new NodeApiHttpPostDeleteAddressRequest(configuration, bearerToken as any).post({
@@ -232,7 +234,7 @@ const MyAccountAllAddressLeftSide: FunctionComponent<IMyAccountAllAddressLeftSid
       dispatch(
         updateError({
           show: true,
-          message: 'Removed Successfully!',
+          message: t('@remove-success'),
           severity: 'success',
         }),
       );
@@ -243,7 +245,7 @@ const MyAccountAllAddressLeftSide: FunctionComponent<IMyAccountAllAddressLeftSid
       dispatch(
         updateError({
           show: true,
-          message: 'Ooops! Something went wrong.',
+          message: t('@oops-error'),
           severity: 'error',
         }),
       );
@@ -253,7 +255,7 @@ const MyAccountAllAddressLeftSide: FunctionComponent<IMyAccountAllAddressLeftSid
   return (
     <Wrapper>
       <Header>
-        <Title>My Addresses</Title>
+        <Title>{t('@address-title')}</Title>
       </Header>
 
       <Container>
@@ -289,7 +291,7 @@ const MyAccountAllAddressLeftSide: FunctionComponent<IMyAccountAllAddressLeftSid
           <AddNewAddressButton onClick={() => handleShowNewAddressModal(false)}>
             <PlusIcon />
 
-            <Text>New Address</Text>
+            <Text>{t('@add-new-address')}</Text>
           </AddNewAddressButton>
         )}
       </Container>

@@ -12,6 +12,7 @@ import { IParticularAddress } from '../../../../../interfaces/common/customer.co
 import NodeApiHttpPostUpdateAddressRequest from '../../../../../http/nodeapi/account/post.update-address.nodeapi.http';
 import { useEffect } from 'react';
 import { BREAKPOINTS } from '../../../../../constants/grid-system-configuration';
+import { useTranslation } from 'next-i18next';
 
 const HomeIconPath = '/assets/svg/account/home.svg';
 const WorkIconPath = '/assets/svg/account/work.svg';
@@ -212,6 +213,7 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
 
   const bearerToken = useAppSelector(selectBearerToken);
   const configuration = useAppSelector(selectConfiguration);
+  const { t } = useTranslation('account');
   const dispatch = useAppDispatch();
 
   const handleCreateNewAddressFormRequest = async (e: FormEvent) => {
@@ -256,7 +258,7 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
       dispatch(
         updateError({
           show: true,
-          message: 'Wohoo 🎉 Successfully added!',
+          message: t('@add-success'),
           severity: 'success',
         }),
       );
@@ -269,7 +271,7 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
       dispatch(
         updateError({
           show: true,
-          message: 'Ooops! Something went wrong.',
+          message: t('@oops-error'),
           severity: 'error',
         }),
       );
@@ -311,7 +313,7 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
       dispatch(
         updateError({
           show: true,
-          message: 'Updated Successfully!',
+          message: t('@update-success'),
           severity: 'success',
         }),
       );
@@ -333,7 +335,7 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
       dispatch(
         updateError({
           show: true,
-          message: 'Ooops! Something went wrong.',
+          message: t('@oops-error'),
           severity: 'error',
         }),
       );
@@ -369,13 +371,12 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
   return (
     <Wrapper>
       <Header>
-        <Title>{isEditMode ? 'Update Your Address' : 'Add New Address'}</Title>
-        {/* <CloseIcon src={'/assets/svg/x-circle.svg'} /> */}
+        <Title>{isEditMode ? t('@update-your-address') : t('@add-your-address')}</Title>
       </Header>
 
       <FormContainer onSubmit={handleCreateNewAddressFormRequest}>
         <InputBox>
-          <Label>Street Address and Building number</Label>
+          <Label>{t('@street')}</Label>
 
           <InputBoxFlex1>
             <Input type="text" required={true} value={address} onChange={(e) => setAddress(e.target.value)} />
@@ -384,24 +385,24 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
         </InputBox>
 
         <InputBox>
-          <Label>Details(Door, Apartment, Number)</Label>
+          <Label>{t('@details')}</Label>
           <Input type="text" value={proximity} onChange={(e) => setProximity(e.target.value)} />
         </InputBox>
 
         <InputBoxFlex2>
           <InputBox>
-            <Label>City</Label>
+            <Label>{t('@city')}</Label>
             <Input type="text" required={true} value={city} onChange={(e) => setCity(e.target.value)} />
           </InputBox>
 
           <InputBox>
-            <Label>Postal Code</Label>
+            <Label>{t('@postal-code')}</Label>
             <Input type="text" required={true} value={postalCode} onChange={(e) => setPostalCode(e.target.value)} />
           </InputBox>
         </InputBoxFlex2>
 
         <AddressTypeContainer>
-          <Label>Address Type</Label>
+          <Label>{t('@address-type')}</Label>
 
           <IconContainer>
             <AddressType type="button" active={type === 'HOME'} onClick={() => setType('HOME')}>
@@ -417,7 +418,7 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
         </AddressTypeContainer>
 
         <SaveAddressButton type="submit">
-          {loading ? <LoadingIndicator width={20} /> : isEditMode ? 'Update Address' : 'Save Address'}
+          {loading ? <LoadingIndicator width={20} /> : isEditMode ? t('@update-address') : t('@save-address')}
         </SaveAddressButton>
       </FormContainer>
     </Wrapper>

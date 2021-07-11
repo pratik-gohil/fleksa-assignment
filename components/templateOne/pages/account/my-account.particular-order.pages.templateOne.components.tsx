@@ -5,6 +5,7 @@ import { useAppSelector } from '../../../../redux/hooks.redux';
 import { selectCustomer } from '../../../../redux/slices/user.slices.redux';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import MobileBackButton from '../../common/backButton/backButton.common.templateOne.components';
+import { useTranslation } from 'next-i18next';
 
 const Wrapper = styled.section`
   height: calc(100vh - ${(p) => p.theme.navDesktop.height}px);
@@ -157,6 +158,7 @@ const SetGap = styled.hr`
 
 const AccountPageParticularOrder: FunctionComponent = ({}) => {
   const order = useAppSelector(selectCustomer).current_order;
+  const { t } = useTranslation('account');
 
   return (
     <Wrapper>
@@ -164,14 +166,14 @@ const AccountPageParticularOrder: FunctionComponent = ({}) => {
 
       <MainSection>
         <ReceiptButton href={order?.pdf_url} target="_blank" rel="noopener noreferrer">
-          View Receipt
+          {t('@view-receipt')}
         </ReceiptButton>
         <Container>
           <LeftContainer>
             <Content>
-              <Label>Placed On</Label>
+              <Label>{t('@placed-on')}</Label>
               <Value>
-                {moment(new Date(`${order?.created_at}`)).format('ll')} at {moment(new Date(`${order?.created_at}`)).format('HH:mm')}
+                {moment(new Date(`${order?.created_at}`)).format('ll')} {t('@at')} {moment(new Date(`${order?.created_at}`)).format('HH:mm')}
               </Value>
             </Content>
 
@@ -195,20 +197,20 @@ const AccountPageParticularOrder: FunctionComponent = ({}) => {
             <PriceContainer>
               {!!order?.price.tip && (
                 <BasePrice>
-                  <PriceLabel>Tip</PriceLabel>
+                  <PriceLabel>{t('@tip')}</PriceLabel>
                   <PriceValue>{order?.price.tip.toFixed(2).replace('.', ',')} €</PriceValue>
                 </BasePrice>
               )}
 
               {!!order?.price.delivery_fee && (
                 <BasePrice>
-                  <PriceLabel>Delivery Fee</PriceLabel>
+                  <PriceLabel>{t('@delivery-fee')}</PriceLabel>
                   <PriceValue>{order?.price.delivery_fee.toFixed(2).replace('.', ',')} €</PriceValue>
                 </BasePrice>
               )}
 
               <BasePrice>
-                <PriceLabel>Subtotal</PriceLabel>
+                <PriceLabel>{t('@subtotal')}</PriceLabel>
                 <PriceValue>{order?.price.sub_total.toFixed(2).replace('.', ',')} €</PriceValue>
               </BasePrice>
 
@@ -219,7 +221,7 @@ const AccountPageParticularOrder: FunctionComponent = ({}) => {
                     fontSize: '1.2rem',
                   }}
                 >
-                  Total
+                  {t('@total')}
                 </PriceLabel>
                 <PriceValue
                   style={{
@@ -234,7 +236,7 @@ const AccountPageParticularOrder: FunctionComponent = ({}) => {
 
           <RightContainer>
             <Content>
-              <Label>Order Type</Label>
+              <Label>{t('@order-type')}</Label>
               <Value>{order?.order_type}</Value>
             </Content>
 
@@ -243,7 +245,7 @@ const AccountPageParticularOrder: FunctionComponent = ({}) => {
             {order?.is_delivery && (
               <>
                 <Content>
-                  <Label>Delivery Address</Label>
+                  <Label>{t('@delivery-address')}</Label>
                   <Value>
                     {order?.delivery_address?.address}, {order?.delivery_address?.city}
                   </Value>
@@ -255,9 +257,9 @@ const AccountPageParticularOrder: FunctionComponent = ({}) => {
             {order?.is_delivery && (
               <>
                 <Content>
-                  <Label>Delivery Time</Label>
+                  <Label>{t('@delivery-time')}</Label>
                   <Value>
-                    {moment(new Date(`${order?.delivered_at}`)).format('ll')} at {moment(new Date(`${order?.delivered_at}`)).format('HH:mm')}
+                    {moment(new Date(`${order?.delivered_at}`)).format('ll')} {t('@at')} {moment(new Date(`${order?.delivered_at}`)).format('HH:mm')}
                   </Value>
                 </Content>
                 <SetGap />
@@ -265,7 +267,7 @@ const AccountPageParticularOrder: FunctionComponent = ({}) => {
             )}
 
             <Content>
-              <Label>Payment Method</Label>
+              <Label>{t('@payment-method')}</Label>
               <Value>{order?.payment_method}</Value>
             </Content>
           </RightContainer>

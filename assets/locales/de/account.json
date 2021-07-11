@@ -4,6 +4,9 @@
   "@phone": "Telefonnummer",
   "@click-to-edit": "Zum Bearbeiten anklicken",
   "@not-verified": "Nicht verifiziert",
+
   "@update-success": "Erfolgreich aktualisiert",
-  "@oops-error": "Hoppla! Etwas ist schief gelaufen."
+  "@oops-error": "Hoppla! Etwas ist schief gelaufen.",
+
+  "@confirmation": "Are you sure?"
 }

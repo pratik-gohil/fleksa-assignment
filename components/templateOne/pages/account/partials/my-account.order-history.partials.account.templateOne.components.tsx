@@ -2,6 +2,7 @@ import React, { FunctionComponent } from 'react';
 import { IParticularOrder } from '../../../../../interfaces/common/customer.common.interfaces';
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../../constants/grid-system-configuration';
+import { useTranslation } from 'next-i18next';
 
 const Container = styled.div`
   max-width: 500px;
@@ -116,14 +117,19 @@ interface IMyAccountOrderProps {
 
 export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order }) => {
   const customDate = new Date(`${order.created_at}`);
+  const { t } = useTranslation('account');
 
   return (
     <Container>
       <TextContainer>
         <Left>
-          <OrderId href={`/account/order/${order.id}`}>Order #{order.id}</OrderId>
+          <OrderId href={`/account/order/${order.id}`}>
+            {t('@order')} #{order.id}
+          </OrderId>
           <Type>{order.order_type}</Type>
-          <Quantity>{order.no_of_products} items</Quantity>
+          <Quantity>
+            {order.no_of_products} {t('@items')}
+          </Quantity>
           {/* <Status>{order.payment_status ? order.payment_status :  'UNPAID' }</Status> */}
         </Left>
         <Right>
@@ -140,9 +146,9 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
       </TextContainer>
 
       <ButtonContainer>
-        <Button href={`/account/order/${order.id}`}>Review Now</Button>
+        <Button href={`/account/order/${order.id}`}>{t('@review-now')}</Button>
         <Receipt target="_blank" rel="noopener noreferrer" back="fill" href={order?.pdf_url}>
-          View Receipt
+          {t('@view-receipt')}
         </Receipt>
       </ButtonContainer>
     </Container>

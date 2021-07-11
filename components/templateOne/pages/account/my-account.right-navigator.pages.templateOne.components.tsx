@@ -157,7 +157,7 @@ const NotVerifyText = styled.p`
 
 export const MyAccountRightSection = () => {
   const customerData = useAppSelector(selectCustomer);
-  const { t } = useTranslation('account-profile');
+  const { t } = useTranslation('account');
 
   const [email, setEmail] = useState(customerData.email);
   const [isEmailReadOnly, setIsEmailReadOnly] = useState(true);
@@ -265,7 +265,7 @@ export const MyAccountRightSection = () => {
           <TextEmailContainer readOnly={isEmailReadOnly}>
             <EmailInputValue type="email" value={email} onChange={(e) => setEmail(e.target.value)} readOnly={isEmailReadOnly} />
 
-            {!customerData.email_verified && <VerifyButton readOnly={isEmailReadOnly}>Verify</VerifyButton>}
+            {!customerData.email_verified && <VerifyButton readOnly={isEmailReadOnly}>{t('@verify')}</VerifyButton>}
           </TextEmailContainer>
         </Content>
 
