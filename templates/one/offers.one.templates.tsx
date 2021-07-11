@@ -53,7 +53,8 @@ const HeroImage = styled.img`
 `;
 
 const ContentContainer = styled.div`
-  height: 500px;
+  min-height: 600px;
+  max-height: 800px;
   margin-bottom: 1rem;
   position: relative;
   padding: 1rem;
@@ -104,7 +105,7 @@ const MainTitle = styled.h2`
 `;
 
 const Image = styled.img`
-  object-fit: cover;
+  object-fit: contain;
   height: 100%;
   width: 100%;
 `;
