@@ -8,22 +8,20 @@ import styled from "styled-components";
 import { BREAKPOINTS } from "../../../../constants/grid-system-configuration";
 import PyApiHttpPostAddress from "../../../../http/pyapi/address/post.address.pyapi.http";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
-import { selectConfiguration } from "../../../../redux/slices/configuration.slices.redux";
-import { selectShop } from "../../../../redux/slices/index.slices.redux";
+import { selectConfiguration, selectSelectedMenuUrlpath } from "../../../../redux/slices/configuration.slices.redux";
 import { selectAddressByType, selectBearerToken, selectIsUserLoggedIn, updateExistCustomerAddress, updateNewCustomerAddress } from "../../../../redux/slices/user.slices.redux";
-// import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
-// import { selectLanguageCode } from "../../../../redux/slices/configuration.slices.redux";
 
 import SvgHome from "../../../../public/assets/svg/address/home.svg";
 import SvgWork from "../../../../public/assets/svg/address/work.svg";
 import SvgMap from "../../../../public/assets/svg/address/map.svg";
+import SvgCross from "../../../../public/assets/svg/cross.svg";
 import { AddressTypes } from "./address-manager.common.templateOne.components";
 import NodeApiHttpPostCreateNewAddressRequest from "../../../../http/nodeapi/account/post.create-address.nodeapi.http";
 import NodeApiHttpPostUpdateAddressRequest from "../../../../http/nodeapi/account/post.update-address.nodeapi.http";
 import { LS_GUEST_USER_ADDRESS } from "../../../../constants/keys-local-storage.constants";
 import { updateError } from "../../../../redux/slices/common.slices.redux";
 import { updateSelectedAddressId } from "../../../../redux/slices/checkout.slices.redux";
-import { updateShowAddAddress } from "../../../../redux/slices/menu.slices.redux";
+import { updateShowAddAddress, updateShowOrderTypeSelect } from "../../../../redux/slices/menu.slices.redux";
 
 export interface IGuestAddress {
   floor: string
@@ -63,22 +61,32 @@ const ContentContainer = styled.div`
   padding: 0 0 ${props => props.theme.dimen.X4}px 0;
 `
 
-const Title = styled.h3`
-  margin: 0 0 ${props => props.theme.dimen.X4}px 0;
-  padding: ${props => props.theme.dimen.X4*2}px 0;
-  text-align: center;
-  line-height: 1;
+const TitleContainer = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
   border-bottom: ${props => props.theme.border};
+  margin: 0 0 ${props => props.theme.dimen.X4}px 0;
+  padding: 0 ${props => props.theme.dimen.X4}px;
 `
 
-// const SubTitle = styled.h4<{ selected: boolean }>`
-//   padding: 0;
-//   margin: 0;
-//   font-size: 16px;
-//   font-weight: 400;
-//   line-height: 1;
-//   color: ${props => props.selected? "rgb(25, 135, 84)": "#222"};
-// `
+const Title = styled.h3`
+  margin: 0;
+  line-height: 1;
+`
+
+const CloseButton = styled.div`
+  padding: 16px;
+  cursor: pointer;
+  svg {
+    display: block;
+    width: 16px;
+    height: 16px;
+    fill: #222;
+  }
+`
 
 const InputContainer = styled.div`
   display: flex;
@@ -174,9 +182,9 @@ const AddressAdd: FunctionComponent = () => {
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn)
   const bearerToken = useAppSelector(selectBearerToken)
   const configuration = useAppSelector(selectConfiguration)
-  const shopData = useAppSelector(selectShop)
   const [ addressType, setAddressType ] = useState<AddressTypes>("HOME")
   const addressByType = useAppSelector(state => selectAddressByType(state, addressType))
+  const selectedMenuUrlpath = useAppSelector(selectSelectedMenuUrlpath)
 
   const [ errorMessage, setErrorMessage ] = useState<string>()
   const [ addressId, setAddressId ] = useState<number|null>(null)
@@ -184,8 +192,12 @@ const AddressAdd: FunctionComponent = () => {
   const [ addressStreet, setAddressStreet ] = useState("")
   const [ addressArea, setAddressArea] = useState("")
   const [ addressCity, setAddressCity] = useState("")
-  const [ addressPostalCode, setAddressPostalCode] = useState("")
+  const [ addressPostalCode, setAddressPostalCode] = useState("456")
   const [ addressFloor, setAddressFloor ] = useState("")
+
+  useEffect(() => {
+    dispatch(updateShowAddAddress(true))
+  }, [ ])
 
   function onAddressChange() {
     const place = autoComplete.getPlace()
@@ -235,7 +247,7 @@ const AddressAdd: FunctionComponent = () => {
   
   async function onClickSubmit() {
     setErrorMessage(undefined)
-    if (shopData?.urlpath) {
+    if (selectedMenuUrlpath) {
       const response = await new PyApiHttpPostAddress(configuration).post({
         area: addressArea,
         street: addressStreet,
@@ -243,7 +255,7 @@ const AddressAdd: FunctionComponent = () => {
         floor: addressFloor,
         address: addressMain,
         addressType: addressType,
-        urlpath: shopData?.urlpath,
+        urlpath: selectedMenuUrlpath,
         postalCode: Number(addressPostalCode)
       })
 
@@ -264,6 +276,7 @@ const AddressAdd: FunctionComponent = () => {
           }
           // save the address to local storage. Add on server when checkout opens
           window.localStorage.setItem(LS_GUEST_USER_ADDRESS, JSON.stringify(guestAddress))
+          dispatch(updateShowAddAddress(false))
         }
       } else {
         setErrorMessage(response?.description)
@@ -295,6 +308,11 @@ const AddressAdd: FunctionComponent = () => {
     dispatch(updateShowAddAddress(false))
   }
 
+  function onClickClose() {
+    dispatch(updateShowOrderTypeSelect(true))
+    dispatch(updateShowAddAddress(false))
+  }
+
   async function updateExistingAddress(bearerToken: string, addressId: number) {
     if (!isLoggedIn) return 
     await new NodeApiHttpPostUpdateAddressRequest(configuration, bearerToken).post({
@@ -321,7 +339,12 @@ const AddressAdd: FunctionComponent = () => {
 
   return <Wrapper>
     <ContentContainer>
-      <Title>{t("@addNewAddress")}</Title>
+      <TitleContainer>
+        <Title>{t("@addNewAddress")}</Title>
+        <CloseButton onClick={onClickClose}>
+          <SvgCross />
+        </CloseButton>
+      </TitleContainer>
       <InputContainer>
         <InputItem>
           <Label>{t("@streetAddress")}</Label>

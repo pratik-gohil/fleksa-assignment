@@ -1,4 +1,9 @@
-import { IPyApiHttpPostAddressRequestData, IPyApiHttpPostAddressResponse } from "../../../interfaces/http/pyapi/address/post.address.pyapi.http"
+import {
+  IPyApiHttpPostAddressRequestData,
+  IPyApiHttpPostAddressResponse,
+  IPyApiHttpPostAddressAllRequestData,
+  IPyApiHttpPostAddressAllResponse
+} from "../../../interfaces/http/pyapi/address/post.address.pyapi.http"
 import { ApiHttpCommon } from "../../base.http"
 import NetPyApi from "../net.pyapi.http"
 
@@ -16,6 +21,22 @@ export default class PyApiHttpPostAddress extends ApiHttpCommon {
           address: data.address,
           address_type: data.addressType,
           urlpath: data.urlpath,
+          postal_code: data.postalCode,
+        }
+      })
+      return response
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  public async postAll(data: IPyApiHttpPostAddressAllRequestData) {
+    try {
+      const response = await new NetPyApi(this.configuration).post<IPyApiHttpPostAddressAllResponse>({
+        path:`pyapi/address/all`,
+        body: {
+          area: data.area,
+          shop_id: data.shopId,
           postal_code: data.postalCode,
         }
       })

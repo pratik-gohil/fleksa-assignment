@@ -9,7 +9,7 @@ import NodeApiHttpGetUserOrderHistory from '../http/nodeapi/account/get.account.
 import NodeApiHttpGetUserParticularOrder from '../http/nodeapi/account/get.order-view-by-id.nodeapi.http';
 import NodeApiHttpGetUserAllAddress from '../http/nodeapi/account/get.account.all-address.nodeapi.http';
 
-const testingDomains = ['127.0.0.1:3000', 'localhost:3000', 'newqa.fleksa.de'];
+const testingDomains = ['127.0.0.1:3000', 'localhost:3000', 'newqa.fleksa.de', 'localhost:3214'];
 
 export async function getServerSidePropsCommon(
   ctx: any,
@@ -98,6 +98,7 @@ export async function getServerSidePropsCommon(
     ctx.store.dispatch(updateIndex(responseIndex));
 
     return {
+      cookies,
       bearerToken,
       responseIndex,
       configuration,

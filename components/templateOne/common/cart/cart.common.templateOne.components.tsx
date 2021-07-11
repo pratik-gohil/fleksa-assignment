@@ -67,6 +67,9 @@ const ListItem = styled.li`
 const ItemTitle = styled.p`
   font-size: 16px;
   margin: ${props => props.theme.dimen.X4}px 0;
+  span {
+    font-size: 12px;
+  }
 `
 
 const OrderButton = styled.p<{ isActive: boolean }>`
@@ -159,7 +162,7 @@ const Cart: FunctionComponent = ({}) => {
           const cartItem = cartData.items[key]
           return cartItem && <ListItem key={key}>
             <Column1>
-              <ItemTitle>{cartItem.mainName[language]} {cartItem.partName && "(" + cartItem.partName[language] + ")"}</ItemTitle>
+              <ItemTitle>{cartItem.mainName[language]} <span>{cartItem.partName && "(" + cartItem.partName[language] + ")"}</span></ItemTitle>
             </Column1>
             <Column2>
               <CartAddRemoveButton cartItem={cartItem} />

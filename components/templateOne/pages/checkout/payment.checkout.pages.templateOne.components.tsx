@@ -10,7 +10,7 @@ import { IMakeOrderProducts } from "../../../../interfaces/http/nodeapi/order/po
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
 import { selectCart } from "../../../../redux/slices/cart.slices.redux";
 import { selectPaymentMethod, updatePaymentMethod, ICheckoutPaymentMethods, selectTip, selectComment, selectOrderType, ICheckoutOrderTypes, selectWantAt, selectSelectedAddressId } from "../../../../redux/slices/checkout.slices.redux";
-import { selectConfiguration } from "../../../../redux/slices/configuration.slices.redux";
+import { selectConfiguration, selectSelectedMenu } from "../../../../redux/slices/configuration.slices.redux";
 import { selectShop } from "../../../../redux/slices/index.slices.redux";
 import { selectBearerToken, selectCustomer } from "../../../../redux/slices/user.slices.redux";
 import LoadingIndicator from "../../common/loadingIndicator/loading-indicator.common.templateOne.components";
@@ -74,6 +74,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   const [ orderCanBePlaced, setOrderCanBePlaced ] = useState(false)
   const paymentMethodData = useAppSelector(selectPaymentMethod)
   const addressId = useAppSelector(selectSelectedAddressId)
+  const shopMenuId = useAppSelector(selectSelectedMenu)
   const configuration = useAppSelector(selectConfiguration)
   const bearerToken = useAppSelector(selectBearerToken)
   const customerData = useAppSelector(selectCustomer)
@@ -110,7 +111,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
 
       const response = await new NodeApiHttpPostOrder(configuration, bearerToken as any).post({
         order: {
-          shop_id: shopData?.id as any,
+          shop_id: shopMenuId as number,
           name: customerData.name,
           email: customerData.email as any,
           phone: customerData.phone as any,

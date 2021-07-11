@@ -12,6 +12,7 @@ import { selectOrderType, selectSelectedAddressId } from "../../../redux/slices/
 import { selectShowAddress, selectShowOrderTypeSelect } from "../../../redux/slices/menu.slices.redux";
 import AddressAdd from "../../../components/templateOne/common/addresses/address-add.common.templateOne.components";
 import MenuPageCartSummary from "../../../components/templateOne/pages/menu/cart-summary.pages.templateOne.components";
+import { LS_GUEST_USER_ADDRESS } from "../../../constants/keys-local-storage.constants";
 
 const SideViewLeft = styled.div`
   display: none;
@@ -72,8 +73,11 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
       </Row>
     </Container>
     <MenuPageCartSummary />
-    {((showSelectOrderType || orderType === null) && !showAddAddress) && <OrderTypeManager key="key-ajkndalkwdmalkwmdlkw" />}
-    {(showAddAddress || (orderType === "DELIVERY" && checkoutAddressId === null)) && <AddressAdd />}
+    {((showSelectOrderType || orderType === null) && !showAddAddress)
+      ? <OrderTypeManager key="key-ajkndalkwdmalkwmdlkw" />
+      : (showAddAddress
+        || (orderType === "DELIVERY" && checkoutAddressId === null
+        && orderType === "DELIVERY" && !window.localStorage.getItem(LS_GUEST_USER_ADDRESS))) && <AddressAdd />}
   </>
 }
 

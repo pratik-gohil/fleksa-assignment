@@ -29,6 +29,8 @@ export const StyledOptionsWrapper = styled.div`
 `
 
 export const StyledOptionsTitleContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
   cursor: pointer;
 `
 
@@ -89,6 +91,7 @@ const MenuPageOptionsList: FunctionComponent<IPropsMenuPageCategoryListItem> = (
   return <StyledOptionsWrapper>
     <StyledOptionsTitleContainer onClick={toggle}>
       <p style={{ margin: 0, padding: 12 }}>{choice.name_json[language]}</p>
+      <p style={{ margin: 0, padding: 12 }}>{isOptionOpen? "Choose One": selectedIndex?.name[language]}</p>
     </StyledOptionsTitleContainer>
     <StyledOptionsListContainer isOptionOpen={isOptionOpen}>
       <StyledOptionsList>
@@ -101,6 +104,7 @@ const MenuPageOptionsList: FunctionComponent<IPropsMenuPageCategoryListItem> = (
               name: option.name_json
             }
           }))
+          setSelectedOption(optionKey+1)
         }}>
           <StyledOptionsRadioButtonContainer>
             <StyledOptionsRadioButton multiselect={false} selected={index === selectedIndex?.product_index} />

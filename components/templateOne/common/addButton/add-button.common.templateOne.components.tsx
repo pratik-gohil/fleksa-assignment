@@ -36,31 +36,30 @@ const ButtonContainer = styled.div`
   display: flex;
   flex-wrap: nowrap;
   width: 86px;
-  background-color: ${props => props.theme.primaryColor};
+  background-color: rgb(255, 209, 0);
   border-radius: ${props => props.theme.borderRadius}px;
-  border: ${props => props.theme.border};
   align-self: center;
   font-weight: 700;
   transition-duration: 500ms;
   overflow: hidden;
 `
 
+const Separator = styled.div`
+  display: block;
+  height: 100%;
+  width: 2px;
+  background: rgba(0, 0, 0, 0.4);
+`
+
 const ButtonItem = styled.p`
   display: flex;
   flex: 1;
-  padding: 4px 12px;
+  padding: 4px 0;
   margin: 0;
-  text-align: center;
+  justify-content: center;
   &:hover {
     background-color: rgba(0, 0, 0, 0.1);
   }
-`
-
-const QuantityCount = styled.div`
-  display: flex;
-  flex: 1;
-  align-items: center;
-  padding: 0 4px;
 `
 
 const AddButton: FunctionComponent<IPropsAddButton> = ({ product, canOpen, hasImage, isOpen }) => {
@@ -117,7 +116,7 @@ const AddButton: FunctionComponent<IPropsAddButton> = ({ product, canOpen, hasIm
     <ButtonContainer>
       {cartData?.quantity? <>
         <ButtonItem onClick={reduceItemFromCart}>-</ButtonItem>
-        <QuantityCount>{cartData.quantity}</QuantityCount>
+        <Separator />
         <ButtonItem onClick={addItemToCart}>+</ButtonItem>
       </>: (
         <ButtonItem onClick={addItemToCart}>ADD{canOpen && " +"}</ButtonItem>
