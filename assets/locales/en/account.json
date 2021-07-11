@@ -33,6 +33,7 @@
   "@total": "Total",
   "@subtotal": "Subtotal",
   "@tip": "Tip",
+  "@items": "items",
   "@update-success": "Updated successfully 🙌",
   "@remove-success": "Removed successfully 🙌",
   "@add-success": "Wohoo 🎉 Successfully added!",
