@@ -4,7 +4,7 @@ import { Row, Col } from "react-grid-system";
 import styled from "styled-components";
 import { useAppSelector } from "../../../../redux/hooks.redux";
 import { selectCart } from "../../../../redux/slices/cart.slices.redux";
-import { selectTip } from "../../../../redux/slices/checkout.slices.redux";
+import { selectPromoCode, selectTip } from "../../../../redux/slices/checkout.slices.redux";
 import { selectLanguage } from "../../../../redux/slices/configuration.slices.redux";
 import { checkoutFinalAmount } from "../../../../utils/checkout.utils";
 import { StyledCheckoutCard, StyledCheckoutTitle } from "./customer-info.checkout.pages.templateOne.components";
@@ -44,6 +44,7 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
   const language = useAppSelector(selectLanguage)
   const cartData = useAppSelector(selectCart)
   const tipData = useAppSelector(selectTip)
+  const promoData = useAppSelector(selectPromoCode)
 
   const cartItemKeys = cartData.items? Object.keys(cartData.items): []
 
@@ -67,17 +68,17 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
           <Title>Subtotal</Title>
           <Price>€{cartData.cartCost.toFixed(2)}</Price>
         </ContainerItem>
-        <ContainerItem>
+        {promoData && <ContainerItem>
           <Title>Discount</Title>
-          <Price>€{0}</Price>
-        </ContainerItem>
+          <Price>€{promoData.value}</Price>
+        </ContainerItem>}
         {tipData && tipData > 0? <ContainerItem>
           <Title>Tip</Title>
           <Price>€{tipData.toFixed(2)}</Price>
         </ContainerItem>: <></>}
         <ContainerItem>
           <Title style={{ fontWeight: 700 }}>Total</Title>
-          <Price>€{checkoutFinalAmount(cartData.cartCost, tipData).toFixed(2)}</Price>
+          <Price>€{checkoutFinalAmount(cartData.cartCost, tipData, promoData?.value).toFixed(2)}</Price>
         </ContainerItem>
       </Col>
     </Row>

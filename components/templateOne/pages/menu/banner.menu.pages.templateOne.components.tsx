@@ -117,12 +117,12 @@ const MenuPageBanner: FunctionComponent = ({}) => {
       <ContentTopContent>
         <Container>
           <Row>
-            <Col>
+            <Col xs={12} lg={6}>
               <Title>{shopData?.name}</Title>
               <SubTitle>{shopData?.category_json[language]}</SubTitle>
               <MenuFeatures />
             </Col>
-            <Col>
+            <Col xs={12} lg={6}>
               <OffersWrapper>
                 <OffersContainer>
                   <OfferTitle>OFFER</OfferTitle>

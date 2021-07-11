@@ -112,9 +112,10 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
   async function finishLogin(bearerToken: string) {
     dispatch(updateBearerToken(bearerToken));
     setCookie(COOKIE_BEARER_TOKEN, bearerToken, {
+      httpOnly: false,
       path: '/',
       maxAge: 365 * 24 * 60 * 60 * 1000,
-      sameSite: 'strict',
+      sameSite: 'lax',
     });
     await new Promise((resolve) => setTimeout(resolve, 500));
   }

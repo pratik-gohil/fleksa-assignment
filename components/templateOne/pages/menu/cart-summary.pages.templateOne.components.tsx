@@ -5,8 +5,8 @@ import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux"
 import { selectCart } from "../../../../redux/slices/cart.slices.redux"
 import { updateShowCart } from "../../../../redux/slices/configuration.slices.redux"
 
-const WrapperCartSummary = styled.div`
-  display: flex;
+const WrapperCartSummary = styled.div<{ show: boolean }>`
+  display: ${props => props.show? "flex": "none"};
   flex-direction: row;
   justify-content: space-between;
   background: ${props => props.theme.primaryColor};
@@ -30,8 +30,8 @@ const MenuPageCartSummary: FunctionComponent = ({}) => {
   const cartData = useAppSelector(selectCart)
   const dispatch = useAppDispatch()
   
-  return <WrapperCartSummary>
-    <Text>Total: <strong>€{cartData.cartCost}</strong></Text>
+  return <WrapperCartSummary show={cartData.cartCost > 0}>
+    <Text>Total: <strong>€{cartData.cartCost.toFixed(2)}</strong></Text>
     <Text onClick={() => dispatch(updateShowCart(true))}><strong>View Cart</strong></Text>
   </WrapperCartSummary>
 }

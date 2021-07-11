@@ -9,7 +9,7 @@ module.exports = withPWA({
   generateEtags: false,
   pwa: {
     dest: "public",
-    disable: prod ? false : true
+    disable: !prod
   },
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     config.module.rules.push({

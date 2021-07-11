@@ -62,7 +62,7 @@ export const ConfigurationSlice = createSlice({
       state.selectedMenu = action.payload
     },
     updateSelectedMenuUrlpath(state, action) {
-      state.selectedMenuUrlpath = action.payload
+      state.selectedMenuUrlpath = action.payload || null
     },
     updateConfiguration(state, action) {
       state.configuration = action.payload

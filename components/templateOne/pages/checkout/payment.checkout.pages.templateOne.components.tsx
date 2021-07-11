@@ -9,10 +9,11 @@ import NodeApiHttpPostOrder from "../../../../http/nodeapi/order/post.order.node
 import { IMakeOrderProducts } from "../../../../interfaces/http/nodeapi/order/post.order.nodeapi.http";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
 import { selectCart } from "../../../../redux/slices/cart.slices.redux";
-import { selectPaymentMethod, updatePaymentMethod, ICheckoutPaymentMethods, selectTip, selectComment, selectOrderType, ICheckoutOrderTypes, selectWantAt, selectSelectedAddressId } from "../../../../redux/slices/checkout.slices.redux";
+import { selectPaymentMethod, updatePaymentMethod, ICheckoutPaymentMethods, selectTip, selectComment, selectOrderType, ICheckoutOrderTypes, selectWantAt, selectSelectedAddressId, selectPromoCode } from "../../../../redux/slices/checkout.slices.redux";
 import { selectConfiguration, selectSelectedMenu } from "../../../../redux/slices/configuration.slices.redux";
 import { selectShop } from "../../../../redux/slices/index.slices.redux";
 import { selectBearerToken, selectCustomer } from "../../../../redux/slices/user.slices.redux";
+import { getPrductsFromCartData } from "../../../../utils/products.utils";
 import LoadingIndicator from "../../common/loadingIndicator/loading-indicator.common.templateOne.components";
 import { StyledCheckoutCard, StyledCheckoutTitle } from "./customer-info.checkout.pages.templateOne.components";
 import CheckoutPageOrderButtonPaypal from "./order-button-paypal.checkout.pages.templateOne.components";
@@ -78,6 +79,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   const configuration = useAppSelector(selectConfiguration)
   const bearerToken = useAppSelector(selectBearerToken)
   const customerData = useAppSelector(selectCustomer)
+  const promoCode = useAppSelector(selectPromoCode)
   const orderType = useAppSelector(selectOrderType)
   const wantAtData = useAppSelector(selectWantAt)
   const comment = useAppSelector(selectComment)
@@ -88,26 +90,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
 
   async function createOrder() {
     try {
-      const products: Array<IMakeOrderProducts> = Object.keys(cartData.items).map(key => {
-        const prod = cartData.items[key]
-        const hasChoice = prod.choice? prod.choice?.length > 0: false
-        const choice = prod.choice? prod.choice.map(choice => ({
-          top_index: choice.top_index,
-          product_index: choice.product_index
-        })): null
-        const hasSides = prod.sideProducts? prod.sideProducts.length > 0: false
-        const sideProducts = prod.sideProducts? prod.sideProducts.map(side => ({ id: side.id })): null
-        return {
-          id: prod.id,
-          quantity: prod.quantity,
-          main_name: prod.mainName,
-          has_choice: hasChoice,
-          choice: hasChoice? choice: null,
-          has_sides: hasSides,
-          side_product_json: hasSides? sideProducts: null,
-          type: prod.type === "SINGLE"? "SINGLE": "PART"
-        }
-      })
+      const products: Array<IMakeOrderProducts> = getPrductsFromCartData(cartData)
 
       const response = await new NodeApiHttpPostOrder(configuration, bearerToken as any).post({
         order: {
@@ -123,7 +106,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
           payment_method: paymentMethodData,
           tip: tipData? tipData: undefined,
           discount_token: "",
-          coupon_token: "",
+          coupon_token: promoCode?.token,
           description: comment,
           order_type: orderType as ICheckoutOrderTypes,
         }

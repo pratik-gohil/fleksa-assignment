@@ -16,6 +16,11 @@ export interface ICheckoutSliceState {
   wantAt: { date: ILabelValue; time: ILabelValue } | null;
   showDateTimeSelect: boolean;
   selectedAddressId: number|null
+  promoCode: {
+    code: string
+    value: number
+    token: string
+  } | null
 }
 
 const initialState: ICheckoutSliceState = {
@@ -25,7 +30,8 @@ const initialState: ICheckoutSliceState = {
   comment: '',
   wantAt: null,
   showDateTimeSelect: false,
-  selectedAddressId: null
+  selectedAddressId: null,
+  promoCode: null
 };
 
 export const CheckoutSlice = createSlice({
@@ -59,6 +65,9 @@ export const CheckoutSlice = createSlice({
     updateSelectedAddressId(state, action) {
       state.selectedAddressId = action.payload;
     },
+    updatePromoCode(state, action) {
+      state.promoCode = action.payload
+    }
   },
   extraReducers: {
     [HYDRATE]: (state) => {
@@ -78,6 +87,7 @@ export const {
   updateClearCheckout,
   updateShowDateTimeSelect,
   updateSelectedAddressId,
+  updatePromoCode,
 } = CheckoutSlice.actions;
 
 export const selectPaymentMethod = (state: RootState) => state.checkout.paymentMethod;
@@ -87,3 +97,4 @@ export const selectComment = (state: RootState) => state.checkout.comment;
 export const selectWantAt = (state: RootState) => state.checkout.wantAt;
 export const selectShowDateTimeSelect = (state: RootState) => state.checkout.showDateTimeSelect;
 export const selectSelectedAddressId = (state: RootState) => state.checkout.selectedAddressId;
+export const selectPromoCode = (state: RootState) => state.checkout.promoCode;
