@@ -4,12 +4,13 @@ import styled from 'styled-components';
 import Image from 'next/image';
 
 import { useAppSelector } from '../../../../redux/hooks.redux';
-import { selectProducts, selectSiblings } from '../../../../redux/slices/index.slices.redux';
+import { selectSiblings } from '../../../../redux/slices/index.slices.redux';
 import HorizontalList from '../../common/horizontal-list/horizontal-list.templateOne.component';
 import HorizontalListItem, { IResponsive } from '../../common/horizontal-list/horizontal-list-item.templateOne.component';
 import { useTranslation } from 'react-i18next';
-import { selectLanguage, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
+import { selectLanguage } from '../../../../redux/slices/configuration.slices.redux';
+import { useRouter } from 'next/router';
 
 const WrapperSection = styled.section`
   padding: ${(props) => props.theme.dimen.X4 * 4}px 0;
@@ -18,7 +19,7 @@ const WrapperSection = styled.section`
 const Title = styled.h2`
   padding: 0;
   text-align: center;
-  margin: 0 0 ${(props) => props.theme.dimen.X4 * 2}px 0;
+  /* margin: 0 0 ${(props) => props.theme.dimen.X4 * 2}px 0; */
 `;
 
 const Card = styled.div`
@@ -27,8 +28,9 @@ const Card = styled.div`
   border: ${(props) => props.theme.border};
   border-radius: ${(props) => props.theme.borderRadius}px;
   overflow: hidden;
-  margin: 0 8px;
   height: 98%;
+  margin: 0 8px;
+  cursor: pointer;
 
   &:hover {
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
@@ -48,8 +50,6 @@ const ImageContainer = styled.div`
 
   &:hover {
     box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
-
-    transform: scale(1.09);
   }
 `;
 
@@ -57,58 +57,52 @@ const InfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
-  justify-content: space-between;
+  position: relative;
 `;
 
 const InfoContainerTop = styled.div``;
 
 const ItemTitle = styled.h2`
-  padding: 0 ${(props) => props.theme.dimen.X4}px;
-  font-size: 20px;
-`;
-
-const ItemDescription = styled.p`
-  padding: 0 ${(props) => props.theme.dimen.X4}px;
+  font-size: 18px;
+  margin: 1rem 0 0 0;
+  padding: 0 1rem;
+  font-weight: 600;
 `;
 
 const InfoContainerBottom = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-
-  p {
-    font-weight: 700;
-    margin: ${(props) => props.theme.dimen.X4}px 0;
-    &:first-child {
-      margin-left: ${(props) => props.theme.dimen.X4}px;
-    }
-    &:last-child {
-      margin-right: ${(props) => props.theme.dimen.X4}px;
-    }
-  }
-`;
-
-const ItemPrice = styled.p`
-  font-size: 20px;
+  position: absolute;
+  bottom: 1.5rem;
 `;
 
 const ItemToProduct = styled.a`
-  p {
-    display: flex;
-    align-items: center;
-    background-color: ${(props) => props.theme.primaryColor};
-    padding: ${(props) => props.theme.dimen.X2}px ${(props) => props.theme.dimen.X4}px;
+  background-color: ${(props) => props.theme.primaryColor};
+  padding: ${(props) => props.theme.dimen.X2}px ${(props) => props.theme.dimen.X4}px;
+  font-weight: 500;
+`;
 
-    span {
-      font-weight: 900;
-      font-size: 22px;
-      height: 21px;
-      margin-top: -4px;
-      margin-left: 6px;
-      line-height: 1;
-    }
-  }
+const InfoCategory = styled.div``;
+const CategoryName = styled.p`
+  padding: 0 1rem;
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  color: rgba(0, 0, 0, 0.5);
+`;
+
+const InfoContainerCenter = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const LogoContainer = styled.div`
+  width: 50px;
+  height: 40px;
+  margin-right: 1rem;
+`;
+
+const Logo = styled.img`
+  width: 100%;
+  height: 100%;
 `;
 
 const responsive: IResponsive = {
@@ -121,12 +115,12 @@ const responsive: IResponsive = {
     height: 460,
   },
   lg: {
-    width: 360,
-    height: 480,
+    width: 300,
+    height: 420,
   },
   xl: {
-    width: 360,
-    height: 480,
+    width: 300,
+    height: 370,
   },
   xxl: {
     width: 360,
@@ -136,9 +130,9 @@ const responsive: IResponsive = {
 
 const IndexMultiRestaurantShowCase: FunctionComponent = ({}) => {
   const { t } = useTranslation('page-index');
-  const language = useAppSelector(selectLanguage);
-  const selectedMenuId = useAppSelector(selectSelectedMenu);
   const siblings = useAppSelector(selectSiblings);
+  const language = useAppSelector(selectLanguage);
+  const router = useRouter();
 
   return !!siblings.length ? (
     <WrapperSection>
@@ -151,23 +145,34 @@ const IndexMultiRestaurantShowCase: FunctionComponent = ({}) => {
               {siblings.map((sibling) => {
                 return (
                   <HorizontalListItem key={sibling.id} responsive={responsive}>
-                    <Card>
-                      <ImageContainer>{sibling.logo && <Image src={sibling.logo} layout="fill" loading="lazy" objectFit="cover" />}</ImageContainer>
+                    <Card onClick={() => router.push(`/menu/${sibling.id}`)}>
+                      <ImageContainer>
+                        {sibling.logo && (
+                          <Image
+                            src={'https://fleksa-image.s3.eu-central-1.amazonaws.com/img/restaurant_covers/mr9l43014dqbp6xo9xf2fa51uwz.jpg'}
+                            layout="fill"
+                            loading="lazy"
+                            objectFit="cover"
+                          />
+                        )}
+                      </ImageContainer>
 
                       <InfoContainer>
                         <InfoContainerTop>
                           <ItemTitle>{sibling.name}</ItemTitle>
-                          {/* <ItemDescription>{sibling.description_json[language]}</ItemDescription> */}
                         </InfoContainerTop>
 
-                        <InfoContainerBottom>
-                          {/* <ItemPrice>€{sibling.price}</ItemPrice> */}
+                        <InfoContainerCenter>
+                          <InfoCategory>
+                            <CategoryName>{sibling.category_json[language]}</CategoryName>
+                          </InfoCategory>
+                          <LogoContainer>
+                            <Logo src={sibling.logo} />
+                          </LogoContainer>
+                        </InfoContainerCenter>
 
-                          <ItemToProduct href={`/menu/${sibling.id}`}>
-                            <p>
-                              {t('MENU')} <span>+</span>
-                            </p>
-                          </ItemToProduct>
+                        <InfoContainerBottom>
+                          <ItemToProduct href={`/menu/${sibling.id}`}>{t('MENU')}</ItemToProduct>
                         </InfoContainerBottom>
                       </InfoContainer>
                     </Card>
