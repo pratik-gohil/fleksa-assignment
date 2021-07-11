@@ -58,6 +58,13 @@ const ContentContainer = styled.div`
   margin-bottom: 1rem;
   position: relative;
   padding: 1rem;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    margin-bottom: 4rem;
+    padding: 0.5rem;
+
+    max-height: max-content;
+  }
 `;
 const Content = styled.div`
   margin: 1rem;
@@ -73,8 +80,9 @@ const Content = styled.div`
   @media (max-width: ${BREAKPOINTS.sm}px) {
     flex-direction: column;
     width: 100%;
-    padding: 0.5rem;
-    margin: 0;
+    overflow: auto;
+    /* background: red; */
+    padding: 0;
   }
 `;
 
