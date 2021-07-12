@@ -192,7 +192,7 @@ const AddressAdd: FunctionComponent = () => {
   const [ addressStreet, setAddressStreet ] = useState("")
   const [ addressArea, setAddressArea] = useState("")
   const [ addressCity, setAddressCity] = useState("")
-  const [ addressPostalCode, setAddressPostalCode] = useState("456")
+  const [ addressPostalCode, setAddressPostalCode] = useState("")
   const [ addressFloor, setAddressFloor ] = useState("")
 
   useEffect(() => {

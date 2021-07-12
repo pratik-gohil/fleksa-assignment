@@ -157,7 +157,8 @@ const InfoContainer = styled.div`
 
 `
 
-const OrderButton = styled.div`
+const OrderButton = styled.a`
+  display: block;
   font-weight: 700;
   border-radius: ${props => props.theme.borderRadius}px;
   border: ${props => props.theme.border};
@@ -166,11 +167,17 @@ const OrderButton = styled.div`
   background: ${props => props.theme.primaryColor};
 `
 
+const InputContainer = styled.div`
+  display: flex;
+  flex: 1;
+`
+
 const Input = styled.input`
-  width: 100%;
+  display: flex;
   border: ${props => props.theme.border};
   border-radius: ${props => props.theme.borderRadius}px;
   padding: ${props => props.theme.dimen.X4}px;
+  margin-top: ${props => props.theme.dimen.X4}px;
   font-family: inherit;
 `
 
@@ -182,12 +189,16 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
   const shopData = useAppSelector(selectShop)
   const siblingsData = useAppSelector(selectSiblings)
   const configuration = useAppSelector(selectConfiguration)
+  const [deliveryFilterData, setDeliveryFilterData ] = useState([])
 
   const refAddressInput = useRef<HTMLInputElement>(null)
 
-  const [ area, setAddressArea ] = useState<string>()
-  const [ postalCode, setAddressPostalCode ] = useState<string>()
   const [ addressMain, setAddressMain ] = useState("")
+  const [ addressStreet, setAddressStreet ] = useState("")
+  const [ addressArea, setAddressArea] = useState("")
+  const [ addressCity, setAddressCity] = useState("")
+  const [ addressPostalCode, setAddressPostalCode] = useState("")
+  const [ addressFloor, setAddressFloor ] = useState("")
   const [ filterName, setFilterName ] = useState<Filters>("has_delivery")
 
   function initMap(): void {
@@ -243,21 +254,21 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
   }, [ ])
 
   async function getAvaibleBasedOnAdress() {
-    console.log(shopData?.id, area, postalCode)
-    if (shopData?.id && area && postalCode) {
+    console.log(shopData?.id, addressArea, addressPostalCode)
+    if (shopData?.id && addressArea && addressPostalCode) {
       const response = await new PyApiHttpPostAddress(configuration).postAll({
         shopId: shopData?.id,
-        area,
-        postalCode
+        area: addressArea,
+        postalCode: addressPostalCode
       })
       console.log(response)
     }
   }
 
   useEffect(() => {
-    console.log(area, postalCode)
+    console.log(addressArea, addressPostalCode)
     getAvaibleBasedOnAdress()
-  }, [ area, postalCode ])
+  }, [ addressArea, addressPostalCode ])
 
   function onAddressChange() {
     const place = autoComplete.getPlace()
@@ -267,8 +278,10 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
           let temp = '';
           for (let component2 of place.address_components) if (component2.types[0] === 'street_number') temp = component2.short_name;
           setAddressMain(`${component.long_name} ${temp}`);
+          setAddressStreet(component.long_name);
         } else if (component.types.indexOf('sublocality') !== -1 || component.types.indexOf('sublocality_level_1') !== -1)
           setAddressArea(component.long_name.includes('Innenstadt') ? 'Innenstadt' : component.long_name);
+        else if (component.types[0] === 'locality') setAddressCity(component.long_name);
         else if (component.types[0] === 'postal_code') setAddressPostalCode(component.short_name);
       }
     }
@@ -299,13 +312,27 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
         }].map(item => <SelectionItem key={item.filter} active={filterName === item.filter} onClick={() => setFilterAndOrderType(item.filter)}>{item.title}</SelectionItem>)}
       </SelectionContainer>
       <List>
-        <Input
-          value={addressMain}
-          onChange={e => setAddressMain(e.target.value)}
-          ref={refAddressInput}
-          placeholder={"Where to deliver?"}
-        />
-        {(filterName === "has_delivery"? siblingsData: siblingsData).filter(sibling => sibling.address.availability[filterName]).map(sibling => {
+        <InputContainer>
+          <Input
+            style={{
+              flex: 1
+            }}
+            value={addressMain}
+            onChange={e => setAddressMain(e.target.value)}
+            ref={refAddressInput}
+            placeholder={"Where to deliver?"}
+          />
+          <Input
+            style={{
+              width: 100,
+              marginLeft: 12
+            }}
+            value={addressStreet}
+            onChange={e => setAddressStreet(e.target.value)}
+            placeholder={"Optional"}
+          />
+        </InputContainer>
+        {(filterName === "has_delivery"? deliveryFilterData: siblingsData).filter(sibling => sibling.address.availability[filterName]).map(sibling => {
           const area = sibling.address?.area ? sibling.address?.area + ' ' : ''
           const address = sibling.address?.address || ''
           const city = sibling.address?.city || ''
@@ -313,7 +340,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
           
           const day = new Date().toLocaleString('en-us', {  weekday: 'long' }).toUpperCase()
           return <ListItem key={`${sibling.id}`}>
-            <ListItemLink href={`/menu/${sibling.id}`}>
+            <ListItemLink>
               <ItemImage src={sibling.logo} />
               <ContentContatiner>
                 <InfoWithOrderButton>
@@ -324,7 +351,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
                       <p>{postalCode} {city}</p>
                     </Address>
                   </InfoContainer>
-                  <OrderButton>ORDER</OrderButton>
+                  <OrderButton href={`/menu/${sibling.id}`}>ORDER</OrderButton>
                 </InfoWithOrderButton>
                 <TimingContainerHolder>
                   <TimingContainer>
