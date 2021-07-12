@@ -5,6 +5,7 @@ import App, { AppInitialProps, AppContext } from "next/app";
 import { appWithTranslation } from 'next-i18next'
 
 import wrapper from '../redux/store.redux';
+import { BREAKPOINTS } from "../constants/grid-system-configuration";
 
 class WrappedApp extends App<AppInitialProps> {
   public static getInitialProps = async ({ Component, ctx }: AppContext) => {
@@ -24,7 +25,15 @@ class WrappedApp extends App<AppInitialProps> {
   };
 
   public render() {
-    setConfiguration({ maxScreenClass: 'xl' });
+    setConfiguration({
+      containerWidths: [
+        BREAKPOINTS.sm,
+        BREAKPOINTS.md,
+        BREAKPOINTS.lg,
+        BREAKPOINTS.xl,
+        BREAKPOINTS.xxl,
+      ]
+    });
     const { Component, pageProps } = this.props;
     return <ScreenClassProvider >
       <Head>
