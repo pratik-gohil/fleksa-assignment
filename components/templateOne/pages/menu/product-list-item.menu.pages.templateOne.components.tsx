@@ -8,7 +8,7 @@ import { ICategoryProduct } from "../../../../interfaces/common/category.common.
 import MenuPageChoiceList from "./choice-list.menu.pages.templateOne.components";
 import AddButton from "../../common/addButton/add-button.common.templateOne.components";
 import { memo } from "react";
-import MenuPageSides from "./sides.menu.pages.templateOne.components";
+// import MenuPageSides from "./sides.menu.pages.templateOne.components";
 
 export interface IPropsMenuPageCategoryListItem {
   product: ICategoryProduct
@@ -150,7 +150,7 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
         selectedOption={selectedOption}
         setSelectedOption={id => setSelectedOption(id)}
       />)}
-      {console.log("product.side_products_json", product.side_products_json)}
+      {product.type_ === "SINGLE" && console.log("product.side_products_json", product.side_products_json)}
       {/* {product.type_ === "SINGLE" && product.side_products_json?.map(sideProduct => {
         return <MenuPageSides
           key={sideProduct.name_json.english}
