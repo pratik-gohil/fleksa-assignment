@@ -145,7 +145,7 @@ const MenuPageBanner: FunctionComponent = ({}) => {
                   <SubTitle>{shopData?.category_json[language]}</SubTitle>
                   <MenuFeatures />
                 </Wrapper>
-                <Wrapper>
+                {offersData.length > 0 && <Wrapper>
                   <OffersWrapper>
                     <OffersContainer>
                       <OfferTitle>OFFER</OfferTitle>
@@ -157,7 +157,7 @@ const MenuPageBanner: FunctionComponent = ({}) => {
                       })}
                     </OffersContainer>
                   </OffersWrapper>
-                </Wrapper>
+                </Wrapper>}
               </WrapperContainer>
             </Col>
           </Row>
