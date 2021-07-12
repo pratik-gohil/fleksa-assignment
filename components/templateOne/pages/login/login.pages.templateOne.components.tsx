@@ -15,6 +15,7 @@ import { updateBearerToken } from '../../../../redux/slices/user.slices.redux';
 import { selectConfiguration } from '../../../../redux/slices/configuration.slices.redux';
 import { updateError } from '../../../../redux/slices/common.slices.redux';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 export interface IPropsLoginComponent {
   onLogin(): void;
@@ -95,6 +96,8 @@ const SendOtpButtonText = styled.p`
   padding: 0;
   cursor: pointer;
 `;
+
+const OTP_LENGTH = 5
 
 const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) => {
   const [, setCookie] = useCookies([COOKIE_BEARER_TOKEN]);
@@ -194,6 +197,12 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
     }
   }
 
+  useEffect(() => {
+    if (otp.length === OTP_LENGTH) {
+      onTapLogin()
+    }
+  }, [ otp ])
+
   return (
     <LoginContainer>
       <SectionOne>{shopData?.cover && <Image src={shopData.cover} loading="eager" layout="fill" objectFit="cover" />}</SectionOne>
@@ -202,23 +211,27 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
           <>
             <Title>Enter OTP</Title>
             <Text>
-              Please enter OTP sent at +{countryCode} {phone}
+              Please enter OTP sent at +{phone}
             </Text>
             <InputContainer>
               <OtpInput
+                isInputNum={true}
+                shouldAutoFocus={true}
                 value={otp}
                 onChange={(otp: React.SetStateAction<string>) => {
                   setOtp(otp);
                 }}
-                numInputs={5}
+                numInputs={OTP_LENGTH}
                 containerStyle={{
                   display: 'flex',
                   justifyContent: 'center',
                 }}
                 inputStyle={{
+                  fontFamily: "Poppins",
                   display: 'inline-block',
-                  fontSize: 42,
+                  fontSize: "42px",
                   margin: '0 8px',
+                  padding: 0,
                   border: '1px solid rgba(0, 0, 0, 0.1)',
                   borderRadius: 4,
                   color: '#222',

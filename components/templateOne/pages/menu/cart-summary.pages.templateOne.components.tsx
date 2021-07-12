@@ -29,10 +29,12 @@ const Text = styled.p`
 const MenuPageCartSummary: FunctionComponent = ({}) => {
   const cartData = useAppSelector(selectCart)
   const dispatch = useAppDispatch()
-  
+
+  const itemsInCart = Object.keys(cartData.items).reduce((acc, i) => cartData.items[i].quantity + acc, 0)
+
   return <WrapperCartSummary show={cartData.cartCost > 0}>
-    <Text>Total: <strong>€{cartData.cartCost.toFixed(2)}</strong></Text>
-    <Text onClick={() => dispatch(updateShowCart(true))}><strong>View Cart</strong></Text>
+    <Text><strong>{itemsInCart} Item | €{cartData.cartCost.toFixed(2)}</strong></Text>
+    <Text onClick={() => dispatch(updateShowCart(true))}><strong>Proceed</strong></Text>
   </WrapperCartSummary>
 }
 
