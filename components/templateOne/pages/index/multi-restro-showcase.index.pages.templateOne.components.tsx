@@ -70,14 +70,38 @@ const ItemTitle = styled.h2`
 `;
 
 const InfoContainerBottom = styled.div`
-  position: absolute;
-  bottom: 1.5rem;
+  /* position: absolute; */
+  /* bottom: 1.5rem; */
+  width: 100%;
+  /* margin: 0 1rem; */
+  padding: 0 0.5rem;
 `;
 
-const ItemToProduct = styled.a`
+const ItemToProduct = styled.button`
+  /* margin: 2rem; */
+  width: 100%;
+  /* padding: ${(props) => props.theme.dimen.X2}px ${(props) => props.theme.dimen.X4}px; */
+  /* font-weight: 500; */
   background-color: ${(props) => props.theme.primaryColor};
-  padding: ${(props) => props.theme.dimen.X2}px ${(props) => props.theme.dimen.X4}px;
-  font-weight: 500;
+  font-weight: 700;
+  font-size: 24px;
+  color: #222;
+  border-radius: ${(props) => props.theme.borderRadius}px;
+  border: ${(props) => props.theme.border};
+  padding: 12px 24px;
+  display: block;
+  -webkit-animation: pulsing 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
+  -moz-animation: pulsing 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
+  -ms-animation: pulsing 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
+  animation: pulsing 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
+  transition: all 300ms ease-in-out;
+  box-shadow: 0 0 0 0 rgba(${(props) => `${props.theme.primaryColorRed},${props.theme.primaryColorGreen},${props.theme.primaryColorBlue}, 0.7`});
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    margin: 18px 0;
+    padding: 12px 24px;
+    font-size: 18px;
+  }
 `;
 
 const InfoCategory = styled.div``;
@@ -172,7 +196,7 @@ const IndexMultiRestaurantShowCase: FunctionComponent = ({}) => {
                         </InfoContainerCenter>
 
                         <InfoContainerBottom>
-                          <ItemToProduct href={`/menu/${sibling.id}`}>{t('MENU')}</ItemToProduct>
+                          <ItemToProduct>{t('@order-online')}</ItemToProduct>
                         </InfoContainerBottom>
                       </InfoContainer>
                     </Card>
