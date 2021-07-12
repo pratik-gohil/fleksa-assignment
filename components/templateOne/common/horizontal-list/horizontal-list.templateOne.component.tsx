@@ -36,14 +36,15 @@ const ListItemsContainer = styled.ul`
 const LeftButton = styled.div`
   width: 48px;
   height: 48px;
-  position: absolute;
-  left: -34px;
+  /* position: absolute; */
+  /* left: -34px; */
   border-radius: 50%;
   background: #fff;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
   display: none;
   cursor: pointer;
   transition: 0.3s;
+  margin-right: 1rem;
 
   svg {
     transition: 0.3s;
@@ -57,9 +58,13 @@ const LeftButton = styled.div`
   }
 `;
 
-const RightButton = styled(LeftButton)`
-  left: auto;
-  right: -34px;
+const RightButton = styled(LeftButton)``;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  position: absolute;
+  top: 0;
+  right: 0;
 `;
 
 const HorizontalList = ({ children, childCount }: HorizontalListProps) => {
@@ -87,14 +92,14 @@ const HorizontalList = ({ children, childCount }: HorizontalListProps) => {
     <ListWrapper>
       <ListItemsContainer ref={refHorizontalDrawer}>{children}</ListItemsContainer>
       {childCount >= 4 && (
-        <>
+        <ButtonContainer>
           <LeftButton onClick={scrollLeft}>
             <SvgPrevious />
           </LeftButton>
           <RightButton onClick={scrollRight}>
             <SvgNext />
           </RightButton>
-        </>
+        </ButtonContainer>
       )}
     </ListWrapper>
   );

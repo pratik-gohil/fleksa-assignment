@@ -19,7 +19,7 @@ const WrapperSection = styled.section`
 const Title = styled.h2`
   padding: 0;
   text-align: center;
-  /* margin: 0 0 ${(props) => props.theme.dimen.X4 * 2}px 0; */
+  margin: 0 0 ${(props) => props.theme.dimen.X4 * 2}px 0;
 `;
 
 const Card = styled.div`
