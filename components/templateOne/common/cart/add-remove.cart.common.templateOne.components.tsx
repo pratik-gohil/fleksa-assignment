@@ -4,41 +4,45 @@ import styled from "styled-components";
 import { useAppDispatch } from "../../../../redux/hooks.redux";
 import { ICartItem, updateAddProduct, updateReduceProduct } from "../../../../redux/slices/cart.slices.redux";
 
+import SvgButtonPlus from "../../../../public/assets/svg/button-plus.svg"
+import SvgButtonMinus from "../../../../public/assets/svg/button-minus.svg"
+
 export interface IPropsCartAddRemoveButton {
   cartItem: ICartItem
 }
 
 const Wrapper = styled.div`
   display: flex;
-  background-color: ${props => props.theme.primaryColor};
   align-self: center;
   width: 70px;
   justify-content: center;
   align-items: center;
-  border-radius: ${props => props.theme.borderRadius}px;
   overflow: hidden;
-  border: ${props => props.theme.border};
 `
 
 const Add = styled.div`
   display: flex;
   flex: 1;
-  padding: 4px 12px;
   justify-content: center;
   cursor: pointer;
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.1);
+  font-weight: 700;
+  svg {
+    width: 24px;
+    height: 24px;
+    fill: rgb(255, 209, 0);
   }
 `
 
 const Reduce = styled.div`
   display: flex;
   flex: 1;
-  padding: 4px 12px;
   justify-content: center;
   cursor: pointer;
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.1);
+  font-weight: 700;
+  svg {
+    width: 24px;
+    height: 24px;
+    fill: rgb(255, 209, 0);
   }
 `
 
@@ -48,9 +52,9 @@ const CartAddRemoveButton: FunctionComponent<IPropsCartAddRemoveButton> = ({ car
   const dispatch = useAppDispatch()
 
   return <Wrapper>
-    <Reduce onClick={() => dispatch(updateReduceProduct({ cartId: cartItem.cartId }))}>-</Reduce>
+    <Reduce onClick={() => dispatch(updateReduceProduct({ cartId: cartItem.cartId }))}><SvgButtonMinus /></Reduce>
     <QuantityCount>{cartItem.quantity}</QuantityCount>
-    <Add onClick={() => dispatch(updateAddProduct({ cartId: cartItem.cartId }))}>+</Add>
+    <Add onClick={() => dispatch(updateAddProduct({ cartId: cartItem.cartId }))}><SvgButtonPlus /></Add>
   </Wrapper>
 }
 
