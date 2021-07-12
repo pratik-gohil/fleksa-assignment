@@ -106,6 +106,27 @@ const OfferItem = styled.div`
   }
 `
 
+const WrapperContainer = styled.div`
+  display: flex;
+  flex: 1;
+  width: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  @media (min-width: ${BREAKPOINTS.lg}px) {
+    flex-direction: row;
+  }
+`
+
+const Wrapper = styled.div`
+  display: flex;
+  min-width: 100%;
+  flex-direction: column;
+  @media (min-width: ${BREAKPOINTS.lg}px) {
+    min-width: 400px;
+  }
+`
+
 const MenuPageBanner: FunctionComponent = ({}) => {
   const language = useAppSelector(selectLanguage)
   const shopData = useAppSelector(selectShop)
@@ -117,23 +138,27 @@ const MenuPageBanner: FunctionComponent = ({}) => {
       <ContentTopContent>
         <Container>
           <Row>
-            <Col xs={12} lg={6}>
-              <Title>{shopData?.name}</Title>
-              <SubTitle>{shopData?.category_json[language]}</SubTitle>
-              <MenuFeatures />
-            </Col>
-            <Col xs={12} lg={6}>
-              <OffersWrapper>
-                <OffersContainer>
-                  <OfferTitle>OFFER</OfferTitle>
-                  {offersData.map(i => {
-                    return <OfferItem key={i.code}>
-                      <SvgTag />
-                      <Text><strong>{i.provided}% OFF - {i.code}</strong> {i.description_json && i.description_json[language]}</Text>
-                    </OfferItem>
-                  })}
-                </OffersContainer>
-              </OffersWrapper>
+            <Col>
+              <WrapperContainer>
+                <Wrapper>
+                  <Title>{shopData?.name}</Title>
+                  <SubTitle>{shopData?.category_json[language]}</SubTitle>
+                  <MenuFeatures />
+                </Wrapper>
+                <Wrapper>
+                  <OffersWrapper>
+                    <OffersContainer>
+                      <OfferTitle>OFFER</OfferTitle>
+                      {offersData.map(i => {
+                        return <OfferItem key={i.code}>
+                          <SvgTag />
+                          <Text><strong>{i.provided}% OFF - {i.code}</strong> {i.description_json && i.description_json[language]}</Text>
+                        </OfferItem>
+                      })}
+                    </OffersContainer>
+                  </OffersWrapper>
+                </Wrapper>
+              </WrapperContainer>
             </Col>
           </Row>
         </Container>
