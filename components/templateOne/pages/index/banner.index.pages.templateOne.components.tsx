@@ -97,8 +97,8 @@ const IndexBanner = () => {
         <Title>{banner.title}</Title>
         <Description>{banner.description}</Description>
         <Cross onClick={handleOfferClose}>X</Cross>
-        <Temp onClick={handleOfferClose} visible={showOfferPopup} />
       </Container>
+      <Temp onClick={handleOfferClose} visible={showOfferPopup} />
     </Wrapper>
   ) : null;
 };
