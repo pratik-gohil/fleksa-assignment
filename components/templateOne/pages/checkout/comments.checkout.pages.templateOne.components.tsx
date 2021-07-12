@@ -16,7 +16,7 @@ export const StyledCheckoutTextarea = styled.textarea`
   padding: ${props => props.theme.dimen.X4}px;
   font-family: inherit;
   font-size: inherit;
-  height: 160px;
+  height: 100px;
 `
 
 const CheckoutPageComments: FunctionComponent = ({}) => {
