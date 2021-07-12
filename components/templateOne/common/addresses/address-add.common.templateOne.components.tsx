@@ -124,6 +124,7 @@ const InputSubmit = styled(Input)`
 `
 
 const Error = styled.p`
+  font-size: 12px;
   color: #f44336;
   margin: 0 ${props => props.theme.dimen.X4}px;
 `
@@ -218,22 +219,47 @@ const AddressAdd: FunctionComponent = () => {
 
   useEffect(() => {
     setErrorMessage(undefined)
-    if (addressByType) {
-      setAddressId(addressByType.id)
-      setAddressMain(addressByType.address || "")
-      setAddressCity(addressByType.city)
-      setAddressArea(addressByType.area || "")
-      setAddressFloor(addressByType.floor || "")
-      setAddressPostalCode(addressByType.postal_code)
-    } else {
-      setAddressId(null)
-      setAddressMain("")
-      setAddressCity("")
-      setAddressArea("")
-      setAddressFloor("")
-      setAddressPostalCode("")
+    if (isLoggedIn) {
+      if (addressByType) {
+        setAddressId(addressByType.id)
+        setAddressMain(addressByType.address || "")
+        setAddressCity(addressByType.city)
+        setAddressArea(addressByType.area || "")
+        setAddressFloor(addressByType.floor || "")
+        setAddressPostalCode(addressByType.postal_code)
+      } else {
+        setAddressId(null)
+        setAddressMain("")
+        setAddressCity("")
+        setAddressArea("")
+        setAddressFloor("")
+        setAddressPostalCode("")
+      }
     }
   }, [ addressByType ])
+
+  useEffect(() => {
+    setErrorMessage(undefined)
+    if (!isLoggedIn) {
+      const guestAddressString = window.localStorage.getItem(LS_GUEST_USER_ADDRESS)
+      console.log("guestAddressString", guestAddressString)
+      if (guestAddressString) {
+        const guestAddress = JSON.parse(guestAddressString) as IGuestAddress
+        console.log("guestAddress", guestAddress)
+        if (guestAddress.address_type === addressType) {
+          setAddressFloor(guestAddress.floor)
+          setAddressMain(guestAddress.address)
+          setAddressCity(guestAddress.city)
+          setAddressPostalCode(guestAddress.postal_code)
+        } else {
+          setAddressFloor("")
+          setAddressMain("")
+          setAddressCity("")
+          setAddressPostalCode("")
+        }
+      }
+    }
+  }, [ addressType ])
 
   useEffect(() => {
     if (window !== "undefined" && refAddressInput.current) {

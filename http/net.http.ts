@@ -11,7 +11,7 @@ export interface IBody extends Record<string, string | string[] | number | numbe
 export interface IGet {
   path?: string;
   query?: IQuery;
-  headers?: Array<IHeaders>;
+  headers?: IHeaders;
 }
 
 export interface IPost extends IGet {
@@ -43,7 +43,7 @@ export default abstract class Net {
     try {
       const response = await fetch(this.getUrl(path, query), {
         method: 'get',
-        headers: { ...this.defaultHeaders, headers } as unknown as HeadersInit | undefined,
+        headers: { ...this.defaultHeaders, ...headers } as unknown as HeadersInit | undefined,
       });
       const responseJson = (await response.json()) as unknown as T;
       return responseJson;
@@ -57,7 +57,7 @@ export default abstract class Net {
       const response = await fetch(this.getUrl(path, query), {
         method: 'post',
         body: JSON.stringify(body),
-        headers: { ...this.defaultHeaders, headers } as unknown as HeadersInit | undefined,
+        headers: { ...this.defaultHeaders, ...headers } as unknown as HeadersInit | undefined,
       });
       const responseJson = (await response.json()) as unknown as T;
       return responseJson;

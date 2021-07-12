@@ -13,6 +13,7 @@ import { selectShowAddress, selectShowOrderTypeSelect } from "../../../redux/sli
 import AddressAdd from "../../../components/templateOne/common/addresses/address-add.common.templateOne.components";
 import MenuPageCartSummary from "../../../components/templateOne/pages/menu/cart-summary.pages.templateOne.components";
 import { LS_GUEST_USER_ADDRESS } from "../../../constants/keys-local-storage.constants";
+import { useTranslation } from "next-i18next";
 
 const SideViewLeft = styled.div`
   display: none;
@@ -44,7 +45,19 @@ const SideViewRight = styled(SideViewLeft)`
   }
 `
 
+const DisclaimerContainer = styled.div`
+  background: #f9f9f9;
+  padding: ${props => props.theme.dimen.X4}px;
+  border-radius: ${props => props.theme.borderRadius}px;
+  margin: ${props => props.theme.dimen.X4*2}px 0;
+`
+
+const Disclaimer = styled.p`
+  font-size: 12px
+`
+
 const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
+  const { t } = useTranslation("disclaimer")
   const orderType = useAppSelector(selectOrderType)
   const showAddAddress = useAppSelector(selectShowAddress)
   const checkoutAddressId = useAppSelector(selectSelectedAddressId)
@@ -64,6 +77,10 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
         </Col>
         <Col sm={12} md={12} lg={5} xxl={5}>
           <MenuPageCategoryList />
+          <DisclaimerContainer>
+            <Disclaimer>{t("line-1")}</Disclaimer>
+            <Disclaimer>{t("line-2")}</Disclaimer>
+          </DisclaimerContainer>
         </Col>
         <Col sm={12} md={12} lg={4} xxl={4}>
           <SideViewRight>

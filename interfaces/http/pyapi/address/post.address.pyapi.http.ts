@@ -1,4 +1,4 @@
-import { AddressTypes } from "../../../../components/templateOne/common/addresses/address-manager.common.templateOne.components";
+import { AddressTypes } from ../../../../components/templateOne/common/addresses/address-manager.common.templateOne.components;
 
 export interface IPyApiHttpPostAddressRequestData {
   area: string
@@ -40,6 +40,20 @@ export type IPyApiHttpPostAddressResponse = {
   result: boolean
 } & ( IPyApiHttpPostAddressResponseCanDeliver | IPyApiHttpPostAddressResponseCannotDeliver )
 
-export type IPyApiHttpPostAddressAllResponse = {
-
+type ResponseDeliveryPossible = {
+  customer: {
+    is_customer: boolean
+  }, 
+  description: string
+  possibilities: Record<number, {
+    is_available: boolean
+  }>
+  result: true
 }
+
+type ResponseDeliveryNotPossible = {
+
+  result: false
+}
+
+export type IPyApiHttpPostAddressAllResponse = ResponseDeliveryNotPossible | ResponseDeliveryPossible

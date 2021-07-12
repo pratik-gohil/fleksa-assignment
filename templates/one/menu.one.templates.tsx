@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useRef } from "react";
+import React, { FunctionComponent, ReactNode, useRef } from "react";
 import styled from "styled-components";
 import { BREAKPOINTS } from "../../constants/grid-system-configuration";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks.redux";
@@ -6,10 +6,17 @@ import { useEffect } from "react";
 import { selectShop, selectSiblings } from "../../redux/slices/index.slices.redux";
 import { useState } from "react";
 import { ITimingsDay } from "../../interfaces/common/shop.common.interfaces";
-import { ICheckoutOrderTypes, updateClearCheckout, updateOrderType } from "../../redux/slices/checkout.slices.redux";
+import { ICheckoutOrderTypes, updateClearCheckout, updateOrderType, updateSelectedAddressId } from "../../redux/slices/checkout.slices.redux";
 import { updateClearCart } from "../../redux/slices/cart.slices.redux";
 import PyApiHttpPostAddress from "../../http/pyapi/address/post.address.pyapi.http";
 import { selectConfiguration } from "../../redux/slices/configuration.slices.redux";
+import { ISibling } from "../../interfaces/common/sibling.common.interfaces";
+import { IGuestAddress } from "../../components/templateOne/common/addresses/address-add.common.templateOne.components";
+import { LS_GUEST_USER_ADDRESS } from "../../constants/keys-local-storage.constants";
+import { selectAddressByType, selectBearerToken, selectIsUserLoggedIn } from "../../redux/slices/user.slices.redux";
+import NodeApiHttpPostCreateNewAddressRequest from "../../http/nodeapi/account/post.create-address.nodeapi.http";
+import { updateError } from "../../redux/slices/common.slices.redux";
+import NodeApiHttpPostUpdateAddressRequest from "../../http/nodeapi/account/post.update-address.nodeapi.http";
 
 type Filters = "has_pickup"|"has_delivery"|"has_dinein"
 
@@ -181,6 +188,16 @@ const Input = styled.input`
   font-family: inherit;
 `
 
+const EnterAddress = styled.div`
+  width: 100%;
+  background: #f9f9f9;
+  padding: ${props => props.theme.dimen.X4}px;
+  margin-top: ${props => props.theme.dimen.X4}px;
+  background: #e9e9e9;
+  border-radius: ${props => props.theme.borderRadius}px;
+  text-align: center;
+`
+
 let map: google.maps.Map;
 let autoComplete: google.maps.places.Autocomplete
 
@@ -188,8 +205,11 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
   const dispatch = useAppDispatch()
   const shopData = useAppSelector(selectShop)
   const siblingsData = useAppSelector(selectSiblings)
+  const bearerToken = useAppSelector(selectBearerToken)
+  const isLoggedIn = useAppSelector(selectIsUserLoggedIn)
+  const addressData = useAppSelector(state => selectAddressByType(state, "HOME"))
   const configuration = useAppSelector(selectConfiguration)
-  const [deliveryFilterData, setDeliveryFilterData ] = useState([])
+  const [deliveryFilterData, setDeliveryFilterData ] = useState<Array<ISibling>>()
 
   const refAddressInput = useRef<HTMLInputElement>(null)
 
@@ -246,7 +266,6 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
 
   useEffect(() => {
     initMap()
-    setDeliveryFilterData([])
     if (typeof window !== "undefined") {
       dispatch(updateClearCart())
       dispatch(updateClearCheckout())
@@ -254,7 +273,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
     }
   }, [ ])
 
-  async function getAvaibleBasedOnAdress(area: string = "", postalCode: string) {
+  async function getAvaibleBasedOnAdress({ area = "", postalCode = "", main = "", city ="" }) {
     console.log(shopData?.id, addressArea, addressPostalCode, addressStreet, addressCity)
     if (shopData?.id) {
       const response = await new PyApiHttpPostAddress(configuration).postAll({
@@ -262,33 +281,104 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
         area,
         postalCode
       })
-      console.log(response)
+      if (response && response.result) {
+        const possibilities = Object.keys(response.possibilities)
+        setDeliveryFilterData(siblingsData.filter(i => possibilities.indexOf(String(i.id)) !== -1))
+        if (possibilities.length > 0) {
+          if (isLoggedIn && bearerToken) {
+            if (addressData?.id) {
+              await updateExistingAddress(bearerToken, addressData.id, postalCode, main, city)
+            } else {
+              await addNewAddress(bearerToken, postalCode, main, city)
+            }
+          } else {
+            const guestAddress: IGuestAddress = {
+              floor: addressFloor,
+              address: main,
+              address_type: "HOME",
+              city: city,
+              postal_code: postalCode
+            }
+            // save the address to local storage. Add on server when checkout opens
+            window.localStorage.setItem(LS_GUEST_USER_ADDRESS, JSON.stringify(guestAddress))
+          }
+        }
+      } else {
+        dispatch(updateSelectedAddressId(null))
+        setDeliveryFilterData([])
+        window.localStorage.removeItem(LS_GUEST_USER_ADDRESS)
+      }
     }
+  }
+
+  async function addNewAddress(bearerToken: string, postalCode: string, main: string, city: string) {
+    if (!isLoggedIn) return 
+    const response = await new NodeApiHttpPostCreateNewAddressRequest(configuration, bearerToken).post({
+      floor: addressFloor,
+      address: main,
+      address_type: "HOME",
+      city: city,
+      postal_code: postalCode
+    })
+    if (!response.result) {
+      dispatch(
+        updateError({
+          show: true,
+          message: response.message,
+          severity: 'error',
+        }),
+      );
+      return;
+    }
+    dispatch(updateSelectedAddressId(response.data?.address.id))
+  }
+
+  async function updateExistingAddress(bearerToken: string, addressId: number, postalCode: string, main: string, city: string) {
+    if (!isLoggedIn) return 
+    await new NodeApiHttpPostUpdateAddressRequest(configuration, bearerToken).post({
+      customer_address_id: addressId,
+      updating_values: {
+        floor: addressFloor,
+        address: main,
+        address_type: "HOME",
+        city: city,
+        postal_code: postalCode
+      }
+    })
+    dispatch(updateSelectedAddressId(addressId))
   }
 
   function onAddressChange() {
     const place = autoComplete.getPlace()
     let area: string | undefined = undefined
     let postalCode: string | undefined = undefined
+    let main: string | undefined = undefined
+    let street: string | undefined = undefined
+    let city: string | undefined = undefined
     if (place.address_components) {
       for (let component of place.address_components) {
         if (component.types[0] === 'route') {
           let temp = '';
           for (let component2 of place.address_components) if (component2.types[0] === 'street_number') temp = component2.short_name;
-          setAddressMain(`${component.long_name} ${temp}`);
-          setAddressStreet(component.long_name);
+          main = `${component.long_name} ${temp}`
+          setAddressMain(main);
+          street = component.long_name
+          setAddressStreet(street);
         } else if (component.types.indexOf('sublocality') !== -1 || component.types.indexOf('sublocality_level_1') !== -1) {
           area = component.long_name.includes('Innenstadt') ? 'Innenstadt' : component.long_name
           setAddressArea(area);
         } else if (component.types[0] === 'locality') {
-          setAddressCity(component.long_name);
+          city = component.long_name
+          setAddressCity(city);
         } else if (component.types[0] === 'postal_code') {
           postalCode = component.short_name
           setAddressPostalCode(postalCode);
         }
       }
     }
-    if (postalCode) getAvaibleBasedOnAdress(area, postalCode)
+    if (postalCode) {
+      getAvaibleBasedOnAdress({ area, postalCode, main, city })
+    }
   }
 
   useEffect(() => {
@@ -300,6 +390,63 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
       autoComplete.addListener('place_changed', onAddressChange);
     }
   }, [ refAddressInput ])
+
+  const restaurantsToShow = filterName === "has_delivery"? deliveryFilterData: siblingsData
+
+  let restaurantListView: ReactNode
+  if (restaurantsToShow && restaurantsToShow.length > 0) {
+    restaurantListView = restaurantsToShow.filter(sibling => sibling.address.availability[filterName]).map(sibling => {
+      const area = sibling.address?.area ? sibling.address?.area + ' ' : ''
+      const address = sibling.address?.address || ''
+      const city = sibling.address?.city || ''
+      const postalCode = sibling.address?.postal_code || ''
+      
+      const day = new Date().toLocaleString('en-us', {  weekday: 'long' }).toUpperCase()
+      return <ListItem key={`${sibling.id}`}>
+        <ListItemLink>
+          <ItemImage src={sibling.logo} />
+          <ContentContatiner>
+            <InfoWithOrderButton>
+              <InfoContainer>
+                <Title>{sibling.name}</Title>
+                <Address>
+                  <p>{area}{address}</p>
+                  <p>{postalCode} {city}</p>
+                </Address>
+              </InfoContainer>
+              <OrderButton href={`/menu/${sibling.id}`}>ORDER</OrderButton>
+            </InfoWithOrderButton>
+            <TimingContainerHolder>
+              <TimingContainer>
+                <TimingContainerTitle>STORE HOURS</TimingContainerTitle>
+                <TimingContainerTiming>{(sibling.timings[day] as ITimingsDay).shop?.timings?.map((t) => `${t.open} - ${t.close}`).join(', ') || (
+                  <span style={{ color: 'red', fontWeight: 500 }}>Closed</span>
+                )}</TimingContainerTiming>
+              </TimingContainer>
+              <TimingContainer>
+                <TimingContainerTitle>DELIVERY HOURS</TimingContainerTitle>
+                <TimingContainerTiming>{(sibling.timings[day] as ITimingsDay).delivery?.timings?.map((t) => `${t.open} - ${t.close}`).join(', ') || (
+                  <span style={{ color: 'red', fontWeight: 500 }}>Closed</span>
+                )}</TimingContainerTiming>
+              </TimingContainer>
+            </TimingContainerHolder>
+          </ContentContatiner>
+        </ListItemLink>
+      </ListItem>
+    })
+  } else {
+    if (filterName === "has_delivery") {
+      if (restaurantsToShow && restaurantsToShow.length === 0) {
+        restaurantListView = <EnterAddress>
+          <p>No locations deliver to your address</p>
+        </EnterAddress>
+      } else {
+        restaurantListView = <EnterAddress>
+          <p>Search to see which locations deliver to you</p>
+        </EnterAddress>
+      }
+    }
+  }
 
   return <ColumnContainer>
     <FullHeightColumnLeft>
@@ -336,45 +483,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
             placeholder={"Optional"}
           />
         </InputContainer>
-        {(filterName === "has_delivery"? deliveryFilterData: siblingsData).filter(sibling => sibling.address.availability[filterName]).map(sibling => {
-          const area = sibling.address?.area ? sibling.address?.area + ' ' : ''
-          const address = sibling.address?.address || ''
-          const city = sibling.address?.city || ''
-          const postalCode = sibling.address?.postal_code || ''
-          
-          const day = new Date().toLocaleString('en-us', {  weekday: 'long' }).toUpperCase()
-          return <ListItem key={`${sibling.id}`}>
-            <ListItemLink>
-              <ItemImage src={sibling.logo} />
-              <ContentContatiner>
-                <InfoWithOrderButton>
-                  <InfoContainer>
-                    <Title>{sibling.name}</Title>
-                    <Address>
-                      <p>{area}{address}</p>
-                      <p>{postalCode} {city}</p>
-                    </Address>
-                  </InfoContainer>
-                  <OrderButton href={`/menu/${sibling.id}`}>ORDER</OrderButton>
-                </InfoWithOrderButton>
-                <TimingContainerHolder>
-                  <TimingContainer>
-                    <TimingContainerTitle>STORE HOURS</TimingContainerTitle>
-                    <TimingContainerTiming>{(sibling.timings[day] as ITimingsDay).shop?.timings?.map((t) => `${t.open} - ${t.close}`).join(', ') || (
-                      <span style={{ color: 'red', fontWeight: 500 }}>Closed</span>
-                    )}</TimingContainerTiming>
-                  </TimingContainer>
-                  <TimingContainer>
-                    <TimingContainerTitle>DELIVERY HOURS</TimingContainerTitle>
-                    <TimingContainerTiming>{(sibling.timings[day] as ITimingsDay).delivery?.timings?.map((t) => `${t.open} - ${t.close}`).join(', ') || (
-                      <span style={{ color: 'red', fontWeight: 500 }}>Closed</span>
-                    )}</TimingContainerTiming>
-                  </TimingContainer>
-                </TimingContainerHolder>
-              </ContentContatiner>
-            </ListItemLink>
-          </ListItem>
-        })}
+        {restaurantListView}
       </List>
     </FullHeightColumnLeft>
     <FullHeightColumnRight>

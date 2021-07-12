@@ -13,6 +13,9 @@ export default class PyApiHttpPostAddress extends ApiHttpCommon {
     try {
       const response = await new NetPyApi(this.configuration).post<IPyApiHttpPostAddressResponse>({
         path:`pyapi/address`,
+        headers: {
+          "Content-Type": "text/plain",
+        },
         body: {
           area: data.area,
           street: data.street,
@@ -34,6 +37,9 @@ export default class PyApiHttpPostAddress extends ApiHttpCommon {
     try {
       const response = await new NetPyApi(this.configuration).post<IPyApiHttpPostAddressAllResponse>({
         path:`pyapi/address/all`,
+        headers: {
+          "Content-Type": "text/plain",
+        },
         body: {
           area: data.area,
           shop_id: data.shopId,
