@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import { useAppSelector } from '../../../../redux/hooks.redux';
-import { selectAddress, selectImages, selectOffers, selectShop } from '../../../../redux/slices/index.slices.redux';
+import { selectAddress, selectImages, selectContents, selectShop } from '../../../../redux/slices/index.slices.redux';
 import { Col, Container, Row } from 'react-grid-system';
 import NavLink from './nav-link.common.templateOne.components';
 import { useTranslation } from 'next-i18next';
@@ -54,7 +54,7 @@ const NavbarDesktop: FunctionComponent = ({}) => {
   const { t } = useTranslation('header');
   const shopData = useAppSelector(selectShop);
   const imageData = useAppSelector(selectImages);
-  const offerData = useAppSelector(selectOffers);
+  const offerData = useAppSelector(selectContents);
   const addressData = useAppSelector(selectAddress);
   const selectedMenuId = useAppSelector(selectSelectedMenu);
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
