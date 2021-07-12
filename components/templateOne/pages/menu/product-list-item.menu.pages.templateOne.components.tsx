@@ -150,7 +150,8 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
         selectedOption={selectedOption}
         setSelectedOption={id => setSelectedOption(id)}
       />)}
-      {product.type_ === "SINGLE" && product.side_products_json?.map(sideProduct => {
+      {console.log("product.side_products_json", product.side_products_json)}
+      {/* {product.type_ === "SINGLE" && product.side_products_json?.map(sideProduct => {
         return <MenuPageSides
           key={sideProduct.name_json.english}
           selectedOption={selectedOption}
@@ -159,7 +160,7 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
           setSelectedOption={id => setSelectedOption(id)}
           getNextIndex={getNextIndex}
         />
-      })}
+      })} */}
     </OptionsContainer>
   </ListItem>
 }

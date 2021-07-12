@@ -26,6 +26,7 @@ const MenuPageMultipleSelector: FunctionComponent<IPropsMenuPageCategoryListItem
   return choice.options && choice.options.length > 0? <StyledOptionsWrapper>
     <StyledOptionsTitleContainer onClick={toggle}>
       <p style={{ margin: 0, padding: 12 }}>{choice.name_json[language]}</p>
+      <p style={{ margin: 0, padding: 12 }}>{isOptionOpen? "Choose One": choice.options.filter(i => i.id === selectionMultipleId)[0].name_json[language]}</p>
     </StyledOptionsTitleContainer>
     <StyledOptionsListContainer isOptionOpen={isOptionOpen}>
       <StyledOptionsList>
@@ -33,6 +34,7 @@ const MenuPageMultipleSelector: FunctionComponent<IPropsMenuPageCategoryListItem
           if (option.id !== selectionMultipleId) {
             setSelectionMultipleId(option.id)
           }
+          setSelectedOption(optionKey+1)
         }}>
           <StyledOptionsRadioButtonContainer>
             <StyledOptionsRadioButton multiselect={false} selected={option.id === selectionMultipleId} />
