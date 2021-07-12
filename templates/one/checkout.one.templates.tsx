@@ -82,7 +82,7 @@ const CheckoutPageTemplateOne: FunctionComponent = ({}) => {
   }}>
     <Container>
       <Row>
-        <Col lg={6}>
+        <Col lg={7}>
           <CartContainerSmall>
             <CheckoutPageCart />
           </CartContainerSmall>
@@ -93,7 +93,7 @@ const CheckoutPageTemplateOne: FunctionComponent = ({}) => {
           <CheckoutPageTip />
           <CheckoutPagePayment />
         </Col>
-        <Col lg={6}>
+        <Col lg={5}>
           <CartContainerLarge>
             <CheckoutPageCart />
           </CartContainerLarge>
