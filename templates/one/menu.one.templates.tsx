@@ -246,6 +246,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
 
   useEffect(() => {
     initMap()
+    setDeliveryFilterData([])
     if (typeof window !== "undefined") {
       dispatch(updateClearCart())
       dispatch(updateClearCheckout())
@@ -254,7 +255,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
   }, [ ])
 
   async function getAvaibleBasedOnAdress() {
-    console.log(shopData?.id, addressArea, addressPostalCode)
+    console.log(shopData?.id, addressArea, addressPostalCode, addressStreet, addressCity)
     if (shopData?.id && addressArea && addressPostalCode) {
       const response = await new PyApiHttpPostAddress(configuration).postAll({
         shopId: shopData?.id,
@@ -327,8 +328,8 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
               width: 100,
               marginLeft: 12
             }}
-            value={addressStreet}
-            onChange={e => setAddressStreet(e.target.value)}
+            value={addressFloor}
+            onChange={e => setAddressFloor(e.target.value)}
             placeholder={"Optional"}
           />
         </InputContainer>

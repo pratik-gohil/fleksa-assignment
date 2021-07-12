@@ -34,8 +34,12 @@ const WrapperButton = styled.div<IPropsWrapperButton>`
 
 const ButtonContainer = styled.div`
   display: flex;
+  flex: 1;
   flex-wrap: nowrap;
   width: 86px;
+  height: 40px;
+  justify-content: center;
+  align-items: center;
   background-color: rgb(255, 209, 0);
   border-radius: ${props => props.theme.borderRadius}px;
   align-self: center;
