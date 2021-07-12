@@ -57,7 +57,6 @@ export default class MyDocument extends Document {
           <link rel='manifest' href='/static/manifest.json' />
           <link rel='mask-icon' href='/static/icons/safari-pinned-tab.svg' color='#5bbad5' />
           <link rel='shortcut icon' href='/favicon.ico' />
-          <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:300,400,500' />
 
           <link rel='apple-touch-startup-image' href='/static/images/apple_splash_2048.png' sizes='2048x2732' />
           <link rel='apple-touch-startup-image' href='/static/images/apple_splash_1668.png' sizes='1668x2224' />
@@ -71,7 +70,7 @@ export default class MyDocument extends Document {
 
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
-          <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700;800&display=swap" rel="stylesheet"></link>
+          <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet"></link>
 
           {(((this.props as any).pathname as string).startsWith("/menu") || (((this.props as any).pathname as string) === "/checkout"))
             && <script src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY}&libraries=places`}></script>}

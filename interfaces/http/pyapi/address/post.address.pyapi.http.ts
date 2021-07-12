@@ -1,4 +1,4 @@
-import { AddressTypes } from ../../../../components/templateOne/common/addresses/address-manager.common.templateOne.components;
+import { AddressTypes } from "../../../../components/templateOne/common/addresses/address-manager.common.templateOne.components"
 
 export interface IPyApiHttpPostAddressRequestData {
   area: string

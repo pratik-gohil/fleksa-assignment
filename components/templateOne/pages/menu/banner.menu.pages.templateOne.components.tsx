@@ -40,15 +40,13 @@ const Title = styled.h1`
   font-size: 30px;
   margin: 0;
   @media (min-width: ${BREAKPOINTS.lg}px) {
-    font-size: 36px;
+    font-size: 40px;
   }
 `
 
 const SubTitle = styled.h2`
   font-size: 18px;
-  @media (min-width: ${BREAKPOINTS.lg}px) {
-    font-size: 24px;
-  }
+  font-weight: 400;
 `
 
 const OffersWrapper = styled.div`

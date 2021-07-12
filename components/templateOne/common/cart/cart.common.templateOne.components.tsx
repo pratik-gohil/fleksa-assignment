@@ -66,10 +66,19 @@ const ListItem = styled.li`
 
 const ItemTitle = styled.p`
   font-size: 16px;
+  font-weight: 600;
   margin: ${props => props.theme.dimen.X4}px 0;
   span {
     font-size: 12px;
+    font-weight: 400;
   }
+`
+
+const ItemTitleAdditional = styled.p`
+  font-size: 12px;
+  font-weight: 400;
+  margin-top: -14px;
+  margin-left: 10px;
 `
 
 const OrderButton = styled.p<{ isActive: boolean }>`
@@ -163,6 +172,8 @@ const Cart: FunctionComponent = ({}) => {
           return cartItem && <ListItem key={key}>
             <Column1>
               <ItemTitle>{cartItem.mainName[language]} <span>{cartItem.partName && "(" + cartItem.partName[language] + ")"}</span></ItemTitle>
+              {(cartItem.sideProducts && cartItem.sideProducts.length > 0)
+                && <ItemTitleAdditional>{"With " + cartItem.sideProducts?.map(i => i.name[language]).join(", ")}</ItemTitleAdditional>}
             </Column1>
             <Column2>
               <CartAddRemoveButton cartItem={cartItem} />

@@ -214,10 +214,6 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
   const refAddressInput = useRef<HTMLInputElement>(null)
 
   const [ addressMain, setAddressMain ] = useState("")
-  const [ addressStreet, setAddressStreet ] = useState("")
-  const [ addressArea, setAddressArea] = useState("")
-  const [ addressCity, setAddressCity] = useState("")
-  const [ addressPostalCode, setAddressPostalCode] = useState("")
   const [ addressFloor, setAddressFloor ] = useState("")
   const [ filterName, setFilterName ] = useState<Filters>("has_delivery")
 
@@ -274,7 +270,6 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
   }, [ ])
 
   async function getAvaibleBasedOnAdress({ area = "", postalCode = "", main = "", city ="" }) {
-    console.log(shopData?.id, addressArea, addressPostalCode, addressStreet, addressCity)
     if (shopData?.id) {
       const response = await new PyApiHttpPostAddress(configuration).postAll({
         shopId: shopData?.id,
@@ -353,7 +348,6 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
     let area: string | undefined = undefined
     let postalCode: string | undefined = undefined
     let main: string | undefined = undefined
-    let street: string | undefined = undefined
     let city: string | undefined = undefined
     if (place.address_components) {
       for (let component of place.address_components) {
@@ -362,17 +356,12 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
           for (let component2 of place.address_components) if (component2.types[0] === 'street_number') temp = component2.short_name;
           main = `${component.long_name} ${temp}`
           setAddressMain(main);
-          street = component.long_name
-          setAddressStreet(street);
         } else if (component.types.indexOf('sublocality') !== -1 || component.types.indexOf('sublocality_level_1') !== -1) {
           area = component.long_name.includes('Innenstadt') ? 'Innenstadt' : component.long_name
-          setAddressArea(area);
         } else if (component.types[0] === 'locality') {
           city = component.long_name
-          setAddressCity(city);
         } else if (component.types[0] === 'postal_code') {
           postalCode = component.short_name
-          setAddressPostalCode(postalCode);
         }
       }
     }

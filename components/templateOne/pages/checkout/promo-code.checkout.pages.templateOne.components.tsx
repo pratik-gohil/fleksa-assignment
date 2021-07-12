@@ -91,7 +91,6 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
         subTotalAmount: checkoutFinalAmountWithoutPromo,
         token: bearerToken
       })
-      console.log(response)
       if (response?.result) {
         dispatch(updatePromoCode({
           code: coupon,

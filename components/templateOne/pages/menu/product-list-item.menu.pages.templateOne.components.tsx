@@ -8,7 +8,7 @@ import { ICategoryProduct } from "../../../../interfaces/common/category.common.
 import MenuPageChoiceList from "./choice-list.menu.pages.templateOne.components";
 import AddButton from "../../common/addButton/add-button.common.templateOne.components";
 import { memo } from "react";
-// import MenuPageSides from "./sides.menu.pages.templateOne.components";
+import MenuPageSides from "./sides.menu.pages.templateOne.components";
 
 export interface IPropsMenuPageCategoryListItem {
   product: ICategoryProduct
@@ -31,10 +31,10 @@ const ListItem = styled.li<IPropsListItem>`
   transition-duration: 500ms;
   z-index: -1;
   @media (min-width: ${BREAKPOINTS.sm}px) {
-    margin: -2px 0;
+    margin: 20px 0;
     border: ${props => props.isOpen? props.theme.border: "1px solid transparent"};
     ${props => props.isOpen && css`
-      box-shadow: 0 0 24px 0 rgba(0, 0, 0, 0.05);
+      box-shadow: 0 0 24px 0 rgba(0, 0, 0, 0.2);
     `}
     border-radius: ${props => props.theme.borderRadius}px;
     &:hover {
@@ -93,11 +93,14 @@ const OptionsContainer = styled.div<IPropsOptionsContainer>`
 `
 
 const RecipeName = styled.h4`
+  font-size: 18px;
   margin: 0;
   padding: 0;
+  font-weight: 600;
 `
 
 const RecipeDescription = styled.p`
+  font-size: 16px;
   margin: 0;
   padding: 0;
 `
@@ -150,8 +153,7 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
         selectedOption={selectedOption}
         setSelectedOption={id => setSelectedOption(id)}
       />)}
-      {product.type_ === "SINGLE" && console.log("product.side_products_json", product.side_products_json)}
-      {/* {product.type_ === "SINGLE" && product.side_products_json?.map(sideProduct => {
+      {(product.type_ === "SINGLE" && Array.isArray(product.side_products_json)) && product.side_products_json?.map(sideProduct => {
         return <MenuPageSides
           key={sideProduct.name_json.english}
           selectedOption={selectedOption}
@@ -160,7 +162,7 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
           setSelectedOption={id => setSelectedOption(id)}
           getNextIndex={getNextIndex}
         />
-      })} */}
+      })}
     </OptionsContainer>
   </ListItem>
 }

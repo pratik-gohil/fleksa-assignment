@@ -242,10 +242,8 @@ const AddressAdd: FunctionComponent = () => {
     setErrorMessage(undefined)
     if (!isLoggedIn) {
       const guestAddressString = window.localStorage.getItem(LS_GUEST_USER_ADDRESS)
-      console.log("guestAddressString", guestAddressString)
       if (guestAddressString) {
         const guestAddress = JSON.parse(guestAddressString) as IGuestAddress
-        console.log("guestAddress", guestAddress)
         if (guestAddress.address_type === addressType) {
           setAddressFloor(guestAddress.floor)
           setAddressMain(guestAddress.address)
