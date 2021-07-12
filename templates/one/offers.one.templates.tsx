@@ -56,7 +56,6 @@ const ContentContainer = styled.div`
   min-height: 600px;
   max-height: 800px;
   margin-bottom: 1rem;
-  position: relative;
   padding: 1rem;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
@@ -81,7 +80,6 @@ const Content = styled.div`
     flex-direction: column;
     width: 100%;
     overflow: auto;
-    /* background: red; */
     padding: 0;
   }
 `;
@@ -106,6 +104,10 @@ const RightSection = styled(LeftSection)`
   }
 `;
 
+const TitleContainer = styled.div`
+  position: relative;
+`;
+
 const MainTitle = styled.h2`
   text-align: left;
   padding: 0;
@@ -121,16 +123,13 @@ const Image = styled.img`
 const LeftButton = styled.div<{ leftVisible: boolean }>`
   width: 48px;
   height: 48px;
-  position: absolute;
-  left: 50px;
-  top: 50%;
-  transform: translateY(-50%);
   border-radius: 50%;
   background: #fff;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
   cursor: pointer;
   transition: 0.3s;
   display: ${(p) => (p.leftVisible ? 'block' : 'none')};
+  margin-right: 0.5rem;
 
   svg {
     transition: 0.3s;
@@ -139,22 +138,13 @@ const LeftButton = styled.div<{ leftVisible: boolean }>`
   &:hover svg {
     fill: rgba(0, 0, 0, 1);
   }
-
-  @media (max-width: ${BREAKPOINTS.sm}px) {
-    transform: translateY(280%);
-    left: 10px;
-  }
 `;
 
 const RightButton = styled.div<{ rightVisible: boolean }>`
   width: 48px;
   height: 48px;
-  position: absolute;
-  right: 50px;
   border-radius: 50%;
   background: #fff;
-  top: 50%;
-  transform: translateY(-50%);
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
   cursor: pointer;
   transition: 0.3s;
@@ -167,11 +157,13 @@ const RightButton = styled.div<{ rightVisible: boolean }>`
   &:hover svg {
     fill: rgba(0, 0, 0, 1);
   }
+`;
 
-  @media (max-width: ${BREAKPOINTS.sm}px) {
-    transform: translateY(280%);
-    right: 10px;
-  }
+const ButtonContainer = styled.div`
+  display: flex;
+  position: absolute;
+  top: 0;
+  right: -1.5rem;
 `;
 
 const OffersPageTemplateOne: FunctionComponent = ({}) => {
@@ -180,7 +172,7 @@ const OffersPageTemplateOne: FunctionComponent = ({}) => {
   const { t } = useTranslation('header');
 
   const [leftArrowVisible, setLeftArrowVisible] = useState(false);
-  const [rightArrowVisible, setRightArrowVisible] = useState(contents.length > 1);
+  const [rightArrowVisible, setRightArrowVisible] = useState(contents.filter((c) => c.type_ === 'JSON').length > 1);
   const [currentContent, setCurrentContent] = useState<IContent | null>(null);
   let index = useRef(0);
 
@@ -251,25 +243,27 @@ const OffersPageTemplateOne: FunctionComponent = ({}) => {
       </HeroContainer>
 
       <ContentContainer>
-        <LeftButton onClick={handleLeftArrowClick} leftVisible={leftArrowVisible}>
-          <SvgPrevious />
-        </LeftButton>
-
         {!!currentContent && (
           <Content>
             <LeftSection>
               <Image src={currentContent.image} alt="currentContent picture" />
             </LeftSection>
             <RightSection>
-              <MainTitle>{currentContent.title}</MainTitle>
+              <TitleContainer>
+                <MainTitle>{currentContent.title}</MainTitle>
+                <ButtonContainer>
+                  <LeftButton onClick={handleLeftArrowClick} leftVisible={leftArrowVisible}>
+                    <SvgPrevious />
+                  </LeftButton>
+                  <RightButton onClick={handleRightArrowClick} rightVisible={rightArrowVisible}>
+                    <SvgNext />
+                  </RightButton>
+                </ButtonContainer>
+              </TitleContainer>
               <div dangerouslySetInnerHTML={{ __html: convertQuillToHtml(JSON.parse(currentContent.description)?.ops) }} />
             </RightSection>
           </Content>
         )}
-
-        <RightButton onClick={handleRightArrowClick} rightVisible={rightArrowVisible}>
-          <SvgNext />
-        </RightButton>
       </ContentContainer>
     </Wrapper>
   );
