@@ -28,8 +28,10 @@ export interface INodeApiHttpPostOrderRequestData {
     products: Array<IMakeOrderProducts>
     payment_method: ICheckoutPaymentMethods,
     tip?: number,
-    discount_token?: string,
-    coupon_token?: string,
+    offer: {
+      is_applicable: boolean
+      token: string
+    }
     description?: string,
     order_type: ICheckoutOrderTypes
   }

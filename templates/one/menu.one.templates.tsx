@@ -254,25 +254,22 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
     }
   }, [ ])
 
-  async function getAvaibleBasedOnAdress() {
+  async function getAvaibleBasedOnAdress(area: string = "", postalCode: string) {
     console.log(shopData?.id, addressArea, addressPostalCode, addressStreet, addressCity)
-    if (shopData?.id && addressArea && addressPostalCode) {
+    if (shopData?.id) {
       const response = await new PyApiHttpPostAddress(configuration).postAll({
         shopId: shopData?.id,
-        area: addressArea,
-        postalCode: addressPostalCode
+        area,
+        postalCode
       })
       console.log(response)
     }
   }
 
-  useEffect(() => {
-    console.log(addressArea, addressPostalCode)
-    getAvaibleBasedOnAdress()
-  }, [ addressArea, addressPostalCode ])
-
   function onAddressChange() {
     const place = autoComplete.getPlace()
+    let area: string | undefined = undefined
+    let postalCode: string | undefined = undefined
     if (place.address_components) {
       for (let component of place.address_components) {
         if (component.types[0] === 'route') {
@@ -280,12 +277,18 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
           for (let component2 of place.address_components) if (component2.types[0] === 'street_number') temp = component2.short_name;
           setAddressMain(`${component.long_name} ${temp}`);
           setAddressStreet(component.long_name);
-        } else if (component.types.indexOf('sublocality') !== -1 || component.types.indexOf('sublocality_level_1') !== -1)
-          setAddressArea(component.long_name.includes('Innenstadt') ? 'Innenstadt' : component.long_name);
-        else if (component.types[0] === 'locality') setAddressCity(component.long_name);
-        else if (component.types[0] === 'postal_code') setAddressPostalCode(component.short_name);
+        } else if (component.types.indexOf('sublocality') !== -1 || component.types.indexOf('sublocality_level_1') !== -1) {
+          area = component.long_name.includes('Innenstadt') ? 'Innenstadt' : component.long_name
+          setAddressArea(area);
+        } else if (component.types[0] === 'locality') {
+          setAddressCity(component.long_name);
+        } else if (component.types[0] === 'postal_code') {
+          postalCode = component.short_name
+          setAddressPostalCode(postalCode);
+        }
       }
     }
+    if (postalCode) getAvaibleBasedOnAdress(area, postalCode)
   }
 
   useEffect(() => {

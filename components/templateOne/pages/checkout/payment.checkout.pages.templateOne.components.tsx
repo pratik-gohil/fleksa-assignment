@@ -105,8 +105,10 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
           products,
           payment_method: paymentMethodData,
           tip: tipData? tipData: undefined,
-          discount_token: "",
-          coupon_token: promoCode?.token,
+          offer: {
+            is_applicable: promoCode !== null,
+            token: promoCode?.token || "",
+          },
           description: comment,
           order_type: orderType as ICheckoutOrderTypes,
         }
