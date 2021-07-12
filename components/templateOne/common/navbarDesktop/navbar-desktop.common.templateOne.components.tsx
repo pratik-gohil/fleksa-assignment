@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import { useAppSelector } from '../../../../redux/hooks.redux';
-import { selectShop } from '../../../../redux/slices/index.slices.redux';
+import { selectAddress, selectImages, selectOffers, selectShop } from '../../../../redux/slices/index.slices.redux';
 import { Col, Container, Row } from 'react-grid-system';
 import NavLink from './nav-link.common.templateOne.components';
 import { useTranslation } from 'next-i18next';
@@ -53,6 +53,9 @@ const NavbarList = styled.ul`
 const NavbarDesktop: FunctionComponent = ({}) => {
   const { t } = useTranslation('header');
   const shopData = useAppSelector(selectShop);
+  const imageData = useAppSelector(selectImages);
+  const offerData = useAppSelector(selectOffers);
+  const addressData = useAppSelector(selectAddress);
   const selectedMenuId = useAppSelector(selectSelectedMenu);
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
   const router = useRouter();
@@ -73,9 +76,11 @@ const NavbarDesktop: FunctionComponent = ({}) => {
                   path={selectedMenuId ? `/menu/${selectedMenuId}` : '/menu'}
                   isActive={router.pathname.startsWith('/menu')}
                 />
-                <NavLink title={t('@offers')} path="/offers" isActive={router.pathname === '/offers'} />
-                <NavLink title={t('@reservation')} path="/reservation" isActive={router.pathname === '/reservation'} />
-                <NavLink title={t('@gallery')} path="/gallery" isActive={router.pathname === '/gallery'} />
+                {!!offerData.length && <NavLink title={t('@offers')} path="/offers" isActive={router.pathname === '/offers'} />}
+                {addressData && addressData?.has_reservations && (
+                  <NavLink title={t('@reservation')} path="/reservation" isActive={router.pathname === '/reservation'} />
+                )}
+                {imageData && !!imageData.length && <NavLink title={t('@gallery')} path="/gallery" isActive={router.pathname === '/gallery'} />}
                 <NavLink title={t('@contact')} path="/contact-us" isActive={router.pathname === '/contact-us'} />
                 {isLoggedIn ? <NavUserProfile /> : <NavLink title={t('@login')} path="/login" isActive={router.pathname === '/login'} />}
                 <NavLanguageChange />

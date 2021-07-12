@@ -117,7 +117,7 @@ const NavbarMobileOptions: FunctionComponent<IPropsNavbarMobileOptions> = ({ isO
           <NavLanguageChange showTitle={true} />
         </ListItem>
         {isLoggedIn && (
-          <ListItem onClick={() => router.push('/account')}>
+          <ListItem onClick={() => router.push('/account')} key="account">
             <NavUserProfile />
             <Title>ACCOUNT</Title>
           </ListItem>
