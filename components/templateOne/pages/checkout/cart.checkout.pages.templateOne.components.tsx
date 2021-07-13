@@ -35,7 +35,8 @@ const Title = styled.p`
 `
 
 const Quantity = styled.span`
-  margin-left: 6px;
+  white-space: nowrap;
+  margin: 0 6px;
   font-weight: 400!important;
 `
 
