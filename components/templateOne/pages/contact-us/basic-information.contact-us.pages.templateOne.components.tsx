@@ -128,7 +128,8 @@ export const BasicContactUsInformation = () => {
       <DaysContainer>
         {days.map((day) => (
           <Day key={day?.dayName}>
-            <DayName selected={currentDay === day?.dayName}>{day?.dayName}</DayName> <DayTime>{day?.time}</DayTime>
+            <DayName selected={currentDay === day?.dayName}>{day?.dayName}</DayName>
+            {day?.available ? <DayTime>{day?.time}</DayTime> : <span style={{ color: 'red', fontWeight: 500 }}>Closed</span>}
           </Day>
         ))}
 
