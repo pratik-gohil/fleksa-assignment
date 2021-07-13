@@ -133,4 +133,20 @@ export default class RestaurantTimingUtils {
 
     return timingList;
   }
+
+  /**
+   * @param timings Array of timings object
+   * @returns boolean
+   */
+  public isShopClosed(timings: ITimings | null) {
+    if (!timings) return false;
+
+    const weekDay = moment().format('dddd').toUpperCase();
+
+    const currentDayTimings = timings[weekDay] as ITimingsDay;
+
+    if (!currentDayTimings.shop.availability) return false;
+
+    return true;
+  }
 }

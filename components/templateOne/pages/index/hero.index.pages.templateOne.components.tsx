@@ -3,8 +3,9 @@ import { Col, Container, Row } from 'react-grid-system';
 import styled from 'styled-components';
 import Image from 'next/image';
 
+import RestaurantTimingUtils from '../../../../utils/restaurant-timings.utils';
 import { useAppSelector } from '../../../../redux/hooks.redux';
-import { selectShop } from '../../../../redux/slices/index.slices.redux';
+import { selectShop, selectTimings } from '../../../../redux/slices/index.slices.redux';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { selectLanguage, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
 import { useTranslation } from 'react-i18next';
@@ -119,11 +120,14 @@ const Logo = styled.img`
 
 const Wrapper = styled.div`
   width: 100%;
-`
+`;
+
+const timingUtils = new RestaurantTimingUtils();
 
 const IndexPageHero: FunctionComponent = ({}) => {
   const language = useAppSelector(selectLanguage);
   const shopData = useAppSelector(selectShop);
+  const timingsData = useAppSelector(selectTimings);
   const selectedMenuId = useAppSelector(selectSelectedMenu);
   const { t } = useTranslation('page-index');
 
@@ -140,7 +144,9 @@ const IndexPageHero: FunctionComponent = ({}) => {
 
                 <Title>{shopData?.name}</Title>
                 <SubTitle>{shopData?.category_json[language]}</SubTitle>
-                <OrderButton href={selectedMenuId ? `/menu/${selectedMenuId}` : '/menu'}>{t('@order-online')}</OrderButton>
+                <OrderButton href={selectedMenuId ? `/menu/${selectedMenuId}` : '/menu'}>
+                  {timingUtils.isShopClosed(timingsData) ? t('@order-online') : t('@pre-online')}
+                </OrderButton>
               </Col>
             </Row>
           </Container>
