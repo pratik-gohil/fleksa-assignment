@@ -53,6 +53,10 @@ const getConfig = (index: number) => {
   }
 };
 
+const Wrapper = styled.div`
+  padding-bottom: 5rem;
+`;
+
 const HeroContainer = styled.section`
   background: #f9f9f9;
   border-bottom: ${(props) => props.theme.border};
@@ -246,7 +250,7 @@ const GalleryPageTemplateOne: FunctionComponent = ({}) => {
   };
 
   return (
-    <>
+    <Wrapper>
       <HeroContainer>
         <HeroImage src={shopData?.place} loading="lazy" alt={shopData?.name} />
         <HeroContentContainer>
@@ -291,7 +295,7 @@ const GalleryPageTemplateOne: FunctionComponent = ({}) => {
           </RightButton>
         </ModalImageContainer>
       </Container>
-    </>
+    </Wrapper>
   );
 };
 
