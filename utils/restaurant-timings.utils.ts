@@ -133,28 +133,28 @@ export default class RestaurantTimingUtils {
 
     return timingList;
   }
+}
 
-  /**
-   * @param timings Array of timings object
-   * @returns boolean
-   */
-  public isShopOpened(timings: ITimings | null) {
-    if (!timings) return false;
+/**
+ * @param timings Array of timings object
+ * @returns boolean
+ */
+export function isShopOpened(timings: ITimings | null) {
+  if (!timings) return false;
 
-    const currentDay = moment();
+  const currentDay = moment();
 
-    const weekDay = currentDay.format('dddd').toUpperCase();
+  const weekDay = currentDay.format('dddd').toUpperCase();
 
-    const currentDayTimings = timings[weekDay] as ITimingsDay;
+  const currentDayTimings = timings[weekDay] as ITimingsDay;
 
-    if (!currentDayTimings.shop.availability) return false;
+  if (!currentDayTimings.shop.availability) return false;
 
-    if (!currentDayTimings.shop.timings) return false;
+  if (!currentDayTimings.shop.timings) return false;
 
-    const open = moment(currentDayTimings.shop.timings[0].open, 'h:mm a');
-    const close = moment(currentDayTimings?.shop?.timings[0]?.close, 'h:mm a');
+  const open = moment(currentDayTimings.shop.timings[0].open, 'h:mm a');
+  const close = moment(currentDayTimings?.shop?.timings[0]?.close, 'h:mm a');
 
-    // ? Only send try if current time inbetween close and open
-    return currentDay.isBetween(open, close);
-  }
+  // ? Only send try if current time inbetween close and open
+  return currentDay.isBetween(open, close);
 }

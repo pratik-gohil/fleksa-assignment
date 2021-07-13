@@ -13,6 +13,9 @@ const WrapperFooter = styled.footer`
   p {
     color: ${(props) => props.theme.textLightColor};
   }
+  position: absolute;
+  width: 100%;
+  bottom: 0;
   @media (min-width: ${BREAKPOINTS.lg}px) {
     display: block;
   }
