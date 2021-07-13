@@ -48,11 +48,11 @@ const Description = styled.p`
   margin-bottom: 1em;
 `;
 
-const Cross = styled.div`
+const Cross = styled.img`
   background-color: white;
   border-radius: 50%;
-  height: 40px;
-  width: 40px;
+  height: 30px;
+  width: 30px;
   position: absolute;
   top: -10px;
   right: -10px;
@@ -96,7 +96,7 @@ const IndexBanner = () => {
         <Img src={banner.background} alt="garlic kulcha" />
         <Title>{banner.title}</Title>
         <Description>{banner.description}</Description>
-        <Cross onClick={handleOfferClose}>X</Cross>
+        <Cross onClick={handleOfferClose} src={'/assets/svg/account/x-circle.svg'}></Cross>
       </Container>
       <Temp onClick={handleOfferClose} visible={showOfferPopup} />
     </Wrapper>
