@@ -235,9 +235,15 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
   
     // Create markers.
     for (let i = 0; i < features.length; i++) {
+      console.log(shopData?.logo)
       new google.maps.Marker({
         position: features[i].position,
-        // icon: shopData?.logo,
+        icon: shopData?.logo && {
+          url: shopData?.logo,
+          scaledSize: new google.maps.Size(40, 40),
+          origin: new google.maps.Point(0, 0),
+          anchor: new google.maps.Point(0, 0),
+        },
         map: map,
       });
     }
@@ -384,11 +390,13 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
     }
   }, [ refAddressInput ])
 
-  const restaurantsToShow = filterName === "has_delivery"? deliveryFilterData: siblingsData
+  const restaurantsToShow = filterName === "has_delivery"
+    ? deliveryFilterData
+    : siblingsData.filter(sibling => sibling.address.availability[filterName])
 
   let restaurantListView: ReactNode
   if (restaurantsToShow && restaurantsToShow.length > 0) {
-    restaurantListView = restaurantsToShow.filter(sibling => sibling.address.availability[filterName]).map(sibling => {
+    restaurantListView = restaurantsToShow.map(sibling => {
       const area = sibling.address?.area ? sibling.address?.area + ' ' : ''
       const address = sibling.address?.address || ''
       const city = sibling.address?.city || ''
@@ -456,7 +464,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
         }].map(item => <SelectionItem key={item.filter} active={filterName === item.filter} onClick={() => setFilterAndOrderType(item.filter)}>{item.title}</SelectionItem>)}
       </SelectionContainer>
       <List>
-        <InputContainer>
+        {filterName === "has_delivery" && <InputContainer>
           <Input
             style={{
               flex: 1
@@ -475,7 +483,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
             onChange={e => setAddressFloor(e.target.value)}
             placeholder={"Optional"}
           />
-        </InputContainer>
+        </InputContainer>}
         {restaurantListView}
       </List>
     </FullHeightColumnLeft>

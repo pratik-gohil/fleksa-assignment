@@ -17,6 +17,8 @@ import { updateError } from '../../../../redux/slices/common.slices.redux';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
+import SvgBack from "../../../../public/assets/svg/back.svg"
+
 export interface IPropsLoginComponent {
   onLogin(): void;
 }
@@ -57,9 +59,9 @@ const SectionTwo = styled.section`
 `;
 
 const Title = styled.h2`
-  font-size: 16;
   margin: 0;
-  padding: 0 24px 24px 24px;
+  padding: 20px;
+  margin-top: -24px;
 `;
 
 const Text = styled.p`
@@ -68,7 +70,7 @@ const Text = styled.p`
 `;
 
 const InputContainer = styled.div`
-  margin: 24px;
+  margin: 56px 24px 24px 24px;
 `;
 
 const SendOtpButtonContainer = styled.div`
@@ -86,7 +88,12 @@ const SendOtpButton = styled.button`
   justify-content: center;
   cursor: pointer;
   width: 100%;
+  margin-bottom: 0;
 `;
+
+const VerifyOtpButton = styled(SendOtpButton)`
+  margin-bottom: 0;
+`
 
 const SendOtpButtonText = styled.p`
   display: inline-block;
@@ -96,6 +103,24 @@ const SendOtpButtonText = styled.p`
   padding: 0;
   cursor: pointer;
 `;
+
+const OTPTopContainer = styled.div`
+  display: flex;
+  align-items: center;
+`
+
+const BackButton = styled.div`
+  display: inline-block;
+  padding: 12px 24px;
+  width: 70px;
+  cursor: pointer;
+  margin-top: -24px;
+  svg {
+    display: block;
+    width: 36px;
+    height: 36px;
+  }
+`
 
 const OTP_LENGTH = 5
 
@@ -108,6 +133,7 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
   const [phone, setPhone] = useState('');
   const [countryCode, setCountryCode] = useState<number>(49);
   const [loading, setLoading] = useState(false);
+  const [ otpBig, setOtpBig ] = useState(false)
   const [customerId, setCustomerId] = useState<number | undefined>();
 
   const router = useRouter();
@@ -203,17 +229,29 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
     }
   }, [ otp ])
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setOtpBig(window.matchMedia(`(min-width: ${BREAKPOINTS.lg}px)`).matches)
+      console.log("window.matchMedia(`(min-width: ${BREAKPOINTS.lg}px)`).matches", window.matchMedia(`(min-width: ${BREAKPOINTS.lg}px)`).matches)
+    }
+  }, [ ])
+
   return (
     <LoginContainer>
       <SectionOne>{shopData?.cover && <Image src={shopData.cover} loading="eager" layout="fill" objectFit="cover" />}</SectionOne>
       <SectionTwo>
         {customerId ? (
           <>
-            <Title>Enter OTP</Title>
+            <OTPTopContainer>
+              <BackButton onClick={() => setCustomerId(undefined)}>
+                <SvgBack />
+              </BackButton>
+              <Title>Enter OTP</Title>
+            </OTPTopContainer>
             <Text>
               Please enter OTP sent at +{phone}
             </Text>
-            <InputContainer>
+            <InputContainer style={{ margin: 24, display: 'flex', justifyContent: 'center' }}>
               <OtpInput
                 isInputNum={true}
                 shouldAutoFocus={true}
@@ -224,13 +262,16 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
                 numInputs={OTP_LENGTH}
                 containerStyle={{
                   display: 'flex',
-                  justifyContent: 'center',
+                  flex: 1,
+                  justifyContent: 'space-between',
+                  maxWidth: otpBig? 500: 300,
+                  justifySelf: 'center',
+                  alignSelf: 'center'
                 }}
                 inputStyle={{
                   fontFamily: "Poppins",
                   display: 'inline-block',
-                  fontSize: "42px",
-                  margin: '0 8px',
+                  fontSize: otpBig? 60: 40,
                   padding: 0,
                   border: '1px solid rgba(0, 0, 0, 0.1)',
                   borderRadius: 4,
@@ -239,9 +280,9 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
               />
             </InputContainer>
             <SendOtpButtonContainer>
-              <SendOtpButton onClick={onTapLogin}>
+              <VerifyOtpButton onClick={onTapLogin}>
                 {loading ? <LoadingIndicator width={20} /> : <SendOtpButtonText>LOGIN</SendOtpButtonText>}
-              </SendOtpButton>
+              </VerifyOtpButton>
             </SendOtpButtonContainer>
             <SendOtpButtonContainer style={{ marginTop: 24 }}>
               OTP not received? <SendOtpButtonText onClick={onTapSendOtp}>Resend</SendOtpButtonText>
@@ -251,7 +292,7 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
           <>
             <Title>Login with Phone Number</Title>
             <Text>Please enter your phone number to get the OTP</Text>
-            <InputContainer>
+            <InputContainer style={{ height: 58 }}>
               <PhoneInput
                 country={'de'}
                 value={phone}
@@ -262,7 +303,7 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
                   }
                   setPhone(ph);
                 }}
-                inputStyle={{ width: '100%' }}
+                inputStyle={{ width: '100%', position: 'relative' }}
               />
             </InputContainer>
             <SendOtpButtonContainer>
