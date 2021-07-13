@@ -30,8 +30,8 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
 
   useEffect(() => {
     const timingList = timings.generateDates()
-    const selectedDate = timingList[0]
     for (let i = 0; i < timingList.length; i++) {
+      const selectedDate = timingList[i]
       if (selectedDate && timingsData && orderType && addressData?.prepare_time && addressData?.delivery_time) {
         const timeData = timings.generateTimeList({
           date: selectedDate,

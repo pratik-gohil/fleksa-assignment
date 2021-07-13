@@ -58,7 +58,9 @@ const CheckoutPageTip: FunctionComponent = ({}) => {
   const tipOptions = [5, 10, 20].map(percent => Math.floor((cartData.cartCost * percent) / 100))
 
   function onChangeTip(amount: number|null) {
-    dispatch(updateTip(amount))
+    if (amount === null || amount >= 0) {
+      dispatch(updateTip(amount))
+    }
   }
 
   return <StyledCheckoutCard>
