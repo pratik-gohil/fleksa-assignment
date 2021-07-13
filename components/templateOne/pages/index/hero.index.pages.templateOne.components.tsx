@@ -145,7 +145,7 @@ const IndexPageHero: FunctionComponent = ({}) => {
                 <Title>{shopData?.name}</Title>
                 <SubTitle>{shopData?.category_json[language]}</SubTitle>
                 <OrderButton href={selectedMenuId ? `/menu/${selectedMenuId}` : '/menu'}>
-                  {timingUtils.isShopClosed(timingsData) ? t('@order-online') : t('@pre-online')}
+                  {timingUtils.isShopOpened(timingsData) ? t('@order-online') : t('@pre-online')}
                 </OrderButton>
               </Col>
             </Row>
