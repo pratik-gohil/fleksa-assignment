@@ -11,9 +11,9 @@ export interface IPropsPageContainer {
   showFooter?: boolean;
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ showFooter: boolean }>`
   position: relative;
-  padding-bottom: 8rem;
+  padding-bottom: ${(p) => (p.showFooter ? '8rem' : '0')};
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     padding-bottom: 0;
@@ -28,7 +28,7 @@ const AllPagesCartContainer = styled.div`
 
 const PageContainer: FunctionComponent<IPropsPageContainer> = ({ children, showFooter = true }) => {
   return (
-    <Wrapper>
+    <Wrapper showFooter={showFooter}>
       <NavbarDesktop />
 
       <Main>{children}</Main>
