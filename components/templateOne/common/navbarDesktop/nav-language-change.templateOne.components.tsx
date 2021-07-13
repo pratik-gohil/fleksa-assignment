@@ -1,12 +1,13 @@
 import { useRouter } from "next/dist/client/router"
-import React from "react"
+import React, { FunctionComponent } from "react"
 import Link from 'next/link'
-import styled from "styled-components"
+import styled, { CSSProperties } from "styled-components"
 import { useAppSelector } from "../../../../redux/hooks.redux"
 import { selectLanguage } from "../../../../redux/slices/configuration.slices.redux"
 
 export interface IPropsNavLanguageChange {
   showTitle?: boolean
+  style?: CSSProperties
 }
 
 const SvgFlagGerman = "/assets/svg/flag-german.svg"
@@ -37,12 +38,12 @@ const Title = styled.h2`
   margin: 0 0 0 ${props => props.theme.dimen.X4}px;
 `
 
-const NavLanguageChange = ({ showTitle=false }) => {
+const NavLanguageChange: FunctionComponent<IPropsNavLanguageChange> = ({ showTitle=false, style }) => {
   const language = useAppSelector(selectLanguage)
   const router = useRouter()
   
   return <Link href="" locale={router.locale === "en"? "de": "en"}>
-    <FlagContainer>
+    <FlagContainer style={style}>
       <FlagImage src={router.locale === "en"? SvgFlagUnitedKingdom: SvgFlagGerman} />
       {showTitle && <Title>{language.toUpperCase()}</Title>}
     </FlagContainer>

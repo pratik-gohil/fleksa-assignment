@@ -11,8 +11,7 @@ import SvgGallery from '../../../../public/assets/svg/gallery.svg';
 import SvgContact from '../../../../public/assets/svg/contact.svg';
 import LegalLinks from '../footer/legal.footer.common.templateOne.components';
 import NavUserProfile from '../navbarDesktop/nav-profile-image.templateOne.components';
-import { selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
-import { useRouter } from 'next/router';
+import { selectCustomer, selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
 
 export interface IPropsNavbarMobileOptions {
   isOpen: boolean;
@@ -51,7 +50,6 @@ const ListItem = styled.li`
   display: flex;
   align-items: center;
   cursor: pointer;
-  padding: ${(props) => props.theme.dimen.X4}px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   svg {
     height: 36px;
@@ -61,6 +59,13 @@ const ListItem = styled.li`
   }
 `;
 
+const LinkItem = styled.a`
+  display: flex;
+  flex: 1;
+  align-items: center;
+  padding: ${(props) => props.theme.dimen.X4}px;
+`
+
 const LegalLinksContainer = styled(ListItem)`
   margin-top: auto;
   a {
@@ -68,6 +73,7 @@ const LegalLinksContainer = styled(ListItem)`
   }
   border-bottom: none;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0 ${(props) => props.theme.dimen.X4}px;
 `;
 
 const Title = styled.h2`
@@ -79,11 +85,11 @@ const Title = styled.h2`
 
 const NavbarMobileOptions: FunctionComponent<IPropsNavbarMobileOptions> = ({ isOpen }) => {
   const shopData = useAppSelector(selectShop);
+  const customerData = useAppSelector(selectCustomer)
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
   const offersData = useAppSelector(selectOffers)
 
   const { t } = useTranslation('header');
-  const router = useRouter();
 
   return (
     <Wrapper isOpen={isOpen}>
@@ -119,27 +125,29 @@ const NavbarMobileOptions: FunctionComponent<IPropsNavbarMobileOptions> = ({ isO
             link: "/contact-us",
             show: true
           },
-        ].map((item) => item.show? <a href={item.link}>
-          <ListItem key={item.title}>
+        ].map((item) => item.show? <ListItem key={item.title}>
+          <LinkItem href={item.link}>
             <item.icon />
             <Title>{item.title}</Title>
-          </ListItem>
-        </a>: <></>)}
+          </LinkItem>
+        </ListItem>: <></>)}
         <ListItem key="lang-change">
-          <NavLanguageChange showTitle={true} />
+          <NavLanguageChange showTitle={true} style={{ padding: "12px 24px" }} />
         </ListItem>
         {isLoggedIn? (
-          <ListItem onClick={() => router.push('/account')} key="account">
-            <NavUserProfile />
-            <Title>{t('@account')}</Title>
+          <ListItem key="account">
+            <LinkItem href="/account">
+              <NavUserProfile />
+              <Title>{customerData.name}</Title>
+            </LinkItem>
           </ListItem>
         ): (
-          <a href={"/login"}>
-            <ListItem key="login">
+          <ListItem key="login">
+            <LinkItem href={"/login"}>
               <SvgContact style={{ fill: "transparent" }} />
               <Title>{t("@login")}</Title>
-            </ListItem>
-          </a>
+            </LinkItem>
+          </ListItem>
         )}
 
         <LegalLinksContainer key="legal-links">

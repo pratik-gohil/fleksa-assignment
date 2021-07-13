@@ -13,11 +13,11 @@ const Text = styled.p`
 
 const LegalLinks: FunctionComponent = () => {
   return <Text>
-    <a href="http://">Terms & Conditions</a>
+    <a href="/terms">Terms & Conditions</a>
     {' '}|{' '}
-    <a href="http://">Privacy Policy</a>
+    <a href="/privacy-policy">Privacy Policy</a>
     {' '}|{' '}
-    <a href="http://">Imprint</a>
+    <a href="/imprint">Imprint</a>
   </Text>
 }
 

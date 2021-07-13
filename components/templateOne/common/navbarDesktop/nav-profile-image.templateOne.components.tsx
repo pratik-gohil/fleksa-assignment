@@ -23,7 +23,7 @@ const FlagImage = styled.p`
   color: ${(props) => props.theme.primaryColor};
   background-color: #444;
   text-transform: uppercase;
-
+  margin: 0;
   @media (max-width: ${BREAKPOINTS.sm}px) {
     margin: 0;
     padding: 0;
