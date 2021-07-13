@@ -63,7 +63,7 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
         {cartItemKeys.map(key => {
           const item = cartData.items[key]
           return <ContainerItem key={key}>
-            <Title>{item.mainName[language]} <Quantity>- X{item.quantity}</Quantity></Title> 
+            <Title>{item.mainName[language]} <Quantity>- x{item.quantity}</Quantity></Title> 
             <Price>€{item.totalCost.toFixed(2)}</Price>
           </ContainerItem>
         })}

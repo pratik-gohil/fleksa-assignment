@@ -14,6 +14,7 @@ import AddressAdd from "../../../components/templateOne/common/addresses/address
 import MenuPageCartSummary from "../../../components/templateOne/pages/menu/cart-summary.pages.templateOne.components";
 import { LS_GUEST_USER_ADDRESS } from "../../../constants/keys-local-storage.constants";
 import { useTranslation } from "next-i18next";
+import { selectCart } from "../../../redux/slices/cart.slices.redux";
 
 const SideViewLeft = styled.div`
   display: none;
@@ -58,6 +59,7 @@ const Disclaimer = styled.p`
 
 const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
   const { t } = useTranslation("disclaimer")
+  const cartData = useAppSelector(selectCart)
   const orderType = useAppSelector(selectOrderType)
   const showAddAddress = useAppSelector(selectShowAddress)
   const checkoutAddressId = useAppSelector(selectSelectedAddressId)
@@ -89,7 +91,9 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
         </Col>
       </Row>
     </Container>
-    <MenuPageCartSummary />
+    <div>
+    {cartData.cartCost > 0 && <MenuPageCartSummary />}
+    </div>
     {((showSelectOrderType || orderType === null) && !showAddAddress)
       ? <OrderTypeManager key="key-ajkndalkwdmalkwmdlkw" />
       : (showAddAddress
