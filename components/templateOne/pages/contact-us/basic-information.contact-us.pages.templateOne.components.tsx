@@ -97,7 +97,7 @@ const Map = styled.div`
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     iframe {
-      /* height: 400px; */
+      height: 400px;
     }
   }
 `;
