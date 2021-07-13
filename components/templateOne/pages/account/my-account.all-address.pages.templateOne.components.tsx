@@ -6,6 +6,7 @@ import { IParticularAddress } from '../../../../interfaces/common/customer.commo
 import MyAccountAllAddressLeftSide from './partials/my-account.all-address.left.partials.account.pages.templateOne.components';
 import MyAccountAllAddressRightSide from './partials/my-account.all-address.right.partials.account.pages.templateOne.components';
 import MobileBackButton from '../../common/backButton/backButton.common.templateOne.components';
+// import AddressAdd from '../../common/addresses/address-add.common.templateOne.components';
 
 const Wrapper = styled.section`
   height: calc(100vh - ${(p) => p.theme.navDesktop.height}px);
@@ -95,6 +96,7 @@ const AccountPageAllAddress: FunctionComponent = ({}) => {
         </LeftWrapper>
 
         <RightWrapper show={show}>
+          {/* <AddressAdd /> */}
           <MyAccountAllAddressRightSide handleShowNewAddressModal={handleShowNewAddressModal} isEditMode={isEditMode} existAddress={existAddress} />
         </RightWrapper>
         <InvisibleLayer onClick={() => handleShowNewAddressModal(false)} show={show} />
