@@ -20,6 +20,7 @@ const LoginContainer = styled.section`
 const WidthFix = styled.div`
   width: 100%;
   position: relative;
+
   @media (min-width: ${BREAKPOINTS.lg}px) {
     margin-bottom: 120px;
   }

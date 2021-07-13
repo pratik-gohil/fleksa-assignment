@@ -23,6 +23,7 @@ export interface IPropsLoginComponent {
 
 const LoginContainer = styled.div`
   display: flex;
+  box-shadow: rgba(145, 145, 202, 0.2) 0px 7px 29px 0px;
   flex: 1 1 auto;
   border: ${(props) => props.theme.border};
   border-radius: ${(props) => props.theme.borderRadius}px;
