@@ -45,7 +45,7 @@ type ResponseDeliveryPossible = {
     is_customer: boolean
   }, 
   description: string
-  possibilities: Record<number, {
+  possibilities: Record<string, {
     is_available: boolean
   }>
   result: true

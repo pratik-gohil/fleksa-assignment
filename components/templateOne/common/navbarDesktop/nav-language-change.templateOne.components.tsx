@@ -14,6 +14,7 @@ const SvgFlagUnitedKingdom = "/assets/svg/flag-united-kingdom.svg"
 
 const FlagContainer = styled.div`
   display: flex;
+  flex: 1;
   flex-direction: row;
   align-items: center;
   padding: 0 ${props => props.theme.dimen.X4}px;

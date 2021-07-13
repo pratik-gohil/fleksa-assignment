@@ -277,7 +277,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
         postalCode
       })
       if (response && response.result) {
-        const possibilities = Object.keys(response.possibilities)
+        const possibilities = Object.keys(Object.keys(response.possibilities).filter(i => response.possibilities[i].is_available))
         setDeliveryFilterData(siblingsData.filter(i => possibilities.indexOf(String(i.id)) !== -1))
         if (possibilities.length > 0) {
           if (isLoggedIn && bearerToken) {
@@ -299,11 +299,15 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
           }
         }
       } else {
-        dispatch(updateSelectedAddressId(null))
-        setDeliveryFilterData([])
-        window.localStorage.removeItem(LS_GUEST_USER_ADDRESS)
+        noDeliveryOptionsAvailable()
       }
     }
+  }
+
+  function noDeliveryOptionsAvailable() {
+    dispatch(updateSelectedAddressId(null))
+    setDeliveryFilterData([])
+    window.localStorage.removeItem(LS_GUEST_USER_ADDRESS)
   }
 
   async function addNewAddress(bearerToken: string, postalCode: string, main: string, city: string) {
