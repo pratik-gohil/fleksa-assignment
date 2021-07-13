@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
-import { Row, Col } from 'react-grid-system';
+import { Row, Col, Container } from 'react-grid-system';
 import { BREAKPOINTS } from '../../constants/grid-system-configuration';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks.redux';
 import { selectConfiguration } from '../../redux/slices/configuration.slices.redux';
@@ -16,7 +16,6 @@ import LoadingIndicator from '../../components/templateOne/common/loadingIndicat
 import NodeApiHttpPostContactUs from '../../http/nodeapi/contact-us/post.contact-us.nodeapi.http';
 
 const ContactUsContainer = styled.div`
-  width: 80%;
   margin: auto;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
@@ -276,10 +275,10 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
   };
 
   return (
-    <>
-      <ContactUsContainer>
-        <Row nogutter>
-          <Col xl={8}>
+    <ContactUsContainer>
+      <Container style={{ margin: 0, padding: 0 }}>
+        <Row justify="center" nogutter>
+          <Col xl={7} sm={12}>
             <Form onSubmit={handleContactUsSendButtonClick}>
               <Header>
                 <Title>{t('@title')}</Title>
@@ -322,14 +321,14 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
             </Form>
           </Col>
 
-          <Col xl={4}>
+          <Col xl={4} sm={12}>
             <BasicContactUsInformation />
           </Col>
         </Row>
-      </ContactUsContainer>
+      </Container>
 
       <Snackbar />
-    </>
+    </ContactUsContainer>
   );
 };
 

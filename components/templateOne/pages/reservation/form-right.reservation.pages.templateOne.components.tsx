@@ -100,7 +100,7 @@ const TimeSlots = styled.div`
   display: flex;
   transition: all 0.1s ease;
   overflow-x: hidden;
-  max-height: 500px;
+  max-height: 400px;
 
   @media (max-width: ${BREAKPOINTS.md}px) {
     max-height: 200px;
@@ -198,12 +198,14 @@ const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGue
         isReservation: true,
       });
 
-      setTimingList(timeData);
+      if (timeData.length) {
+        setTimingList(timeData);
 
-      setTime({
-        value: timeData[0]?.value || '-',
-        label: '',
-      });
+        setTime({
+          value: timeData[0]?.value || '-',
+          label: '',
+        });
+      } else setDate(moment(date).add(1, 'days').format('YYYY-MM-DD')); // ? Set next day if not exist
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

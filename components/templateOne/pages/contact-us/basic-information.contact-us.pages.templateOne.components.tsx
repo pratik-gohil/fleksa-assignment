@@ -22,7 +22,9 @@ const Wrapper = styled.div`
   }
 `;
 
-const DaysContainer = styled.div``;
+const DaysContainer = styled.div`
+  margin: 1rem 0;
+`;
 const Day = styled.div`
   display: flex;
   justify-content: space-between;
@@ -62,6 +64,7 @@ const LinkArea = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  margin: 1rem 0;
 `;
 
 const StyledLink = styled.a`
@@ -96,8 +99,9 @@ const Map = styled.div`
   flex-direction: column;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
+    margin-top: 2rem;
     iframe {
-      height: 400px;
+      width: 100%;
     }
   }
 `;
@@ -178,7 +182,8 @@ export const BasicContactUsInformation = () => {
             '+',
           )},${addressData?.city.replace(' ', '+')}+${addressData?.country.replace(' ', '+')}`}
           title="Restaurant Map"
-          height="350"
+          height="400"
+          width="400"
           frameBorder="0"
           style={{ border: 0 }}
           aria-hidden="false"

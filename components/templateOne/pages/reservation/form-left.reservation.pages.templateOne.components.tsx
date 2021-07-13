@@ -15,6 +15,7 @@ import { ILabelValue } from '../../../../utils/restaurant-timings.utils';
 import { useRouter } from 'next/router';
 
 const Wrapper = styled.div``;
+const FormContainer = styled.form``;
 const InputBox = styled.div`
   padding: 0 0 1rem 0;
 `;
@@ -139,8 +140,23 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
   const [countryCode, setCountryCode] = useState<number>(49);
   const [loading, setLoading] = useState(false);
 
+  const customFieldError = (message: string) => {
+    dispatch(
+      updateError({
+        show: true,
+        message: message,
+        severity: 'error',
+      }),
+    );
+    return;
+  };
+
   const handleReserveButtonClick = async () => {
     try {
+      if (!name) return customFieldError('Please enter your name!');
+      if (!email) return customFieldError('Please enter your email!');
+      if (!countryCode || !phone) return customFieldError('Please enter your phone!');
+
       if (!bearerToken) {
         dispatch(updateShowLogin(true));
         return;
@@ -204,48 +220,50 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
 
   return (
     <Wrapper>
-      <InputBox>
-        <Label>Name</Label>
-        <Input type="text" placeholder="John Doe" value={name} onChange={(e) => setName(e.target.value)} required={true} />
-      </InputBox>
+      <FormContainer>
+        <InputBox>
+          <Label>Name</Label>
+          <Input type="text" placeholder="John Doe" value={name} onChange={(e) => setName(e.target.value)} required={true} />
+        </InputBox>
 
-      <InputBox>
-        <Label>Email</Label>
-        <Input type="email" placeholder="john@gmail.com" value={email} onChange={(e) => setEmail(e.target.value)} required={true} />
-      </InputBox>
+        <InputBox>
+          <Label>Email</Label>
+          <Input type="email" placeholder="john@gmail.com" value={email} onChange={(e) => setEmail(e.target.value)} required={true} />
+        </InputBox>
 
-      <InputBox>
-        <Label>Phone Number</Label>
+        <InputBox>
+          <Label>Phone Number</Label>
 
-        <PhoneInput
-          country={'de'}
-          value={phone}
-          enableSearch
-          specialLabel=""
-          onChange={(ph, data) => {
-            if ((data as any).dialCode !== countryCode) {
-              setCountryCode((data as any).dialCode);
-            }
-            setPhone(ph);
-          }}
-          inputStyle={{ width: '100%' }}
-        />
-      </InputBox>
+          <PhoneInput
+            country={'de'}
+            value={phone}
+            enableSearch
+            specialLabel=""
+            onChange={(ph, data) => {
+              if ((data as any).dialCode !== countryCode) {
+                setCountryCode((data as any).dialCode);
+              }
+              setPhone(ph);
+            }}
+            inputStyle={{ width: '100%' }}
+          />
+        </InputBox>
 
-      <InputTextBox>
-        <Label>Comments</Label>
-        <Textarea value={comment} onChange={(e) => setComment(e.target.value)} />
-      </InputTextBox>
+        <InputTextBox>
+          <Label>Comments</Label>
+          <Textarea value={comment} onChange={(e) => setComment(e.target.value)} />
+        </InputTextBox>
 
-      <Acknowledgement>
-        By continuing, you agree to Fleksa's <LinkText href="#">Terms of use</LinkText> and <LinkText href="#">Privacy Policy</LinkText>
-      </Acknowledgement>
+        <Acknowledgement>
+          By continuing, you agree to Fleksa's <LinkText href="#">Terms of use</LinkText> and <LinkText href="#">Privacy Policy</LinkText>
+        </Acknowledgement>
 
-      <ReservationButton onClick={handleReserveButtonClick} type="submit">
-        {loading ? <LoadingIndicator width={20} /> : <ButtonText> Reserve Now </ButtonText>}
-      </ReservationButton>
+        <ReservationButton onClick={handleReserveButtonClick} type="button">
+          {loading ? <LoadingIndicator width={20} /> : <ButtonText> Reserve Now </ButtonText>}
+        </ReservationButton>
 
-      <LoginAllPages callback={handleReserveButtonClick} />
+        <LoginAllPages callback={handleReserveButtonClick} />
+      </FormContainer>
     </Wrapper>
   );
 };

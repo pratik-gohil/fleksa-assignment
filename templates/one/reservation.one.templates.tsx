@@ -21,10 +21,15 @@ const ReservationContainer = styled.section`
 `;
 
 const WidthFix = styled.div`
-  width: 100%;
+  width: 80%;
+  margin: auto;
 
   @media (min-width: ${BREAKPOINTS.lg}px) {
     margin-bottom: 30px;
+  }
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    width: 100%;
   }
 `;
 
@@ -61,7 +66,7 @@ const ReservationTemplateOne: FunctionComponent = ({}) => {
   return (
     <ReservationContainer>
       <WidthFix>
-        <Container fluid>
+        <Container>
           <Row justify="center" nogutter nowrap>
             <Col sm={8} lg={9}>
               <Row>
