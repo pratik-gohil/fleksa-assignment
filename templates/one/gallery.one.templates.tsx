@@ -205,6 +205,11 @@ const GalleryPageTemplateOne: FunctionComponent = ({}) => {
   const shopData = useAppSelector(selectShop);
   const imagesData = useAppSelector(selectImages);
 
+  const handleModalCloseClick = async (_e: any) => {
+    setCurrentImg('');
+    setShowModal(false);
+  };
+
   const handleImageClick = async (e: any) => {
     currentIndex.current = +e.target.alt.split('-')[1];
     setCurrentImg(imagesData[currentIndex.current]);
@@ -273,15 +278,8 @@ const GalleryPageTemplateOne: FunctionComponent = ({}) => {
             );
           })}
         </Row>
-        <ModalImageContainer visible={showModal}>
-          <Close
-            onClick={() => {
-              setCurrentImg('');
-              setShowModal(false);
-            }}
-          >
-            &#10006;
-          </Close>
+        <ModalImageContainer visible={showModal} onClick={handleModalCloseClick}>
+          <Close onClick={handleModalCloseClick}>&#10006;</Close>
           <LeftButton onClick={handleLeftArrowClick} leftVisible={leftArrowVisible}>
             <SvgPrevious />
           </LeftButton>
