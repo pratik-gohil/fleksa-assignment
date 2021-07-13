@@ -148,7 +148,7 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
       <ButtonContainer>
         <Button href={`/account/order/${order.id}`}>{t('@review-now')}</Button>
         <Receipt target="_blank" rel="noopener noreferrer" back="fill" href={order?.pdf_url}>
-          {t('@view-receipt')}
+          {t('@re-order')}
         </Receipt>
       </ButtonContainer>
     </Container>
