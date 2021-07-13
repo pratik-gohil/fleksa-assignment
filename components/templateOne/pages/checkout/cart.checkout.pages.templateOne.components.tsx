@@ -25,10 +25,18 @@ const ContainerItem = styled.div`
 `
 
 const Title = styled.p`
+  display: flex;
+  flex: 1;
   margin: 0;
+  font-weight: 600;
   span {
     font-weight: 600;
   }
+`
+
+const Quantity = styled.span`
+  margin-left: 6px;
+  font-weight: 400!important;
 `
 
 const Price = styled.p`
@@ -55,7 +63,7 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
         {cartItemKeys.map(key => {
           const item = cartData.items[key]
           return <ContainerItem key={key}>
-            <Title><span>X{item.quantity}</span> {item.mainName[language]}</Title>
+            <Title>{item.mainName[language]} <Quantity>- X{item.quantity}</Quantity></Title> 
             <Price>€{item.totalCost.toFixed(2)}</Price>
           </ContainerItem>
         })}
