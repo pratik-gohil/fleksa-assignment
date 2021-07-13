@@ -7,7 +7,15 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     margin: 0;
     font-family: ${props => props.theme.fontFamily};
-    scroll-padding-top: 100px;
+    scroll-padding-top: 110px;
+  }
+
+  :target {
+    animation: background-fade 10s forwards;
+    -webkit-animation: background-fade 3s forwards; /* Safari 4+ */
+    -moz-animation:    background-fade 3s forwards; /* Fx 5+ */
+    -o-animation:      background-fade 3s forwards; /* Opera 12+ */
+    animation:         background-fade 3s forwards;
   }
 
   body::-webkit-scrollbar {
@@ -61,6 +69,18 @@ const GlobalStyle = createGlobalStyle`
 
     h2 {
       font-size: 32px;
+    }
+  }
+
+  @keyframes background-fade {
+    0% {
+      background #F7FFAD;
+    }
+    60% {
+      background:#F7FFAD;
+    }
+    100% {
+      background:transparent;
     }
   }
 
