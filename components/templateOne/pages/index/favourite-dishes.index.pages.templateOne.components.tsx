@@ -4,11 +4,11 @@ import styled from 'styled-components';
 import Image from 'next/image';
 
 import { useAppSelector } from '../../../../redux/hooks.redux';
-import { selectProducts } from '../../../../redux/slices/index.slices.redux';
+import { selectProducts, selectShop, selectSiblings } from '../../../../redux/slices/index.slices.redux';
 import HorizontalList from '../../common/horizontal-list/horizontal-list.templateOne.component';
 import HorizontalListItem, { IResponsive } from '../../common/horizontal-list/horizontal-list-item.templateOne.component';
 import { useTranslation } from 'react-i18next';
-import { selectLanguage, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
+import { selectLanguage } from '../../../../redux/slices/configuration.slices.redux';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 
 const WrapperSection = styled.section`
@@ -137,7 +137,8 @@ const responsive: IResponsive = {
 const IndexPageFavouriteDishes: FunctionComponent = ({}) => {
   const { t } = useTranslation('page-index');
   const language = useAppSelector(selectLanguage);
-  const selectedMenuId = useAppSelector(selectSelectedMenu)
+  const siblingsData = useAppSelector(selectSiblings)
+  const shopData = useAppSelector(selectShop)
   const productsData = useAppSelector(selectProducts);
 
   return !!productsData.length ? (
@@ -163,7 +164,7 @@ const IndexPageFavouriteDishes: FunctionComponent = ({}) => {
                         <InfoContainerBottom>
                           <ItemPrice>€{product.price}</ItemPrice>
 
-                          <ItemToProduct href={selectedMenuId? `/menu/${selectedMenuId}`: "/menu"}>
+                          <ItemToProduct href={siblingsData.length === 0? `/menu/${shopData?.id}#product-id-${product.id}`: "/menu"}>
                             <p>
                               {t('@to-product')} <span>+</span>
                             </p>

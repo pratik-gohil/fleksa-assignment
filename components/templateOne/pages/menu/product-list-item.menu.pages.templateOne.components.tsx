@@ -127,7 +127,7 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
     }
   }
 
-  return <ListItem isOpen={isOpen}>
+  return <ListItem isOpen={isOpen} id={`product-id-${product.id}`}>
     <ClosedViewContainer onClick={toggle}>
       {product.image &&  <BannerImage src={product.image} loading="lazy" isOpen={isOpen} />}
       <ClosedViewInfoContainer>

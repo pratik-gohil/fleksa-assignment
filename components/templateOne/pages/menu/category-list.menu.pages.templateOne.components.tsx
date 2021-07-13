@@ -29,13 +29,13 @@ const CategoryTitle = styled.h3`
   padding: ${props => props.theme.dimen.X4}px 0 ${props => props.theme.dimen.X4}px;
   @media (min-width: ${BREAKPOINTS.lg}px) {
     top: 10px;
-    padding: ${props => props.theme.dimen.X4*6}px 0 ${props => props.theme.dimen.X4}px;
+    padding: 0 0 ${props => props.theme.dimen.X4}px;
   }
 `
 
 const Space = styled.div`
   width: 100%;
-  height: 4px;
+  height: 100px;
 `
 
 const MenuPageCategoryList: FunctionComponent = ({}) => {

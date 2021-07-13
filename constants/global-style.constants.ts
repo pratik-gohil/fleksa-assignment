@@ -7,6 +7,7 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     margin: 0;
     font-family: ${props => props.theme.fontFamily};
+    scroll-padding-top: 100px;
   }
 
   body::-webkit-scrollbar {
