@@ -56,7 +56,7 @@ export const THEME_ONE: ITheme = {
   },
   navMobile: {
     height: 60,
-    backgroundColor: '#444',
+    backgroundColor: '#202020',
   },
   footer: {
     background: '#222',

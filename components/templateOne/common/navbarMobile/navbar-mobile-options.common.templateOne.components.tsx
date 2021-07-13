@@ -64,7 +64,7 @@ const LinkItem = styled.a`
   flex: 1;
   align-items: center;
   padding: ${(props) => props.theme.dimen.X4}px;
-`
+`;
 
 const LegalLinksContainer = styled(ListItem)`
   margin-top: auto;
@@ -85,9 +85,9 @@ const Title = styled.h2`
 
 const NavbarMobileOptions: FunctionComponent<IPropsNavbarMobileOptions> = ({ isOpen }) => {
   const shopData = useAppSelector(selectShop);
-  const customerData = useAppSelector(selectCustomer)
+  const customerData = useAppSelector(selectCustomer);
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
-  const offersData = useAppSelector(selectOffers)
+  const offersData = useAppSelector(selectOffers);
 
   const { t } = useTranslation('header');
 
@@ -98,54 +98,61 @@ const NavbarMobileOptions: FunctionComponent<IPropsNavbarMobileOptions> = ({ isO
           {
             title: shopData?.name,
             icon: SvgRestaurant,
-            link: "/",
-            show: true
+            link: '/',
+            show: true,
           },
           {
             title: t('@reservation'),
             icon: SvgReservation,
-            link: "/reservation",
-            show: true
+            link: '/reservation',
+            show: true,
           },
           {
             title: t('@gallery'),
             icon: SvgGallery,
-            link: "/gallery",
-            show: true
+            link: '/gallery',
+            show: true,
           },
           {
             title: t('@offers'),
             icon: SvgGallery,
-            link: "/offers",
-            show: offersData.length > 0
+            link: '/offers',
+            show: offersData.length > 0,
           },
           {
             title: t('@contact'),
             icon: SvgContact,
-            link: "/contact-us",
-            show: true
+            link: '/contact-us',
+            show: true,
           },
-        ].map((item) => item.show? <ListItem key={item.title}>
-          <LinkItem href={item.link}>
-            <item.icon />
-            <Title>{item.title}</Title>
-          </LinkItem>
-        </ListItem>: <></>)}
+        ].map((item) =>
+          item.show ? (
+            <ListItem key={item.title}>
+              <LinkItem href={item.link}>
+                <item.icon />
+                <Title>{item.title}</Title>
+              </LinkItem>
+            </ListItem>
+          ) : (
+            <></>
+          ),
+        )}
         <ListItem key="lang-change">
-          <NavLanguageChange showTitle={true} style={{ padding: "12px 24px" }} />
+          <NavLanguageChange showTitle={true} style={{ padding: '12px 24px' }} />
         </ListItem>
-        {isLoggedIn? (
+
+        {isLoggedIn ? (
           <ListItem key="account">
             <LinkItem href="/account">
               <NavUserProfile />
               <Title>{customerData.name}</Title>
             </LinkItem>
           </ListItem>
-        ): (
+        ) : (
           <ListItem key="login">
-            <LinkItem href={"/login"}>
-              <SvgContact style={{ fill: "transparent" }} />
-              <Title>{t("@login")}</Title>
+            <LinkItem href={'/login'}>
+              <SvgContact style={{ fill: 'transparent' }} />
+              <Title>{t('@login')}</Title>
             </LinkItem>
           </ListItem>
         )}
