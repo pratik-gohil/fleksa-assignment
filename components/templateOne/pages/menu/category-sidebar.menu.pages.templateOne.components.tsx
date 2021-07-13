@@ -63,7 +63,7 @@ const MenuPageCategorySidebar: FunctionComponent = ({}) => {
   const language = useAppSelector(selectLanguage)
   const categories = useAppSelector(selectCategoryNames)
 
-  const idList = categories.map(i => "#" + i.name_json.english.toLowerCase().replace(/[^A-Za-z0-9]/g,"").split(" ").join("-"))
+  const [ idList ] = useState(categories.map(i => "#" + i.name_json.english.toLowerCase().replace(/[^A-Za-z0-9]/g,"").split(" ").join("-")))
 
   const [ activeId, setActiveId ] = useState(idList[0])
 
@@ -73,6 +73,7 @@ const MenuPageCategorySidebar: FunctionComponent = ({}) => {
   })
 
   function navHighlighter(sections: NodeListOf<Element>) {
+    let lastVisible: string | undefined = undefined
     for(const current in sections) {
       let el = sections[current] as any
       var top = el.offsetTop;
@@ -93,8 +94,11 @@ const MenuPageCategorySidebar: FunctionComponent = ({}) => {
         (left + width) > window.pageXOffset
       );
       if (!sections[current].getAttribute) break
-      setActiveId(sections[current].getAttribute("id") as string)
+      lastVisible = sections[current].getAttribute("id") as string
       if (visible) break
+    }
+    if (lastVisible && lastVisible !== activeId) {
+      setActiveId(lastVisible)
     }
   }
 
@@ -108,13 +112,37 @@ const MenuPageCategorySidebar: FunctionComponent = ({}) => {
     return () => window.removeEventListener("scroll", navHighlighter.bind(null, sections));
   }, [ ])
 
-  return <List>
+  function scrollParentToChild(parent: HTMLElement, child: HTMLElement) {
+    var parentRect = parent.getBoundingClientRect();
+    var parentViewableArea = {
+      height: parent.clientHeight,
+      width: parent.clientWidth
+    };
+    var childRect = child.getBoundingClientRect();
+    var isViewable = (childRect.left >= parentRect.left) && (childRect.left <= parentRect.left + parentViewableArea.width);
+    if (!isViewable) {
+      parent.scrollTo({
+        top: 0,
+        left: (childRect.left + parent.scrollLeft) - parentRect.left,
+        behavior: 'smooth'
+      });
+    }
+  }
+
+  useEffect(() => {
+    const parent = document.getElementById("list-list")
+    const el = document.getElementById(`sidebar-${activeId}`)
+    if (parent && el) scrollParentToChild(parent, el)
+  }, [ activeId ])
+
+  return <List id={"list-list"}>
     <ListItem key="search">
       <MenuSearch />
     </ListItem>
     {categories.map((category, index) => {
       const id = category.name_json.english.toLowerCase().replace(/[^A-Za-z0-9]/g,"").split(" ").join("-")
-      return <ListItem key={index}>
+      const sidebarId = `sidebar-${id}`
+      return <ListItem key={index} id={sidebarId}>
         <CategoryButton onClick={scrollIntoView.bind(null, id)}>
           <CategoryButtonText active={activeId === id}>{category.name_json[language]}</CategoryButtonText>
         </CategoryButton>

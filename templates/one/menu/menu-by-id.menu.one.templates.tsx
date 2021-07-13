@@ -72,7 +72,7 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
       <Row>
         <Col sm={12} md={12} lg={3} xxl={3}>
           <SideViewLeft>
-            <MenuPageCategorySidebar />
+            {/* {(typeof window !== "undefined" && window.matchMedia(`(min-width: ${BREAKPOINTS.lg}px)`).matches) && <MenuPageCategorySidebar />} */}
           </SideViewLeft>
         </Col>
         <Col sm={12} md={12} lg={5} xxl={5}>
