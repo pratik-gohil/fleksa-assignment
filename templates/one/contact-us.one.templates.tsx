@@ -16,7 +16,6 @@ import LoadingIndicator from '../../components/templateOne/common/loadingIndicat
 import NodeApiHttpPostContactUs from '../../http/nodeapi/contact-us/post.contact-us.nodeapi.http';
 
 const ContactUsContainer = styled.div`
-  /* width: 80%; */
   margin: auto;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
@@ -277,9 +276,9 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
 
   return (
     <ContactUsContainer>
-      <Container>
-        <Row justify="center">
-          <Col xl={7}>
+      <Container style={{ margin: 0, padding: 0 }}>
+        <Row justify="center" nogutter>
+          <Col xl={7} sm={12}>
             <Form onSubmit={handleContactUsSendButtonClick}>
               <Header>
                 <Title>{t('@title')}</Title>
@@ -322,7 +321,7 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
             </Form>
           </Col>
 
-          <Col xl={4}>
+          <Col xl={4} sm={12}>
             <BasicContactUsInformation />
           </Col>
         </Row>
