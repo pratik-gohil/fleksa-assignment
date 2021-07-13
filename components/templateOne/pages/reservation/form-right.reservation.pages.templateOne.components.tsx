@@ -100,7 +100,7 @@ const TimeSlots = styled.div`
   display: flex;
   transition: all 0.1s ease;
   overflow-x: hidden;
-  max-height: 500px;
+  max-height: 400px;
 
   @media (max-width: ${BREAKPOINTS.md}px) {
     max-height: 200px;
