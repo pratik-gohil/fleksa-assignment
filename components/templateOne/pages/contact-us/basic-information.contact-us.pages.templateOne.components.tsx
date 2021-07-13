@@ -97,7 +97,7 @@ const Map = styled.div`
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     iframe {
-      height: 400px;
+      /* height: 400px; */
     }
   }
 `;
@@ -178,7 +178,8 @@ export const BasicContactUsInformation = () => {
             '+',
           )},${addressData?.city.replace(' ', '+')}+${addressData?.country.replace(' ', '+')}`}
           title="Restaurant Map"
-          height="350"
+          height="400"
+          width="400"
           frameBorder="0"
           style={{ border: 0 }}
           aria-hidden="false"
