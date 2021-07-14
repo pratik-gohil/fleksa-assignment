@@ -4,9 +4,15 @@ import { updateBearerToken } from "../redux/slices/user.slices.redux";
 
 async function logout(ctx: any, cookie: Cookies) {
   ctx.store.dispatch(updateBearerToken(null))
-  cookie.set(COOKIE_BEARER_TOKEN, undefined)
-  cookie.set(COOKIE_SELECTED_MENU_ID, undefined)
-  cookie.set(COOKIE_SELECTED_MENU_URLPATH, undefined)
+  cookie.set(COOKIE_BEARER_TOKEN, undefined, {
+    sameSite: "lax"
+  })
+  cookie.set(COOKIE_SELECTED_MENU_ID, undefined, {
+    sameSite: "lax"
+  })
+  cookie.set(COOKIE_SELECTED_MENU_URLPATH, undefined, {
+    sameSite: "lax"
+  })
 }
 
 export {

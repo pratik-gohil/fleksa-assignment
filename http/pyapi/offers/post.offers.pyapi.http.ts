@@ -8,6 +8,9 @@ export default class PyApiHttpPostOffers extends ApiHttpCommon {
     try {
       const response = await new NetPyApi(this.configuration).post<IPyApiHttpPostOffersPostResponse>({
         path: `pyapi/checkout/offers`,
+        headers: {
+          "Content-Type": "text/plain",
+        },
         body: {
           code: data.code,
           order_type: data.orderType,

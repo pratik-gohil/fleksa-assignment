@@ -31,14 +31,16 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async ctx
 
     const cookies = new Cookies(ctx.req, ctx.res)
     cookies.set(COOKIE_SELECTED_MENU_ID, undefined, {
-      httpOnly: true,
+      path: "/",
+      httpOnly: false,
       maxAge: 365*24*60*60*1000,
-      sameSite: "strict"
+      sameSite: "lax"
     })
     cookies.set(COOKIE_SELECTED_MENU_URLPATH, undefined, {
-      httpOnly: true,
+      path: "/",
+      httpOnly: false,
       maxAge: 365*24*60*60*1000,
-      sameSite: "strict"
+      sameSite: "lax"
     })
     ctx.store.dispatch(updateSelectedMenu(null))
     ctx.store.dispatch(updateSiblings(responseIndex?.siblings))

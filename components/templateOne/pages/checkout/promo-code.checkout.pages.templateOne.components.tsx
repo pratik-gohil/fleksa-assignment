@@ -86,7 +86,7 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
       const response = await new PyApiHttpPostOffers(configuration).post({
         products,
         code: coupon,
-        orderType: "DELIVERY",
+        orderType: orderType,
         shopId,
         subTotalAmount: checkoutFinalAmountWithoutPromo,
         token: bearerToken
