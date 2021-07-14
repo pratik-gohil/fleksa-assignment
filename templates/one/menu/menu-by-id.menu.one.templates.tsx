@@ -15,6 +15,7 @@ import MenuPageCartSummary from '../../../components/templateOne/pages/menu/cart
 import { LS_GUEST_USER_ADDRESS } from '../../../constants/keys-local-storage.constants';
 import { useTranslation } from 'next-i18next';
 import { selectCart } from '../../../redux/slices/cart.slices.redux';
+import { Snackbar } from '../../../components/templateOne/common/snackbar/snackbar.error.pages.templateOne.components';
 
 const SideViewLeft = styled.div`
   display: none;
@@ -102,6 +103,8 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
             orderType === 'DELIVERY' &&
             !window.localStorage.getItem(LS_GUEST_USER_ADDRESS))) && <AddressAdd />
       )}
+
+      <Snackbar />
     </>
   );
 };
