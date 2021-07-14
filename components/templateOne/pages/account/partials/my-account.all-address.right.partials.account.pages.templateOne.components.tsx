@@ -13,10 +13,9 @@ import NodeApiHttpPostUpdateAddressRequest from '../../../../../http/nodeapi/acc
 import { useEffect } from 'react';
 import { BREAKPOINTS } from '../../../../../constants/grid-system-configuration';
 import { useTranslation } from 'next-i18next';
-
-const HomeIconPath = '/assets/svg/account/home.svg';
-const WorkIconPath = '/assets/svg/account/work.svg';
-const MapIconPath = '/assets/svg/account/map.svg';
+import HomeIconPath from '../../../../../public/assets/svg/address/home.svg';
+import WorkIconPath from '../../../../../public/assets/svg/address/work.svg';
+import MapIconPath from '../../../../../public/assets/svg/address/map.svg';
 
 const Wrapper = styled.div`
   padding: 1rem;
@@ -54,20 +53,6 @@ const InputBox = styled.div`
   }
 `;
 
-const InputBoxFlex1 = styled.div`
-  display: flex;
-
-  input {
-    &:nth-child(1) {
-      width: 70%;
-    }
-    &:nth-child(2) {
-      width: 30%;
-      margin: 0 0 0 0.5rem;
-    }
-  }
-`;
-
 const InputBoxFlex2 = styled.div`
   display: flex;
 
@@ -88,6 +73,7 @@ const Label = styled.p`
   font-weight: 600;
   padding: 0 0 0.4rem 0;
   margin: 0;
+  text-transform: uppercase;
 `;
 
 const BaseInputStyle = css`
@@ -114,6 +100,8 @@ const Input = styled.input`
 
   &::placeholder {
     font-weight: 300;
+    text-transform: uppercase;
+    font-size: 0.8rem;
   }
 
   &[type='date'],
@@ -131,32 +119,55 @@ const Input = styled.input`
   }
 `;
 
-const TypeIcon = styled.img`
-  height: 100%;
-  width: 100%;
-`;
-
 const AddressTypeContainer = styled.div``;
 
 const AddressType = styled.button<{ active: boolean }>`
-  width: 70px;
-  height: 70px;
+  width: 100px;
+  height: 100px;
   padding: 0.5rem;
   margin: 0 0.5rem;
   border-radius: 0.5rem;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
 
   border: 1px solid rgba(0, 0, 0, 0.1);
-  background: ${(p) => (p.active ? 'rgba(0, 0, 0, 0.1)' : 'rgba(0, 0, 0, 0)')};
+  background: ${(p) => (p.active ? 'rgba(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0)')};
 
   &:hover {
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 1);
+
+    svg {
+      fill: #fff;
+    }
+    p {
+      color: #fff;
+    }
+  }
+
+  svg {
+    fill: ${(p) => (p.active ? '#fff' : '#000')};
+    width: 48px;
+    height: 48px;
+  }
+
+  p {
+    color: ${(p) => (p.active ? '#fff' : '#000')};
   }
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     width: 48px;
     height: 48px;
   }
+`;
+
+const IconLabel = styled.p`
+  padding: 0.3rem 0;
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
 `;
 
 const IconContainer = styled.div`
@@ -176,6 +187,7 @@ const SaveAddressButton = styled.button`
   padding: 1rem;
   border: none;
   outline: none;
+  border-radius: 0.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -191,6 +203,10 @@ const SaveAddressButton = styled.button`
     padding: 0.5rem;
   }
 `;
+
+const HomeIcon = styled(HomeIconPath)``;
+const WorkIcon = styled(WorkIconPath)``;
+const MapIcon = styled(MapIconPath)``;
 
 interface IMyAccountAllAddressRightSideProps {
   handleShowNewAddressModal: (isEdit: boolean) => void;
@@ -378,26 +394,23 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
         <InputBox>
           <Label>{t('@street')}</Label>
 
-          <InputBoxFlex1>
-            <Input type="text" required={true} value={address} onChange={(e) => setAddress(e.target.value)} />
-            <Input type="text" value={floor} onChange={(e) => setFloor(e.target.value)} />
-          </InputBoxFlex1>
+          <Input type="text" required={true} value={address} onChange={(e) => setAddress(e.target.value)} placeholder={t('@street')} />
         </InputBox>
 
         <InputBox>
           <Label>{t('@details')}</Label>
-          <Input type="text" value={proximity} onChange={(e) => setProximity(e.target.value)} />
+          <Input type="text" value={proximity} onChange={(e) => setProximity(e.target.value)} placeholder={t('@details')} />
         </InputBox>
 
         <InputBoxFlex2>
           <InputBox>
             <Label>{t('@city')}</Label>
-            <Input type="text" required={true} value={city} onChange={(e) => setCity(e.target.value)} />
+            <Input type="text" required={true} value={city} onChange={(e) => setCity(e.target.value)} placeholder={t('@city')} />
           </InputBox>
 
           <InputBox>
             <Label>{t('@postal-code')}</Label>
-            <Input type="text" required={true} value={postalCode} onChange={(e) => setPostalCode(e.target.value)} />
+            <Input type="text" required={true} value={postalCode} onChange={(e) => setPostalCode(e.target.value)} placeholder={t('@postal-code')} />
           </InputBox>
         </InputBoxFlex2>
 
@@ -406,13 +419,16 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
 
           <IconContainer>
             <AddressType type="button" active={type === 'HOME'} onClick={() => setType('HOME')}>
-              <TypeIcon src={HomeIconPath} />
+              <HomeIcon />
+              <IconLabel>HOME</IconLabel>
             </AddressType>
             <AddressType type="button" active={type === 'WORK'} onClick={() => setType('WORK')}>
-              <TypeIcon src={WorkIconPath} />
+              <WorkIcon />
+              <IconLabel>WORK</IconLabel>
             </AddressType>
             <AddressType type="button" active={type === 'OTHER'} onClick={() => setType('OTHER')}>
-              <TypeIcon src={MapIconPath} />
+              <MapIcon />
+              <IconLabel>OTHER</IconLabel>
             </AddressType>
           </IconContainer>
         </AddressTypeContainer>

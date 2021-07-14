@@ -49,7 +49,7 @@ const RightWrapper = styled.div<{ show: boolean }>`
   justify-content: center;
   align-items: center;
   opacity: ${(p) => (p.show ? 1 : 0)};
-  transition: opacity 0.2s ease-in;
+  transition: opacity 0.1s ease-in;
   pointer-events: ${(p) => (p.show ? 'all' : 'none')};
 
   @media (max-width: ${BREAKPOINTS.sm}px) {

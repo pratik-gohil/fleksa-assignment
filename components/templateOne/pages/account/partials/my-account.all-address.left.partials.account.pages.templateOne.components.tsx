@@ -167,6 +167,7 @@ const AddNewAddressButton = styled.button`
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  border-radius: 0.5rem;
 
   &:hover {
     background: #575757;
