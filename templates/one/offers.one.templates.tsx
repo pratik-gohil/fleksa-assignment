@@ -14,6 +14,12 @@ import { BREAKPOINTS } from '../../constants/grid-system-configuration';
 const Wrapper = styled.div`
   outline: none;
   border: none;
+  height: max-content;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    height: calc(100vh - ${(p) => p.theme.navMobile.height}px);
+    margin: 0;
+  }
 `;
 
 const HeroContainer = styled.section`
@@ -53,8 +59,6 @@ const HeroImage = styled.img`
 `;
 
 const ContentContainer = styled.div`
-  min-height: 600px;
-  max-height: 800px;
   margin-bottom: 1rem;
   padding: 1rem;
 
@@ -69,10 +73,11 @@ const Content = styled.div`
   margin: 1rem;
   height: 100%;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-  width: 80%;
+  width: 70%;
+  /* position: relative; */
   border-radius: 0.5rem;
   margin: auto;
-  display: flex;
+  /* display: flex; */
   padding: 2rem;
   overflow: hidden;
 
@@ -85,8 +90,8 @@ const Content = styled.div`
 `;
 
 const LeftSection = styled.div`
-  width: 50%;
   height: 100%;
+  position: relative;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     width: 100%;
@@ -104,9 +109,7 @@ const RightSection = styled(LeftSection)`
   }
 `;
 
-const TitleContainer = styled.div`
-  position: relative;
-`;
+const TitleContainer = styled.div``;
 
 const MainTitle = styled.h2`
   text-align: left;
@@ -128,15 +131,12 @@ const LeftButton = styled.div<{ leftVisible: boolean }>`
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
   cursor: pointer;
   transition: 0.3s;
-  display: ${(p) => (p.leftVisible ? 'block' : 'none')};
+  cursor: ${(p) => (p.leftVisible ? 'pointer' : 'not-allowed')};
   margin-right: 0.5rem;
 
   svg {
     transition: 0.3s;
-    fill: rgba(0, 0, 0, 0.4);
-  }
-  &:hover svg {
-    fill: rgba(0, 0, 0, 1);
+    fill: ${(p) => (p.leftVisible ? 'rgba(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0.4)')};
   }
 `;
 
@@ -146,24 +146,24 @@ const RightButton = styled.div<{ rightVisible: boolean }>`
   border-radius: 50%;
   background: #fff;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
-  cursor: pointer;
+  cursor: ${(p) => (p.rightVisible ? 'pointer' : 'not-allowed')};
   transition: 0.3s;
-  display: ${(p) => (p.rightVisible ? 'block' : 'none')};
 
   svg {
     transition: 0.3s;
-    fill: rgba(0, 0, 0, 0.4);
-  }
-  &:hover svg {
-    fill: rgba(0, 0, 0, 1);
+    fill: ${(p) => (p.rightVisible ? 'rgba(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0.4)')};
   }
 `;
 
 const ButtonContainer = styled.div`
   display: flex;
+  width: 100px;
+  justify-content: space-between;
+  align-items: center;
   position: absolute;
-  top: 0;
-  right: -1.5rem;
+  right: 2rem;
+  top: 2rem;
+  z-index: 2;
 `;
 
 const OffersPageTemplateOne: FunctionComponent = ({}) => {
@@ -188,6 +188,9 @@ const OffersPageTemplateOne: FunctionComponent = ({}) => {
         if (!contents[index.current - 1]) {
           setLeftArrowVisible(false);
           setRightArrowVisible(true);
+        } else {
+          setLeftArrowVisible(true);
+          setRightArrowVisible(true);
         }
 
         return;
@@ -208,6 +211,9 @@ const OffersPageTemplateOne: FunctionComponent = ({}) => {
 
         if (!contents[index.current + 1]) {
           setRightArrowVisible(false);
+          setLeftArrowVisible(true);
+        } else {
+          setRightArrowVisible(true);
           setLeftArrowVisible(true);
         }
 
@@ -247,18 +253,18 @@ const OffersPageTemplateOne: FunctionComponent = ({}) => {
           <Content>
             <LeftSection>
               <Image src={currentContent.image} alt="currentContent picture" />
+              <ButtonContainer>
+                <LeftButton onClick={handleLeftArrowClick} leftVisible={leftArrowVisible}>
+                  <SvgPrevious />
+                </LeftButton>
+                <RightButton onClick={handleRightArrowClick} rightVisible={rightArrowVisible}>
+                  <SvgNext />
+                </RightButton>
+              </ButtonContainer>
             </LeftSection>
             <RightSection>
               <TitleContainer>
                 <MainTitle>{currentContent.title}</MainTitle>
-                <ButtonContainer>
-                  <LeftButton onClick={handleLeftArrowClick} leftVisible={leftArrowVisible}>
-                    <SvgPrevious />
-                  </LeftButton>
-                  <RightButton onClick={handleRightArrowClick} rightVisible={rightArrowVisible}>
-                    <SvgNext />
-                  </RightButton>
-                </ButtonContainer>
               </TitleContainer>
               <div dangerouslySetInnerHTML={{ __html: convertQuillToHtml(JSON.parse(currentContent.description)?.ops) }} />
             </RightSection>
