@@ -139,7 +139,6 @@ const IndexPageHero: FunctionComponent = ({}) => {
   });
 
   useEffect(() => {
-    console.log('check => ', isShopOpened(timingsData));
     setShop(isShopOpened(timingsData));
   }, []);
 
@@ -162,7 +161,9 @@ const IndexPageHero: FunctionComponent = ({}) => {
                 ) : (
                   <>
                     <OrderButton href={selectedMenuId ? `/menu/${selectedMenuId}` : '/menu'}>{t('@pre-online')}</OrderButton>
-                    <SubTitle2>Next Opening Hours: {shop.next}</SubTitle2>
+                    <SubTitle2>
+                      {t('@next-hours')} {shop.next}
+                    </SubTitle2>
                   </>
                 )}
               </Col>
