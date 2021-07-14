@@ -7,9 +7,10 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async ctx
   try {
     const cookies = new Cookies(ctx.req, ctx.res)
     cookies.set(COOKIE_SELECTED_RESTAURANT_DOMAIN, ctx.query.name as string, {
-      httpOnly: true,
+      path: "/",
+      httpOnly: false,
       maxAge: 365*24*60*60*1000,
-      sameSite: "strict"
+      sameSite: "lax"
     })
 
     return {
