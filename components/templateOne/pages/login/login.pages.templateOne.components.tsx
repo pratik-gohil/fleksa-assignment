@@ -233,7 +233,6 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
   useEffect(() => {
     if (typeof window !== "undefined") {
       setOtpBig(window.matchMedia(`(min-width: ${BREAKPOINTS.lg}px)`).matches)
-      console.log("window.matchMedia(`(min-width: ${BREAKPOINTS.lg}px)`).matches", window.matchMedia(`(min-width: ${BREAKPOINTS.lg}px)`).matches)
     }
   }, [ ])
 

@@ -5,7 +5,6 @@ module.exports = withPWA({
   generateEtags: false,
   pwa: {
     dest: "public",
-    disable: true,
   },
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     config.module.rules.push({
