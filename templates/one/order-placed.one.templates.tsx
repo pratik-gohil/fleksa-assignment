@@ -12,8 +12,15 @@ const Wrapper = styled.div`
   width: 100%;
   align-items: center;
   justify-content: center;
+
   @media (min-width: ${BREAKPOINTS.lg}px) {
     height: calc(100vh - ${(props) => props.theme.navDesktop.height}px);
+  }
+`;
+
+const Title = styled.h2`
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    text-align: center;
   }
 `;
 
@@ -28,7 +35,11 @@ const ViewManageButton = styled.a`
   color: ${(props) => props.theme.textLightActiveColor};
 `;
 
-const Image = styled.img``;
+const Image = styled.img`
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    width: 80%;
+  }
+`;
 
 const OrderPlacedPageTemplateOne: FunctionComponent = ({}) => {
   return (
@@ -36,7 +47,7 @@ const OrderPlacedPageTemplateOne: FunctionComponent = ({}) => {
       <Container>
         <Row>
           <Col style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-            <h2>Your order is placed successfully</h2>
+            <Title>Your order is placed successfully</Title>
             <Image src={OrderPlacedImage} alt="person jumping" />
             <ViewManageButton href="/account/order-history">View or Manage Order</ViewManageButton>
           </Col>
