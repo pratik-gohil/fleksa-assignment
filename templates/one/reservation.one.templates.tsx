@@ -36,7 +36,7 @@ const WidthFix = styled.div`
   }
 `;
 
-const FormContainer = styled.form`
+const FormContainer = styled.div`
   border-top: 2px solid rgba(0, 0, 0, 0.1);
   padding: 1rem 0;
 `;
