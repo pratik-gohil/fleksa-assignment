@@ -53,12 +53,12 @@ const OrderButtonContainer = styled.div`
   margin-top: ${props => props.theme.dimen.X4}px;
 `
 
-const OrderButtonCashContainer = styled.div`
+const OrderButtonCashContainer = styled.div<{ active: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
   height: 55px;
-  background-color: ${props => props.theme.primaryColor};
+  background-color: ${props => props.active? props.theme.primaryColor: "#aaa"};
   cursor: pointer;
   border: ${props => props.theme.border};
   border-radius: 1000px;
@@ -120,9 +120,9 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   }
 
   useEffect(() => {
-    const canPlace = !!(bearerToken && shopData?.id && customerData.email && customerData.phone && customerData.country_code)
+    const canPlace = !!(bearerToken && shopData?.id && customerData.email && customerData.phone && customerData.country_code && wantAtData)
     setOrderCanBePlaced(canPlace)
-  }, [ bearerToken, shopData?.id, customerData.email, customerData.phone, customerData.country_code ])
+  }, [ bearerToken, shopData?.id, customerData.email, customerData.phone, customerData.country_code, wantAtData ])
 
   async function onPaymentDone() {
     router.push("/order-placed")
@@ -144,7 +144,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   let orderButton
   switch (paymentMethodData) {
     case "CASH":
-      orderButton = <OrderButtonCashContainer onClick={onClickCashOrderButton}>
+      orderButton = <OrderButtonCashContainer onClick={onClickCashOrderButton} active={orderCanBePlaced}>
         {orderButtonLoading? <LoadingIndicator />: <OrderButton>ORDER AND PAY</OrderButton>}
       </OrderButtonCashContainer>
       break;

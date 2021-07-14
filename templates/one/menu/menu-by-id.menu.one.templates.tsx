@@ -93,7 +93,10 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
           </Col>
         </Row>
       </Container>
-      <div>{cartData.cartCost > 0 && <MenuPageCartSummary />}</div>
+      <div>
+        {cartData.cartCost > 0 && <MenuPageCartSummary />}
+        <Snackbar />
+      </div>
       {(showSelectOrderType || orderType === null) && !showAddAddress ? (
         <OrderTypeManager key="key-ajkndalkwdmalkwmdlkw" />
       ) : (
@@ -103,8 +106,6 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
             orderType === 'DELIVERY' &&
             !window.localStorage.getItem(LS_GUEST_USER_ADDRESS))) && <AddressAdd />
       )}
-
-      <Snackbar />
     </>
   );
 };

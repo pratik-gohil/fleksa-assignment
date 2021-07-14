@@ -30,6 +30,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
 
   useEffect(() => {
     const timingList = timings.generateDates()
+    let foundDateTime = false
     for (let i = 0; i < timingList.length; i++) {
       const selectedDate = timingList[i]
       if (selectedDate && timingsData && orderType && addressData?.prepare_time && addressData?.delivery_time) {
@@ -44,11 +45,13 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
         });
         if (timeData.length > 0) {
           dispatch(updateWantAt({ date: selectedDate, time: timeData[0] }))
+          foundDateTime = true
           break
         }
       }
     }
-  }, [ ])
+    if (!foundDateTime) updateWantAt(null)
+  }, [ orderType ])
 
   return <StyledCheckoutCard>
     <StyledCheckoutTitle>SUMMARY</StyledCheckoutTitle>
@@ -59,17 +62,21 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
           <EditButton onClick={() => dispatch(updateShowOrderTypeSelect(true))} />
         </EditContainer>
         <EditContainer>
-          <StyledCheckoutText>{wantAtData?.date.label} ({wantAtData?.time.label})</StyledCheckoutText>
+          <StyledCheckoutText>{wantAtData? `${wantAtData?.date.label} (${wantAtData?.time.label})`: "Select Time"}</StyledCheckoutText>
           <EditButton onClick={() => dispatch(updateShowDateTimeSelect(true))} />
         </EditContainer>
       </Col>
     </Row>
-    {((showSelectOrderType || orderType === null) && !showAddAddress)
-      ? <OrderTypeManager key="key-ajkndalkwdmalkwmdlkw" />
-      : (showAddAddress
-        || (orderType === "DELIVERY" && checkoutAddressId === null
-        && orderType === "DELIVERY" && !window.localStorage.getItem(LS_GUEST_USER_ADDRESS))) && <AddressAdd />}
-    {showDateTimeSelect && <CheckoutDateTime />}
+    <div>
+      {((showSelectOrderType || orderType === null) && !showAddAddress)
+        ? <OrderTypeManager key="key-ajkndalkwdmalkwmdlkw" />
+        : (showAddAddress
+          || (orderType === "DELIVERY" && checkoutAddressId === null
+          && orderType === "DELIVERY" && !window.localStorage.getItem(LS_GUEST_USER_ADDRESS))) && <AddressAdd />}
+    </div>
+    <div>
+      {showDateTimeSelect && <CheckoutDateTime />}
+    </div>
   </StyledCheckoutCard>
 }
 

@@ -113,8 +113,6 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
     }
   }, [ ])
 
-  // ASIA2021
-
   return <StyledCheckoutCard>
     <EditContainer>
       <StyledCheckoutTitle>PROMO CODE</StyledCheckoutTitle>
