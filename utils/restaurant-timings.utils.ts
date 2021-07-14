@@ -98,7 +98,7 @@ export default class RestaurantTimingUtils {
 
         start.set({
           hours: start.hours(),
-          minutes: isReservation ? temp : temp + initialDifference,
+          minutes: isReservation ? temp + 180 - interval.pickup_time : temp + initialDifference,
         });
       }
 
