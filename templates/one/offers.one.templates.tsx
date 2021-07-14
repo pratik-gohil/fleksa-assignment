@@ -106,12 +106,31 @@ const RightSection = styled(LeftSection)`
   }
 `;
 
-const TitleContainer = styled.div``;
+const TitleContainer = styled.div`
+  padding: 0 0 1rem 0;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
-const MainTitle = styled.h2`
-  text-align: left;
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    padding: 1rem 0;
+    display: block;
+    line-height: 1.2;
+  }
+`;
+
+const MainTitle = styled.h1`
+  text-align: center;
   padding: 0;
   margin: 0;
+  font-size: 2.5rem;
+  width: 90%;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    font-size: 2rem;
+    width: 100%;
+  }
 `;
 
 const Image = styled.img`
@@ -157,14 +176,11 @@ const ButtonContainer = styled.div`
   width: 100px;
   justify-content: space-between;
   align-items: center;
-  position: absolute;
-  right: 2rem;
-  top: 2rem;
-  z-index: 2;
+  z-index: 999999;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     right: 1rem;
-    bottom: -23rem;
+    bottom: calc(${(p) => p.theme.navMobile.height}px + 1rem);
     position: fixed;
   }
 `;
@@ -255,20 +271,20 @@ const OffersPageTemplateOne: FunctionComponent = ({}) => {
         {!!currentContent && (
           <Content>
             <LeftSection>
-              <Image src={currentContent.image} alt="currentContent picture" />
-              <ButtonContainer>
-                <LeftButton onClick={handleLeftArrowClick} leftVisible={leftArrowVisible}>
-                  <SvgPrevious />
-                </LeftButton>
-                <RightButton onClick={handleRightArrowClick} rightVisible={rightArrowVisible}>
-                  <SvgNext />
-                </RightButton>
-              </ButtonContainer>
-            </LeftSection>
-            <RightSection>
               <TitleContainer>
                 <MainTitle>{currentContent.title}</MainTitle>
+                <ButtonContainer>
+                  <LeftButton onClick={handleLeftArrowClick} leftVisible={leftArrowVisible}>
+                    <SvgPrevious />
+                  </LeftButton>
+                  <RightButton onClick={handleRightArrowClick} rightVisible={rightArrowVisible}>
+                    <SvgNext />
+                  </RightButton>
+                </ButtonContainer>
               </TitleContainer>
+              <Image src={currentContent.image} alt="currentContent picture" />
+            </LeftSection>
+            <RightSection>
               <div dangerouslySetInnerHTML={{ __html: convertQuillToHtml(JSON.parse(currentContent.description)?.ops) }} />
             </RightSection>
           </Content>
