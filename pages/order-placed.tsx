@@ -7,6 +7,7 @@ import { getServerSidePropsCommon } from '../utils/page.utils';
 import { useRouter } from 'next/dist/client/router';
 import { useAppDispatch } from '../redux/hooks.redux';
 import { updateClearCart } from '../redux/slices/cart.slices.redux';
+import { updateClearCheckout } from '../redux/slices/checkout.slices.redux';
 
 const OrderPlacedPageTemplateOne = dynamic(import('../templates/one/order-placed.one.templates'));
 
@@ -36,6 +37,7 @@ function Checkout({ templateNumber, meta }: any) {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       dispatch(updateClearCart());
+      dispatch(updateClearCheckout())
     }
   }, [router]);
   return <TemplateToShow meta={meta} templateList={templateList} templateNumber={templateNumber} pageContainer={{ showFooter: false }} />;

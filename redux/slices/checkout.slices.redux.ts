@@ -61,6 +61,10 @@ export const CheckoutSlice = createSlice({
       state.paymentMethod = 'CASH';
       state.tip = null;
       state.comment = '';
+      state.wantAt = null;
+      state.showDateTimeSelect = false;
+      state.selectedAddressId = null;
+      state.promoCode = null;
     },
     updateSelectedAddressId(state, action) {
       state.selectedAddressId = action.payload;
