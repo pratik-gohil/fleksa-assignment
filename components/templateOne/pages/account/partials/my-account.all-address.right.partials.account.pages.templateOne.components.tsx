@@ -1,4 +1,4 @@
-import React, { FormEvent, FunctionComponent } from 'react';
+import React, { FormEvent, FunctionComponent, useRef } from 'react';
 import { useState } from 'react';
 import styled, { css } from 'styled-components';
 import NodeApiHttpPostCreateNewAddressRequest from '../../../../../http/nodeapi/account/post.create-address.nodeapi.http';
@@ -16,6 +16,7 @@ import { useTranslation } from 'next-i18next';
 import HomeIconPath from '../../../../../public/assets/svg/address/home.svg';
 import WorkIconPath from '../../../../../public/assets/svg/address/work.svg';
 import MapIconPath from '../../../../../public/assets/svg/address/map.svg';
+import SvgCross from '../../../../../public/assets/svg/cross.svg';
 
 const Wrapper = styled.div`
   padding: 1rem;
@@ -23,7 +24,9 @@ const Wrapper = styled.div`
 `;
 
 const Header = styled.div`
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   width: 100%;
 `;
 
@@ -42,7 +45,6 @@ const FormContainer = styled.form`
   justify-content: space-between;
   width: 100%;
   min-height: max-content;
-  padding-top: 1rem;
 `;
 
 const InputBox = styled.div`
@@ -158,8 +160,13 @@ const AddressType = styled.button<{ active: boolean }>`
   }
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    width: 48px;
-    height: 48px;
+    width: 70px;
+    height: 70px;
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
   }
 `;
 
@@ -168,6 +175,11 @@ const IconLabel = styled.p`
   margin: 0;
   font-size: 0.8rem;
   font-weight: 600;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    padding: 0.2rem 0;
+    font-size: 0.6rem;
+  }
 `;
 
 const IconContainer = styled.div`
@@ -200,7 +212,22 @@ const SaveAddressButton = styled.button`
   }
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    padding: 0.5rem;
+    /* padding: 0.5rem; */
+  }
+`;
+
+const CloseButton = styled.button`
+  padding: 16px;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: none;
+
+  svg {
+    display: block;
+    width: 16px;
+    height: 16px;
+    fill: #222;
   }
 `;
 
@@ -214,6 +241,8 @@ interface IMyAccountAllAddressRightSideProps {
   isEditMode: boolean;
 }
 
+let autoComplete: google.maps.places.Autocomplete;
+
 const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightSideProps> = ({
   handleShowNewAddressModal,
   existAddress,
@@ -222,15 +251,46 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
   const [address, setAddress] = useState('');
   const [floor, setFloor] = useState('');
   const [city, setCity] = useState('');
+  const [area, setArea] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [type, setType] = useState('HOME'); // ? default
   const [proximity, setProximity] = useState('');
   const [loading, setLoading] = useState(false);
+  const refAddressInput = useRef<HTMLInputElement>(null);
 
   const bearerToken = useAppSelector(selectBearerToken);
   const configuration = useAppSelector(selectConfiguration);
   const { t } = useTranslation('account');
   const dispatch = useAppDispatch();
+
+  // TODO: Auto complete
+  function onAddressChange() {
+    console.log('changed address');
+    const place = autoComplete.getPlace();
+    if (place.address_components) {
+      for (let component of place.address_components) {
+        if (component.types[0] === 'route') {
+          let temp = '';
+          for (let component2 of place.address_components) if (component2.types[0] === 'street_number') temp = component2.short_name;
+          setAddress(`${component.long_name} ${temp}`);
+          // setAddressStreet(component.long_name);
+        } else if (component.types.indexOf('sublocality') !== -1 || component.types.indexOf('sublocality_level_1') !== -1)
+          setArea(component.long_name.includes('Innenstadt') ? 'Innenstadt' : component.long_name);
+        else if (component.types[0] === 'locality') setCity(component.long_name);
+        else if (component.types[0] === 'postal_code') setPostalCode(component.short_name);
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (window !== 'undefined' && refAddressInput.current) {
+      autoComplete = new google.maps.places.Autocomplete(refAddressInput.current, {
+        types: ['geocode'],
+      });
+      autoComplete.setFields(['address_component']);
+      autoComplete.addListener('place_changed', onAddressChange);
+    }
+  }, [refAddressInput]);
 
   const handleCreateNewAddressFormRequest = async (e: FormEvent) => {
     e.preventDefault();
@@ -256,6 +316,7 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
         postal_code: postalCode,
         address_type: type as Allowed_address_type,
         proximity,
+        area,
       });
 
       setLoading(false);
@@ -388,13 +449,23 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
     <Wrapper>
       <Header>
         <Title>{isEditMode ? t('@update-your-address') : t('@add-your-address')}</Title>
+        <CloseButton onClick={handleShowNewAddressModal}>
+          <SvgCross />
+        </CloseButton>
       </Header>
 
       <FormContainer onSubmit={handleCreateNewAddressFormRequest}>
         <InputBox>
           <Label>{t('@street')}</Label>
 
-          <Input type="text" required={true} value={address} onChange={(e) => setAddress(e.target.value)} placeholder={t('@street')} />
+          <Input
+            type="text"
+            required={true}
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            placeholder={t('@street')}
+            ref={refAddressInput}
+          />
         </InputBox>
 
         <InputBox>

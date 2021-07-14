@@ -11,6 +11,7 @@ export interface INodeApiHttpPostCreateNewAddressRequestData {
   postal_code: string;
   address_type: Allowed_address_type;
   proximity?: string;
+  area?: string;
 }
 
 export interface INodeApiHttpPostCreateNewAddressResponseData {
