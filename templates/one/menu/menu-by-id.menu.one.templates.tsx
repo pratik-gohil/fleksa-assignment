@@ -95,7 +95,6 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
       </Container>
       <div>
         {cartData.cartCost > 0 && <MenuPageCartSummary />}
-        <Snackbar />
       </div>
       {(showSelectOrderType || orderType === null) && !showAddAddress ? (
         <OrderTypeManager key="key-ajkndalkwdmalkwmdlkw" />

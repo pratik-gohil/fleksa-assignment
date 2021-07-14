@@ -327,8 +327,6 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
           </Col>
         </Row>
       </Container>
-
-      <Snackbar />
     </ContactUsContainer>
   );
 };

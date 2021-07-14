@@ -64,8 +64,6 @@ const LoginPageTemplateOne: FunctionComponent = ({}) => {
           ></Path>
         </WaveImg>
       </WidthFix>
-
-      <Snackbar />
     </LoginContainer>
   );
 };

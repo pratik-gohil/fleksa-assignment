@@ -9,7 +9,6 @@ const AccountEditPageTemplateOne: FunctionComponent = ({}) => {
   return (
     <MyAccountPageContainer>
       <AccountPageMyAccount />
-      <Snackbar />
     </MyAccountPageContainer>
   );
 };

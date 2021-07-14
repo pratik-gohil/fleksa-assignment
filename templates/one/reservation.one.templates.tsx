@@ -101,8 +101,6 @@ const ReservationTemplateOne: FunctionComponent = ({}) => {
       </WidthFix>
 
       <CoupleImg src="/assets/svg/couple.svg" alt="couple" />
-
-      <Snackbar />
     </ReservationContainer>
   );
 };

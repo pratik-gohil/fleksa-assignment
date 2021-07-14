@@ -9,7 +9,6 @@ const AccountPageTemplateOne: FunctionComponent = ({}) => {
   return (
     <MyAccountPageContainer>
       <AccountPageMyAccount />
-      <Snackbar />
     </MyAccountPageContainer>
   );
 };
