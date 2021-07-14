@@ -1,5 +1,5 @@
 import React, { FunctionComponent, ReactNode, useRef } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { BREAKPOINTS } from "../../constants/grid-system-configuration";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks.redux";
 import { useEffect } from "react";
@@ -92,13 +92,17 @@ const List = styled.ul`
   }
 `
 
-const ListItem = styled.li`
+const ListItem = styled.li<{ active: boolean }>`
   border: ${props => props.theme.border};
   border-radius: ${props => props.theme.borderRadius}px;
   margin: ${props => props.theme.dimen.X4}px 0;
+  ${props => props.active && css`
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2);
+    border-color: ${props => props.theme.primaryColor};
+  `}
 `
 
-const ListItemLink = styled.a`
+const ListItemLink = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -200,6 +204,11 @@ const EnterAddress = styled.div`
 
 let map: google.maps.Map;
 let autoComplete: google.maps.places.Autocomplete
+const markers: Record<string, {
+  marker: google.maps.Marker
+  infoWindow: google.maps.InfoWindow
+}> = {}
+let tempSelId: number|null = null
 
 const MenuPageTemplateOne: FunctionComponent = ({}) => {
   const dispatch = useAppDispatch()
@@ -209,7 +218,10 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn)
   const addressData = useAppSelector(state => selectAddressByType(state, "HOME"))
   const configuration = useAppSelector(selectConfiguration)
-  const [deliveryFilterData, setDeliveryFilterData ] = useState<Array<ISibling>>()
+  
+  const [ restaurantsToShow, setRestaurantsToShow ] = useState<Array<ISibling>|undefined>(undefined)
+  const [ deliveryFilterData, setDeliveryFilterData ] = useState<Array<ISibling>>()
+  const [ selectedId, setSelectedId ] = useState<number|null>(null)
 
   const refAddressInput = useRef<HTMLInputElement>(null)
 
@@ -217,27 +229,48 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
   const [ addressFloor, setAddressFloor ] = useState("")
   const [ filterName, setFilterName ] = useState<Filters>("has_delivery")
 
-  function initMap(): void {
+  useEffect(() => {
+    if (tempSelId) {
+      markers[tempSelId].infoWindow.close()
+    }
+    if (selectedId) markers[selectedId].infoWindow.open({
+      anchor: markers[selectedId].marker,
+      map,
+      shouldFocus: false,
+    })
+    tempSelId = selectedId
+  })
+
+  function initMap() {
     map = new google.maps.Map(document.getElementById("map") as HTMLElement, {
       zoom: 16,
     });
     const latlngbounds = new google.maps.LatLngBounds();
   
-    const features = siblingsData.map(sibling => {
-      latlngbounds.extend(new google.maps.LatLng(sibling.address.lat, sibling.address.lon));
-      return {
-        position: new google.maps.LatLng(sibling.address.lat, sibling.address.lon),
-        type: "info",
-      }
+    map.fitBounds(latlngbounds)
+
+    google.maps.event.addListener(map, "click", function() {
+      Object.keys(markers).map(i => markers[i].infoWindow.close())
     });
 
-    map.fitBounds(latlngbounds)
-  
-    // Create markers.
-    for (let i = 0; i < features.length; i++) {
-      console.log(shopData?.logo)
-      new google.maps.Marker({
-        position: features[i].position,
+    siblingsData.map(sibling => {
+      latlngbounds.extend(new google.maps.LatLng(sibling.address.lat, sibling.address.lon));
+      const position = new google.maps.LatLng(sibling.address.lat, sibling.address.lon);
+
+      const area = sibling.address?.area ? sibling.address?.area + ' ' : ''
+      const address = sibling.address?.address || ''
+      const city = sibling.address?.city || ''
+      const postalCode = sibling.address?.postal_code || ''
+      
+      const infoWindow = new google.maps.InfoWindow({
+        content: `
+          <p>${area}${address}</p>
+          <p>${postalCode} ${city}</p>
+        `,
+      });
+
+      const marker = new google.maps.Marker({
+        position,
         icon: shopData?.logo && {
           url: shopData?.logo,
           scaledSize: new google.maps.Size(40, 40),
@@ -246,7 +279,25 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
         },
         map: map,
       });
-    }
+
+      marker.addListener("click", () => {
+        if (tempSelId) markers[tempSelId].infoWindow.close()
+        setSelectedId(sibling.id)
+        infoWindow.open({
+          anchor: marker,
+          map,
+          shouldFocus: false,
+        });
+        document.getElementById(`sibling-item-id${sibling.id}`)?.scrollIntoView({
+          behavior: "smooth"
+        })
+      })
+
+      markers[sibling.id] = {
+        marker,
+        infoWindow
+      }
+    });
   }
 
   function setFilterAndOrderType(filter: Filters) {
@@ -390,9 +441,15 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
     }
   }, [ refAddressInput ])
 
-  const restaurantsToShow = filterName === "has_delivery"
+  useEffect(() => {
+    const tempRestaurantsToShow = filterName === "has_delivery"
     ? deliveryFilterData
     : siblingsData.filter(sibling => sibling.address.availability[filterName])
+    setRestaurantsToShow(tempRestaurantsToShow)
+    Object.keys(markers).map(i => markers[i].marker.setMap(tempRestaurantsToShow?.find(o => o.id === Number(i))? map: null))
+    if (selectedId) markers[selectedId].infoWindow.close()
+    setSelectedId(null)
+  }, [ filterName ])
 
   let restaurantListView: ReactNode
   if (restaurantsToShow && restaurantsToShow.length > 0) {
@@ -403,7 +460,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
       const postalCode = sibling.address?.postal_code || ''
       
       const day = new Date().toLocaleString('en-us', {  weekday: 'long' }).toUpperCase()
-      return <ListItem key={`${sibling.id}`}>
+      return <ListItem key={`${sibling.id}`} id={`sibling-item-id${sibling.id}`} active={sibling.id === selectedId} onClick={() => setSelectedId(sibling.id)}>
         <ListItemLink>
           <ItemImage src={sibling.logo} />
           <ContentContatiner>

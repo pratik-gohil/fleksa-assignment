@@ -8,7 +8,6 @@ import { BREAKPOINTS } from '../../constants/grid-system-configuration';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks.redux';
 import { selectConfiguration } from '../../redux/slices/configuration.slices.redux';
 import { selectShop } from '../../redux/slices/index.slices.redux';
-import { Snackbar } from '../../components/templateOne/common/snackbar/snackbar.error.pages.templateOne.components';
 import { updateError } from '../../redux/slices/common.slices.redux';
 import { BasicContactUsInformation } from '../../components/templateOne/pages/contact-us/basic-information.contact-us.pages.templateOne.components';
 

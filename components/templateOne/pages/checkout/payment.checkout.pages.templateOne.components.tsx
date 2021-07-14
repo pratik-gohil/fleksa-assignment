@@ -38,9 +38,11 @@ const PaymentMethodItems = styled.li<{ isActive: boolean }>`
   border: ${props => props.theme.border};
   justify-content: center;
   border-radius: ${props => props.theme.borderRadius}px;
-  ${props => props.isActive && css`
+  ${props => props.isActive? css`
     border-color: ${props => props.theme.primaryColor};
     box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2);
+  `: css`
+    box-shadow: 0 0 4px 0 transparent;
   `}
   cursor: pointer;
   svg {
@@ -149,7 +151,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
     }
   }
 
-  let paymentTitle: string
+  let paymentTitle: string|undefined = undefined
   let orderButton
   switch (paymentMethodData) {
     case "CASH":
@@ -167,12 +169,11 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
       paymentTitle = paymentMethodData
       break;
     default:
-      paymentTitle = ""
       break;
   }
 
   return <StyledCheckoutCard style={{ marginBottom: 48 }}>
-    <StyledCheckoutTitle>PAYMENT ({paymentTitle})</StyledCheckoutTitle>
+    <StyledCheckoutTitle>PAYMENT {paymentTitle? `(${paymentTitle})`: ""}</StyledCheckoutTitle>
     <Row>
       <Col xs={12}>
         <PaymentMethodList>
@@ -186,9 +187,10 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
             method: "PAYPAL" as ICheckoutPaymentMethods,
             icon: SvgPaypal
           }].map(item => {
+            const isActive = paymentMethodData === item.method
             return <PaymentMethodItems
               key={item.method}
-              isActive={paymentMethodData === item.method}
+              isActive={isActive}
               onClick={() => dispatch(updatePaymentMethod(item.method))}
             ><item.icon /></PaymentMethodItems>
           })}
