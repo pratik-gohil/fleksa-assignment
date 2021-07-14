@@ -14,11 +14,11 @@ import { ILabelValue } from '../../utils/restaurant-timings.utils';
 const ReservationContainer = styled.section`
   position: relative;
   height: calc(100vh - ${(p) => p.theme.navDesktop.height}px);
-  margin-top: 4rem;
+  margin: 4rem 0;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     height: calc(100vh - ${(p) => p.theme.navMobile.height}px);
-    margin-top: 0;
+    margin: 0;
   }
 `;
 
