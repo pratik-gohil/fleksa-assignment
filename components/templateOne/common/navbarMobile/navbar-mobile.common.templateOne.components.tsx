@@ -125,6 +125,7 @@ const NavbarMobile: FunctionComponent = ({}) => {
               <Title isActive={item.isActive}>{item.title}</Title>
             </>
           );
+
           return (
             <ListItem key={index} isActive={item.isActive}>
               {item.link ? <Link href={item.link}>{view}</Link> : <Button onClick={item.button}>{view}</Button>}
