@@ -19,6 +19,10 @@ import { StyledCheckoutCard, StyledCheckoutTitle } from "./customer-info.checkou
 import CheckoutPageOrderButtonPaypal from "./order-button-paypal.checkout.pages.templateOne.components";
 import CheckoutPageOrderButtonStripe from "./order-button-stripe.checkout.pages.templateOne.components";
 
+import SvgCash from "../../../../public/assets/svg/cash.svg"
+import SvgCard from "../../../../public/assets/svg/card.svg"
+import SvgPaypal from "../../../../public/assets/svg/paypal.svg"
+
 
 const PaymentMethodList = styled.ul`
   display: flex;
@@ -39,6 +43,10 @@ const PaymentMethodItems = styled.li<{ isActive: boolean }>`
     box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2);
   `}
   cursor: pointer;
+  svg {
+    display: block;
+    height: 40px;
+  }
 `
 
 const Disclaimer = styled.p`
@@ -141,34 +149,48 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
     }
   }
 
+  let paymentTitle: string
   let orderButton
   switch (paymentMethodData) {
     case "CASH":
       orderButton = <OrderButtonCashContainer onClick={onClickCashOrderButton} active={orderCanBePlaced}>
         {orderButtonLoading? <LoadingIndicator />: <OrderButton>ORDER AND PAY</OrderButton>}
       </OrderButtonCashContainer>
+      paymentTitle = paymentMethodData
       break;
     case "STRIPE":
       orderButton = <CheckoutPageOrderButtonStripe onPaymentDone={onPaymentDone} createOrder={createOrder} orderCanBePlaced={orderCanBePlaced} />
+      paymentTitle = "CREDIT CARD"
       break;
     case "PAYPAL":
       orderButton = <CheckoutPageOrderButtonPaypal onPaymentDone={onPaymentDone} createOrder={createOrder} orderCanBePlaced={orderCanBePlaced} />
+      paymentTitle = paymentMethodData
       break;
     default:
+      paymentTitle = ""
       break;
   }
 
-  return <StyledCheckoutCard>
-    <StyledCheckoutTitle>PAYMENT ({paymentMethodData})</StyledCheckoutTitle>
+  return <StyledCheckoutCard style={{ marginBottom: 48 }}>
+    <StyledCheckoutTitle>PAYMENT ({paymentTitle})</StyledCheckoutTitle>
     <Row>
       <Col xs={12}>
         <PaymentMethodList>
-          {(["CASH", "STRIPE", "PAYPAL"] as Array<ICheckoutPaymentMethods>).map(method => {
+          {[{
+            method: "CASH" as ICheckoutPaymentMethods,
+            icon: SvgCash
+          }, {
+            method: "STRIPE" as ICheckoutPaymentMethods,
+            icon: SvgCard
+          }, {
+            method: "PAYPAL" as ICheckoutPaymentMethods,
+            icon: SvgPaypal
+          }].map(item => {
             return <PaymentMethodItems
-              key={method}
-              isActive={paymentMethodData === method}
-              onClick={() => dispatch(updatePaymentMethod(method))}
-            >{method}</PaymentMethodItems>
+              key={item.method}
+              isActive={paymentMethodData === item.method}
+              onClick={() => dispatch(updatePaymentMethod(item.method))}
+            ><item.icon /></PaymentMethodItems>
           })}
         </PaymentMethodList>
       </Col>

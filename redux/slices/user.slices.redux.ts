@@ -82,3 +82,4 @@ export const selectIsUserLoggedIn = (state: RootState) => state.user.bearerToken
 export const selectBearerToken = (state: RootState) => state.user.bearerToken;
 export const selectCustomer = (state: RootState) => state.user.customer;
 export const selectAddressByType = (state: RootState, addressType: AddressTypes) => state.user.customer.all_address?.find(i => i.address_type === addressType);
+export const selectAddressById = (state: RootState, id: number|null) => id? state.user.customer.all_address?.find(i => i.id === id): undefined;
