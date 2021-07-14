@@ -17,7 +17,6 @@ const Wrapper = styled.div`
   height: max-content;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    height: calc(100vh - ${(p) => p.theme.navMobile.height}px);
     margin: 0;
   }
 `;
@@ -74,10 +73,8 @@ const Content = styled.div`
   height: 100%;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   width: 70%;
-  /* position: relative; */
   border-radius: 0.5rem;
   margin: auto;
-  /* display: flex; */
   padding: 2rem;
   overflow: hidden;
 
@@ -164,6 +161,12 @@ const ButtonContainer = styled.div`
   right: 2rem;
   top: 2rem;
   z-index: 2;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    right: 1rem;
+    bottom: -23rem;
+    position: fixed;
+  }
 `;
 
 const OffersPageTemplateOne: FunctionComponent = ({}) => {
