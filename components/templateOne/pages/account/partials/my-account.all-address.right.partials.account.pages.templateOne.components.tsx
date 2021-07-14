@@ -216,7 +216,7 @@ const SaveAddressButton = styled.button`
   }
 `;
 
-const CloseButton = styled.button`
+const CloseButton = styled.div`
   padding: 16px;
   cursor: pointer;
   border: none;
@@ -449,7 +449,7 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
     <Wrapper>
       <Header>
         <Title>{isEditMode ? t('@update-your-address') : t('@add-your-address')}</Title>
-        <CloseButton onClick={handleShowNewAddressModal}>
+        <CloseButton onClick={() => handleShowNewAddressModal(false)}>
           <SvgCross />
         </CloseButton>
       </Header>
