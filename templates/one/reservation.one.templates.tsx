@@ -13,10 +13,12 @@ import { ILabelValue } from '../../utils/restaurant-timings.utils';
 
 const ReservationContainer = styled.section`
   position: relative;
+  height: calc(100vh - ${(p) => p.theme.navDesktop.height}px);
   margin-top: 4rem;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    margin-top: 1rem;
+    height: calc(100vh - ${(p) => p.theme.navMobile.height}px);
+    margin-top: 0;
   }
 `;
 
@@ -30,6 +32,7 @@ const WidthFix = styled.div`
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     width: 100%;
+    padding-bottom: 2rem;
   }
 `;
 

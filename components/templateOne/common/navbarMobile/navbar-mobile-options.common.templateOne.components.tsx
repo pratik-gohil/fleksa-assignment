@@ -143,8 +143,8 @@ const NavbarMobileOptions: FunctionComponent<IPropsNavbarMobileOptions> = ({ isO
 
         {isLoggedIn ? (
           <ListItem key="account">
+            <NavUserProfile />
             <LinkItem href="/account">
-              <NavUserProfile />
               <Title>{customerData.name}</Title>
             </LinkItem>
           </ListItem>

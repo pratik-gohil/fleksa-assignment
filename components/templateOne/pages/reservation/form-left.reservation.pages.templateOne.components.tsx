@@ -15,7 +15,7 @@ import { ILabelValue } from '../../../../utils/restaurant-timings.utils';
 import { useRouter } from 'next/router';
 
 const Wrapper = styled.div``;
-const FormContainer = styled.form``;
+const FormContainer = styled.div``;
 const InputBox = styled.div`
   padding: 0 0 1rem 0;
 `;
