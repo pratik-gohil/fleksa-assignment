@@ -11,7 +11,11 @@ export interface IShop {
   name: string;
   paypal_available: boolean;
   place: string;
-  social: null;
+  social: null | {
+    facebook?: string;
+    instagram?: string;
+    twitter?: string;
+  };
   stripe_available: boolean;
   uis: string;
   urlpath: string;
