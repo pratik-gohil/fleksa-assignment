@@ -117,7 +117,8 @@ const BottomContainer = styled.div`
 
 const InputContainerFlex = styled.div`
   display: flex;
-  column-gap: 1rem;
+  column-gap: 0.5rem;
+  margin-right: 0.5rem;
 
   div {
     width: 50%;
@@ -276,9 +277,9 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
 
   return (
     <ContactUsContainer>
-      <Container style={{ margin: 0, padding: 0 }}>
+      <Container>
         <Row justify="center" nogutter>
-          <Col xl={7} sm={12}>
+          <Col xl={6} sm={12}>
             <Form onSubmit={handleContactUsSendButtonClick}>
               <Header>
                 <Title>{t('@title')}</Title>
@@ -321,7 +322,7 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
             </Form>
           </Col>
 
-          <Col xl={4} sm={12}>
+          <Col xl={3} sm={12}>
             <BasicContactUsInformation />
           </Col>
         </Row>
