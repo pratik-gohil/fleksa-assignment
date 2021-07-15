@@ -40,8 +40,11 @@ export const UserSlice = createSlice({
     updateCustomerEmail(state, action) {
       state.customer.email = action.payload;
     },
+    updateCustomerEmailVerification(state, action) {
+      state.customer.email_verified = action.payload;
+    },
     updateLoadAddressesList(state, action) {
-      state.customer.all_address = action.payload
+      state.customer.all_address = action.payload;
     },
     updateNewCustomerAddress(state, action) {
       state.customer.all_address?.push(action.payload);
@@ -76,10 +79,13 @@ export const {
   updateNewCustomerAddress,
   updateExistCustomerAddress,
   deleteCustomerAddress,
+  updateCustomerEmailVerification,
 } = UserSlice.actions;
 
 export const selectIsUserLoggedIn = (state: RootState) => state.user.bearerToken !== null;
 export const selectBearerToken = (state: RootState) => state.user.bearerToken;
 export const selectCustomer = (state: RootState) => state.user.customer;
-export const selectAddressByType = (state: RootState, addressType: AddressTypes) => state.user.customer.all_address?.find(i => i.address_type === addressType);
-export const selectAddressById = (state: RootState, id: number|null) => id? state.user.customer.all_address?.find(i => i.id === id): undefined;
+export const selectAddressByType = (state: RootState, addressType: AddressTypes) =>
+  state.user.customer.all_address?.find((i) => i.address_type === addressType);
+export const selectAddressById = (state: RootState, id: number | null) =>
+  id ? state.user.customer.all_address?.find((i) => i.id === id) : undefined;

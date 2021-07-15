@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
-import { selectCustomer, updateCustomerName, updateCustomerEmail } from '../../../../redux/slices/user.slices.redux';
+import { selectCustomer, updateCustomerName, updateCustomerEmail, updateCustomerEmailVerification } from '../../../../redux/slices/user.slices.redux';
 import styled from 'styled-components';
 import PhoneInput from 'react-phone-input-2';
 import OtpInput from 'react-otp-input';
@@ -14,6 +14,7 @@ import PencilIconPath from '../../../../public/assets/svg/pencil.svg';
 import InfoRedIconPath from '../../../../public/assets/svg/account/info_red.svg';
 import MobileBackButton from '../../common/backButton/backButton.common.templateOne.components';
 import NodeApiHttpPostVerifyEmailPhoneRequest from '../../../../http/nodeapi/account/post.send-verify-code.nodeapi.http';
+import NodeApiHttpPostVerifyCodeRequest from '../../../../http/nodeapi/account/post.verify-code.nodeapi.http';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -197,7 +198,7 @@ export const MyAccountRightSection = () => {
   const [phone, setPhone] = useState(`${customerData.country_code + '' + customerData.phone}`);
   const [countryCode, setCountryCode] = useState<number>(customerData.country_code || 49);
   const [otp, setOtp] = useState('');
-  const [otpBig, setOtpBig] = useState(false);
+  const [otpBig] = useState(false);
   const [isVerify, setIsVerify] = useState(false);
 
   const bearerToken = useAppSelector(selectBearerToken);
@@ -267,16 +268,13 @@ export const MyAccountRightSection = () => {
         return;
       }
 
-      dispatch(updateCustomerEmail(email));
-
       setIsEmailReadOnly(true);
-      setIsNameReadOnly(true);
-      setIsVerify(true);
+      setIsVerify(!isVerify);
 
       dispatch(
         updateError({
           show: true,
-          message: t('@update-success'),
+          message: 'Verification code sent t  o your email!',
           severity: 'success',
         }),
       );
@@ -291,6 +289,51 @@ export const MyAccountRightSection = () => {
       );
     }
   };
+
+  const handleVerifyCode = async () => {
+    try {
+      const response = await new NodeApiHttpPostVerifyCodeRequest(configuration, bearerToken as any).post({
+        otp,
+      });
+
+      if (!response.result) {
+        dispatch(
+          updateError({
+            show: true,
+            message: response.message,
+            severity: 'error',
+          }),
+        );
+        return;
+      }
+
+      setIsEmailReadOnly(true);
+      setIsVerify(false);
+      dispatch(updateCustomerEmailVerification(1));
+
+      dispatch(
+        updateError({
+          show: true,
+          message: 'Wohoo 🎉 successfully verified!',
+          severity: 'success',
+        }),
+      );
+    } catch (e) {
+      console.error('e : ', e);
+      dispatch(
+        updateError({
+          show: true,
+          message: t('@oops-error'),
+          severity: 'error',
+        }),
+      );
+    }
+  };
+
+  useEffect(() => {
+    // TODO: Call otp verification method automatically once entered
+    if (otp.length === OTP_LENGTH) handleVerifyCode();
+  }, [otp]);
 
   return (
     <Wrapper>
@@ -343,9 +386,12 @@ export const MyAccountRightSection = () => {
             {!isVerify && (
               <>
                 <EmailInputValue type="email" value={email} onChange={(e) => setEmail(e.target.value)} readOnly={isEmailReadOnly} />
-                <VerifyButton readOnly={isEmailReadOnly} onClick={handleVerifyEmailButtonClick}>
-                  {t('@verify')}
-                </VerifyButton>
+
+                {!customerData.email_verified && (
+                  <VerifyButton readOnly={isEmailReadOnly} onClick={handleVerifyEmailButtonClick}>
+                    {t('@verify')}
+                  </VerifyButton>
+                )}
               </>
             )}
 
@@ -377,7 +423,7 @@ export const MyAccountRightSection = () => {
                     color: '#222',
                   }}
                 />
-                <CancelButton>{t('@Cancel')}</CancelButton>
+                <CancelButton onClick={() => setIsVerify(!isVerify)}>{t('@Cancel')}</CancelButton>
               </InputContainer>
             )}
           </TextEmailContainer>
