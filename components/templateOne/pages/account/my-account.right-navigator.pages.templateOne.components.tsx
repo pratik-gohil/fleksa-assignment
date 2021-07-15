@@ -389,16 +389,18 @@ export const MyAccountRightSection = () => {
               </NotVerifyIndigator>
             </TitleHeader>
 
-            <IconContainer
-              onClick={async () => {
-                setIsEmailReadOnly(!isEmailReadOnly);
-                if (!isEmailReadOnly && customerData.email !== email) await hanldeUpdateButtonClick();
-              }}
-              readOnly={isEmailReadOnly}
-              title="Click to Edit"
-            >
-              <PencilIcon />
-            </IconContainer>
+            {!customerData.email_verified && (
+              <IconContainer
+                onClick={async () => {
+                  setIsEmailReadOnly(!isEmailReadOnly);
+                  if (!isEmailReadOnly && customerData.email !== email) await hanldeUpdateButtonClick();
+                }}
+                readOnly={isEmailReadOnly}
+                title="Click to Edit"
+              >
+                <PencilIcon />
+              </IconContainer>
+            )}
           </TitleContainer>
 
           <TextEmailContainer readOnly={isEmailReadOnly}>
