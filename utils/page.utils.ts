@@ -26,6 +26,7 @@ const testingHosts = [
   'foodworld.fleksa.com',
   'asiadinhau.fleksa.com',
   'maincurry.fleksa.com',
+  'smartpizzas.fleksa.com',
 ]
 
 export async function getServerSidePropsCommon(
