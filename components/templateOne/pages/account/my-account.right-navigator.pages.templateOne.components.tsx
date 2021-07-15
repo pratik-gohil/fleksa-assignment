@@ -215,6 +215,7 @@ export const MyAccountRightSection = () => {
   const configuration = useAppSelector(selectConfiguration);
   const dispatch = useAppDispatch();
 
+  // TODO: Made request for update their name and email
   const hanldeUpdateButtonClick = async () => {
     try {
       const response = await new NodeApiHttpPatchAccountProfileRequest(configuration, bearerToken as any).post({
@@ -260,6 +261,7 @@ export const MyAccountRightSection = () => {
     }
   };
 
+  // TODO: Made request for sending the code to email
   const handleVerifyEmailButtonClick = async () => {
     try {
       setLoading(true);
@@ -304,6 +306,7 @@ export const MyAccountRightSection = () => {
     }
   };
 
+  // TODO: Made request for verify the code
   const handleVerifyCode = async () => {
     try {
       setLoading(true);
@@ -349,8 +352,8 @@ export const MyAccountRightSection = () => {
     }
   };
 
+  // TODO: Call otp verification method automatically once entered
   useEffect(() => {
-    // TODO: Call otp verification method automatically once entered
     if (otp.length === OTP_LENGTH) handleVerifyCode();
   }, [otp]);
 
