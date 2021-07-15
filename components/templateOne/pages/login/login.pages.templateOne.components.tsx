@@ -17,7 +17,7 @@ import { updateError } from '../../../../redux/slices/common.slices.redux';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
-import SvgBack from "../../../../public/assets/svg/back.svg"
+import SvgBack from '../../../../public/assets/svg/back.svg';
 
 export interface IPropsLoginComponent {
   onLogin(): void;
@@ -94,7 +94,7 @@ const SendOtpButton = styled.button`
 
 const VerifyOtpButton = styled(SendOtpButton)`
   margin-bottom: 0;
-`
+`;
 
 const SendOtpButtonText = styled.p`
   display: inline-block;
@@ -108,7 +108,7 @@ const SendOtpButtonText = styled.p`
 const OTPTopContainer = styled.div`
   display: flex;
   align-items: center;
-`
+`;
 
 const BackButton = styled.div`
   display: inline-block;
@@ -121,9 +121,9 @@ const BackButton = styled.div`
     width: 36px;
     height: 36px;
   }
-`
+`;
 
-const OTP_LENGTH = 5
+const OTP_LENGTH = 5;
 
 const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) => {
   const [, setCookie] = useCookies([COOKIE_BEARER_TOKEN]);
@@ -134,7 +134,7 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
   const [phone, setPhone] = useState('');
   const [countryCode, setCountryCode] = useState<number>(49);
   const [loading, setLoading] = useState(false);
-  const [ otpBig, setOtpBig ] = useState(false)
+  const [otpBig, setOtpBig] = useState(false);
   const [customerId, setCustomerId] = useState<number | undefined>();
 
   const router = useRouter();
@@ -226,15 +226,15 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
 
   useEffect(() => {
     if (otp.length === OTP_LENGTH) {
-      onTapLogin()
+      onTapLogin();
     }
-  }, [ otp ])
+  }, [otp]);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setOtpBig(window.matchMedia(`(min-width: ${BREAKPOINTS.lg}px)`).matches)
+    if (typeof window !== 'undefined') {
+      setOtpBig(window.matchMedia(`(min-width: ${BREAKPOINTS.lg}px)`).matches);
     }
-  }, [ ])
+  }, []);
 
   return (
     <LoginContainer>
@@ -248,9 +248,7 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
               </BackButton>
               <Title>Enter OTP</Title>
             </OTPTopContainer>
-            <Text>
-              Please enter OTP sent at +{phone}
-            </Text>
+            <Text>Please enter OTP sent at +{phone}</Text>
             <InputContainer style={{ margin: 24, display: 'flex', justifyContent: 'center' }}>
               <OtpInput
                 isInputNum={true}
@@ -264,14 +262,14 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
                   display: 'flex',
                   flex: 1,
                   justifyContent: 'space-between',
-                  maxWidth: otpBig? 500: 300,
+                  maxWidth: otpBig ? 500 : 300,
                   justifySelf: 'center',
-                  alignSelf: 'center'
+                  alignSelf: 'center',
                 }}
                 inputStyle={{
-                  fontFamily: "Poppins",
+                  fontFamily: 'Poppins',
                   display: 'inline-block',
-                  fontSize: otpBig? 60: 40,
+                  fontSize: otpBig ? 60 : 40,
                   padding: 0,
                   border: '1px solid rgba(0, 0, 0, 0.1)',
                   borderRadius: 4,

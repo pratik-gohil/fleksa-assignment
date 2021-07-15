@@ -3,6 +3,8 @@ import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { selectCustomer, updateCustomerName, updateCustomerEmail } from '../../../../redux/slices/user.slices.redux';
 import styled from 'styled-components';
 import PhoneInput from 'react-phone-input-2';
+import OtpInput from 'react-otp-input';
+import { useTranslation } from 'next-i18next';
 import NodeApiHttpPatchAccountProfileRequest from '../../../../http/nodeapi/account/post.account.nodeapi.http';
 import { selectBearerToken } from '../../../../redux/slices/user.slices.redux';
 import { selectConfiguration } from '../../../../redux/slices/configuration.slices.redux';
@@ -11,7 +13,7 @@ import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import PencilIconPath from '../../../../public/assets/svg/pencil.svg';
 import InfoRedIconPath from '../../../../public/assets/svg/account/info_red.svg';
 import MobileBackButton from '../../common/backButton/backButton.common.templateOne.components';
-import { useTranslation } from 'next-i18next';
+import NodeApiHttpPostVerifyEmailPhoneRequest from '../../../../http/nodeapi/account/post.send-verify-code.nodeapi.http';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -155,6 +157,35 @@ const NotVerifyText = styled.p`
   font-size: 0.8rem;
 `;
 
+const InputContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
+`;
+const CancelButton = styled.button`
+  width: 120px;
+  border-top-right-radius: 0.5rem;
+  padding: 1rem 0;
+  border-bottom-right-radius: 0.5rem;
+  background: ${(p) => p.theme.textDarkColor};
+  color: ${(p) => p.theme.textLightActiveColor};
+  font-weight: 600;
+  font-size: 1.2rem;
+  cursor: pointer;
+
+  &:hover {
+    filter: brightness(1.3);
+  }
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    font-size: 1rem;
+    width: 90px;
+  }
+`;
+
+const OTP_LENGTH = 5;
+
 export const MyAccountRightSection = () => {
   const customerData = useAppSelector(selectCustomer);
   const { t } = useTranslation('account');
@@ -165,6 +196,9 @@ export const MyAccountRightSection = () => {
   const [isNameReadOnly, setIsNameReadOnly] = useState(true);
   const [phone, setPhone] = useState(`${customerData.country_code + '' + customerData.phone}`);
   const [countryCode, setCountryCode] = useState<number>(customerData.country_code || 49);
+  const [otp, setOtp] = useState('');
+  const [otpBig, setOtpBig] = useState(false);
+  const [isVerify, setIsVerify] = useState(false);
 
   const bearerToken = useAppSelector(selectBearerToken);
   const configuration = useAppSelector(selectConfiguration);
@@ -195,6 +229,49 @@ export const MyAccountRightSection = () => {
 
       setIsEmailReadOnly(true);
       setIsNameReadOnly(true);
+
+      dispatch(
+        updateError({
+          show: true,
+          message: t('@update-success'),
+          severity: 'success',
+        }),
+      );
+    } catch (e) {
+      console.error('e : ', e);
+      dispatch(
+        updateError({
+          show: true,
+          message: t('@oops-error'),
+          severity: 'error',
+        }),
+      );
+    }
+  };
+
+  const handleVerifyEmailButtonClick = async () => {
+    try {
+      const response = await new NodeApiHttpPostVerifyEmailPhoneRequest(configuration, bearerToken as any).post({
+        method: 'email',
+        email,
+      });
+
+      if (!response.result) {
+        dispatch(
+          updateError({
+            show: true,
+            message: response.message,
+            severity: 'error',
+          }),
+        );
+        return;
+      }
+
+      dispatch(updateCustomerEmail(email));
+
+      setIsEmailReadOnly(true);
+      setIsNameReadOnly(true);
+      setIsVerify(true);
 
       dispatch(
         updateError({
@@ -263,9 +340,46 @@ export const MyAccountRightSection = () => {
           </TitleContainer>
 
           <TextEmailContainer readOnly={isEmailReadOnly}>
-            <EmailInputValue type="email" value={email} onChange={(e) => setEmail(e.target.value)} readOnly={isEmailReadOnly} />
+            {!isVerify && (
+              <>
+                <EmailInputValue type="email" value={email} onChange={(e) => setEmail(e.target.value)} readOnly={isEmailReadOnly} />
+                <VerifyButton readOnly={isEmailReadOnly} onClick={handleVerifyEmailButtonClick}>
+                  {t('@verify')}
+                </VerifyButton>
+              </>
+            )}
 
-            {!customerData.email_verified && <VerifyButton readOnly={isEmailReadOnly}>{t('@verify')}</VerifyButton>}
+            {isVerify && !customerData.email_verified && (
+              <InputContainer>
+                <OtpInput
+                  isInputNum={true}
+                  shouldAutoFocus={true}
+                  value={otp}
+                  onChange={(otp: React.SetStateAction<string>) => {
+                    setOtp(otp);
+                  }}
+                  numInputs={OTP_LENGTH}
+                  containerStyle={{
+                    display: 'flex',
+                    flex: 1,
+                    justifyContent: 'space-between',
+                    maxWidth: otpBig ? 500 : 300,
+                    justifySelf: 'center',
+                    alignSelf: 'center',
+                  }}
+                  inputStyle={{
+                    fontFamily: 'Poppins',
+                    display: 'inline-block',
+                    fontSize: otpBig ? 60 : 40,
+                    padding: 0,
+                    border: '1px solid rgba(0, 0, 0, 0.1)',
+                    borderRadius: 4,
+                    color: '#222',
+                  }}
+                />
+                <CancelButton>{t('@Cancel')}</CancelButton>
+              </InputContainer>
+            )}
           </TextEmailContainer>
         </Content>
 
