@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-grid-system';
 import styled from 'styled-components';
 import Image from 'next/image';
@@ -122,12 +122,25 @@ const Wrapper = styled.div`
   width: 100%;
 `;
 
+const SubTitle2 = styled(SubTitle)`
+  font-size: clamp(0.8rem, 1.2rem, 3vw);
+`;
+
 const IndexPageHero: FunctionComponent = ({}) => {
   const language = useAppSelector(selectLanguage);
   const shopData = useAppSelector(selectShop);
   const timingsData = useAppSelector(selectTimings);
   const selectedMenuId = useAppSelector(selectSelectedMenu);
   const { t } = useTranslation('page-index');
+
+  const [shop, setShop] = useState<{ available: boolean; next?: string }>({
+    available: false,
+    next: '',
+  });
+
+  useEffect(() => {
+    setShop(isShopOpened(timingsData));
+  }, []);
 
   return (
     <WrapperSection>
@@ -142,9 +155,17 @@ const IndexPageHero: FunctionComponent = ({}) => {
 
                 <Title>{shopData?.name}</Title>
                 <SubTitle>{shopData?.category_json[language]}</SubTitle>
-                <OrderButton href={selectedMenuId ? `/menu/${selectedMenuId}` : '/menu'}>
-                  {isShopOpened(timingsData) ? t('@order-online') : t('@pre-online')}
-                </OrderButton>
+
+                {shop.available ? (
+                  <OrderButton href={selectedMenuId ? `/menu/${selectedMenuId}` : '/menu'}>{t('@order-online')}</OrderButton>
+                ) : (
+                  <>
+                    <OrderButton href={selectedMenuId ? `/menu/${selectedMenuId}` : '/menu'}>{t('@pre-online')}</OrderButton>
+                    <SubTitle2>
+                      {t('@next-hours')} {shop.next}
+                    </SubTitle2>
+                  </>
+                )}
               </Col>
             </Row>
           </Container>

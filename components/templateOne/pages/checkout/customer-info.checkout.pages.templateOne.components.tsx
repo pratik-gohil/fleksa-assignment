@@ -62,6 +62,7 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
           type="text"
           placeholder="Name"
           value={userData.name}
+          onBlur={() => setEditableName(!(userData.name && userData.name.length > 0))}
           onChange={e => dispatch(updateCustomerName(e.target.value))}
         />
       ): (
@@ -76,6 +77,7 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
           type="text"
           placeholder="Email"
           value={userData.email || ""}
+          onBlur={() => setEditableEmail(!(userData.email && userData.email.length > 0))}
           onChange={e => dispatch(updateCustomerEmail(e.target.value))}
         />
       ): (

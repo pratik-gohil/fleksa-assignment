@@ -140,21 +140,69 @@ export default class RestaurantTimingUtils {
  * @returns boolean
  */
 export function isShopOpened(timings: ITimings | null) {
-  if (!timings) return false;
+  let availability = {
+    available: false,
+    next: '',
+  };
+
+  if (!timings) return availability;
 
   const currentDay = moment();
-
   const weekDay = currentDay.format('dddd').toUpperCase();
-
   const currentDayTimings = timings[weekDay] as ITimingsDay;
 
-  if (!currentDayTimings.shop.availability) return false;
+  if (!currentDayTimings?.shop.availability || !currentDayTimings.shop.timings) return goNextDay(timings, currentDay);
 
-  if (!currentDayTimings.shop.timings) return false;
-
-  const open = moment(currentDayTimings.shop.timings[0].open, 'h:mm a');
-  const close = moment(currentDayTimings?.shop?.timings[0]?.close, 'h:mm a');
-
-  // ? Only send try if current time inbetween close and open
-  return currentDay.isBetween(open, close);
+  // TODO: Check currently before the open time
+  if (currentDay.diff(moment(currentDayTimings.shop?.timings[0]?.open, 'h:mm a'), 'minutes') <= 0) {
+    return {
+      ...availability,
+      next: `${moment(currentDayTimings?.shop?.timings[currentDayTimings.shop?.timings.length - 1]?.open, 'h:mm a').format('dddd')}, ${moment(
+        currentDayTimings?.shop?.timings[currentDayTimings.shop?.timings.length - 1]?.open,
+        'h:mm a',
+      ).format('HH:mm')}`,
+    };
+  }
+  // TODO: Check currently after the close time
+  else if (currentDay.diff(moment(currentDayTimings.shop?.timings[currentDayTimings.shop?.timings.length - 1]?.close, 'h:mm a'), 'minutes') >= 0) {
+    return goNextDay(timings, currentDay);
+  }
+  // TODO: Check currently between the break times
+  else if (
+    currentDay.isBetween(moment(currentDayTimings.shop?.timings[0]?.close, 'h:mm a'), moment(currentDayTimings.shop?.timings[1]?.open, 'h:mm a')) &&
+    !!currentDayTimings.shop?.timings.length
+  ) {
+    return {
+      ...availability,
+      next: `${moment(currentDayTimings?.shop?.timings[1]?.open, 'h:mm a').format('dddd')}, ${moment(
+        currentDayTimings?.shop?.timings[1]?.open,
+        'h:mm a',
+      ).format('HH:mm')}`,
+    };
+  } else {
+    return {
+      available: true,
+    };
+  }
 }
+
+const goNextDay = (timings: ITimings, currentDay: moment.Moment) => {
+  const nextDay = currentDay.add(1, 'days');
+  let day = nextDay.format('dddd').toUpperCase();
+
+  while (true) {
+    const processDay = timings[day] as ITimingsDay;
+
+    if (!processDay?.shop.timings || !processDay?.shop.availability) {
+      day = nextDay.add(1, 'days').format('dddd').toUpperCase();
+
+      continue;
+    } else
+      return {
+        available: false,
+        next: `${moment(processDay?.shop?.timings[0]?.open, 'h:mm a').format('dddd')}, ${moment(processDay?.shop?.timings[0]?.open, 'h:mm a').format(
+          'HH:mm',
+        )}`,
+      };
+  }
+};

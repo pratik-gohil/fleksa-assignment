@@ -244,6 +244,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
   function initMap() {
     map = new google.maps.Map(document.getElementById("map") as HTMLElement, {
       zoom: 16,
+      mapId: "3a7840eca8fbb359",
     });
     const latlngbounds = new google.maps.LatLngBounds();
   

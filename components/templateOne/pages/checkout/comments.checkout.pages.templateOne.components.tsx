@@ -31,7 +31,15 @@ const CheckoutPageComments: FunctionComponent = ({}) => {
     </EditContainer>
     <Row>
       <Col xs={12}>
-        {editing? <StyledCheckoutTextarea value={comment} onChange={e => dispatch(updateComment(e.target.value))} />: <p>{comment}</p>}
+        {editing
+        ? <StyledCheckoutTextarea
+            value={comment}
+            autoFocus
+            onBlur={() => setEditing(false)}
+            onChange={e => dispatch(updateComment(e.target.value))}
+          />
+        : <p>{comment}</p>
+        }
       </Col>
     </Row>
   </StyledCheckoutCard>

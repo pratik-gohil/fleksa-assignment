@@ -124,12 +124,16 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
         {editing? <EditContainer>
           {promoCodeData? <AppliedPromoContainer>
             <SvgTag className="svg-tag-yellow" />
-            <TextSaved>YAY! You saved <strong style={{ marginLeft: 4 }}>€{promoCodeData.value}</strong></TextSaved>
+            <TextSaved>YAY! You saved <strong style={{ marginLeft: 4 }}>€{promoCodeData.value.toFixed(2)}</strong></TextSaved>
             <RemovePromo onClick={() => dispatch(updatePromoCode(null))}>
               <SvgCross />
             </RemovePromo>
           </AppliedPromoContainer>: <>
-            <StyledCheckoutInput value={coupon} onChange={e => setCoupon(e.target.value)} />
+            <StyledCheckoutInput
+              value={coupon}
+              autoFocus
+              onChange={e => setCoupon(e.target.value)}
+            />
             <ApplyButton onClick={onClickApply}>APPLY</ApplyButton>
           </>}
         </EditContainer>: <></>}
