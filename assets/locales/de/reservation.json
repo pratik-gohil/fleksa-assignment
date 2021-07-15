@@ -1,4 +1,16 @@
 {
-  "@title": "Table Reservation",
-  "@sub-title": "We look forward to serving you"
+  "@title": "Tischreservierung",
+  "@sub-title": "Wir freuen uns auf Sie.",
+  "@name": "Name",
+  "@email": "Email",
+  "@phone": "Telefonnummer",
+  "@Comments": "Comments",
+  "@guest": "Anzahl der Gäste & Datum - Uhrzeit​",
+  "@agreement": "Indem Sie fortfahren, stimmen Sie Fleksa zu",
+  "@terms": "Nutzungsbedingungen",
+  "@and": "und",
+  "@policy": "Datenschutz-Bestimmungen",
+  "@reserve-now": "Jetzt reservieren",
+  "@choose-slot": "Steckplatz wählen",
+  "@not-available": "N / A"
 }

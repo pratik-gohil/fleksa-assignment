@@ -13,6 +13,7 @@ import { selectShop } from '../../../../redux/slices/index.slices.redux';
 import { selectBearerToken, selectCustomer, selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
 import { ILabelValue } from '../../../../utils/restaurant-timings.utils';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 
 const Wrapper = styled.div``;
 const FormContainer = styled.div``;
@@ -132,6 +133,7 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const { t } = useTranslation('reservation');
 
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -153,9 +155,9 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
 
   const handleReserveButtonClick = async () => {
     try {
-      if (!name) return customFieldError('Please enter your name!');
-      if (!email) return customFieldError('Please enter your email!');
-      if (!countryCode || !phone) return customFieldError('Please enter your phone!');
+      if (!name) return customFieldError(t('@enter-name'));
+      if (!email) return customFieldError(t('@enter-email'));
+      if (!countryCode || !phone) return customFieldError(t('@enter-phone'));
 
       if (!bearerToken) {
         dispatch(updateShowLogin(true));
@@ -202,7 +204,7 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
       dispatch(
         updateError({
           show: true,
-          message: 'Ooops! Something went wrong.',
+          message: t('@oops-error'),
           severity: 'error',
         }),
       );
@@ -222,17 +224,17 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
     <Wrapper>
       <FormContainer>
         <InputBox>
-          <Label>Name</Label>
+          <Label>{t('@name')}</Label>
           <Input type="text" placeholder="John Doe" value={name} onChange={(e) => setName(e.target.value)} required={true} />
         </InputBox>
 
         <InputBox>
-          <Label>Email</Label>
+          <Label>{t('@email')}</Label>
           <Input type="email" placeholder="john@gmail.com" value={email} onChange={(e) => setEmail(e.target.value)} required={true} />
         </InputBox>
 
         <InputBox>
-          <Label>Phone Number</Label>
+          <Label>{t('@phone')}</Label>
 
           <PhoneInput
             country={'de'}
@@ -250,16 +252,16 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
         </InputBox>
 
         <InputTextBox>
-          <Label>Comments</Label>
+          <Label>{t('@comments')}</Label>
           <Textarea value={comment} onChange={(e) => setComment(e.target.value)} />
         </InputTextBox>
 
         <Acknowledgement>
-          By continuing, you agree to Fleksa's <LinkText href="#">Terms of use</LinkText> and <LinkText href="#">Privacy Policy</LinkText>
+          {t('@agreement')} <LinkText href="#">{t('@terms')}</LinkText> {t('@and')} <LinkText href="#">{t('@policy')}</LinkText>
         </Acknowledgement>
 
         <ReservationButton onClick={handleReserveButtonClick} type="button">
-          {loading ? <LoadingIndicator width={20} /> : <ButtonText> Reserve Now </ButtonText>}
+          {loading ? <LoadingIndicator width={20} /> : <ButtonText> {t('@reserve-now')} </ButtonText>}
         </ReservationButton>
 
         <LoginAllPages callback={handleReserveButtonClick} />

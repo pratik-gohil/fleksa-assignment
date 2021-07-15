@@ -6,6 +6,7 @@ import { useAppSelector } from '../../../../redux/hooks.redux';
 import { selectAddress, selectTimings } from '../../../../redux/slices/index.slices.redux';
 import moment from 'moment';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
+import { useTranslation } from 'next-i18next';
 
 const Wrapper = styled.div`
   margin: 0;
@@ -174,6 +175,7 @@ const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGue
   const timingsData = useAppSelector(selectTimings);
   const addressData = useAppSelector(selectAddress);
   const [timingList, setTimingList] = useState<ILabelValue[]>([]);
+  const { t } = useTranslation('reservation');
 
   const handleDateChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setDate(e.target.value);
@@ -220,7 +222,7 @@ const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGue
           margin: 0,
         }}
       >
-        <Label>No. of Guests & Date - Time​</Label>
+        <Label>{t('@guest')}​</Label>
         <Row nogutter>
           <Col xl={3} lg={3}>
             <SelectBox value={totalGuest} onChange={(e) => setTotalGuest(e.target.value)}>
@@ -252,7 +254,7 @@ const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGue
                   </Slot>
                 ))}
               </TimeSlots>
-              <IndigationText>{timingList.length ? 'Choose slot' : 'Currently not available'}</IndigationText>
+              <IndigationText>{timingList.length ? t('@choose-slot') : t('@not-available')}</IndigationText>
             </SlotContainer>
           </Col>
         </Row>
