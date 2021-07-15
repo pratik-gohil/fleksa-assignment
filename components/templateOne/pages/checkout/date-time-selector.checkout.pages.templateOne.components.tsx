@@ -83,6 +83,7 @@ const CheckoutDateTime: FunctionComponent = ({}) => {
       });
 
       setTimeList(timeData);
+      dispatch(updateWantAt(null))
     }
   }, [selectedDate, timingsData, orderType, addressData?.prepare_time, addressData?.delivery_time]);
 

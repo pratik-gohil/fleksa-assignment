@@ -3,6 +3,7 @@ import React, { ComponentType, FunctionComponent } from 'react';
 import { ThemeProvider } from 'styled-components';
 import PageContainer, { IPropsPageContainer } from '../components/templateOne/common/page-container.commom.templateOne.components';
 import { PwaMeta } from '../components/templateOne/common/pwa/pwa.common.templateOne.components';
+import { Snackbar } from '../components/templateOne/common/snackbar/snackbar.error.pages.templateOne.components';
 import GlobalStyle from '../constants/global-style.constants';
 import { THEME_ONE, THEME_TWO } from '../constants/theme.constants';
 import { IMeta } from '../interfaces/common/metea.common.interfaces';
@@ -51,6 +52,7 @@ const TemplateToShow: FunctionComponent<IPropsTemplateToShow> = ({ meta, templat
       <PageContainer {...pageContainer}>
         <ViewTemplate />
       </PageContainer>
+      <Snackbar />
     </ThemeProvider>
   );
 };

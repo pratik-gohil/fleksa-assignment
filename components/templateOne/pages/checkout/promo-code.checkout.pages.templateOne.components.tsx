@@ -98,6 +98,7 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
           token: response.token
         }))
       } else {
+        dispatch(updatePromoCode(null))
         dispatch(updateError({
           show: true,
           message: response?.message[language],
@@ -112,8 +113,6 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
       onClickApply()
     }
   }, [ ])
-
-  // ASIA2021
 
   return <StyledCheckoutCard>
     <EditContainer>

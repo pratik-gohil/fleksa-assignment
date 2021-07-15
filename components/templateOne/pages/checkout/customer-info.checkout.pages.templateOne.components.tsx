@@ -49,8 +49,8 @@ const Text = styled.p`
 
 const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
   const userData = useAppSelector(selectCustomer)
-  const [ editableName, setEditableName ] = useState(true)
-  const [ editableEmail, setEditableEmail ] = useState(true)
+  const [ editableName, setEditableName ] = useState(!(userData.name && userData.name.length > 0))
+  const [ editableEmail, setEditableEmail ] = useState(!(userData.email && userData.email.length > 0))
   const dispatch = useAppDispatch()
 
   return <StyledCheckoutCard>

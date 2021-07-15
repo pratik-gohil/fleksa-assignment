@@ -4,7 +4,6 @@ import { Col, Container, Row } from 'react-grid-system';
 
 import styled from 'styled-components';
 import LoginComponent from '../../components/templateOne/pages/login/login.pages.templateOne.components';
-import { Snackbar } from '../../components/templateOne/common/snackbar/snackbar.error.pages.templateOne.components';
 import { BREAKPOINTS } from '../../constants/grid-system-configuration';
 
 const LoginContainer = styled.section`
@@ -64,8 +63,6 @@ const LoginPageTemplateOne: FunctionComponent = ({}) => {
           ></Path>
         </WaveImg>
       </WidthFix>
-
-      <Snackbar />
     </LoginContainer>
   );
 };
