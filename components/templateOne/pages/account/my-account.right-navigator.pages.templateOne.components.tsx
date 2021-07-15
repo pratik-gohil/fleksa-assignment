@@ -15,6 +15,7 @@ import InfoRedIconPath from '../../../../public/assets/svg/account/info_red.svg'
 import MobileBackButton from '../../common/backButton/backButton.common.templateOne.components';
 import NodeApiHttpPostVerifyEmailPhoneRequest from '../../../../http/nodeapi/account/post.send-verify-code.nodeapi.http';
 import NodeApiHttpPostVerifyCodeRequest from '../../../../http/nodeapi/account/post.verify-code.nodeapi.http';
+import LoadingIndicator from '../../common/loadingIndicator/loading-indicator.common.templateOne.components';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -200,6 +201,7 @@ export const MyAccountRightSection = () => {
   const [otp, setOtp] = useState('');
   const [otpBig] = useState(false);
   const [isVerify, setIsVerify] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const bearerToken = useAppSelector(selectBearerToken);
   const configuration = useAppSelector(selectConfiguration);
@@ -252,6 +254,8 @@ export const MyAccountRightSection = () => {
 
   const handleVerifyEmailButtonClick = async () => {
     try {
+      setLoading(!loading);
+
       const response = await new NodeApiHttpPostVerifyEmailPhoneRequest(configuration, bearerToken as any).post({
         method: 'email',
         email,
@@ -270,11 +274,12 @@ export const MyAccountRightSection = () => {
 
       setIsEmailReadOnly(true);
       setIsVerify(!isVerify);
+      setLoading(!loading);
 
       dispatch(
         updateError({
           show: true,
-          message: 'Verification code sent t  o your email!',
+          message: 'Verification code sent to your email!',
           severity: 'success',
         }),
       );
@@ -389,7 +394,7 @@ export const MyAccountRightSection = () => {
 
                 {!customerData.email_verified && (
                   <VerifyButton readOnly={isEmailReadOnly} onClick={handleVerifyEmailButtonClick}>
-                    {t('@verify')}
+                    {loading ? <LoadingIndicator width={20} /> : t('@verify')}
                   </VerifyButton>
                 )}
               </>
