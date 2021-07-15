@@ -260,7 +260,7 @@ const OffersPageTemplateOne: FunctionComponent = ({}) => {
           <Container>
             <Row>
               <Col sm={12}>
-                <h1>{t('OFFERS')}</h1>
+                <h1>{t('@offers')}</h1>
               </Col>
             </Row>
           </Container>
