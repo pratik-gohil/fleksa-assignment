@@ -18,7 +18,7 @@
   "@policy": "Privacy Policy",
   "@send": "Send",
   "@phone": "Phone",
-  "@Closed": "Closed",
+  "@closed": "Closed",
   "@need-accept": "Kindly accept our terms and service.",
   "@successfully-sent": "Successfully sent 👏 Thanks for contacting us.",
   "@oops-error": "Ooops! Something went wrong."

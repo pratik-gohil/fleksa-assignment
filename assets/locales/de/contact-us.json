@@ -18,7 +18,7 @@
   "@policy": "Datenschutz-Bestimmungen",
   "@send": "Senden",
   "@phone": "Telefon",
-  "@Closed": "Geschlossen",
+  "@closed": "Geschlossen",
   "@need-accept": "Bitte akzeptieren Sie unsere Allgemeinen Geschäftsbedingungen.",
   "@successfully-sent": "Erfolgreich versendet 👏 Vielen Dank für Ihre Kontaktaufnahme.",
   "@oops-error": "Ups! Etwas ist schief gelaufen."
