@@ -24,8 +24,8 @@ const Header: FunctionComponent = () => {
 
   return (
     <Wrapper>
-      <Title>{t('Table Reservation')}</Title>
-      <SubTitle>{t('We look forward to serving you')}</SubTitle>
+      <Title>{t('@title')}</Title>
+      <SubTitle>{t('@sub-title')}</SubTitle>
     </Wrapper>
   );
 };

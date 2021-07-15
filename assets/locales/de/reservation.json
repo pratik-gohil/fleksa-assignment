@@ -4,7 +4,7 @@
   "@name": "Name",
   "@email": "Email",
   "@phone": "Telefonnummer",
-  "@Comments": "Comments",
+  "@comments": "Comments",
   "@guest": "Anzahl der Gäste & Datum - Uhrzeit​",
   "@agreement": "Indem Sie fortfahren, stimmen Sie Fleksa zu",
   "@terms": "Nutzungsbedingungen",
