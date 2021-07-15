@@ -140,7 +140,11 @@ export default class RestaurantTimingUtils {
  * @returns boolean
  */
 export function isShopOpened(timings: ITimings | null) {
-  if (!timings) return false;
+  let availability = {
+    available: false,
+  };
+
+  if (!timings) return availability;
 
   const currentDay = moment();
 
@@ -148,13 +152,20 @@ export function isShopOpened(timings: ITimings | null) {
 
   const currentDayTimings = timings[weekDay] as ITimingsDay;
 
-  if (!currentDayTimings.shop.availability) return false;
+  if (!currentDayTimings.shop.availability) return availability;
 
-  if (!currentDayTimings.shop.timings) return false;
+  if (!currentDayTimings.shop.timings) return availability;
 
-  const open = moment(currentDayTimings.shop.timings[0].open, 'h:mm a');
-  const close = moment(currentDayTimings?.shop?.timings[0]?.close, 'h:mm a');
+  let i = 1;
+  while (currentDayTimings.shop.timings.length !== i) {
+    if (currentDay.isBetween(moment(currentDayTimings.shop.timings[i]?.open, 'h:mm a'), moment(currentDayTimings.shop.timings[i]?.close, 'h:mm a')))
+      return {
+        available: true,
+      };
+
+    i += 1;
+  }
 
   // ? Only send try if current time inbetween close and open
-  return currentDay.isBetween(open, close);
+  return availability;
 }
