@@ -18,6 +18,7 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
 import SvgBack from '../../../../public/assets/svg/back.svg';
+import { useTranslation } from 'next-i18next';
 
 export interface IPropsLoginComponent {
   onLogin(): void;
@@ -136,6 +137,7 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
   const [loading, setLoading] = useState(false);
   const [otpBig, setOtpBig] = useState(false);
   const [customerId, setCustomerId] = useState<number | undefined>();
+  const { t } = useTranslation('login');
 
   const router = useRouter();
 
@@ -176,7 +178,7 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
       dispatch(
         updateError({
           show: true,
-          message: 'Ooops! Something went wrong.',
+          message: t('@oops-error'),
           severity: 'error',
         }),
       );
@@ -215,7 +217,7 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
       dispatch(
         updateError({
           show: true,
-          message: 'Ooops! Something went wrong.',
+          message: t('@oops-error'),
           severity: 'error',
         }),
       );
@@ -246,9 +248,11 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
               <BackButton onClick={() => setCustomerId(undefined)}>
                 <SvgBack />
               </BackButton>
-              <Title>Enter OTP</Title>
+              <Title>{t('@enter-otp')}</Title>
             </OTPTopContainer>
-            <Text>Please enter OTP sent at +{phone}</Text>
+            <Text>
+              {t('@sent-at')} +{phone}
+            </Text>
             <InputContainer style={{ margin: 24, display: 'flex', justifyContent: 'center' }}>
               <OtpInput
                 isInputNum={true}
@@ -279,22 +283,23 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
             </InputContainer>
             <SendOtpButtonContainer>
               <VerifyOtpButton onClick={onTapLogin}>
-                {loading ? <LoadingIndicator width={20} /> : <SendOtpButtonText>LOGIN</SendOtpButtonText>}
+                {loading ? <LoadingIndicator width={20} /> : <SendOtpButtonText>{t('@login')}</SendOtpButtonText>}
               </VerifyOtpButton>
             </SendOtpButtonContainer>
             <SendOtpButtonContainer style={{ marginTop: 24 }}>
-              OTP not received? <SendOtpButtonText onClick={onTapSendOtp}>Resend</SendOtpButtonText>
+              {t('@not-received')} <SendOtpButtonText onClick={onTapSendOtp}>{t('@resend')}</SendOtpButtonText>
             </SendOtpButtonContainer>
           </>
         ) : (
           <>
-            <Title>Login with Phone Number</Title>
-            <Text>Please enter your phone number to get the OTP</Text>
+            <Title>{t('@title')}</Title>
+            <Text>{t('@sub-title')}</Text>
             <InputContainer style={{ height: 58 }}>
               <PhoneInput
                 country={'de'}
                 value={phone}
                 enableSearch
+                specialLabel={t('@phone')}
                 onChange={(ph, data) => {
                   if ((data as any).dialCode !== countryCode) {
                     setCountryCode((data as any).dialCode);
@@ -306,7 +311,7 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
             </InputContainer>
             <SendOtpButtonContainer>
               <SendOtpButton onClick={onTapSendOtp}>
-                {loading ? <LoadingIndicator width={20} /> : <SendOtpButtonText>SEND OTP</SendOtpButtonText>}
+                {loading ? <LoadingIndicator width={20} /> : <SendOtpButtonText>{t('@send-otp')}</SendOtpButtonText>}
               </SendOtpButton>
             </SendOtpButtonContainer>
           </>
