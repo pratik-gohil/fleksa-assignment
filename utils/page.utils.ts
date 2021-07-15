@@ -9,7 +9,24 @@ import NodeApiHttpGetUserOrderHistory from '../http/nodeapi/account/get.account.
 import NodeApiHttpGetUserParticularOrder from '../http/nodeapi/account/get.order-view-by-id.nodeapi.http';
 import NodeApiHttpGetUserAllAddress from '../http/nodeapi/account/get.account.all-address.nodeapi.http';
 
-const testingDomains = ['127.0.0.1:3000', 'localhost:3000', 'newqa.fleksa.de', 'localhost:3214', '192.168.43.24:3000'];
+const multiRestaurantHosts = [
+  '127.0.0.1:3000',
+  'localhost:3000',
+  'newqa.fleksa.de',
+  'localhost:3214',
+  '192.168.43.24:3000'
+];
+
+const testingHosts = [
+  'roma.fleksa.com',
+  'nidda.fleksa.com',
+  'spiceofindia.fleksa.com',
+  'bockenheim.fleksa.com',
+  'crazypizza.fleksa.com',
+  'foodworld.fleksa.com',
+  'asiadinhau.fleksa.com',
+  'maincurry.fleksa.com',
+]
 
 export async function getServerSidePropsCommon(
   ctx: any,
@@ -32,9 +49,11 @@ export async function getServerSidePropsCommon(
      * If above constraints are met but no restaurant name found in cookie, use roma.fleksa.com
      * If restauant name includes ".fleksa." it will use production API's otherwise use testing API's
      */
-    const host: string = testingDomains.includes(ctx.req.headers.host) ? restaurantDomain || 'roma.fleksa.com' : ctx.req.headers.host;
-    const baseUrlPyApi = host.includes('.fleksa.') ? 'https://myqa.fleksa.com' : 'https://my.fleksa.com';
-    const baseUrlNodeApi = host.includes('.fleksa.') ? 'https://orderqa.fleksa.com' : 'https://order.fleksa.com';
+    const isMultiRestaurantHost = multiRestaurantHosts.includes(ctx.req.headers.host)
+    const host: string = isMultiRestaurantHost ? restaurantDomain || 'roma.fleksa.com' : ctx.req.headers.host;
+    const testHost = testingHosts.includes(host)
+    const baseUrlPyApi = testHost ? 'https://myqa.fleksa.com' : 'https://my.fleksa.com';
+    const baseUrlNodeApi = testHost ? 'https://orderqa.fleksa.com' : 'https://order.fleksa.com';
 
     ctx.store.dispatch(updateLanguage((ctx as any).locale));
     const configuration: IConfiguration = {
