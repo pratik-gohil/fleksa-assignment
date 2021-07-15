@@ -3,7 +3,6 @@ import styled from 'styled-components';
 
 import EditIconPath from '../../../../../public/assets/svg/pencil.svg';
 import PlusIconPath from '../../../../../public/assets/svg/account/plus.svg';
-// import DeleteIconPath from '../../../../../public/assets/svg/account/delete.svg';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks.redux';
 import { selectBearerToken, selectCustomer } from '../../../../../redux/slices/user.slices.redux';
 import { IParticularAddress } from '../../../../../interfaces/common/customer.common.interfaces';
@@ -14,17 +13,16 @@ import { updateError } from '../../../../../redux/slices/common.slices.redux';
 import { deleteCustomerAddress } from '../../../../../redux/slices/user.slices.redux';
 import { useTranslation } from 'next-i18next';
 
-const HomeIconPath = '/assets/svg/account/home.svg';
-const WorkIconPath = '/assets/svg/account/work.svg';
-const MapIconPath = '/assets/svg/account/map.svg';
-const DeleteIconPath = '/assets/svg/account/delete.svg';
+const HomeIconPath = '/assets/svg/address/home.svg';
+const WorkIconPath = '/assets/svg/address/work.svg';
+const MapIconPath = '/assets/svg/address/map.svg';
+const DeleteIconPath = '/assets/svg/account/delete.png';
 
 const Wrapper = styled.div`
   margin-left: 5rem;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     margin-left: 0;
-    /* height: calc(100vh - ${(p) => p.theme.navMobile.height}px); */
     width: 100%;
   }
 `;
@@ -34,11 +32,6 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: space-between;
   width: 100%;
-  /* min-height: 400px; */
-
-  @media (max-width: ${BREAKPOINTS.sm}px) {
-    /* min-height: 450px; */
-  }
 `;
 
 const Header = styled.div`
@@ -131,8 +124,8 @@ const OptionIconContainer = styled.div`
 `;
 const EditIcon = styled(EditIconPath)``;
 const DeleteIcon = styled.img`
-  width: 100%;
-  height: 100%;
+  width: 24px;
+  height: 24px;
 `;
 const PlusIcon = styled(PlusIconPath)``;
 
