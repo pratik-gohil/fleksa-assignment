@@ -153,8 +153,6 @@ export function isShopOpened(timings: ITimings | null) {
 
   if (!currentDayTimings?.shop.availability || !currentDayTimings.shop.timings) return goNextDay(timings, currentDay);
 
-  console.log('diff=>', currentDay.diff(moment(currentDayTimings.shop?.timings[0]?.open, 'h:mm a'), 'minutes'));
-
   // TODO: Check currently before the open time
   if (currentDay.diff(moment(currentDayTimings.shop?.timings[0]?.open, 'h:mm a'), 'minutes') <= 0) {
     return {
@@ -167,7 +165,6 @@ export function isShopOpened(timings: ITimings | null) {
   }
   // TODO: Check currently after the close time
   else if (currentDay.diff(moment(currentDayTimings.shop?.timings[currentDayTimings.shop?.timings.length - 1]?.close, 'h:mm a'), 'minutes') >= 0) {
-    console.log('after:::::::');
     return goNextDay(timings, currentDay);
   }
   // TODO: Check currently between the break times
@@ -183,8 +180,6 @@ export function isShopOpened(timings: ITimings | null) {
       ).format('HH:mm')}`,
     };
   } else {
-    console.log('available ::::::');
-
     return {
       available: true,
     };
