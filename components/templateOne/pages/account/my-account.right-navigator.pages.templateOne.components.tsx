@@ -96,7 +96,7 @@ const EmailInputValue = styled(InputValue)``;
 const VerifyButton = styled.button<{ readOnly: boolean }>`
   position: absolute;
   width: 120px;
-  height: calc(100% - 1rem);
+  /* height: calc(100% - 1rem); */
   right: 0;
   border-top-right-radius: 0.5rem;
   border-bottom-right-radius: 0.5rem;
@@ -105,8 +105,13 @@ const VerifyButton = styled.button<{ readOnly: boolean }>`
   font-weight: 600;
   font-size: 1.2rem;
   cursor: pointer;
+  top: 0;
+  padding: 1rem 0;
   visibility: ${(p) => (p.readOnly ? 'hidden' : 'visible')};
   margin-top: ${(p) => (!p.readOnly ? '1rem' : '0')};
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   &:hover {
     filter: brightness(1.3);
@@ -394,7 +399,7 @@ export const MyAccountRightSection = () => {
 
                 {!customerData.email_verified && (
                   <VerifyButton readOnly={isEmailReadOnly} onClick={handleVerifyEmailButtonClick}>
-                    {loading ? <LoadingIndicator width={20} /> : t('@verify')}
+                    {loading ? <LoadingIndicator width={20} /> : <span> {t('@verify')}</span>}
                   </VerifyButton>
                 )}
               </>
