@@ -1,0 +1,23 @@
+{
+  "@addNewAddress": "Add delivery address",
+  "@locationAccessible": "Location Accessible",
+  "@find": "Find",
+  "@streetAddress": "STREET AND NUMBER",
+  "@additionalDeliveryInfo": "ADDITIONAL DELIVERY INFO",
+  "@city": "CITY",
+  "@postalCode": "POSTAL CODE",
+  "@addressType": "ADDRESS TYPE",
+  "@home": "HOME",
+  "@work": "WORK",
+  "@other": "OTHER",
+  "@addNow": "SAVE ADDRESS",
+  "@select": "CONFIRM",
+  "@orderDetails": "ORDER DETAILS",
+  "@yourAddress": "ADDRESS",
+  "@streetAndNumber": "STREET AND NUMBER",
+  "@save": "SAVE",
+  "@deliveryAddress": "Delivery Address",
+  "@addressPart1": "Sorry, we don't currently offer delivery to your location.",
+  "@addressPart2": "the restaurant for more information.",
+  "@contact": "Please contact"
+}

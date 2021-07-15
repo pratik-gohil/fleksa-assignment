@@ -1,0 +1,12 @@
+{
+  "@title": "Einloggen mit Telefonnummer",
+  "@sub-title": "Bitte geben Sie Ihre Telefonnummer ein, um das OTP zu erhalten",
+  "@phone": "Telefon",
+  "@send-otp": "OTP SENDEN",
+  "@enter-otp": "OTP eingeben",
+  "@sent-at": "Bitte geben Sie OTP ein, gesendet um",
+  "@not-received": "OTP nicht empfangen?",
+  "@resend": "ResendErneut senden",
+  "@oops-error": "Ups! Etwas ist schief gelaufen.",
+  "@login": "ANMELDUNG"
+}

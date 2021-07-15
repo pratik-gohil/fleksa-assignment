@@ -1,0 +1,20 @@
+{
+  "@title": "Tischreservierung",
+  "@sub-title": "Wir freuen uns auf Sie.",
+  "@name": "Name",
+  "@email": "Email",
+  "@phone": "Telefonnummer",
+  "@comments": "Comments",
+  "@guest": "Anzahl der Gäste & Datum - Uhrzeit​",
+  "@agreement": "Indem Sie fortfahren, stimmen Sie Fleksa zu",
+  "@terms": "Nutzungsbedingungen",
+  "@and": "und",
+  "@policy": "Datenschutz-Bestimmungen",
+  "@reserve-now": "Jetzt reservieren",
+  "@choose-slot": "Steckplatz wählen",
+  "@not-available": "N / A",
+  "@enter-name": "Bitte geben Sie Ihren Namen ein!",
+  "@enter-email": "Bitte geben Sie ihre E-Mail-Adresse ein!",
+  "@enter-phone": "Bitte geben Sie Ihr Telefon ein!",
+  "@oops-error": "Ups! Etwas ist schief gelaufen."
+}

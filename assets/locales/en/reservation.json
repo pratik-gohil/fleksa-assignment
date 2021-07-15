@@ -1,0 +1,20 @@
+{
+  "@title": "Table Reservation",
+  "@sub-title": "We look forward to serving you.",
+  "@name": "Name",
+  "@email": "Email",
+  "@phone": "Phone Number",
+  "@comments": "Comments",
+  "@guest": "No. of Guests & Date - Time​",
+  "@agreement": "By continuing, you agree to Fleksa's",
+  "@terms": "Terms of use",
+  "@and": "and",
+  "@policy": "Privacy Policy",
+  "@reserve-now": "Reserve Now",
+  "@choose-slot": "Choose slot",
+  "@not-available": "N/A",
+  "@enter-name": "Please enter your name!",
+  "@enter-email": "Please enter your email!",
+  "@enter-phone": "Please enter your phone!",
+  "@oops-error": "Ooops! Something went wrong."
+}

@@ -1,0 +1,23 @@
+{
+  "@addNewAddress": "Lieferadresse hinzufügen",
+  "@locationAccessible": "Location Accessible",
+  "@find": "Suchen",
+  "@streetAddress": "STRAßE UND NUMMER",
+  "@additionalDeliveryInfo": "ZUSÄTZLICHE LIEFERINFO",
+  "@city": "STADT",
+  "@postalCode": "PLZ",
+  "@addressType": "ADRESSTYP",
+  "@home": "HOME",
+  "@work": "ARBEIT",
+  "@other": "ANDERE",
+  "@addNow": "ADRESSE SPEICHERN",
+  "@select": "BESTÄTIGEN",
+  "@orderDetails": "BESTELLDETAILS",
+  "@yourAddress": "ADRESSE",
+  "@streetAndNumber": "STRAßE UND NUMMER",
+  "@save": "SPEICHERN",
+  "@deliveryAddress": "Lieferadresse",
+  "@addressPart1": "Leider bieten wir derzeit keine Lieferung an Ihren Standort an.",
+  "@addressPart2": "das Restaurant für weitere Informationen.",
+  "@contact": "Bitte kontaktieren Sie"
+}

@@ -1,0 +1,12 @@
+{
+  "@title": "Login with Phone Number",
+  "@sub-title": "Please enter your phone number to get the OTP",
+  "@phone": "Phone",
+  "@send-otp": "SEND OTP",
+  "@enter-otp": "Enter OTP",
+  "@sent-at": "Please enter OTP sent at",
+  "@not-received": "OTP not received?",
+  "@resend": "Resend",
+  "@oops-error": "Ooops! Something went wrong.",
+  "@login": "LOGIN"
+}

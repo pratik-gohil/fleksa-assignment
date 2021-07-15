@@ -1,0 +1,15 @@
+import React, { FunctionComponent } from 'react';
+import styled from 'styled-components';
+import AccountPageMyAccount from '../../../components/templateOne/pages/account/common/my-account.all-address.common.pages.templateOne.components';
+
+const MyAccountPageContainer = styled.div``;
+
+const AccountAddressesPageTemplateOne: FunctionComponent = ({}) => {
+  return (
+    <MyAccountPageContainer>
+      <AccountPageMyAccount />
+    </MyAccountPageContainer>
+  );
+};
+
+export default AccountAddressesPageTemplateOne;
