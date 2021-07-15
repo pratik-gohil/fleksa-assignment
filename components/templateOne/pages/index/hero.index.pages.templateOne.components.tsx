@@ -139,6 +139,7 @@ const IndexPageHero: FunctionComponent = ({}) => {
   });
 
   useEffect(() => {
+    console.log('check => ', isShopOpened(timingsData));
     setShop(isShopOpened(timingsData));
   }, []);
 
@@ -159,9 +160,11 @@ const IndexPageHero: FunctionComponent = ({}) => {
                 {shop.available ? (
                   <OrderButton href={selectedMenuId ? `/menu/${selectedMenuId}` : '/menu'}>{t('@order-online')}</OrderButton>
                 ) : (
-                  <OrderButton href={selectedMenuId ? `/menu/${selectedMenuId}` : '/menu'}>{t('@pre-online')}</OrderButton>
+                  <>
+                    <OrderButton href={selectedMenuId ? `/menu/${selectedMenuId}` : '/menu'}>{t('@pre-online')}</OrderButton>
+                    <SubTitle2>Next Opening Hours: {shop.next}</SubTitle2>
+                  </>
                 )}
-                <SubTitle2>Next Opening Hours: Wed, 12:00</SubTitle2>
               </Col>
             </Row>
           </Container>
