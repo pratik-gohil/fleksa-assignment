@@ -180,6 +180,9 @@ const CancelButton = styled.button`
   font-weight: 600;
   font-size: 1.2rem;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   &:hover {
     filter: brightness(1.3);
@@ -259,7 +262,7 @@ export const MyAccountRightSection = () => {
 
   const handleVerifyEmailButtonClick = async () => {
     try {
-      setLoading(!loading);
+      setLoading(true);
 
       const response = await new NodeApiHttpPostVerifyEmailPhoneRequest(configuration, bearerToken as any).post({
         method: 'email',
@@ -279,12 +282,11 @@ export const MyAccountRightSection = () => {
 
       setIsEmailReadOnly(true);
       setIsVerify(!isVerify);
-      setLoading(!loading);
 
       dispatch(
         updateError({
           show: true,
-          message: 'Verification code sent to your email!',
+          message: t('@code-sent'),
           severity: 'success',
         }),
       );
@@ -297,11 +299,15 @@ export const MyAccountRightSection = () => {
           severity: 'error',
         }),
       );
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleVerifyCode = async () => {
     try {
+      setLoading(true);
+
       const response = await new NodeApiHttpPostVerifyCodeRequest(configuration, bearerToken as any).post({
         otp,
       });
@@ -320,11 +326,12 @@ export const MyAccountRightSection = () => {
       setIsEmailReadOnly(true);
       setIsVerify(false);
       dispatch(updateCustomerEmailVerification(1));
+      setOtp('');
 
       dispatch(
         updateError({
           show: true,
-          message: 'Wohoo 🎉 successfully verified!',
+          message: t('@verify-success'),
           severity: 'success',
         }),
       );
@@ -337,6 +344,8 @@ export const MyAccountRightSection = () => {
           severity: 'error',
         }),
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -433,7 +442,14 @@ export const MyAccountRightSection = () => {
                     color: '#222',
                   }}
                 />
-                <CancelButton onClick={() => setIsVerify(!isVerify)}>{t('@Cancel')}</CancelButton>
+                <CancelButton
+                  onClick={() => {
+                    setOtp('');
+                    setIsVerify(!isVerify);
+                  }}
+                >
+                  {loading ? <LoadingIndicator width={20} /> : <span>{t('@cancel')}</span>}
+                </CancelButton>
               </InputContainer>
             )}
           </TextEmailContainer>

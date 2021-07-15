@@ -5,6 +5,7 @@
   "@click-to-edit": "Click to Edit",
   "@not-verified": "Not Verified",
   "@verify": "Verify",
+  "@cancel": "Cancel",
   "@address-title": "My Address",
   "@add-new-address": "New Address",
   "@update-your-address": "Update Your Address",
@@ -37,6 +38,8 @@
   "@update-success": "Updated successfully 🙌",
   "@remove-success": "Removed successfully 🙌",
   "@add-success": "Wohoo 🎉 Successfully added!",
+  "@code-sent": "Verification code sent to your email!",
+  "@verify-success": "Wohoo 🎉 Successfully verified!",
   "@oops-error": "Oops! Something went wrong.",
   "@confirmation": "Are you sure?"
 }
