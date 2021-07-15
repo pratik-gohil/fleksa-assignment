@@ -133,7 +133,7 @@ export const BasicContactUsInformation = () => {
         {days.map((day) => (
           <Day key={day?.dayName}>
             <DayName selected={currentDay === day?.dayName}>{day?.dayName}</DayName>
-            {day?.available ? <DayTime>{day?.time}</DayTime> : <span style={{ color: 'red', fontWeight: 500 }}>Closed</span>}
+            {day?.available ? <DayTime>{day?.time}</DayTime> : <span style={{ color: 'red', fontWeight: 500 }}>{t('@closed')}</span>}
           </Day>
         ))}
 
@@ -167,7 +167,7 @@ export const BasicContactUsInformation = () => {
 
             <LinkArea>
               <StyledLink href={`tel:+${addressData.country_code}${addressData.phone}`}>
-                Phone
+                {t('@phone')}
                 <ArrowIcon />
               </StyledLink>
             </LinkArea>

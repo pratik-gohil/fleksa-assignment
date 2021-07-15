@@ -216,7 +216,7 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
         dispatch(
           updateError({
             show: true,
-            message: 'Kindly accept our terms and service.',
+            message: t('@need-accept'),
             severity: 'error',
           }),
         );
@@ -257,7 +257,7 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
       dispatch(
         updateError({
           show: true,
-          message: 'Successfully sent 👏 Thanks for contacting us.',
+          message: t('@successfully-sent'),
           severity: 'success',
         }),
       );
@@ -267,7 +267,7 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
       dispatch(
         updateError({
           show: true,
-          message: 'Ooops! Something went wrong.',
+          message: t('@oops-error'),
           severity: 'error',
         }),
       );
@@ -313,11 +313,11 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
               <AgreementBox>
                 <Checkbox type="checkbox" checked={checked} onChange={() => setChecked(!checked)} />
                 <Acknowledgement>
-                  Yes, I agree to the <a href="#">Terms of use</a> and <a href="#">Privacy Policy</a>
+                  {t('@accept')} <a href="#">{t('@terms')}</a> {t('@and')} <a href="#">{t('@policy')}</a>
                 </Acknowledgement>
               </AgreementBox>
 
-              <SendButton type="submit">{loading ? <LoadingIndicator width={20} /> : 'Send'}</SendButton>
+              <SendButton type="submit">{loading ? <LoadingIndicator width={20} /> : t('@send')}</SendButton>
             </Form>
           </Col>
 

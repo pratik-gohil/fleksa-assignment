@@ -11,5 +11,15 @@
   "@THURSDAY": "Donnerstag",
   "@FRIDAY": "Freitag",
   "@SATURDAY": "Samstag",
-  "@SUNDAY": "Sonntag"
+  "@SUNDAY": "Sonntag",
+  "@accept": "Ja, ich stimme den",
+  "@terms": "Nutzungsbedingungen",
+  "@and": "und",
+  "@policy": "Datenschutz-Bestimmungen",
+  "@send": "Senden",
+  "@phone": "Telefon",
+  "@Closed": "Geschlossen",
+  "@need-accept": "Bitte akzeptieren Sie unsere Allgemeinen Geschäftsbedingungen.",
+  "@successfully-sent": "Erfolgreich versendet 👏 Vielen Dank für Ihre Kontaktaufnahme.",
+  "@oops-error": "Ups! Etwas ist schief gelaufen."
 }

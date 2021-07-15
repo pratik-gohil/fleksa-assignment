@@ -11,5 +11,15 @@
   "@THURSDAY": "Thursday",
   "@FRIDAY": "Friday",
   "@SATURDAY": "Saturday",
-  "@SUNDAY": "Sunday"
+  "@SUNDAY": "Sunday",
+  "@accept": "Yes, I agree to ",
+  "@terms": "Terms of use",
+  "@and": "and",
+  "@policy": "Privacy Policy",
+  "@send": "Send",
+  "@phone": "Phone",
+  "@Closed": "Closed",
+  "@need-accept": "Kindly accept our terms and service.",
+  "@successfully-sent": "Successfully sent 👏 Thanks for contacting us.",
+  "@oops-error": "Ooops! Something went wrong."
 }
