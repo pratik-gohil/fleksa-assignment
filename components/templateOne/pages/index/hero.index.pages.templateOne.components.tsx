@@ -133,9 +133,18 @@ const IndexPageHero: FunctionComponent = ({}) => {
   const selectedMenuId = useAppSelector(selectSelectedMenu);
   const { t } = useTranslation('page-index');
 
-  const [shop, setShop] = useState<{ available: boolean; next?: string }>({
+  const [shop, setShop] = useState<{
+    available: boolean;
+    next?: {
+      day: string;
+      time: string;
+    };
+  }>({
     available: false,
-    next: '',
+    next: {
+      day: '',
+      time: '',
+    },
   });
 
   useEffect(() => {
@@ -162,7 +171,7 @@ const IndexPageHero: FunctionComponent = ({}) => {
                   <>
                     <OrderButton href={selectedMenuId ? `/menu/${selectedMenuId}` : '/menu'}>{t('@pre-online')}</OrderButton>
                     <SubTitle2>
-                      {t('@next-hours')} {shop.next}
+                      {t('@next-hours')} {t(`@${shop.next?.day.toUpperCase()}`)}, {shop.next?.time}
                     </SubTitle2>
                   </>
                 )}

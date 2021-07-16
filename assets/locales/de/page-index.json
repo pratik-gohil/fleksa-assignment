@@ -4,5 +4,14 @@
   "@favourite-dishes-title": "UNSERE LIEBLINGSGERICHTE",
   "@customer-review-title": "DAS SAGEN UNSERE KUNDEN",
   "@to-product": "Zum Produkt",
-  "@next-hours": "Nächste Öffnungszeiten:"
+  "@next-hours": "Nächste Öffnungszeiten:",
+  "@TODAY": "Heute",
+  "@TOMORROW": "Morgen",
+  "@MONDAY": "Montag",
+  "@TUESDAY": "Dienstag",
+  "@WEDNESDAY": "Mittwoch",
+  "@THURSDAY": "Donnerstag",
+  "@FRIDAY": "Freitag",
+  "@SATURDAY": "Samstag",
+  "@SUNDAY": "Sonntag"
 }
