@@ -1,4 +1,5 @@
 import Document, { Html, Head, Main, NextScript, DocumentContext } from 'next/document';
+import Script from 'next/script';
 import { ServerStyleSheet } from 'styled-components';
 
 export default class MyDocument extends Document {
@@ -39,14 +40,17 @@ export default class MyDocument extends Document {
           {(((this.props as any).pathname as string).startsWith('/menu') ||
             ((this.props as any).pathname as string) === '/checkout' ||
             ((this.props as any).pathname as string) === '/account/addresses') && (
-            <script
+            <Script
               src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY}&libraries=places`}
-            ></script>
+              strategy="afterInteractive"
+            ></Script>
           )}
+
+          <Script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/19546797.js" strategy="afterInteractive"></Script>
         </Head>
         <body>
           <Main />
-          <button
+          {/* <button
             type="button"
             id="hs_show_banner_button"
             style={{
@@ -69,7 +73,7 @@ export default class MyDocument extends Document {
             }}
           >
             Cookie Settings
-          </button>
+          </button> */}
           <NextScript />
         </body>
       </Html>
