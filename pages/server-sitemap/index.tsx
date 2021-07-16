@@ -2,21 +2,12 @@ import { getServerSideSitemap } from 'next-sitemap';
 import { GetServerSideProps } from 'next';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  // Method to source urls from cms
-  // const urls = await fetch('https//example.com/api')
+  console.log('============= ', ctx.req.headers.host, ' ============= ');
 
   const fields = [
     {
-      loc: 'https://example.com', // Absolute url
+      loc: ctx.req.headers?.host || '', // Absolute url
       lastmod: new Date().toISOString(),
-      // changefreq
-      // priority
-    },
-    {
-      loc: 'https://example.com/dynamic-path-2', // Absolute url
-      lastmod: new Date().toISOString(),
-      // changefreq
-      // priority
     },
   ];
 

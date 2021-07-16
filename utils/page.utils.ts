@@ -9,13 +9,7 @@ import NodeApiHttpGetUserOrderHistory from '../http/nodeapi/account/get.account.
 import NodeApiHttpGetUserParticularOrder from '../http/nodeapi/account/get.order-view-by-id.nodeapi.http';
 import NodeApiHttpGetUserAllAddress from '../http/nodeapi/account/get.account.all-address.nodeapi.http';
 
-const multiRestaurantHosts = [
-  '127.0.0.1:3000',
-  'localhost:3000',
-  'newqa.fleksa.de',
-  'localhost:3214',
-  '192.168.43.24:3000'
-];
+const multiRestaurantHosts = ['127.0.0.1:3000', 'localhost:3000', 'newqa.fleksa.de', 'localhost:3214', '192.168.43.24:3000'];
 
 const testingHosts = [
   'roma.fleksa.com',
@@ -27,7 +21,7 @@ const testingHosts = [
   'asiadinhau.fleksa.com',
   'maincurry.fleksa.com',
   'smartpizzas.fleksa.com',
-]
+];
 
 export async function getServerSidePropsCommon(
   ctx: any,
@@ -50,14 +44,14 @@ export async function getServerSidePropsCommon(
      * If above constraints are met but no restaurant name found in cookie, use roma.fleksa.com
      * If restauant name includes ".fleksa." it will use production API's otherwise use testing API's
      */
-    const isMultiRestaurantHost = multiRestaurantHosts.includes(ctx.req.headers.host)
-    console.log("isMultiRestaurantHost", isMultiRestaurantHost, ctx.req.headers.host)
+    const isMultiRestaurantHost = multiRestaurantHosts.includes(ctx.req.headers.host);
+    // console.log("isMultiRestaurantHost", isMultiRestaurantHost, ctx.req.headers.host)
     const host: string = isMultiRestaurantHost ? restaurantDomain || 'roma.fleksa.com' : ctx.req.headers.host;
-    console.log("isMultiRestaurantHost host", host)
-    const testHost = testingHosts.includes(host)
-    console.log("isMultiRestaurantHost test host", testHost)
+    // console.log("isMultiRestaurantHost host", host)
+    const testHost = testingHosts.includes(host);
+    // console.log("isMultiRestaurantHost test host", testHost)
     const baseUrlPyApi = testHost ? 'https://myqa.fleksa.com' : 'https://my.fleksa.com';
-    console.log("isMultiRestaurantHost host baseUrlPyApi", baseUrlPyApi)
+    // console.log("isMultiRestaurantHost host baseUrlPyApi", baseUrlPyApi)
     const baseUrlNodeApi = testHost ? 'https://orderqa.fleksa.com' : 'https://order.fleksa.com';
 
     ctx.store.dispatch(updateLanguage((ctx as any).locale));
