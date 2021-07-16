@@ -1,4 +1,4 @@
-import React, { FormEvent, FunctionComponent } from 'react';
+import React, { FormEvent, FunctionComponent, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { useTranslation } from 'next-i18next';
@@ -13,6 +13,7 @@ import { BasicContactUsInformation } from '../../components/templateOne/pages/co
 
 import LoadingIndicator from '../../components/templateOne/common/loadingIndicator/loading-indicator.common.templateOne.components';
 import NodeApiHttpPostContactUs from '../../http/nodeapi/contact-us/post.contact-us.nodeapi.http';
+import { selectCustomer, selectIsUserLoggedIn } from '../../redux/slices/user.slices.redux';
 
 const ContactUsContainer = styled.div`
   margin: auto;
@@ -206,6 +207,8 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
 
   const configuration = useAppSelector(selectConfiguration);
   const shopData = useAppSelector(selectShop);
+  const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
+  const customerData = useAppSelector(selectCustomer);
   const dispatch = useAppDispatch();
 
   const handleContactUsSendButtonClick = async (e: FormEvent) => {
@@ -273,6 +276,14 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
       );
     }
   };
+
+  // TODO: Pre filling if logged in user
+  useEffect(() => {
+    if (isLoggedIn) {
+      setEmail(customerData?.email || '');
+      setName(customerData.name);
+    }
+  }, []);
 
   return (
     <ContactUsContainer>
