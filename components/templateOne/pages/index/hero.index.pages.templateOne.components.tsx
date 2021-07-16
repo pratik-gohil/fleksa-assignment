@@ -56,10 +56,12 @@ const Title = styled.h1`
   font-size: clamp(2.53rem, 5rem, 8vw);
   margin: 0;
   padding: 0;
+  width: 80%;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     font-weight: 600;
     line-height: 1.2;
+    width: 100%;
   }
 `;
 
@@ -124,6 +126,7 @@ const Wrapper = styled.div`
 
 const SubTitle2 = styled(SubTitle)`
   font-size: clamp(0.8rem, 1.2rem, 3vw);
+  padding-top: 1rem;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     padding-top: 0;
