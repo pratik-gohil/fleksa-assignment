@@ -46,6 +46,32 @@ export default class MyDocument extends Document {
         </Head>
         <body>
           <Main />
+          <button
+            type="button"
+            id="hs_show_banner_button"
+            style={{
+              backgroundColor: '#202020',
+              border: '1px solid #202020',
+              borderRadius: '3px',
+              padding: '10px 16px',
+              textDecoration: 'none',
+              color: '#fff',
+              fontFamily: 'inherit',
+              fontSize: 'inherit',
+              fontWeight: 'normal',
+              lineHeight: 'inherit',
+              textAlign: 'left',
+              textShadow: 'none',
+            }}
+            onClick={() =>
+              (function () {
+                var _hsp = (window._hsp = window._hsp || []);
+                _hsp.push(['showBanner']);
+              })()
+            }
+          >
+            Cookie Settings
+          </button>
           <NextScript />
         </body>
       </Html>
