@@ -142,7 +142,10 @@ export default class RestaurantTimingUtils {
 export function isShopOpened(timings: ITimings | null) {
   let availability = {
     available: false,
-    next: '',
+    next: {
+      day: '',
+      time: '',
+    },
   };
 
   if (!timings) return availability;
@@ -157,10 +160,10 @@ export function isShopOpened(timings: ITimings | null) {
   if (currentDay.diff(moment(currentDayTimings.shop?.timings[0]?.open, 'h:mm a'), 'minutes') <= 0) {
     return {
       ...availability,
-      next: `${moment(currentDayTimings?.shop?.timings[currentDayTimings.shop?.timings.length - 1]?.open, 'h:mm a').format('dddd')}, ${moment(
-        currentDayTimings?.shop?.timings[currentDayTimings.shop?.timings.length - 1]?.open,
-        'h:mm a',
-      ).format('HH:mm')}`,
+      next: {
+        day: moment(currentDayTimings?.shop?.timings[currentDayTimings.shop?.timings.length - 1]?.open, 'h:mm a').format('dddd'),
+        time: moment(currentDayTimings?.shop?.timings[currentDayTimings.shop?.timings.length - 1]?.open, 'h:mm a').format('HH:mm'),
+      },
     };
   }
   // TODO: Check currently after the close time
@@ -174,10 +177,10 @@ export function isShopOpened(timings: ITimings | null) {
   ) {
     return {
       ...availability,
-      next: `${moment(currentDayTimings?.shop?.timings[1]?.open, 'h:mm a').format('dddd')}, ${moment(
-        currentDayTimings?.shop?.timings[1]?.open,
-        'h:mm a',
-      ).format('HH:mm')}`,
+      next: {
+        day: moment(currentDayTimings?.shop?.timings[1]?.open, 'h:mm a').add(0, 'days').calendar().split(' at ')[0],
+        time: moment(currentDayTimings?.shop?.timings[1]?.open, 'h:mm a').format('HH:mm'),
+      },
     };
   } else {
     return {
@@ -200,9 +203,10 @@ const goNextDay = (timings: ITimings, currentDay: moment.Moment) => {
     } else
       return {
         available: false,
-        next: `${moment(processDay?.shop?.timings[0]?.open, 'h:mm a').format('dddd')}, ${moment(processDay?.shop?.timings[0]?.open, 'h:mm a').format(
-          'HH:mm',
-        )}`,
+        next: {
+          day: nextDay.add(0, 'days').calendar().split(' at ')[0],
+          time: moment(processDay?.shop?.timings[0]?.open, 'h:mm a').format('HH:mm'),
+        },
       };
   }
 };

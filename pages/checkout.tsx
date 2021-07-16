@@ -19,16 +19,16 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ct
     if (redirect) return redirect;
 
     ctx.store.dispatch(updateSelectedMenu(cookies?.get(COOKIE_SELECTED_MENU_ID)));
-    ctx.store.dispatch(updateSelectedMenuUrlpath(cookies?.get(COOKIE_SELECTED_MENU_URLPATH)))
+    ctx.store.dispatch(updateSelectedMenuUrlpath(cookies?.get(COOKIE_SELECTED_MENU_URLPATH)));
 
-    const addressResponse = await new NodeApiHttpGetUserAllAddress(configuration, bearerToken).get({})
-    ctx.store.dispatch(updateLoadAddressesList(addressResponse?.data.customer_address))
+    const addressResponse = await new NodeApiHttpGetUserAllAddress(configuration, bearerToken).get({});
+    ctx.store.dispatch(updateLoadAddressesList(addressResponse?.data.customer_address));
 
     return {
       props: {
-        ...(await serverSideTranslations((ctx as any).locale, ['header', 'footer', 'add-address'])),
+        ...(await serverSideTranslations((ctx as any).locale, ['header', 'footer', 'add-address', 'login'])),
         templateNumber: 0,
-        meta: responseIndex?.meta
+        meta: responseIndex?.meta,
       },
     };
   } catch (error) {
