@@ -56,10 +56,12 @@ const Title = styled.h1`
   font-size: clamp(2.53rem, 5rem, 8vw);
   margin: 0;
   padding: 0;
+  width: 80%;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     font-weight: 600;
     line-height: 1.2;
+    width: 100%;
   }
 `;
 
@@ -82,7 +84,7 @@ const OrderButton = styled.a`
   border-radius: ${(props) => props.theme.borderRadius}px;
   border: ${(props) => props.theme.border};
   padding: 12px 24px;
-  margin: 24px 0;
+  margin: 24px 0 0 0;
   display: inline-block;
   -webkit-animation: pulsing 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
   -moz-animation: pulsing 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
@@ -124,6 +126,11 @@ const Wrapper = styled.div`
 
 const SubTitle2 = styled(SubTitle)`
   font-size: clamp(0.8rem, 1.2rem, 3vw);
+  padding-top: 1rem;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    padding-top: 0;
+  }
 `;
 
 const IndexPageHero: FunctionComponent = ({}) => {
@@ -133,9 +140,18 @@ const IndexPageHero: FunctionComponent = ({}) => {
   const selectedMenuId = useAppSelector(selectSelectedMenu);
   const { t } = useTranslation('page-index');
 
-  const [shop, setShop] = useState<{ available: boolean; next?: string }>({
+  const [shop, setShop] = useState<{
+    available: boolean;
+    next?: {
+      day: string;
+      time: string;
+    };
+  }>({
     available: false,
-    next: '',
+    next: {
+      day: '',
+      time: '',
+    },
   });
 
   useEffect(() => {
@@ -162,7 +178,7 @@ const IndexPageHero: FunctionComponent = ({}) => {
                   <>
                     <OrderButton href={selectedMenuId ? `/menu/${selectedMenuId}` : '/menu'}>{t('@pre-online')}</OrderButton>
                     <SubTitle2>
-                      {t('@next-hours')} {shop.next}
+                      {t('@next-hours')} {t(`@${shop.next?.day.toUpperCase()}`)}, {shop.next?.time}
                     </SubTitle2>
                   </>
                 )}

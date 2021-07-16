@@ -1,8 +1,17 @@
 {
-  "@order-online": "ONLINE BESTELLEN",
+  "@order-online": "JETZT BESTELLEN",
   "@pre-online": "VORBESTELLUNG",
-  "@favourite-dishes-title": "UNSERE LIEBLINGSGERICHTE",
-  "@customer-review-title": "DAS SAGEN UNSERE KUNDEN",
-  "@to-product": "Zum Produkt",
-  "@next-hours": "Nächste Öffnungszeiten:"
+  "@favourite-dishes-title": "UNSERE BELIEBTESTEN GERICHTE",
+  "@customer-review-title": "WAS UNSERE KUNDEN ÜBER UNS SAGEN",
+  "@to-product": "ZUM PRODUKT",
+  "@next-hours": "Nächste Öffnungszeiten:",
+  "@TODAY": "Heute",
+  "@TOMORROW": "Morgen",
+  "@MONDAY": "Montag",
+  "@TUESDAY": "Dienstag",
+  "@WEDNESDAY": "Mittwoch",
+  "@THURSDAY": "Donnerstag",
+  "@FRIDAY": "Freitag",
+  "@SATURDAY": "Samstag",
+  "@SUNDAY": "Sonntag"
 }

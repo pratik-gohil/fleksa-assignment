@@ -1,8 +1,17 @@
 {
-  "@order-online": "ORDER ONLINE",
-  "@pre-online": "PREORDER",
-  "@favourite-dishes-title": "OUR FAVOURITE DISHES",
-  "@customer-review-title": "WHAT OUR CUSTOMERS SAY",
-  "@to-product": "To product",
-  "@next-hours": "Next Opening Hours:"
+  "@order-online": "ORDER NOW",
+  "@pre-online": "PRE-ORDER",
+  "@favourite-dishes-title": "OUR MOST POPULAR DISHES",
+  "@customer-review-title": "WHAT OUR CUSTOMERS SAY ABOUT US",
+  "@to-product": "TO PRODUCT",
+  "@next-hours": "Next Opening Hours:",
+  "@TODAY": "Today",
+  "@TOMORROW": "Tomorrow",
+  "@MONDAY": "Monday",
+  "@TUESDAY": "Tuesday",
+  "@WEDNESDAY": "Wednesday",
+  "@THURSDAY": "Thursday",
+  "@FRIDAY": "Friday",
+  "@SATURDAY": "Saturday",
+  "@SUNDAY": "Sunday"
 }
