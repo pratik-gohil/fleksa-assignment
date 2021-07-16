@@ -63,12 +63,10 @@ export default class MyDocument extends Document {
               textAlign: 'left',
               textShadow: 'none',
             }}
-            onClick={() =>
-              (function () {
-                var _hsp = (window._hsp = window._hsp || []);
-                _hsp.push(['showBanner']);
-              })()
-            }
+            onClick={function () {
+              var _hsp = (window._hsp = window._hsp || []);
+              _hsp.push(['showBanner']);
+            }}
           >
             Cookie Settings
           </button>
