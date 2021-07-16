@@ -82,7 +82,7 @@ const OrderButton = styled.a`
   border-radius: ${(props) => props.theme.borderRadius}px;
   border: ${(props) => props.theme.border};
   padding: 12px 24px;
-  margin: 24px 0;
+  margin: 24px 0 0 0;
   display: inline-block;
   -webkit-animation: pulsing 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
   -moz-animation: pulsing 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
@@ -124,6 +124,10 @@ const Wrapper = styled.div`
 
 const SubTitle2 = styled(SubTitle)`
   font-size: clamp(0.8rem, 1.2rem, 3vw);
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    padding-top: 0;
+  }
 `;
 
 const IndexPageHero: FunctionComponent = ({}) => {
