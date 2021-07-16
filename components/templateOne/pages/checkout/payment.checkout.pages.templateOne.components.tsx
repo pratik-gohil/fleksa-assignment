@@ -130,9 +130,26 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   }
 
   useEffect(() => {
-    const canPlace = !!(bearerToken && shopData?.id && customerData.email && customerData.phone && customerData.country_code && wantAtData)
+    const canPlace = !!(bearerToken
+      && shopData?.id
+      && customerData.name
+      && customerData.name.length
+      && customerData.email
+      && customerData.email.length
+      && customerData.phone
+      && customerData.country_code
+      && wantAtData
+    )
     setOrderCanBePlaced(canPlace)
-  }, [ bearerToken, shopData?.id, customerData.email, customerData.phone, customerData.country_code, wantAtData ])
+  }, [
+    bearerToken,
+    shopData?.id,
+    customerData.name,
+    customerData.email,
+    customerData.phone,
+    customerData.country_code,
+    wantAtData
+  ])
 
   async function onPaymentDone() {
     router.push("/order-placed")
