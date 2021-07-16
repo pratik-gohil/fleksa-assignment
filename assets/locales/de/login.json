@@ -1,6 +1,6 @@
 {
   "@title": "Einloggen mit Telefonnummer",
-  "@sub-title": "Bitte geben Sie Ihre Telefonnummer ein, um das OTP zu erhalten",
+  "@sub-title": "Bitte geben Sie Ihre Telefonnummer ein, um das EINMALIGES PASSWORT (OTP) zu erhalten",
   "@phone": "Telefon",
   "@send-otp": "SENDEN",
   "@enter-otp": "Bestätigen Sie Ihre Telefonnummer",
