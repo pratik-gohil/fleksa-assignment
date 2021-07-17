@@ -49,13 +49,18 @@ const TipOptionsItem = styled.div<{ isSelected: boolean }>`
   }
 `
 
+const tipPercentage = [
+  [5, 10, 20],
+  [10, 20, 30]
+]
+
 const CheckoutPageTip: FunctionComponent = ({}) => {
   const tipData = useAppSelector(selectTip)
   const cartData = useAppSelector(selectCart)
   const dispatch = useAppDispatch()
   const [ otherTip, setOtherTip ] = useState(false)
 
-  const tipOptions = [5, 10, 20].map(percent => Math.ceil((cartData.cartCost * percent) / 100))
+  const tipOptions = tipPercentage[cartData.cartCost > 10? 0: 1].map(percent => Math.ceil((cartData.cartCost * percent) / 100))
 
   function onChangeTip(amount: number|null) {
     if (amount === null || amount >= 0) {

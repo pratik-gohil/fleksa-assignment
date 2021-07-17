@@ -81,9 +81,6 @@ const CheckoutDateTime: FunctionComponent = ({}) => {
           delivery_time: addressData?.delivery_time,
         },
       });
-      if (datesList[0].value === selectedDate.value) {
-        console.log(datesList[0].value, selectedDate.value)
-      }
       if (datesList[0].value === selectedDate.value && timeData[0]) {
         timeData[0].label = "As soon as possible"
       }
