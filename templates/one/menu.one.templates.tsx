@@ -178,8 +178,8 @@ const OrderButton = styled.a`
   background: ${props => props.theme.primaryColor};
 `
 
-const InputContainer = styled.div`
-  display: flex;
+const InputContainer = styled.div<{ visible: boolean }>`
+  display: ${props => props.visible? "flex": "none"};
   flex: 1;
 `
 
@@ -230,6 +230,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
   const [ filterName, setFilterName ] = useState<Filters>("has_delivery")
 
   useEffect(() => {
+    noDeliveryOptionsAvailable()
     if (tempSelId) {
       markers[tempSelId].infoWindow.close()
     }
@@ -239,7 +240,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
       shouldFocus: false,
     })
     tempSelId = selectedId
-  })
+  }, [ selectedId ])
 
   function initMap() {
     map = new google.maps.Map(document.getElementById("map") as HTMLElement, {
@@ -335,7 +336,8 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
         postalCode
       })
       if (response && response.result) {
-        const possibilities = Object.keys(Object.keys(response.possibilities).filter(i => response.possibilities[i].is_available))
+        const possibilities = Object.keys(response.possibilities).filter(i => response.possibilities[i].is_available)
+        console.log("possibilities", possibilities)
         setDeliveryFilterData(siblingsData.filter(i => possibilities.indexOf(String(i.id)) !== -1))
         if (possibilities.length > 0) {
           if (isLoggedIn && bearerToken) {
@@ -450,7 +452,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
     Object.keys(markers).map(i => markers[i].marker.setMap(tempRestaurantsToShow?.find(o => o.id === Number(i))? map: null))
     if (selectedId) markers[selectedId].infoWindow.close()
     setSelectedId(null)
-  }, [ filterName ])
+  }, [ filterName, deliveryFilterData ])
 
   let restaurantListView: ReactNode
   if (restaurantsToShow && restaurantsToShow.length > 0) {
@@ -522,7 +524,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
         }].map(item => <SelectionItem key={item.filter} active={filterName === item.filter} onClick={() => setFilterAndOrderType(item.filter)}>{item.title}</SelectionItem>)}
       </SelectionContainer>
       <List>
-        {filterName === "has_delivery" && <InputContainer>
+        <InputContainer visible={filterName === "has_delivery"}>
           <Input
             style={{
               flex: 1
@@ -541,7 +543,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
             onChange={e => setAddressFloor(e.target.value)}
             placeholder={"Optional"}
           />
-        </InputContainer>}
+        </InputContainer>
         {restaurantListView}
       </List>
     </FullHeightColumnLeft>

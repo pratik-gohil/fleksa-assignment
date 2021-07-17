@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { FunctionComponent } from 'react';
+import { Fragment, FunctionComponent } from 'react';
 import styled from 'styled-components';
 import { useAppSelector } from '../../../../redux/hooks.redux';
 import { selectOffers, selectShop } from '../../../../redux/slices/index.slices.redux';
@@ -134,7 +134,7 @@ const NavbarMobileOptions: FunctionComponent<IPropsNavbarMobileOptions> = ({ isO
               </LinkItem>
             </ListItem>
           ) : (
-            <></>
+            <Fragment key={item.title} />
           ),
         )}
         <ListItem key="lang-change">
