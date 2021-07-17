@@ -154,10 +154,25 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
 
   async function onTapSendOtp() {
     setLoading(true);
+    let phoneNumber = phone.substring(String(countryCode).length)
+    if (phoneNumber.startsWith("0")) {
+      phoneNumber = phoneNumber.substring(1)
+      setPhone(countryCode + phoneNumber)
+    }
     try {
+      if (phoneNumber.length < 9 || phoneNumber.length > 11) {
+        dispatch(
+          updateError({
+            show: true,
+            message: "Invalid phone number",
+            severity: 'error',
+          }),
+        );
+        return
+      }
       const response = await new NodeApiHttpPostLogin(configuration).post({
         countryCode,
-        phone: phone.substring(String(countryCode).length),
+        phone: phoneNumber,
         shopId: shopData?.id as unknown as number,
       });
 
