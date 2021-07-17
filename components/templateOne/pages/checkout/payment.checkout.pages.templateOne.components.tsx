@@ -129,15 +129,18 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
     }
   }
 
+  function isEmailValid(mail: string) {
+    return /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i.test(mail)
+  }
+
   useEffect(() => {
     const canPlace = !!(bearerToken
       && shopData?.id
       && customerData.name
       && customerData.name.length
       && customerData.email
-      && customerData.email.length
+      && isEmailValid(customerData.email)
       && customerData.phone
-      && customerData.email_verified
       && customerData.country_code
       && wantAtData
     )
@@ -147,7 +150,6 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
     shopData?.id,
     customerData.name,
     customerData.email,
-    customerData.email_verified,
     customerData.phone,
     customerData.country_code,
     wantAtData

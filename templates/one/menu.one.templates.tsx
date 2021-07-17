@@ -208,6 +208,7 @@ const markers: Record<string, {
   marker: google.maps.Marker
   infoWindow: google.maps.InfoWindow
 }> = {}
+let currentLocationMarker: google.maps.Marker
 let tempSelId: number|null = null
 
 const MenuPageTemplateOne: FunctionComponent = ({}) => {
@@ -229,8 +230,9 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
   const [ addressFloor, setAddressFloor ] = useState("")
   const [ filterName, setFilterName ] = useState<Filters>("has_delivery")
 
+  useEffect(noDeliveryOptionsAvailable, [ ])
+
   useEffect(() => {
-    noDeliveryOptionsAvailable()
     if (tempSelId) {
       markers[tempSelId].infoWindow.close()
     }
@@ -248,8 +250,6 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
       mapId: "3a7840eca8fbb359",
     });
     const latlngbounds = new google.maps.LatLngBounds();
-  
-    map.fitBounds(latlngbounds)
 
     google.maps.event.addListener(map, "click", function() {
       Object.keys(markers).map(i => markers[i].infoWindow.close())
@@ -300,6 +300,42 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
         infoWindow
       }
     });
+
+    map.fitBounds(latlngbounds)
+
+    currentLocationMarker = new google.maps.Marker({
+      icon: {
+        url: "/assets/png/person.png",
+        scaledSize: new google.maps.Size(40, 40),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(0, 0),
+      },
+      map: null,
+    });
+
+    if (navigator.geolocation) {
+      updateCurrentPosition(latlngbounds)
+      setInterval(() => {
+        updateCurrentPosition(latlngbounds)
+      }, 10000)
+    }
+  }
+
+  function updateCurrentPosition(latlngbounds: google.maps.LatLngBounds) {
+    navigator.geolocation.getCurrentPosition(
+      (position: GeolocationPosition) => {
+        const pos = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+
+        latlngbounds.extend(new google.maps.LatLng(pos.lat, pos.lng));
+        map.fitBounds(latlngbounds)
+
+        currentLocationMarker.setPosition(pos);
+        currentLocationMarker.setMap(map);
+      }
+    );
   }
 
   function setFilterAndOrderType(filter: Filters) {
@@ -337,7 +373,6 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
       })
       if (response && response.result) {
         const possibilities = Object.keys(response.possibilities).filter(i => response.possibilities[i].is_available)
-        console.log("possibilities", possibilities)
         setDeliveryFilterData(siblingsData.filter(i => possibilities.indexOf(String(i.id)) !== -1))
         if (possibilities.length > 0) {
           if (isLoggedIn && bearerToken) {
