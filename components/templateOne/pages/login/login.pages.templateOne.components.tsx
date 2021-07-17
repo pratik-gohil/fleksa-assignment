@@ -113,7 +113,7 @@ const OTPTopContainer = styled.div`
 
 const BackButton = styled.div`
   display: inline-block;
-  padding: 12px 24px;
+  padding: 12px 0;
   width: 70px;
   cursor: pointer;
   margin-top: -24px;
@@ -260,10 +260,10 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
         {customerId ? (
           <>
             <OTPTopContainer>
+              <Title>{t('@enter-otp')}</Title>
               <BackButton onClick={() => setCustomerId(undefined)}>
                 <SvgBack />
               </BackButton>
-              <Title>{t('@enter-otp')}</Title>
             </OTPTopContainer>
             <Text>
               {t('@sent-at')} +{phone}
