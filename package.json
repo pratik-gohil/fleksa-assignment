@@ -5,8 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "start": "next start",
-    "build": "next build",
-    "postbuild": "next-sitemap --config next-sitemap.config.js"
+    "build": "next build"
   },
   "dependencies": {
     "@paypal/react-paypal-js": "^7.1.0",
