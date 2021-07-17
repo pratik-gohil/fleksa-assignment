@@ -2,9 +2,9 @@ import React, { FunctionComponent } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import { useAppSelector } from "../../../../redux/hooks.redux";
-import { selectOffers, selectShop } from "../../../../redux/slices/index.slices.redux";
+import { selectOffers, selectShop, selectSiblings } from "../../../../redux/slices/index.slices.redux";
 import { Col, Container, Row } from "react-grid-system";
-import { selectLanguage } from "../../../../redux/slices/configuration.slices.redux";
+import { selectLanguage, selectSelectedMenu } from "../../../../redux/slices/configuration.slices.redux";
 import MenuFeatures from "./feature.menu.pages.templateOne.components";
 
 import SvgTag from "../../../../public/assets/svg/tag.svg"
@@ -129,6 +129,20 @@ const MenuPageBanner: FunctionComponent = ({}) => {
   const language = useAppSelector(selectLanguage)
   const shopData = useAppSelector(selectShop)
   const offersData = useAppSelector(selectOffers)
+  const menuId = useAppSelector(selectSelectedMenu)
+  const siblingData = useAppSelector(selectSiblings)
+
+  let shopName: string|undefined
+  let shopCategory: string|undefined
+  const sibling = siblingData.filter(i => i.id == menuId)[0]
+
+  if (sibling) {
+    shopName = sibling.name
+    shopCategory = sibling.category_json[language]
+  } else {
+    shopName = shopData?.name
+    shopCategory = shopData?.category_json[language]
+  }
 
   return <BannerContainer>
     {shopData?.cover && <Image src={shopData.cover} loading="eager" layout="fill" objectFit="cover" />}
@@ -139,8 +153,8 @@ const MenuPageBanner: FunctionComponent = ({}) => {
             <Col>
               <WrapperContainer>
                 <Wrapper>
-                  <Title>{shopData?.name}</Title>
-                  <SubTitle>{shopData?.category_json[language]}</SubTitle>
+                  <Title>{shopName}</Title>
+                  <SubTitle>{shopCategory}</SubTitle>
                   <MenuFeatures />
                 </Wrapper>
                 {offersData.length > 0 && <Wrapper>
