@@ -137,6 +137,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
       && customerData.email
       && customerData.email.length
       && customerData.phone
+      && customerData.email_verified
       && customerData.country_code
       && wantAtData
     )
@@ -146,6 +147,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
     shopData?.id,
     customerData.name,
     customerData.email,
+    customerData.email_verified,
     customerData.phone,
     customerData.country_code,
     wantAtData
