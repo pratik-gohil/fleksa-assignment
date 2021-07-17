@@ -178,8 +178,8 @@ const OrderButton = styled.a`
   background: ${props => props.theme.primaryColor};
 `
 
-const InputContainer = styled.div`
-  display: flex;
+const InputContainer = styled.div<{ visible: boolean }>`
+  display: ${props => props.visible? "flex": "none"};
   flex: 1;
 `
 
@@ -208,6 +208,7 @@ const markers: Record<string, {
   marker: google.maps.Marker
   infoWindow: google.maps.InfoWindow
 }> = {}
+let currentLocationMarker: google.maps.Marker
 let tempSelId: number|null = null
 
 const MenuPageTemplateOne: FunctionComponent = ({}) => {
@@ -229,6 +230,8 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
   const [ addressFloor, setAddressFloor ] = useState("")
   const [ filterName, setFilterName ] = useState<Filters>("has_delivery")
 
+  useEffect(noDeliveryOptionsAvailable, [ ])
+
   useEffect(() => {
     if (tempSelId) {
       markers[tempSelId].infoWindow.close()
@@ -239,7 +242,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
       shouldFocus: false,
     })
     tempSelId = selectedId
-  })
+  }, [ selectedId ])
 
   function initMap() {
     map = new google.maps.Map(document.getElementById("map") as HTMLElement, {
@@ -247,8 +250,6 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
       mapId: "3a7840eca8fbb359",
     });
     const latlngbounds = new google.maps.LatLngBounds();
-  
-    map.fitBounds(latlngbounds)
 
     google.maps.event.addListener(map, "click", function() {
       Object.keys(markers).map(i => markers[i].infoWindow.close())
@@ -299,6 +300,42 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
         infoWindow
       }
     });
+
+    map.fitBounds(latlngbounds)
+
+    currentLocationMarker = new google.maps.Marker({
+      icon: {
+        url: "/assets/png/person.png",
+        scaledSize: new google.maps.Size(40, 40),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(0, 0),
+      },
+      map: null,
+    });
+
+    if (navigator.geolocation) {
+      updateCurrentPosition(latlngbounds)
+      setInterval(() => {
+        updateCurrentPosition(latlngbounds)
+      }, 10000)
+    }
+  }
+
+  function updateCurrentPosition(latlngbounds: google.maps.LatLngBounds) {
+    navigator.geolocation.getCurrentPosition(
+      (position: GeolocationPosition) => {
+        const pos = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+
+        latlngbounds.extend(new google.maps.LatLng(pos.lat, pos.lng));
+        map.fitBounds(latlngbounds)
+
+        currentLocationMarker.setPosition(pos);
+        currentLocationMarker.setMap(map);
+      }
+    );
   }
 
   function setFilterAndOrderType(filter: Filters) {
@@ -335,7 +372,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
         postalCode
       })
       if (response && response.result) {
-        const possibilities = Object.keys(Object.keys(response.possibilities).filter(i => response.possibilities[i].is_available))
+        const possibilities = Object.keys(response.possibilities).filter(i => response.possibilities[i].is_available)
         setDeliveryFilterData(siblingsData.filter(i => possibilities.indexOf(String(i.id)) !== -1))
         if (possibilities.length > 0) {
           if (isLoggedIn && bearerToken) {
@@ -450,7 +487,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
     Object.keys(markers).map(i => markers[i].marker.setMap(tempRestaurantsToShow?.find(o => o.id === Number(i))? map: null))
     if (selectedId) markers[selectedId].infoWindow.close()
     setSelectedId(null)
-  }, [ filterName ])
+  }, [ filterName, deliveryFilterData ])
 
   let restaurantListView: ReactNode
   if (restaurantsToShow && restaurantsToShow.length > 0) {
@@ -522,7 +559,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
         }].map(item => <SelectionItem key={item.filter} active={filterName === item.filter} onClick={() => setFilterAndOrderType(item.filter)}>{item.title}</SelectionItem>)}
       </SelectionContainer>
       <List>
-        {filterName === "has_delivery" && <InputContainer>
+        <InputContainer visible={filterName === "has_delivery"}>
           <Input
             style={{
               flex: 1
@@ -541,7 +578,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
             onChange={e => setAddressFloor(e.target.value)}
             placeholder={"Optional"}
           />
-        </InputContainer>}
+        </InputContainer>
         {restaurantListView}
       </List>
     </FullHeightColumnLeft>

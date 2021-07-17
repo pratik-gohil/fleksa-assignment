@@ -138,7 +138,7 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
         </ClosedViewInfoContainerSection1>
         <ClosedViewInfoContainerSection2>
           {product.image && <ClosedViewInfoImage src={product.image} loading="lazy" isOpen={isOpen} />}
-          <AddButton product={product} canOpen={!!product.choice && product.choice.length > 0 } hasImage={!!product.image} isOpen={isOpen} />
+          <AddButton setOpenItemId={setOpenItemId} product={product} canOpen={!!product.choice && product.choice.length > 0 } hasImage={!!product.image} isOpen={isOpen} />
         </ClosedViewInfoContainerSection2>
       </ClosedViewInfoContainer>
     </ClosedViewContainer>

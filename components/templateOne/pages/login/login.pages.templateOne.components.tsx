@@ -113,7 +113,7 @@ const OTPTopContainer = styled.div`
 
 const BackButton = styled.div`
   display: inline-block;
-  padding: 12px 24px;
+  padding: 12px 0;
   width: 70px;
   cursor: pointer;
   margin-top: -24px;
@@ -154,10 +154,25 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
 
   async function onTapSendOtp() {
     setLoading(true);
+    let phoneNumber = phone.substring(String(countryCode).length)
+    if (phoneNumber.startsWith("0")) {
+      phoneNumber = phoneNumber.substring(1)
+      setPhone(countryCode + phoneNumber)
+    }
     try {
+      if (phoneNumber.length < 9 || phoneNumber.length > 11) {
+        dispatch(
+          updateError({
+            show: true,
+            message: "Invalid phone number",
+            severity: 'error',
+          }),
+        );
+        return
+      }
       const response = await new NodeApiHttpPostLogin(configuration).post({
         countryCode,
-        phone: phone.substring(String(countryCode).length),
+        phone: phoneNumber,
         shopId: shopData?.id as unknown as number,
       });
 
@@ -245,10 +260,10 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
         {customerId ? (
           <>
             <OTPTopContainer>
+              <Title>{t('@enter-otp')}</Title>
               <BackButton onClick={() => setCustomerId(undefined)}>
                 <SvgBack />
               </BackButton>
-              <Title>{t('@enter-otp')}</Title>
             </OTPTopContainer>
             <Text>
               {t('@sent-at')} +{phone}
