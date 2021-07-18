@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Image from 'next/image';
 
 import { useAppSelector } from '../../../../redux/hooks.redux';
-import { selectProducts, selectShop, selectSiblings } from '../../../../redux/slices/index.slices.redux';
+import { selectProducts, selectSiblings } from '../../../../redux/slices/index.slices.redux';
 import HorizontalList from '../../common/horizontal-list/horizontal-list.templateOne.component';
 import HorizontalListItem, { IResponsive } from '../../common/horizontal-list/horizontal-list-item.templateOne.component';
 import { useTranslation } from 'react-i18next';
@@ -137,11 +137,10 @@ const responsive: IResponsive = {
 const IndexPageFavouriteDishes: FunctionComponent = ({}) => {
   const { t } = useTranslation('page-index');
   const language = useAppSelector(selectLanguage);
-  const siblingsData = useAppSelector(selectSiblings)
-  const shopData = useAppSelector(selectShop)
+  const siblingsData = useAppSelector(selectSiblings);
   const productsData = useAppSelector(selectProducts);
 
-  return !!productsData.length ? (
+  return !!productsData.length && siblingsData.length <= 1 ? (
     <WrapperSection>
       <Container>
         <Row>
@@ -164,7 +163,7 @@ const IndexPageFavouriteDishes: FunctionComponent = ({}) => {
                         <InfoContainerBottom>
                           <ItemPrice>€{product.price}</ItemPrice>
 
-                          <ItemToProduct href={siblingsData.length === 0? `/menu/${shopData?.id}#product-id-${product.id}`: "/menu"}>
+                          <ItemToProduct href="/menu">
                             <p>
                               {t('@to-product')} <span>+</span>
                             </p>
