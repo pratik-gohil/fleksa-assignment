@@ -81,7 +81,9 @@ const CheckoutDateTime: FunctionComponent = ({}) => {
           delivery_time: addressData?.delivery_time,
         },
       });
-
+      if (datesList[0].value === selectedDate.value && timeData[0]) {
+        timeData[0].label = "As soon as possible"
+      }
       setTimeList(timeData);
       dispatch(updateWantAt(null))
     }

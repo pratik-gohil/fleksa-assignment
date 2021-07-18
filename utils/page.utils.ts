@@ -45,13 +45,9 @@ export async function getServerSidePropsCommon(
      * If restauant name includes ".fleksa." it will use production API's otherwise use testing API's
      */
     const isMultiRestaurantHost = multiRestaurantHosts.includes(ctx.req.headers.host);
-    // console.log("isMultiRestaurantHost", isMultiRestaurantHost, ctx.req.headers.host)
     const host: string = isMultiRestaurantHost ? restaurantDomain || 'roma.fleksa.com' : ctx.req.headers.host;
-    // console.log("isMultiRestaurantHost host", host)
     const testHost = testingHosts.includes(host);
-    // console.log("isMultiRestaurantHost test host", testHost)
     const baseUrlPyApi = testHost ? 'https://myqa.fleksa.com' : 'https://my.fleksa.com';
-    // console.log("isMultiRestaurantHost host baseUrlPyApi", baseUrlPyApi)
     const baseUrlNodeApi = testHost ? 'https://orderqa.fleksa.com' : 'https://order.fleksa.com';
 
     ctx.store.dispatch(updateLanguage((ctx as any).locale));

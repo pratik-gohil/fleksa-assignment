@@ -51,6 +51,9 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
             delivery_time: addressData?.delivery_time,
           },
         });
+        if (i === 0 && timeData[0]) {
+          timeData[0].label = "As soon as possible"
+        }
         if (timeData.length > 0) {
           dispatch(updateWantAt({ date: selectedDate, time: timeData[0] }))
           foundDateTime = true

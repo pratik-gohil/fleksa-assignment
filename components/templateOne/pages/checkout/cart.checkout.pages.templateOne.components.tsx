@@ -79,7 +79,7 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
         </ContainerItem>
         {promoData && <ContainerItem>
           <Title>Discount</Title>
-          <Price>€{promoData.value}</Price>
+          <Price>- €{promoData.value}</Price>
         </ContainerItem>}
         {tipData && tipData > 0? <ContainerItem>
           <Title>Tip</Title>

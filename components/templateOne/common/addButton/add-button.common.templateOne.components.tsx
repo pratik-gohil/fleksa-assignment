@@ -14,6 +14,7 @@ export interface IPropsAddButton {
   isOpen: boolean
   canOpen: boolean
   product: ICategoryProduct
+  setOpenItemId(id: number|undefined): void
 }
 
 interface IPropsWrapperButton {
@@ -76,7 +77,7 @@ const ButtonItem = styled.p`
   }
 `
 
-const AddButton: FunctionComponent<IPropsAddButton> = ({ product, canOpen, hasImage, isOpen }) => {
+const AddButton: FunctionComponent<IPropsAddButton> = ({ setOpenItemId, product, canOpen, hasImage, isOpen }) => {
 
   const [ lastCartId, setLastCartId ] = useState<string|null>(null)
   const selectionData = useAppSelector(state => selectItemSelectionByTopProductId(state, product.id))
@@ -104,6 +105,7 @@ const AddButton: FunctionComponent<IPropsAddButton> = ({ product, canOpen, hasIm
         type: selectionData.type,
         totalCost: selectionData.totalCost,
       }))
+      setOpenItemId(undefined)
     } if (!canOpen) {
       dispatch(updateAddProduct({
         topProductId: product.id,
@@ -115,6 +117,7 @@ const AddButton: FunctionComponent<IPropsAddButton> = ({ product, canOpen, hasIm
         totalCost: product.price,
         mainName: product.name_json
       }))
+      setOpenItemId(undefined)
     }
   }
 
