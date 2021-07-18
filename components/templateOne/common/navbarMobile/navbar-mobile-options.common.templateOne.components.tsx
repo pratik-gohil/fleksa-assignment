@@ -9,10 +9,11 @@ import SvgRestaurant from '../../../../public/assets/svg/restaurant.svg';
 import SvgReservation from '../../../../public/assets/svg/reservation.svg';
 import SvgGallery from '../../../../public/assets/svg/gallery.svg';
 import SvgContact from '../../../../public/assets/svg/contact.svg';
-import SvgLogin from '../../../../public/assets/svg/login.svg';
 import LegalLinks from '../footer/legal.footer.common.templateOne.components';
 import NavUserProfile from '../navbarDesktop/nav-profile-image.templateOne.components';
 import { selectCustomer, selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
+
+const SvgLoginIconPath = '/assets/svg/login.svg';
 
 export interface IPropsNavbarMobileOptions {
   isOpen: boolean;
@@ -84,6 +85,16 @@ const Title = styled.h2`
   padding: 0;
 `;
 
+const IconContainer = styled.div`
+  width: 35px;
+  height: 35px;
+  margin: 0 0.8rem;
+`;
+const Icon = styled.img`
+  width: 100%;
+  height: 100%;
+`;
+
 const NavbarMobileOptions: FunctionComponent<IPropsNavbarMobileOptions> = ({ isOpen }) => {
   const shopData = useAppSelector(selectShop);
   const customerData = useAppSelector(selectCustomer);
@@ -152,7 +163,9 @@ const NavbarMobileOptions: FunctionComponent<IPropsNavbarMobileOptions> = ({ isO
         ) : (
           <ListItem key="login">
             <LinkItem href={'/login'}>
-              <SvgLogin style={{ fill: 'none', width: '40px', height: '40px' }} />
+              <IconContainer>
+                <Icon src={SvgLoginIconPath} />
+              </IconContainer>
               <Title>{t('@login')}</Title>
             </LinkItem>
           </ListItem>
