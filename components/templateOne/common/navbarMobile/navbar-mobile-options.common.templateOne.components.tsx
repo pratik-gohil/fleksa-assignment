@@ -9,6 +9,7 @@ import SvgRestaurant from '../../../../public/assets/svg/restaurant.svg';
 import SvgReservation from '../../../../public/assets/svg/reservation.svg';
 import SvgGallery from '../../../../public/assets/svg/gallery.svg';
 import SvgContact from '../../../../public/assets/svg/contact.svg';
+import SvgLogin from '../../../../public/assets/svg/login.svg';
 import LegalLinks from '../footer/legal.footer.common.templateOne.components';
 import NavUserProfile from '../navbarDesktop/nav-profile-image.templateOne.components';
 import { selectCustomer, selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
@@ -151,7 +152,7 @@ const NavbarMobileOptions: FunctionComponent<IPropsNavbarMobileOptions> = ({ isO
         ) : (
           <ListItem key="login">
             <LinkItem href={'/login'}>
-              <SvgContact style={{ fill: 'transparent' }} />
+              <SvgLogin style={{ fill: 'none', width: '40px', height: '40px' }} />
               <Title>{t('@login')}</Title>
             </LinkItem>
           </ListItem>
