@@ -5,9 +5,9 @@ import IndexStoreWrapper from '../redux/store.redux';
 import TemplateToShow from '../templates/template-to-show.templates';
 import { getServerSidePropsCommon } from '../utils/page.utils';
 
-const TermsPageTemplateOne = dynamic(import('../templates/one/terms.one.templates'));
+const PolicyPageTemplateOne = dynamic(import('../templates/one/policy.one.templates'));
 
-const templateList = [TermsPageTemplateOne];
+const templateList = [PolicyPageTemplateOne];
 
 export const getServerSideProps = IndexStoreWrapper.getStaticProps(async (ctx) => {
   try {
