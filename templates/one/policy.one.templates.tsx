@@ -49,6 +49,24 @@ const PointsListOrder = styled.ol`
   margin: 1rem 1rem;
 `;
 
+const TableContainer = styled.div`
+  border: 1px solid #000;
+  margin: 1rem 0;
+  padding: 0 1rem 1rem 1rem;
+`;
+const Table = styled.table`
+  font-size: 1rem;
+  width: 100%;
+
+  tr {
+    border-bottom: 1px solid #000;
+  }
+  td {
+    font-size: 0.8rem;
+    padding: 0 0.5rem;
+  }
+`;
+
 const TermsPageTemplateOne: FunctionComponent = ({}) => {
   const { t } = useTranslation('page-policy');
 
@@ -344,6 +362,27 @@ const TermsPageTemplateOne: FunctionComponent = ({}) => {
             <Heading2>{t('@sub-title-14')}</Heading2>
             <Description>{t('@sub-title-14-paragraph-1')}</Description>
             <Description>{t('@sub-title-14-paragraph-2')}</Description>
+
+            <TableContainer>
+              <Description>{t('@sub-title-14-paragraph-1')}</Description>
+
+              <Table>
+                <tr>
+                  <th>Name</th>
+                  <th>Anbieter</th>
+                  <th>Zweck</th>
+                  <th>Ablauf</th>
+                  <th>Typ</th>
+                </tr>
+                <tr>
+                  <td>CookieConsent</td>
+                  <td>Cookiebot</td>
+                  <td>Speichert den Zustimmungsstatus des Benutzers für Cookies auf der aktuellen Domäne.</td>
+                  <td>1 Jahr</td>
+                  <td>HTTP Cookie</td>
+                </tr>
+              </Table>
+            </TableContainer>
 
             <Heading2>{t('@sub-title-15')}</Heading2>
             <Description>{t('@sub-title-15-paragraph-1')}</Description>
