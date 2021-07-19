@@ -70,18 +70,12 @@ const ItemTitle = styled.h2`
 `;
 
 const InfoContainerBottom = styled.div`
-  /* position: absolute; */
-  /* bottom: 1.5rem; */
   width: 100%;
-  /* margin: 0 1rem; */
   padding: 0 0.5rem;
 `;
 
 const ItemToProduct = styled.button`
-  /* margin: 2rem; */
   width: 100%;
-  /* padding: ${(props) => props.theme.dimen.X2}px ${(props) => props.theme.dimen.X4}px; */
-  /* font-weight: 500; */
   background-color: ${(props) => props.theme.primaryColor};
   font-weight: 700;
   font-size: 24px;
@@ -172,12 +166,7 @@ const IndexMultiRestaurantShowCase: FunctionComponent = ({}) => {
                     <Card onClick={() => router.push(`/menu/${sibling.id}`)}>
                       <ImageContainer>
                         {sibling.logo && (
-                          <Image
-                            src={'https://fleksa-image.s3.eu-central-1.amazonaws.com/img/restaurant_covers/mr9l43014dqbp6xo9xf2fa51uwz.jpg'}
-                            layout="fill"
-                            loading="lazy"
-                            objectFit="cover"
-                          />
+                          <Image src={sibling.cover_json.images?.[0]} layout="fill" loading="lazy" objectFit="cover" alt="Other Restaurant" />
                         )}
                       </ImageContainer>
 

@@ -8,6 +8,11 @@ const ProfileLink = styled.a``;
 
 const FlagContainer = styled.div`
   padding: 0 ${(props) => props.theme.dimen.X4}px;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    margin-left: 1.5rem;
+    padding: 0;
+  }
 `;
 
 const FlagImage = styled.p`
@@ -21,11 +26,14 @@ const FlagImage = styled.p`
   align-items: center;
   font-weight: 600;
   color: ${(props) => props.theme.primaryColor};
-  background-color: #444;
+  background-color: #000;
   text-transform: uppercase;
   margin: 0;
+
   @media (max-width: ${BREAKPOINTS.sm}px) {
+    background-color: #fff;
     margin: 0;
+    color: ${(props) => props.theme.textDarkColor};
     padding: 0;
   }
 `;

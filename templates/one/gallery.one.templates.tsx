@@ -167,6 +167,7 @@ const LeftButton = styled.div<{ leftVisible: boolean }>`
   cursor: pointer;
   transition: 0.3s;
   display: ${(p) => (p.leftVisible ? 'block' : 'none')};
+  z-index: 99;
 
   svg {
     transition: 0.3s;
@@ -187,6 +188,7 @@ const RightButton = styled.div<{ rightVisible: boolean }>`
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
   cursor: pointer;
   transition: 0.3s;
+  z-index: 99;
   display: ${(p) => (p.rightVisible ? 'block' : 'none')};
 
   svg {
@@ -196,6 +198,14 @@ const RightButton = styled.div<{ rightVisible: boolean }>`
   &:hover svg {
     fill: rgba(0, 0, 0, 1);
   }
+`;
+
+const Background = styled.div`
+  position: absolute;
+  background: transparent;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
 `;
 
 const GalleryPageTemplateOne: FunctionComponent = ({}) => {
@@ -282,7 +292,7 @@ const GalleryPageTemplateOne: FunctionComponent = ({}) => {
             );
           })}
         </Row>
-        <ModalImageContainer visible={showModal} onClick={handleModalCloseClick}>
+        <ModalImageContainer visible={showModal}>
           <Close onClick={handleModalCloseClick}>&#10006;</Close>
           <LeftButton onClick={handleLeftArrowClick} leftVisible={leftArrowVisible}>
             <SvgPrevious />
@@ -293,6 +303,8 @@ const GalleryPageTemplateOne: FunctionComponent = ({}) => {
           <RightButton onClick={handleRightArrowClick} rightVisible={rightArrowVisible}>
             <SvgNext />
           </RightButton>
+
+          <Background onClick={handleModalCloseClick} />
         </ModalImageContainer>
       </Container>
     </Wrapper>

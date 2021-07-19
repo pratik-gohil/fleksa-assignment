@@ -1,6 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { createWrapper } from 'next-redux-wrapper';
-import { AddressesSlice } from './slices/addresses.slices.redux';
 import { ConfigurationSlice } from './slices/configuration.slices.redux';
 import { IndexSlice } from './slices/index.slices.redux';
 import { MenuSlice } from './slices/menu.slices.redux';
@@ -18,7 +17,6 @@ const store = configureStore({
     user: UserSlice.reducer,
     index: IndexSlice.reducer,
     checkout: CheckoutSlice.reducer,
-    address: AddressesSlice.reducer,
     configuration: ConfigurationSlice.reducer,
     itemSelection: ItemSelectionSlice.reducer,
     common: CommonSlice.reducer,

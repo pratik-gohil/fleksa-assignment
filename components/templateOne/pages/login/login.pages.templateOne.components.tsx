@@ -113,8 +113,8 @@ const OTPTopContainer = styled.div`
 
 const BackButton = styled.div`
   display: inline-block;
-  padding: 12px 0;
-  width: 70px;
+  padding: 0 1rem 0 0;
+  width: 50px;
   cursor: pointer;
   margin-top: -24px;
   svg {
@@ -154,21 +154,21 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
 
   async function onTapSendOtp() {
     setLoading(true);
-    let phoneNumber = phone.substring(String(countryCode).length)
-    if (phoneNumber.startsWith("0")) {
-      phoneNumber = phoneNumber.substring(1)
-      setPhone(countryCode + phoneNumber)
+    let phoneNumber = phone.substring(String(countryCode).length);
+    if (phoneNumber.startsWith('0')) {
+      phoneNumber = phoneNumber.substring(1);
+      setPhone(countryCode + phoneNumber);
     }
     try {
       if (phoneNumber.length < 9 || phoneNumber.length > 11) {
         dispatch(
           updateError({
             show: true,
-            message: "Invalid phone number",
+            message: 'Invalid phone number',
             severity: 'error',
           }),
         );
-        return
+        return;
       }
       const response = await new NodeApiHttpPostLogin(configuration).post({
         countryCode,
