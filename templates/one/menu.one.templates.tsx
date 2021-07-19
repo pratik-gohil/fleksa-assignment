@@ -324,7 +324,6 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
   async function geocodeLatLng(location: { lat: number; lng: number }) {
     const geocoder = new google.maps.Geocoder();
     const response = await geocoder.geocode({ location }, null)
-    console.log(response)
 
     const place = response.results[0]
     if (place) {

@@ -39,6 +39,8 @@ export async function getServerSidePropsCommon(
     const selectedMenu = cookies.get(COOKIE_SELECTED_MENU_ID);
     ctx.store.dispatch(updateSelectedMenu(selectedMenu || null));
 
+    console.log("bearerToken", bearerToken)
+
     /**
      * If hostname is localhost:3000 or newqa.felksa.de use the restaurant name given by the cookie otherwise use the actual host.
      * If above constraints are met but no restaurant name found in cookie, use roma.fleksa.com
@@ -79,7 +81,7 @@ export async function getServerSidePropsCommon(
         configuration,
       };
     } else if (bearerToken) {
-      ctx.store.dispatch(updateBearerToken(bearerToken));
+      ctx.store.dispatch(updateBearerToken(bearerToken || null));
       const userData = await new NodeApiHttpGetUser(configuration, bearerToken).get({});
       ctx.store.dispatch(updateCustomer(userData?.data.customer));
 

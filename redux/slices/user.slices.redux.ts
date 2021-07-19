@@ -62,6 +62,7 @@ export const UserSlice = createSlice({
   },
   extraReducers: {
     [HYDRATE]: (state, action) => {
+      console.log("data", action.payload[SLICE_NAME])
       return {
         ...state,
         ...action.payload[SLICE_NAME],
@@ -82,10 +83,7 @@ export const {
   updateCustomerEmailVerification,
 } = UserSlice.actions;
 
-export const selectIsUserLoggedIn = (state: RootState) => {
-  console.log("state.user.bearerToken", state.user.bearerToken)
-  return !!state.user.bearerToken;
-}
+export const selectIsUserLoggedIn = (state: RootState) => !!state.user.bearerToken;
 export const selectBearerToken = (state: RootState) => state.user.bearerToken;
 export const selectCustomer = (state: RootState) => state.user.customer;
 export const selectAddressByType = (state: RootState, addressType: AddressTypes) =>
