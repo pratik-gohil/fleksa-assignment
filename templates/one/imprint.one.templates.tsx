@@ -85,38 +85,37 @@ const TermsPageTemplateOne: FunctionComponent = ({}) => {
             <Heading>{t('@title')}</Heading>
 
             <Info>
-              <SubHeading>Restaurant Logo</SubHeading>
               <Logo src={shopData?.logo} />
             </Info>
 
             <Info>
-              <SubHeading>Restaurant Name</SubHeading>
+              <SubHeading>{t('@name')}</SubHeading>
               <Text>{shopData?.name}</Text>
             </Info>
 
             <Info>
-              <SubHeading>Postal Address</SubHeading>
+              <SubHeading>{t('@address')}</SubHeading>
               <Text>
                 {addressData?.area} {addressData?.address} <br /> {addressData?.postal_code} {addressData?.city}
               </Text>
             </Info>
 
             <Info>
-              <SubHeading>Contact :</SubHeading>
+              <SubHeading>{t('@contact')}</SubHeading>
               <Text>
-                Phone : +{addressData?.country_code}
+                {t('@phone')} : +{addressData?.country_code}
                 {addressData?.phone}
               </Text>
               <Text>Email : {addressData?.email}</Text>
             </Info>
 
             <Info>
-              <SubHeading>Owner</SubHeading>
+              <SubHeading>{t('@owner')}</SubHeading>
               <Text>{ownerData.name}</Text>
             </Info>
 
             <Info>
-              <PoweredBy>Powered By</PoweredBy>
+              <PoweredBy>{t('@powered-by')}</PoweredBy>
               <Logo src={fleksaLogoPath} width={200} />
             </Info>
           </Col>

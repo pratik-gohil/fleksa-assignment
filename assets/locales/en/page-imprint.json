@@ -1,3 +1,9 @@
 {
-  "@title": "Imprint"
+  "@title": "Imprint",
+  "@name": "Restaurant Name",
+  "@address": "Postal Address",
+  "@contact": "Contact :",
+  "@owner": "Owner",
+  "@powered-by": "Powered By",
+  "@phone": "Phone"
 }
