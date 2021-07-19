@@ -364,7 +364,10 @@ const TermsPageTemplateOne: FunctionComponent = ({}) => {
             <Description>{t('@sub-title-14-paragraph-2')}</Description>
 
             <TableContainer>
-              <Description>{t('@sub-title-14-paragraph-1')}</Description>
+              <Description>
+                Notwendige Cookies helfen dabei, eine Webseite nutzbar zu machen, indem sie Grundfunktionen wie Seitennavigation und Zugriff auf
+                sichere Bereiche der Webseite ermöglichen. Die Webseite kann ohne diese Cookies nicht richtig funktionieren.
+              </Description>
 
               <Table>
                 <tr>
