@@ -15,19 +15,19 @@ export interface IPropsTemplateToShow {
   templateList: Array<ComponentType>;
   templateNumber: number;
   pageContainer?: IPropsPageContainer;
-  meta?: IMeta
+  meta?: IMeta;
 }
 
 const themes = [THEME_ONE, THEME_TWO];
 
 const TemplateToShow: FunctionComponent<IPropsTemplateToShow> = ({ meta, templateList, templateNumber, pageContainer }) => {
-  const languageCode = useAppSelector(selectLanguageCode)
+  const languageCode = useAppSelector(selectLanguageCode);
   const shop = useAppSelector(selectShop);
-  const images = useAppSelector(selectImages)
+  const images = useAppSelector(selectImages);
 
-  const imagesForSeo = images.map(i => ({ url: i }))
+  const imagesForSeo = images.map((i) => ({ url: i }));
   if (meta?.image) {
-    imagesForSeo.unshift({ url: meta.image })
+    imagesForSeo.unshift({ url: meta.image });
   }
 
   const ViewTemplate = templateList[templateNumber];
@@ -42,7 +42,7 @@ const TemplateToShow: FunctionComponent<IPropsTemplateToShow> = ({ meta, templat
           description: meta?.description,
           images: imagesForSeo,
           site_name: shop?.name,
-          locale: languageCode
+          locale: languageCode,
         }}
         twitter={{
           cardType: 'summary_large_image',

@@ -27,6 +27,9 @@ export interface IIndexSliceState {
     description: string;
     title: string;
   };
+  owner: {
+    name: string;
+  };
 }
 
 const initialState: IIndexSliceState = {
@@ -39,6 +42,9 @@ const initialState: IIndexSliceState = {
   siblings: [],
   offers: [],
   contents: [],
+  owner: {
+    name: '',
+  },
 };
 
 export const IndexSlice = createSlice({
@@ -110,3 +116,4 @@ export const selectSiblings = (state: RootState) => state.index.siblings;
 export const selectOffers = (state: RootState) => state.index.offers;
 export const selectContents = (state: RootState) => state.index.contents;
 export const selectBanner = (state: RootState) => state.index.banner;
+export const selectOwner = (state: RootState) => state.index.owner;
