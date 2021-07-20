@@ -132,25 +132,9 @@ const Slot = styled.div<{
     background: rgba(0, 0, 0, 0);
   }
 
-  &:active {
-    animation: zoomer 2s cubic-bezier(0.17, 0.89, 0.32, 1.49);
-  }
-
   @media (max-width: 576px) {
     width: 50px;
     height: 40px;
-  }
-
-  @keyframes zoomer {
-    0% {
-      transform: scale(0);
-    }
-    50% {
-      transform: scale(1.2);
-    }
-    100% {
-      transform: scale(1);
-    }
   }
 `;
 
