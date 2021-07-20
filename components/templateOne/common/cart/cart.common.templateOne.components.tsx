@@ -172,8 +172,8 @@ const Cart: FunctionComponent = ({}) => {
           return cartItem && <ListItem key={key}>
             <Column1>
               <ItemTitle>{cartItem.mainName[language]} <span>{cartItem.partName && "(" + cartItem.partName[language] + ")"}</span></ItemTitle>
-              {(cartItem.sideProducts && cartItem.sideProducts.length > 0)
-                && <ItemTitleAdditional>{"With " + cartItem.sideProducts?.map(i => i.name[language]).join(", ")}</ItemTitleAdditional>}
+              {((cartItem.sideProducts && cartItem.sideProducts.length > 0) || (cartItem.choice && cartItem.choice.length > 0))
+                && <ItemTitleAdditional>{cartItem.choice?.map(i => i.name[language]).join(", ")}, {cartItem.sideProducts?.map(i => i.name[language]).join(", ")}</ItemTitleAdditional>}
             </Column1>
             <Column2>
               <CartAddRemoveButton cartItem={cartItem} />
