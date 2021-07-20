@@ -4,6 +4,7 @@ import Select from 'react-select';
 import styled from 'styled-components';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { selectOrderType, selectWantAt, updateShowDateTimeSelect, updateWantAt } from '../../../../redux/slices/checkout.slices.redux';
+import { selectLanguage } from '../../../../redux/slices/configuration.slices.redux';
 import { selectAddress, selectTimings } from '../../../../redux/slices/index.slices.redux';
 import RestaurantTimingUtils, { ILabelValue } from '../../../../utils/restaurant-timings.utils';
 
@@ -66,6 +67,7 @@ const CheckoutDateTime: FunctionComponent = ({}) => {
   const addressData = useAppSelector(selectAddress);
   const timingsData = useAppSelector(selectTimings);
   const orderType = useAppSelector(selectOrderType);
+  const currentLanguage = useAppSelector(selectLanguage);
   const [selectedDate, setSelectedDate] = useState<ILabelValue | null>(wantAtData?.date || null);
   const [datesList] = useState<Array<ILabelValue>>(timings.generateDates());
   const [timeList, setTimeList] = useState<Array<ILabelValue>>();
@@ -80,12 +82,10 @@ const CheckoutDateTime: FunctionComponent = ({}) => {
           pickup_time: addressData?.prepare_time,
           delivery_time: addressData?.delivery_time,
         },
+        language: currentLanguage,
       });
-      if (datesList[0].value === selectedDate.value && timeData[0]) {
-        timeData[0].label = "As soon as possible"
-      }
       setTimeList(timeData);
-      dispatch(updateWantAt(null))
+      dispatch(updateWantAt(null));
     }
   }, [selectedDate, timingsData, orderType, addressData?.prepare_time, addressData?.delivery_time]);
 
