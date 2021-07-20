@@ -79,7 +79,7 @@ export async function getServerSidePropsCommon(
         configuration,
       };
     } else if (bearerToken) {
-      ctx.store.dispatch(updateBearerToken(bearerToken));
+      ctx.store.dispatch(updateBearerToken(bearerToken || null));
       const userData = await new NodeApiHttpGetUser(configuration, bearerToken).get({});
       ctx.store.dispatch(updateCustomer(userData?.data.customer));
 

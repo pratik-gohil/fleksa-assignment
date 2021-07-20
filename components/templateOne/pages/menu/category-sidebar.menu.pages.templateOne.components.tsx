@@ -104,10 +104,9 @@ const MenuPageCategorySidebar: FunctionComponent = ({}) => {
 
   useEffect(() => {
     let sections: NodeListOf<Element>;
-    if (window !== "undefined") {
+    if (window !== "undefined" && idList.length > 0) {
       sections = document.querySelectorAll(idList.join(","))
       window.addEventListener("scroll", navHighlighter.bind(null, sections));
-      
     }
     return () => window.removeEventListener("scroll", navHighlighter.bind(null, sections));
   }, [ ])

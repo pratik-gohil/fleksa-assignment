@@ -14,7 +14,7 @@ export interface ICartItem {
   partName: ILanguageData
   type: IType
   sideProducts: Array<{ id: number; name: ILanguageData }> | null
-  choice: Array<{ top_index: number; product_index: number; name: string }> | null
+  choice: Array<{ top_index: number; product_index: number; name: ILanguageData }> | null
   costOneItem: number
   totalCost: number
 }

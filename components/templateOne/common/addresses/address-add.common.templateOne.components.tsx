@@ -16,11 +16,6 @@ import {
   updateExistCustomerAddress,
   updateNewCustomerAddress,
 } from '../../../../redux/slices/user.slices.redux';
-
-import SvgHome from '../../../../public/assets/svg/address/home.svg';
-import SvgWork from '../../../../public/assets/svg/address/work.svg';
-import SvgMap from '../../../../public/assets/svg/address/map.svg';
-import SvgCross from '../../../../public/assets/svg/cross.svg';
 import { AddressTypes } from './address-manager.common.templateOne.components';
 import NodeApiHttpPostCreateNewAddressRequest from '../../../../http/nodeapi/account/post.create-address.nodeapi.http';
 import NodeApiHttpPostUpdateAddressRequest from '../../../../http/nodeapi/account/post.update-address.nodeapi.http';
@@ -28,6 +23,12 @@ import { LS_GUEST_USER_ADDRESS } from '../../../../constants/keys-local-storage.
 import { updateError } from '../../../../redux/slices/common.slices.redux';
 import { updateSelectedAddressId } from '../../../../redux/slices/checkout.slices.redux';
 import { updateShowAddAddress, updateShowOrderTypeSelect } from '../../../../redux/slices/menu.slices.redux';
+
+import SvgHome from '../../../../public/assets/svg/address/home.svg';
+import SvgWork from '../../../../public/assets/svg/address/work.svg';
+import SvgMap from '../../../../public/assets/svg/address/map.svg';
+import SvgCross from '../../../../public/assets/svg/cross.svg';
+import SvgAutolocate from '../../../../public/assets/svg/autolocate.svg';
 
 export interface IGuestAddress {
   floor: string;
@@ -180,6 +181,19 @@ const AddressTypeName = styled.p`
   font-weight: 500;
 `;
 
+const InputWithAutoLocate = styled.div`
+  position: relative;
+`
+
+const Autolocate = styled.div`
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 46px;
+  height: 46px;
+  padding: 12px;
+`
+
 let autoComplete: google.maps.places.Autocomplete;
 
 const AddressAdd: FunctionComponent = () => {
@@ -206,8 +220,9 @@ const AddressAdd: FunctionComponent = () => {
     dispatch(updateShowAddAddress(true));
   }, []);
 
-  function onAddressChange() {
-    const place = autoComplete.getPlace();
+  function onAddressChange(placeReceived?: google.maps.places.PlaceResult) {
+    resetAddressData()
+    const place = placeReceived || autoComplete.getPlace();
     if (place.address_components) {
       for (let component of place.address_components) {
         if (component.types[0] === 'route') {
@@ -223,6 +238,29 @@ const AddressAdd: FunctionComponent = () => {
     }
   }
 
+  async function geocodeLatLng(location: { lat: number; lng: number }) {
+    const geocoder = new google.maps.Geocoder();
+    const response = await geocoder.geocode({ location }, null)
+    console.log(response)
+
+    const place = response.results[0]
+    if (place) {
+      onAddressChange(place)
+    }
+  }
+
+  function updateCurrentPosition() {
+    navigator.geolocation.getCurrentPosition(
+      (position: GeolocationPosition) => {
+        const pos = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        geocodeLatLng(pos)
+      }
+    );
+  }
+
   useEffect(() => {
     setErrorMessage(undefined);
     if (isLoggedIn) {
@@ -234,15 +272,19 @@ const AddressAdd: FunctionComponent = () => {
         setAddressFloor(addressByType.floor || '');
         setAddressPostalCode(addressByType.postal_code);
       } else {
-        setAddressId(null);
-        setAddressMain('');
-        setAddressCity('');
-        setAddressArea('');
-        setAddressFloor('');
-        setAddressPostalCode('');
+        resetAddressData()
       }
     }
   }, [addressByType]);
+
+  function resetAddressData() {
+    setAddressId(null);
+    setAddressMain('');
+    setAddressCity('');
+    setAddressArea('');
+    setAddressFloor('');
+    setAddressPostalCode('');
+  }
 
   useEffect(() => {
     setErrorMessage(undefined);
@@ -381,7 +423,12 @@ const AddressAdd: FunctionComponent = () => {
         <InputContainer>
           <InputItem>
             <Label>{t('@streetAddress')}</Label>
-            <Input value={addressMain} onChange={(e) => setAddressMain(e.target.value)} ref={refAddressInput} placeholder={t('@streetAddress')} />
+            <InputWithAutoLocate>
+              <Input value={addressMain} onChange={(e) => setAddressMain(e.target.value)} ref={refAddressInput} placeholder={t('@streetAddress')} />
+              <Autolocate onClick={updateCurrentPosition}>
+                <SvgAutolocate />
+              </Autolocate>
+            </InputWithAutoLocate>
           </InputItem>
         </InputContainer>
         <InputContainer>
