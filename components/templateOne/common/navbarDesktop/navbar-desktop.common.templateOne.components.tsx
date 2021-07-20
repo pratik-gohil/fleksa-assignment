@@ -61,7 +61,6 @@ const NavbarDesktop: FunctionComponent = ({}) => {
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
   const router = useRouter();
 
-  console.log("router.pathname.startsWith(`/${languageCode}/menu`)", `/${languageCode}/menu`, router.pathname.startsWith(`/${languageCode}/menu`), router.pathname)
   return (
     <WrapperHeader>
       <Container>

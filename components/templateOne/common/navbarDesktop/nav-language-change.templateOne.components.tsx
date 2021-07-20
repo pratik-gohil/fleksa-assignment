@@ -42,8 +42,6 @@ const NavLanguageChange: FunctionComponent<IPropsNavLanguageChange> = ({ showTit
   const language = useAppSelector(selectLanguage)
   const router = useRouter()
 
-  console.log("router.locale", router.locale, router.query, router.pathname)
-  
   return <Link href={{
     pathname: router.pathname,
     query: router.query
