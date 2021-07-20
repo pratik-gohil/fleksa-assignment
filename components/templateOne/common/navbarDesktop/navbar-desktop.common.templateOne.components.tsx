@@ -10,7 +10,7 @@ import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
 import NavUserProfile from './nav-profile-image.templateOne.components';
 import { useRouter } from 'next/router';
-import { selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
+import { selectLanguageCode, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
 
 const WrapperHeader = styled.header`
   display: none;
@@ -56,6 +56,7 @@ const NavbarDesktop: FunctionComponent = ({}) => {
   const imageData = useAppSelector(selectImages);
   const offerData = useAppSelector(selectContents);
   const addressData = useAppSelector(selectAddress);
+  const languageCode = useAppSelector(selectLanguageCode)
   const selectedMenuId = useAppSelector(selectSelectedMenu);
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
   const router = useRouter();
@@ -65,7 +66,7 @@ const NavbarDesktop: FunctionComponent = ({}) => {
       <Container>
         <Row>
           <Col md={4}>
-            <a href="/">{shopData?.logo && <Logo src={shopData?.logo} loading="lazy" />}</a>
+            <a href={`${languageCode}/`}>{shopData?.logo && <Logo src={shopData?.logo} loading="lazy" />}</a>
           </Col>
 
           <Col md={8}>

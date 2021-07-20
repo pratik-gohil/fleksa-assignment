@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import PyApiHttpPostAddress from '../../../../http/pyapi/address/post.address.pyapi.http';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
-import { selectConfiguration, selectSelectedMenuUrlpath } from '../../../../redux/slices/configuration.slices.redux';
+import { selectConfiguration, selectLanguageCode, selectSelectedMenuUrlpath } from '../../../../redux/slices/configuration.slices.redux';
 import {
   selectAddressByType,
   selectBearerToken,
@@ -202,6 +202,7 @@ const AddressAdd: FunctionComponent = () => {
   const refAddressInput = useRef<HTMLInputElement>(null);
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
   const bearerToken = useAppSelector(selectBearerToken);
+  const languageCode = useAppSelector(selectLanguageCode)
   const configuration = useAppSelector(selectConfiguration);
   const [addressType, setAddressType] = useState<AddressTypes>('HOME');
   const addressByType = useAppSelector((state) => selectAddressByType(state, addressType));
@@ -480,7 +481,7 @@ const AddressAdd: FunctionComponent = () => {
           <InputContainer>
             <Error>
               {t('@addressPart1')}
-              <a href="/contact-us"> {t('@contact')} </a>
+              <a href={`${languageCode}/contact-us`}> {t('@contact')} </a>
               {t('@addressPart2')}
             </Error>
           </InputContainer>
