@@ -1,12 +1,12 @@
-import { createGlobalStyle } from "styled-components";
-import { BREAKPOINTS } from "./grid-system-configuration";
+import { createGlobalStyle } from 'styled-components';
+import { BREAKPOINTS } from './grid-system-configuration';
 
 const GlobalStyle = createGlobalStyle`
   html,
   body {
     padding: 0;
     margin: 0;
-    font-family: ${props => props.theme.fontFamily};
+    font-family: ${(props) => props.theme.fontFamily};
     scroll-padding-top: 110px;
   }
 
@@ -40,9 +40,9 @@ const GlobalStyle = createGlobalStyle`
 
   p {
     font-size: 16px;
-    color: ${props => props.theme.textDarkColor};
+    color: ${(props) => props.theme.textDarkColor};
     padding: 0;
-    margin: ${props => props.theme.dimen.X4}px 0;
+    margin: ${(props) => props.theme.dimen.X4}px 0;
   }
 
   h1 {
@@ -74,7 +74,7 @@ const GlobalStyle = createGlobalStyle`
 
   @keyframes background-fade {
     0% {
-      background #F7FFAD;
+      background: #F7FFAD;
     }
     60% {
       background:#F7FFAD;
@@ -107,6 +107,6 @@ const GlobalStyle = createGlobalStyle`
       box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
     }
   }
-`
+`;
 
-export default GlobalStyle
+export default GlobalStyle;
