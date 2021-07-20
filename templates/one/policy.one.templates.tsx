@@ -64,6 +64,7 @@ const Table = styled.table`
   td {
     font-size: 0.8rem;
     padding: 0 0.5rem;
+    text-align: center;
   }
 `;
 
@@ -364,25 +365,84 @@ const TermsPageTemplateOne: FunctionComponent = ({}) => {
             <Description>{t('@sub-title-14-paragraph-2')}</Description>
 
             <TableContainer>
+              <SubHeading>Category:Statistics (3)</SubHeading>
+
               <Description>
-                Notwendige Cookies helfen dabei, eine Webseite nutzbar zu machen, indem sie Grundfunktionen wie Seitennavigation und Zugriff auf
-                sichere Bereiche der Webseite ermöglichen. Die Webseite kann ohne diese Cookies nicht richtig funktionieren.
+                Statistic cookies help website owners to understand how visitors interact with websites by collecting and reporting information
+                anonymously.
               </Description>
 
               <Table>
                 <tr>
-                  <th>Name</th>
-                  <th>Anbieter</th>
-                  <th>Zweck</th>
-                  <th>Ablauf</th>
-                  <th>Typ</th>
+                  <th>COOKIE NAME</th>
+                  <th>PROVIDER</th>
+                  <th>TYPE</th>
+                  <th>EXPIRY</th>
+                  <th>DESCRIPTION</th>
                 </tr>
                 <tr>
-                  <td>CookieConsent</td>
-                  <td>Cookiebot</td>
-                  <td>Speichert den Zustimmungsstatus des Benutzers für Cookies auf der aktuellen Domäne.</td>
-                  <td>1 Jahr</td>
-                  <td>HTTP Cookie</td>
+                  <td>_ga</td>
+                  <td>fleksa.de</td>
+                  <td>HTTP</td>
+                  <td>2 years</td>
+                  <td style={{ width: '55%' }}>
+                    Registers a unique ID th at is used to generate statistical data on how the visitor uses the website.
+                  </td>
+                </tr>
+                <tr>
+                  <td>_gat</td>
+                  <td>fleksa.de</td>
+                  <td>HTTP</td>
+                  <td>1 day</td>
+                  <td style={{ width: '55%' }}>Used by Google Analytics to throttle request rate.</td>
+                </tr>
+                <tr>
+                  <td>_gid</td>
+                  <td>fleksa.de</td>
+                  <td>HTTP</td>
+                  <td>1 day</td>
+                  <td style={{ width: '55%' }}>
+                    Registers a unique ID that isused to generate statistical data on how the visitor uses the website.
+                  </td>
+                </tr>
+              </Table>
+            </TableContainer>
+
+            <TableContainer>
+              <SubHeading>Category:Marketing (2)</SubHeading>
+
+              <Description>
+                Marketing cookies are used to track visitors across websites. The intention is to display ads that are relevant and engaging for the
+                individual user and thereby more valuable for publishers and third party advertisers. anonymously.
+              </Description>
+
+              <Table>
+                <tr>
+                  <th>COOKIE NAME</th>
+                  <th>PROVIDER</th>
+                  <th>TYPE</th>
+                  <th>EXPIRY</th>
+                  <th>DESCRIPTION</th>
+                </tr>
+                <tr>
+                  <td>__ptq.gif </td>
+                  <td>hubspot.com</td>
+                  <td>Pixel</td>
+                  <td>Session</td>
+                  <td style={{ width: '55%' }}>
+                    Sends data to the marketing platform Hubspot about the visitor's device and behaviour. Tracks the visitor across devices and
+                    marketing channels.
+                  </td>
+                </tr>
+                <tr>
+                  <td>ads/ga-audiences</td>
+                  <td>google.com</td>
+                  <td>Pixel</td>
+                  <td>Session</td>
+                  <td style={{ width: '55%' }}>
+                    Used by Google AdWords to re-engage visitors that are likely to convert to customers based on the visitor's online behaviour
+                    across websites.
+                  </td>
                 </tr>
               </Table>
             </TableContainer>
