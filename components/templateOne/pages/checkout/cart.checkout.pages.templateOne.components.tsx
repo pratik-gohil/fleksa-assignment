@@ -4,7 +4,7 @@ import { Row, Col } from "react-grid-system";
 import styled from "styled-components";
 import { useAppSelector } from "../../../../redux/hooks.redux";
 import { selectCart } from "../../../../redux/slices/cart.slices.redux";
-import { selectPromoCode, selectTip } from "../../../../redux/slices/checkout.slices.redux";
+import { selectDeliveryFinances, selectPromoCode, selectTip } from "../../../../redux/slices/checkout.slices.redux";
 import { selectLanguage, selectLanguageCode } from "../../../../redux/slices/configuration.slices.redux";
 import { checkoutFinalAmount } from "../../../../utils/checkout.utils";
 import formatCurrency from "../../../../utils/formatCurrency";
@@ -56,8 +56,11 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
   const tipData = useAppSelector(selectTip)
   const promoData = useAppSelector(selectPromoCode)
   const languageCode = useAppSelector(selectLanguageCode)
+  const deliveryFinances = useAppSelector(selectDeliveryFinances)
 
   const cartItemKeys = cartData.items? Object.keys(cartData.items): []
+  const deliveryFeeApplicable = deliveryFinances?.free_from? cartData.cartCost < deliveryFinances.free_from: true
+  const deliveryFee = deliveryFeeApplicable && deliveryFinances?.charges? deliveryFinances?.charges: 0
 
   return <StyledCheckoutCard>
     <StyledCheckoutTitle>CART</StyledCheckoutTitle>
@@ -87,9 +90,13 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
           <Title>Tip</Title>
           <Price>{formatCurrency(tipData, languageCode)}</Price>
         </ContainerItem>: <></>}
+        {deliveryFee > 0? <ContainerItem>
+          <Title>Delivery</Title>
+          <Price>{formatCurrency(deliveryFee, languageCode)}</Price>
+        </ContainerItem>: <></>}
         <ContainerItem>
           <Title style={{ fontWeight: 700 }}>Total</Title>
-          <Price>{formatCurrency(checkoutFinalAmount(cartData.cartCost, tipData, promoData?.value), languageCode)}</Price>
+          <Price>{formatCurrency(checkoutFinalAmount(cartData.cartCost, tipData, promoData?.value, deliveryFee), languageCode)}</Price>
         </ContainerItem>
       </Col>
     </Row>

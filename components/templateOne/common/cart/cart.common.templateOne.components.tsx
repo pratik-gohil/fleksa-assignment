@@ -13,6 +13,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import LoginAllPages from "../login/login.common.templateOne.components";
 import formatCurrency from "../../../../utils/formatCurrency";
+import { selectDeliveryFinances, selectOrderType } from "../../../../redux/slices/checkout.slices.redux";
 
 const Wrapper = styled.div<{ showCart: boolean }>`
   position: fixed;
@@ -145,22 +146,43 @@ const TextChooseDishes = styled(TextFeelingHungry)`
   margin: 0 0 ${props => props.theme.dimen.X4}px 0;
 `
 
+const MinimumOrderMessage = styled.p`
+  font-size: 16px;
+  font-weight: 400;
+  background: #f0f0f0;
+  padding: 4px 8px;
+  border-radius: ${props => props.theme.borderRadius}px;
+  margin: 0 0 ${props => props.theme.dimen.X4}px 0;
+`
+
 const Cart: FunctionComponent = ({}) => {
   const router = useRouter()
   const [ cartItemKeys, setCartItemKeys ] = useState<Array<string>>([])
   const showCart = useAppSelector(selectShowCart)
   const language = useAppSelector(selectLanguage)
   const cartData = useAppSelector(selectCart)
+  const orderType = useAppSelector(selectOrderType)
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn)
   const languageCode = useAppSelector(selectLanguageCode)
+  const deliveryFinances = useAppSelector(selectDeliveryFinances)
   const dispatch = useAppDispatch()
   
   useEffect(() => {
     setCartItemKeys(cartData.items? Object.keys(cartData.items): [])
   }, [ cartData ])
 
+  function isOrderPossible() {
+    if (orderType === "DELIVERY") {
+      return deliveryFinances && deliveryFinances.amount
+        ? cartData.cartCost > deliveryFinances.amount
+        : false
+    } else {
+      return cartItemKeys.length > 0
+    }
+  }
+
   function onClickOrderButton() {
-    if (cartItemKeys.length > 0) {
+    if (isOrderPossible()) {
       isLoggedIn? router.push("/checkout"): dispatch(updateShowLogin(true))
     }
   }
@@ -193,6 +215,7 @@ const Cart: FunctionComponent = ({}) => {
             <Price>{formatCurrency(cartData.cartCost, languageCode)}</Price>
           </CartCost>
         </ListItem>
+        {!isOrderPossible() && <MinimumOrderMessage>Minimum cart value required to place an order is {deliveryFinances?.amount && formatCurrency(deliveryFinances?.amount, languageCode)}.</MinimumOrderMessage>}
       </>: <ListItem key="empty-cart">
         <CartEmptyContainer>
             <SvgCartEmpty />
@@ -202,7 +225,7 @@ const Cart: FunctionComponent = ({}) => {
       </ListItem>}
     </List>
 
-    <OrderButton isActive={cartItemKeys.length > 0} onClick={onClickOrderButton}>ORDER</OrderButton>
+    <OrderButton isActive={isOrderPossible()} onClick={onClickOrderButton}>ORDER</OrderButton>
 
     <LoginAllPages callback={() => router.push("/checkout")} />
   </Wrapper>

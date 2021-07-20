@@ -21,7 +21,7 @@ import NodeApiHttpPostCreateNewAddressRequest from '../../../../http/nodeapi/acc
 import NodeApiHttpPostUpdateAddressRequest from '../../../../http/nodeapi/account/post.update-address.nodeapi.http';
 import { LS_GUEST_USER_ADDRESS } from '../../../../constants/keys-local-storage.constants';
 import { updateError } from '../../../../redux/slices/common.slices.redux';
-import { updateSelectedAddressId } from '../../../../redux/slices/checkout.slices.redux';
+import { updateDeliveryFinances, updateSelectedAddressId } from '../../../../redux/slices/checkout.slices.redux';
 import { updateShowAddAddress, updateShowOrderTypeSelect } from '../../../../redux/slices/menu.slices.redux';
 
 import SvgHome from '../../../../public/assets/svg/address/home.svg';
@@ -333,6 +333,7 @@ const AddressAdd: FunctionComponent = () => {
       });
 
       if (response?.can_deliver) {
+        dispatch(updateDeliveryFinances(response.details))
         if (isLoggedIn && bearerToken) {
           if (addressId) {
             await updateExistingAddress(bearerToken, addressId);
