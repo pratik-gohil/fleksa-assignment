@@ -42,9 +42,12 @@ const NavLanguageChange: FunctionComponent<IPropsNavLanguageChange> = ({ showTit
   const language = useAppSelector(selectLanguage)
   const router = useRouter()
 
-  console.log("router.locale", router.locale)
+  console.log("router.locale", router.locale, router.query, router.pathname)
   
-  return <Link href="" locale={router.locale === "en"? "de": "en"}>
+  return <Link href={{
+    pathname: router.pathname,
+    query: router.query
+  }} locale={router.locale === "en"? "de": "en"}>
     <FlagContainer style={style}>
       <FlagImage src={router.locale === "en"? SvgFlagUnitedKingdom: SvgFlagGerman} />
       {showTitle && <Title>{language.toUpperCase()}</Title>}
