@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { Fragment, FunctionComponent, useEffect } from "react";
 import styled from "styled-components";
 import { BREAKPOINTS } from "../../../../constants/grid-system-configuration";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
@@ -8,6 +8,10 @@ import SvgPickup from "../../../../public/assets/svg/pickup.svg";
 import SvgDinein from "../../../../public/assets/svg/dinein.svg";
 import SvgTick from "../../../../public/assets/svg/tick.svg";
 import { updateShowAddAddress, updateShowOrderTypeSelect } from "../../../../redux/slices/menu.slices.redux";
+import { selectSelectedMenu } from "../../../../redux/slices/configuration.slices.redux";
+import { selectAddress, selectShop, selectSiblings } from "../../../../redux/slices/index.slices.redux";
+import { useState } from "react";
+import { IAddress } from "../../../../interfaces/common/address.common.interfaces";
 
 const Wrapper = styled.div`
   position: fixed;
@@ -99,8 +103,13 @@ const SelectedTick = styled.div`
 `
 
 const OrderTypeManager: FunctionComponent = () => {
+  const shopData = useAppSelector(selectShop)
+  const address = useAppSelector(selectAddress)
+  const siblings = useAppSelector(selectSiblings)
   const orderType = useAppSelector(selectOrderType)
+  const selectedMenuId = useAppSelector(selectSelectedMenu)
   const dispatch = useAppDispatch()
+  const [ addressData, setAddressData ] = useState<IAddress|null|undefined>(undefined)
 
   function onClickDelivery(orderType: ICheckoutOrderTypes) {
     dispatch(updateOrderType(orderType))
@@ -119,6 +128,14 @@ const OrderTypeManager: FunctionComponent = () => {
     dispatch(updateShowOrderTypeSelect(false))
   }
 
+  useEffect(() => {
+    if (shopData?.id == selectedMenuId) {
+      setAddressData(address)
+    } else {
+      setAddressData(siblings.find(item => item.id == selectedMenuId)?.address)
+    }
+  }, [ ])
+
   return <Wrapper>
     <ContentContainer>
       <Title>ORDER DETAILS</Title>
@@ -129,32 +146,39 @@ const OrderTypeManager: FunctionComponent = () => {
           subTitle: "",
           orderType: "DELIVERY" as ICheckoutOrderTypes,
           logo: SvgDelivery,
-          onClick: onClickDelivery
+          onClick: onClickDelivery,
+          visible: addressData?.has_delivery
         },{
           title: "Takeaway",
           subTitle: "I'll pick it up myself",
           orderType: "PICKUP" as ICheckoutOrderTypes,
           logo: SvgPickup,
-          onClick: onClickTakeaway
+          onClick: onClickTakeaway,
+          visible: addressData?.has_pickup
         }, {
           title: "Dine-in",
           subTitle: "I'll eat at the restaurant",
           orderType: "DINE_IN" as ICheckoutOrderTypes,
           logo: SvgDinein,
-          onClick: onClickDineIn
+          onClick: onClickDineIn,
+          visible: addressData?.has_dinein
         }].map(item => {
-          const selected = item.orderType === orderType
-          const centerContent = item.subTitle !== null && item.subTitle.length === 0
-          return <ListItem key={item.title} selected={selected} onClick={() => item.onClick(item.orderType)}>
-            <item.logo />
-            <ListItemContent centerContent={centerContent}>
-              <Title>{item.title}</Title>
-              {!centerContent && <SubTitle selected={selected}>{item.subTitle}</SubTitle>}
-            </ListItemContent>
-            {selected && <SelectedTick>
-              <SvgTick />
-            </SelectedTick>}
-          </ListItem>
+          if (item.visible) {
+            const selected = item.orderType === orderType
+            const centerContent = item.subTitle !== null && item.subTitle.length === 0
+            return <ListItem key={item.title} selected={selected} onClick={() => item.onClick(item.orderType)}>
+              <item.logo />
+              <ListItemContent centerContent={centerContent}>
+                <Title>{item.title}</Title>
+                {!centerContent && <SubTitle selected={selected}>{item.subTitle}</SubTitle>}
+              </ListItemContent>
+              {selected && <SelectedTick>
+                <SvgTick />
+              </SelectedTick>}
+            </ListItem>
+          } else {
+            return <Fragment key={item.title} />
+          }
         })}
       </List>
     </ContentContainer>
