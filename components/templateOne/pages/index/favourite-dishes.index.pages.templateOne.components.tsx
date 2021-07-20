@@ -165,7 +165,7 @@ const IndexPageFavouriteDishes: FunctionComponent = ({}) => {
                         <InfoContainerBottom>
                           <ItemPrice>{formatCurrency(product.price, languageCode)}</ItemPrice>
 
-                          <ItemToProduct href={`${languageCode}/menu`}>
+                          <ItemToProduct href={`/${languageCode}/menu`}>
                             <p>
                               {t('@to-product')} <span>+</span>
                             </p>

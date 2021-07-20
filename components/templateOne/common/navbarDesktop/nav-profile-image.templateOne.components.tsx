@@ -44,7 +44,7 @@ const NavUserProfile = ({}) => {
   const customerData = useAppSelector(selectCustomer);
 
   return (
-    <ProfileLink href={`${languageCode}/account`}>
+    <ProfileLink href={`/${languageCode}/account`}>
       <FlagContainer>
         <FlagImage>
           {customerData.name

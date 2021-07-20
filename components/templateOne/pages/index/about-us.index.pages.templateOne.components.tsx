@@ -133,7 +133,7 @@ const IndexPageAboutUs: FunctionComponent = ({}) => {
                 )}
               </Row>
 
-              <a href={`${languageCode}/gallery`}>
+              <a href={`/${languageCode}/gallery`}>
                 <ImagesContainerHover>
                   <ImagesContainerHoverTextMore>
                     More <SvgRightArrow />

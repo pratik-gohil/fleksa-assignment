@@ -53,7 +53,7 @@ const OrderPlacedPageTemplateOne: FunctionComponent = ({}) => {
           <Col style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
             <Title>Your order is placed successfully</Title>
             <Image src={OrderPlacedImage} alt="person jumping" />
-            <ViewManageButton href={`${languageCode}/account/order-history`}>View or Manage Order</ViewManageButton>
+            <ViewManageButton href={`/${languageCode}/account/order-history`}>View or Manage Order</ViewManageButton>
           </Col>
         </Row>
       </Container>

@@ -97,7 +97,7 @@ const MenuFeatures: FunctionComponent = () => {
         <p>{orderTypeData.title}</p>
       </OrderTypeContainer>}
     </OrderTypeView>
-    {siblingsData.length > 0 && <ChangeRestaurantButton href={`${languageCode}/menu`}>CHANGE STORE</ChangeRestaurantButton>}
+    {siblingsData.length > 0 && <ChangeRestaurantButton href={`/${languageCode}/menu`}>CHANGE STORE</ChangeRestaurantButton>}
   </Wrapper>
 }
 

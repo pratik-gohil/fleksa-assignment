@@ -61,12 +61,13 @@ const NavbarDesktop: FunctionComponent = ({}) => {
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
   const router = useRouter();
 
+  console.log("router.pathname.startsWith(`/${languageCode}/menu`)", `/${languageCode}/menu`, router.pathname.startsWith(`/${languageCode}/menu`), router.pathname)
   return (
     <WrapperHeader>
       <Container>
         <Row>
           <Col md={4}>
-            <a href={`${languageCode}/`}>{shopData?.logo && <Logo src={shopData?.logo} loading="lazy" />}</a>
+            <a href={`/${languageCode}/`}>{shopData?.logo && <Logo src={shopData?.logo} loading="lazy" />}</a>
           </Col>
 
           <Col md={8}>
@@ -74,16 +75,16 @@ const NavbarDesktop: FunctionComponent = ({}) => {
               <NavbarList>
                 <NavLink
                   title={t('@menu')}
-                  path={selectedMenuId ? `/menu/${selectedMenuId}` : '/menu'}
-                  isActive={router.pathname.startsWith('/menu')}
+                  path={selectedMenuId ? `/${languageCode}/menu/${selectedMenuId}` : `/${languageCode}/menu`}
+                  isActive={router.pathname === `/menu/[id]`}
                 />
-                {!!offerData.length && <NavLink title={t('@offers')} path="/offers" isActive={router.pathname === '/offers'} />}
+                {!!offerData.length && <NavLink title={t('@offers')} path={`/${languageCode}/offers`} isActive={router.pathname === `/offers`} />}
                 {addressData && addressData?.has_reservations && (
-                  <NavLink title={t('@reservation')} path="/reservation" isActive={router.pathname === '/reservation'} />
+                  <NavLink title={t('@reservation')} path={`/${languageCode}/reservation`} isActive={router.pathname === `/reservation`} />
                 )}
-                {imageData && !!imageData.length && <NavLink title={t('@gallery')} path="/gallery" isActive={router.pathname === '/gallery'} />}
-                <NavLink title={t('@contact')} path="/contact-us" isActive={router.pathname === '/contact-us'} />
-                {isLoggedIn ? <NavUserProfile /> : <NavLink title={t('@login')} path="/login" isActive={router.pathname === '/login'} />}
+                {imageData && !!imageData.length && <NavLink title={t('@gallery')} path={`/${languageCode}/gallery`} isActive={router.pathname === `/gallery`} />}
+                <NavLink title={t('@contact')} path={`/${languageCode}/contact-us`} isActive={router.pathname === '/contact-us'} />
+                {isLoggedIn ? <NavUserProfile /> : <NavLink title={t('@login')} path={`/${languageCode}/login`} isActive={router.pathname === `/login`} />}
                 <NavLanguageChange />
               </NavbarList>
             </Navbar>

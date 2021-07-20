@@ -481,7 +481,7 @@ const AddressAdd: FunctionComponent = () => {
           <InputContainer>
             <Error>
               {t('@addressPart1')}
-              <a href={`${languageCode}/contact-us`}> {t('@contact')} </a>
+              <a href={`/${languageCode}/contact-us`}> {t('@contact')} </a>
               {t('@addressPart2')}
             </Error>
           </InputContainer>

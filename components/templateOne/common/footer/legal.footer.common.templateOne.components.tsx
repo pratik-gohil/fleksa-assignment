@@ -75,7 +75,7 @@ const LegalLinks: FunctionComponent = () => {
         </IconContainer>
       </SocialMediaLinks>
       <Text>
-        <a href={`${languageCode}/terms`}>Terms & Conditions</a> | <a href={`${languageCode}/privacy-policy`}>Privacy Policy</a> | <a href={`${languageCode}/imprint`}>Imprint</a>
+        <a href={`/${languageCode}/terms`}>Terms & Conditions</a> | <a href={`/${languageCode}/privacy-policy`}>Privacy Policy</a> | <a href={`/${languageCode}/imprint`}>Imprint</a>
       </Text>
     </Wrapper>
   );

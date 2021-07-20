@@ -112,31 +112,31 @@ const NavbarMobileOptions: FunctionComponent<IPropsNavbarMobileOptions> = ({ isO
           {
             title: shopData?.name,
             icon: SvgRestaurant,
-            link: `${languageCode}/`,
+            link: `/${languageCode}/`,
             show: true,
           },
           {
             title: t('@reservation'),
             icon: SvgReservation,
-            link: `${languageCode}/reservation`,
+            link: `/${languageCode}/reservation`,
             show: true,
           },
           {
             title: t('@gallery'),
             icon: SvgGallery,
-            link: `${languageCode}/gallery`,
+            link: `/${languageCode}/gallery`,
             show: true,
           },
           {
             title: t('@offers'),
             icon: SvgGallery,
-            link: `${languageCode}/offers`,
+            link: `/${languageCode}/offers`,
             show: offersData.length > 0,
           },
           {
             title: t('@contact'),
             icon: SvgContact,
-            link: `${languageCode}/contact-us`,
+            link: `/${languageCode}/contact-us`,
             show: true,
           },
         ].map((item) =>
@@ -158,13 +158,13 @@ const NavbarMobileOptions: FunctionComponent<IPropsNavbarMobileOptions> = ({ isO
         {isLoggedIn ? (
           <ListItem key="account">
             <NavUserProfile />
-            <LinkItem href={`${languageCode}/account`}>
+            <LinkItem href={`/${languageCode}/account`}>
               <Title>{customerData.name}</Title>
             </LinkItem>
           </ListItem>
         ) : (
           <ListItem key="login">
-            <LinkItem href={`${languageCode}/login`}>
+            <LinkItem href={`/${languageCode}/login`}>
               <IconContainer>
                 <Icon src={SvgLoginIconPath} />
               </IconContainer>

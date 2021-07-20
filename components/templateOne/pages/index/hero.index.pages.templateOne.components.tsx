@@ -168,7 +168,7 @@ const IndexPageHero: FunctionComponent = ({}) => {
           <Container>
             <Row>
               <Col>
-                <LogoLink href={`${languageCode}/`}>{!!shopData?.logo && <Logo src={shopData?.logo} loading="lazy" />}</LogoLink>
+                <LogoLink href={`/${languageCode}/`}>{!!shopData?.logo && <Logo src={shopData?.logo} loading="lazy" />}</LogoLink>
 
                 <Title>{shopData?.name}</Title>
                 <SubTitle>{shopData?.category_json[language]}</SubTitle>
