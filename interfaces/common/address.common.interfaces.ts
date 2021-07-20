@@ -2,7 +2,16 @@ export interface IAddress {
   address: string
   area: string
   availability: {
+    has_delivery: {
+      always: boolean
+    }
     has_dinein: {
+      always: boolean
+    }
+    has_pickup: {
+      always: boolean
+    }
+    has_reservations: {
       always: boolean
     }
   }

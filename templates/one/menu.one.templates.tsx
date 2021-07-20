@@ -494,7 +494,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
   useEffect(() => {
     const tempRestaurantsToShow = filterName === "has_delivery"
     ? deliveryFilterData
-    : siblingsData.filter(sibling => sibling.address.availability[filterName])
+    : siblingsData.filter(sibling => sibling.address[filterName])
     setRestaurantsToShow(tempRestaurantsToShow)
     Object.keys(markers).map(i => markers[i].marker.setMap(tempRestaurantsToShow?.find(o => o.id === Number(i))? map: null))
     if (selectedId) markers[selectedId].infoWindow.close()
