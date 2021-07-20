@@ -314,20 +314,32 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
     });
 
     if (navigator.geolocation) {
-      updateCurrentPosition(latlngbounds)
+      updateCurrentPosition(latlngbounds, true)
       setInterval(() => {
-        updateCurrentPosition(latlngbounds)
+        updateCurrentPosition(latlngbounds, false)
       }, 10000)
     }
   }
 
-  function updateCurrentPosition(latlngbounds: google.maps.LatLngBounds) {
+  async function geocodeLatLng(location: { lat: number; lng: number }) {
+    const geocoder = new google.maps.Geocoder();
+    const response = await geocoder.geocode({ location }, null)
+
+    const place = response.results[0]
+    if (place) {
+      onAddressChange(place)
+    }
+  }
+
+  function updateCurrentPosition(latlngbounds: google.maps.LatLngBounds, setCurrentAddress: boolean) {
     navigator.geolocation.getCurrentPosition(
       (position: GeolocationPosition) => {
         const pos = {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
         };
+
+        if (setCurrentAddress) geocodeLatLng(pos)
 
         latlngbounds.extend(new google.maps.LatLng(pos.lat, pos.lng));
         map.fitBounds(latlngbounds)
@@ -442,8 +454,8 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
     dispatch(updateSelectedAddressId(addressId))
   }
 
-  function onAddressChange() {
-    const place = autoComplete.getPlace()
+  function onAddressChange(placeReceived?: google.maps.places.PlaceResult) {
+    const place = placeReceived || autoComplete.getPlace()
     let area: string | undefined = undefined
     let postalCode: string | undefined = undefined
     let main: string | undefined = undefined

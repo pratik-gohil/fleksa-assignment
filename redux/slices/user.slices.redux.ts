@@ -82,7 +82,7 @@ export const {
   updateCustomerEmailVerification,
 } = UserSlice.actions;
 
-export const selectIsUserLoggedIn = (state: RootState) => state.user.bearerToken !== null;
+export const selectIsUserLoggedIn = (state: RootState) => !!state.user.bearerToken;
 export const selectBearerToken = (state: RootState) => state.user.bearerToken;
 export const selectCustomer = (state: RootState) => state.user.customer;
 export const selectAddressByType = (state: RootState, addressType: AddressTypes) =>

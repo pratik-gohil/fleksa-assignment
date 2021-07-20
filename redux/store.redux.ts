@@ -10,7 +10,7 @@ import { LS_CART, LS_CHECKOUT } from '../constants/keys-local-storage.constants'
 import { CheckoutSlice } from './slices/checkout.slices.redux';
 import { CommonSlice } from './slices/common.slices.redux';
 
-const store = configureStore({
+const makeStore = () => configureStore({
   reducer: {
     cart: CartSlice.reducer,
     menu: MenuSlice.reducer,
@@ -50,23 +50,27 @@ const store = configureStore({
   },
 });
 
-store.subscribe(() => {
-  if (typeof window !== 'undefined') {
-    try {
-      const state = store.getState();
-      localStorage.setItem(LS_CART, JSON.stringify(state.cart));
-      localStorage.setItem(LS_CHECKOUT, JSON.stringify(state.checkout));
-    } catch (error) {
-      console.error(error);
-    }
-  }
-});
 
-const wrapper = createWrapper(() => store, { debug: false });
+const wrapper = createWrapper(() => {
+  const store = makeStore()
+  store.subscribe(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const state = store.getState();
+        localStorage.setItem(LS_CART, JSON.stringify(state.cart));
+        localStorage.setItem(LS_CHECKOUT, JSON.stringify(state.checkout));
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  });
+  return store
+}, { debug: false });
 
 export default wrapper;
 
+export type AppStore = ReturnType<typeof makeStore>;
 // Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<typeof store.getState>;
+export type RootState = ReturnType<AppStore['getState']>;
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
-export type AppDispatch = typeof store.dispatch;
+// export type AppDispatch = typeof store.dispatch;
