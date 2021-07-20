@@ -1,12 +1,14 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useState } from "react";
 import { useEffect } from "react";
 import { Row, Col } from "react-grid-system";
 import styled from "styled-components";
 import { LS_GUEST_USER_ADDRESS } from "../../../../constants/keys-local-storage.constants";
+import { IAddress } from "../../../../interfaces/common/address.common.interfaces";
 
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
 import { selectOrderType, selectSelectedAddressId, selectShowDateTimeSelect, selectWantAt, updateShowDateTimeSelect, updateWantAt } from "../../../../redux/slices/checkout.slices.redux";
-import { selectAddress, selectTimings } from "../../../../redux/slices/index.slices.redux";
+import { selectSelectedMenu } from "../../../../redux/slices/configuration.slices.redux";
+import { selectAddress, selectShop, selectSiblings, selectTimings } from "../../../../redux/slices/index.slices.redux";
 import { selectShowAddress, selectShowOrderTypeSelect, updateShowOrderTypeSelect } from "../../../../redux/slices/menu.slices.redux";
 import { selectAddressById } from "../../../../redux/slices/user.slices.redux";
 import RestaurantTimingUtils from "../../../../utils/restaurant-timings.utils";
@@ -27,14 +29,27 @@ const timings = new RestaurantTimingUtils();
 const CheckoutPageSummary: FunctionComponent = ({}) => {
   const orderType = useAppSelector(selectOrderType)
   const wantAtData = useAppSelector(selectWantAt)
-  const addressData = useAppSelector(selectAddress);
+  const address = useAppSelector(selectAddress);
+  const siblings = useAppSelector(selectSiblings);
+  const shopData = useAppSelector(selectShop);
   const timingsData = useAppSelector(selectTimings);
   const showAddAddress = useAppSelector(selectShowAddress)
+  const selectedMenuId = useAppSelector(selectSelectedMenu);
   const checkoutAddressId = useAppSelector(selectSelectedAddressId)
   const showSelectOrderType = useAppSelector(selectShowOrderTypeSelect)
   const showDateTimeSelect = useAppSelector(selectShowDateTimeSelect)
   const selectedAddress = useAppSelector(state => selectAddressById(state, checkoutAddressId))
   const dispatch = useAppDispatch()
+
+  const [ addressData, setAddressData ] = useState<IAddress|null|undefined>(undefined)
+
+  useEffect(() => {
+    if (shopData?.id == selectedMenuId) {
+      setAddressData(address)
+    } else {
+      setAddressData(siblings.find(item => item.id == selectedMenuId)?.address)
+    }
+  }, [ ])
 
   useEffect(() => {
     const timingList = timings.generateDates()
@@ -51,9 +66,6 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
             delivery_time: addressData?.delivery_time,
           },
         });
-        if (i === 0 && timeData[0]) {
-          timeData[0].label = "As soon as possible"
-        }
         if (timeData.length > 0) {
           dispatch(updateWantAt({ date: selectedDate, time: timeData[0] }))
           foundDateTime = true
@@ -62,7 +74,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
       }
     }
     if (!foundDateTime) updateWantAt(null)
-  }, [ orderType ])
+  }, [ orderType, addressData?.prepare_time, addressData?.delivery_time ])
 
   return <StyledCheckoutCard>
     <StyledCheckoutTitle>SUMMARY</StyledCheckoutTitle>

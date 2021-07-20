@@ -2,9 +2,11 @@ import React, { FunctionComponent, useEffect } from 'react';
 import { useState } from 'react';
 import Select from 'react-select';
 import styled from 'styled-components';
+import { IAddress } from '../../../../interfaces/common/address.common.interfaces';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { selectOrderType, selectWantAt, updateShowDateTimeSelect, updateWantAt } from '../../../../redux/slices/checkout.slices.redux';
-import { selectAddress, selectTimings } from '../../../../redux/slices/index.slices.redux';
+import { selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
+import { selectAddress, selectShop, selectSiblings, selectTimings } from '../../../../redux/slices/index.slices.redux';
 import RestaurantTimingUtils, { ILabelValue } from '../../../../utils/restaurant-timings.utils';
 
 const Wrapper = styled.div`
@@ -62,13 +64,25 @@ const timings = new RestaurantTimingUtils();
 
 const CheckoutDateTime: FunctionComponent = ({}) => {
   const dispatch = useAppDispatch();
+  const shopData = useAppSelector(selectShop)
+  const address = useAppSelector(selectAddress);
   const wantAtData = useAppSelector(selectWantAt);
-  const addressData = useAppSelector(selectAddress);
+  const siblings = useAppSelector(selectSiblings);
   const timingsData = useAppSelector(selectTimings);
   const orderType = useAppSelector(selectOrderType);
+  const selectedMenuId = useAppSelector(selectSelectedMenu)
   const [selectedDate, setSelectedDate] = useState<ILabelValue | null>(wantAtData?.date || null);
   const [datesList] = useState<Array<ILabelValue>>(timings.generateDates());
   const [timeList, setTimeList] = useState<Array<ILabelValue>>();
+  const [ addressData, setAddressData ] = useState<IAddress|null|undefined>(undefined)
+
+  useEffect(() => {
+    if (shopData?.id == selectedMenuId) {
+      setAddressData(address)
+    } else {
+      setAddressData(siblings.find(item => item.id == selectedMenuId)?.address)
+    }
+  }, [ ])
 
   useEffect(() => {
     if (selectedDate && timingsData && orderType && addressData?.prepare_time && addressData?.delivery_time) {
@@ -81,9 +95,6 @@ const CheckoutDateTime: FunctionComponent = ({}) => {
           delivery_time: addressData?.delivery_time,
         },
       });
-      if (datesList[0].value === selectedDate.value && timeData[0]) {
-        timeData[0].label = "As soon as possible"
-      }
       setTimeList(timeData);
       dispatch(updateWantAt(null))
     }
