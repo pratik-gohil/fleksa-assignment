@@ -9,7 +9,7 @@ const PolicyPageTemplateOne = dynamic(import('../templates/one/policy.one.templa
 
 const templateList = [PolicyPageTemplateOne];
 
-export const getServerSideProps = IndexStoreWrapper.getStaticProps(async (ctx) => {
+export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ctx) => {
   try {
     const { redirect, responseIndex } = await getServerSidePropsCommon(ctx, false);
     if (redirect) return redirect;

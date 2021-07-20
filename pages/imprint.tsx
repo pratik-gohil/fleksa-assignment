@@ -9,7 +9,7 @@ const ImprintPageTemplateOne = dynamic(import('../templates/one/imprint.one.temp
 
 const templateList = [ImprintPageTemplateOne];
 
-export const getServerSideProps = IndexStoreWrapper.getStaticProps(async (ctx) => {
+export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ctx) => {
   try {
     const { redirect, responseIndex } = await getServerSidePropsCommon(ctx, false);
     if (redirect) return redirect;
