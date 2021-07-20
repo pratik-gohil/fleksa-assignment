@@ -176,7 +176,6 @@ const ButtonContainer = styled.div`
   width: 100px;
   justify-content: space-between;
   align-items: center;
-  z-index: 999999;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     right: 1rem;

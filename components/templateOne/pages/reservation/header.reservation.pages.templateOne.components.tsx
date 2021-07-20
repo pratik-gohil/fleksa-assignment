@@ -9,7 +9,7 @@ const Wrapper = styled.div`
 const Title = styled.h1`
   margin: 0;
   padding: 0;
-  font-size: clamp(1.3rem, 1.8rem, 3vw);
+  font-size: clamp(1.2rem, 1.8rem, 3vw);
   padding: 0.7rem 0 0.3rem 0;
 `;
 const SubTitle = styled.h2`
