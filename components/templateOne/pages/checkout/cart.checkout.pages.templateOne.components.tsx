@@ -5,8 +5,9 @@ import styled from "styled-components";
 import { useAppSelector } from "../../../../redux/hooks.redux";
 import { selectCart } from "../../../../redux/slices/cart.slices.redux";
 import { selectPromoCode, selectTip } from "../../../../redux/slices/checkout.slices.redux";
-import { selectLanguage } from "../../../../redux/slices/configuration.slices.redux";
+import { selectLanguage, selectLanguageCode } from "../../../../redux/slices/configuration.slices.redux";
 import { checkoutFinalAmount } from "../../../../utils/checkout.utils";
+import formatCurrency from "../../../../utils/formatCurrency";
 import { StyledCheckoutCard, StyledCheckoutTitle } from "./customer-info.checkout.pages.templateOne.components";
 
 export const StyledCheckoutTextarea = styled.textarea`
@@ -54,6 +55,7 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
   const cartData = useAppSelector(selectCart)
   const tipData = useAppSelector(selectTip)
   const promoData = useAppSelector(selectPromoCode)
+  const languageCode = useAppSelector(selectLanguageCode)
 
   const cartItemKeys = cartData.items? Object.keys(cartData.items): []
 
@@ -65,7 +67,7 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
           const item = cartData.items[key]
           return <ContainerItem key={key}>
             <Title><Quantity>{item.quantity}x - </Quantity> {item.mainName[language]}</Title> 
-            <Price>€{item.totalCost.toFixed(2)}</Price>
+            <Price>{formatCurrency(item.totalCost, languageCode)}</Price>
           </ContainerItem>
         })}
       </Col>
@@ -75,19 +77,19 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
       <Col xs={12}>
         <ContainerItem>
           <Title>Subtotal</Title>
-          <Price>€{cartData.cartCost.toFixed(2)}</Price>
+          <Price>{formatCurrency(cartData.cartCost, languageCode)}</Price>
         </ContainerItem>
         {promoData && <ContainerItem>
           <Title>Discount</Title>
-          <Price>- €{promoData.value}</Price>
+          <Price>- {formatCurrency(promoData.value, languageCode)}</Price>
         </ContainerItem>}
         {tipData && tipData > 0? <ContainerItem>
           <Title>Tip</Title>
-          <Price>€{tipData.toFixed(2)}</Price>
+          <Price>{formatCurrency(tipData, languageCode)}</Price>
         </ContainerItem>: <></>}
         <ContainerItem>
           <Title style={{ fontWeight: 700 }}>Total</Title>
-          <Price>€{checkoutFinalAmount(cartData.cartCost, tipData, promoData?.value).toFixed(2)}</Price>
+          <Price>{formatCurrency(checkoutFinalAmount(cartData.cartCost, tipData, promoData?.value), languageCode)}</Price>
         </ContainerItem>
       </Col>
     </Row>

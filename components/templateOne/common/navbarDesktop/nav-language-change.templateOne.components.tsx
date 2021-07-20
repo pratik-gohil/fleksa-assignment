@@ -41,6 +41,8 @@ const Title = styled.h2`
 const NavLanguageChange: FunctionComponent<IPropsNavLanguageChange> = ({ showTitle=false, style }) => {
   const language = useAppSelector(selectLanguage)
   const router = useRouter()
+
+  console.log("router.locale", router.locale)
   
   return <Link href="" locale={router.locale === "en"? "de": "en"}>
     <FlagContainer style={style}>

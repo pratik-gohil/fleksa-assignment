@@ -8,8 +8,9 @@ import { selectProducts, selectSiblings } from '../../../../redux/slices/index.s
 import HorizontalList from '../../common/horizontal-list/horizontal-list.templateOne.component';
 import HorizontalListItem, { IResponsive } from '../../common/horizontal-list/horizontal-list-item.templateOne.component';
 import { useTranslation } from 'react-i18next';
-import { selectLanguage } from '../../../../redux/slices/configuration.slices.redux';
+import { selectLanguage, selectLanguageCode } from '../../../../redux/slices/configuration.slices.redux';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
+import formatCurrency from '../../../../utils/formatCurrency';
 
 const WrapperSection = styled.section`
   padding: ${(props) => props.theme.dimen.X4 * 4}px 0;
@@ -139,6 +140,7 @@ const IndexPageFavouriteDishes: FunctionComponent = ({}) => {
   const language = useAppSelector(selectLanguage);
   const siblingsData = useAppSelector(selectSiblings);
   const productsData = useAppSelector(selectProducts);
+  const languageCode = useAppSelector(selectLanguageCode)
 
   return !!productsData.length && siblingsData.length <= 1 ? (
     <WrapperSection>
@@ -161,7 +163,7 @@ const IndexPageFavouriteDishes: FunctionComponent = ({}) => {
                         </InfoContainerTop>
 
                         <InfoContainerBottom>
-                          <ItemPrice>€{product.price}</ItemPrice>
+                          <ItemPrice>{formatCurrency(product.price, languageCode)}</ItemPrice>
 
                           <ItemToProduct href="/menu">
                             <p>

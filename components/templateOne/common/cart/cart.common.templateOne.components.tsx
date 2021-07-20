@@ -5,13 +5,14 @@ import { BREAKPOINTS } from "../../../../constants/grid-system-configuration";
 
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
 import { selectCart } from "../../../../redux/slices/cart.slices.redux";
-import { selectLanguage, selectShowCart, updateShowLogin } from "../../../../redux/slices/configuration.slices.redux";
+import { selectLanguage, selectLanguageCode, selectShowCart, updateShowLogin } from "../../../../redux/slices/configuration.slices.redux";
 import { selectIsUserLoggedIn } from "../../../../redux/slices/user.slices.redux";
 import CartAddRemoveButton from "./add-remove.cart.common.templateOne.components";
 import SvgCartEmpty from "../../../../public/assets/svg/cart-empty.svg";
 import { useEffect } from "react";
 import { useState } from "react";
 import LoginAllPages from "../login/login.common.templateOne.components";
+import formatCurrency from "../../../../utils/formatCurrency";
 
 const Wrapper = styled.div<{ showCart: boolean }>`
   position: fixed;
@@ -151,6 +152,7 @@ const Cart: FunctionComponent = ({}) => {
   const language = useAppSelector(selectLanguage)
   const cartData = useAppSelector(selectCart)
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn)
+  const languageCode = useAppSelector(selectLanguageCode)
   const dispatch = useAppDispatch()
   
   useEffect(() => {
@@ -179,14 +181,14 @@ const Cart: FunctionComponent = ({}) => {
               <CartAddRemoveButton cartItem={cartItem} />
             </Column2>
             <Column3>
-              <Price>€ {cartItem.totalCost.toFixed(2)}</Price>
+              <Price>{formatCurrency(cartItem.totalCost, languageCode)}</Price>
             </Column3>
           </ListItem>
         })}
         <ListItem key="info-cart">
           <CartCost>
             <ItemTitle>Total</ItemTitle>
-            <Price>€{cartData.cartCost.toFixed(2)}</Price>
+            <Price>{formatCurrency(cartData.cartCost, languageCode)}</Price>
           </CartCost>
         </ListItem>
       </>: <ListItem key="empty-cart">
