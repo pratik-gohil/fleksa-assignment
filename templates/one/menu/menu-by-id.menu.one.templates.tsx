@@ -79,7 +79,6 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
   }, [ addressByType ])
 
   async function getAddressInfo() {
-    console.log(selectedMenuUrlpath, deliveryFinances, orderType)
     if (selectedMenuUrlpath && deliveryFinances === null && orderType === "DELIVERY") {
       let postalCode: number|null = null
       if (isLoggedIn) {
