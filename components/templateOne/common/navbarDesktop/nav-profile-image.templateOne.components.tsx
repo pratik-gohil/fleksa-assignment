@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { useAppSelector } from '../../../../redux/hooks.redux';
+import { selectLanguageCode } from '../../../../redux/slices/configuration.slices.redux';
 import { selectCustomer } from '../../../../redux/slices/user.slices.redux';
 
 const ProfileLink = styled.a``;
@@ -39,10 +40,11 @@ const FlagImage = styled.p`
 `;
 
 const NavUserProfile = ({}) => {
+  const languageCode = useAppSelector(selectLanguageCode)
   const customerData = useAppSelector(selectCustomer);
 
   return (
-    <ProfileLink href="/account">
+    <ProfileLink href={`/${languageCode}/account`}>
       <FlagContainer>
         <FlagImage>
           {customerData.name

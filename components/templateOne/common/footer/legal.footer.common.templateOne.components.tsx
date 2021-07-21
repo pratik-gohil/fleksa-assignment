@@ -2,6 +2,7 @@ import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { useAppSelector } from '../../../../redux/hooks.redux';
+import { selectLanguageCode } from '../../../../redux/slices/configuration.slices.redux';
 import { selectShop } from '../../../../redux/slices/index.slices.redux';
 
 const Wrapper = styled.div`
@@ -51,6 +52,7 @@ const Icon = styled.img`
 
 const LegalLinks: FunctionComponent = () => {
   const socialData = useAppSelector(selectShop)?.social;
+  const languageCode = useAppSelector(selectLanguageCode)
   const socialLinks = {
     facebook: socialData?.facebook ?? 'https://www.facebook.com/fleksaofficial',
     instagram: socialData?.instagram ?? 'https://www.instagram.com/fleksaofficial/',
@@ -73,7 +75,7 @@ const LegalLinks: FunctionComponent = () => {
         </IconContainer>
       </SocialMediaLinks>
       <Text>
-        <a href="/terms">Terms & Conditions</a> | <a href="/privacy-policy">Privacy Policy</a> | <a href="/imprint">Imprint</a>
+        <a href={`/${languageCode}/terms`}>Terms & Conditions</a> | <a href={`/${languageCode}/privacy-policy`}>Privacy Policy</a> | <a href={`/${languageCode}/imprint`}>Imprint</a>
       </Text>
     </Wrapper>
   );

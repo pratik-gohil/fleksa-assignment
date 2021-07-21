@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Image from 'next/image';
 import { selectImages, selectShop } from '../../../../redux/slices/index.slices.redux';
 import { useAppSelector } from '../../../../redux/hooks.redux';
-import { selectLanguage } from '../../../../redux/slices/configuration.slices.redux';
+import { selectLanguage, selectLanguageCode } from '../../../../redux/slices/configuration.slices.redux';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import SvgRightArrow from '../../../../public/assets/svg/right-arrow.svg';
 
@@ -92,6 +92,7 @@ const IndexPageAboutUs: FunctionComponent = ({}) => {
   const language = useAppSelector(selectLanguage);
   const shopData = useAppSelector(selectShop);
   const imagesData = useAppSelector(selectImages);
+  const languageCode = useAppSelector(selectLanguageCode)
 
   return (
     <WrapperSection>
@@ -132,7 +133,7 @@ const IndexPageAboutUs: FunctionComponent = ({}) => {
                 )}
               </Row>
 
-              <a href="/gallery">
+              <a href={`/${languageCode}/gallery`}>
                 <ImagesContainerHover>
                   <ImagesContainerHoverTextMore>
                     More <SvgRightArrow />

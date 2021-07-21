@@ -315,9 +315,6 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
 
     if (navigator.geolocation) {
       updateCurrentPosition(latlngbounds, true)
-      setInterval(() => {
-        updateCurrentPosition(latlngbounds, false)
-      }, 10000)
     }
   }
 
@@ -476,6 +473,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
         }
       }
     }
+    currentLocationMarker.setPosition(place.geometry?.location)
     if (postalCode) {
       getAvaibleBasedOnAdress({ area, postalCode, main, city })
     }
@@ -486,7 +484,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
       autoComplete = new google.maps.places.Autocomplete(refAddressInput.current, {
         types: ['geocode'],
       });
-      autoComplete.setFields(['address_component']);
+      autoComplete.setFields(['address_component', 'geometry']);
       autoComplete.addListener('place_changed', onAddressChange);
     }
   }, [ refAddressInput ])

@@ -7,7 +7,7 @@ import { isShopOpened } from '../../../../utils/restaurant-timings.utils';
 import { useAppSelector } from '../../../../redux/hooks.redux';
 import { selectShop, selectTimings } from '../../../../redux/slices/index.slices.redux';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
-import { selectLanguage, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
+import { selectLanguage, selectLanguageCode, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
 import { useTranslation } from 'react-i18next';
 
 const WrapperSection = styled.section`
@@ -137,6 +137,7 @@ const IndexPageHero: FunctionComponent = ({}) => {
   const language = useAppSelector(selectLanguage);
   const shopData = useAppSelector(selectShop);
   const timingsData = useAppSelector(selectTimings);
+  const languageCode = useAppSelector(selectLanguageCode)
   const selectedMenuId = useAppSelector(selectSelectedMenu);
   const { t } = useTranslation('page-index');
 
@@ -167,7 +168,7 @@ const IndexPageHero: FunctionComponent = ({}) => {
           <Container>
             <Row>
               <Col>
-                <LogoLink href="/">{!!shopData?.logo && <Logo src={shopData?.logo} loading="lazy" />}</LogoLink>
+                <LogoLink href={`/${languageCode}/`}>{!!shopData?.logo && <Logo src={shopData?.logo} loading="lazy" />}</LogoLink>
 
                 <Title>{shopData?.name}</Title>
                 <SubTitle>{shopData?.category_json[language]}</SubTitle>

@@ -7,6 +7,7 @@ import SvgDinein from "../../../../public/assets/svg/dinein.svg";
 import { ICheckoutOrderTypes, selectOrderType } from "../../../../redux/slices/checkout.slices.redux";
 import { updateShowOrderTypeSelect } from "../../../../redux/slices/menu.slices.redux";
 import { selectSiblings } from "../../../../redux/slices/index.slices.redux";
+import { selectLanguageCode } from "../../../../redux/slices/configuration.slices.redux";
 
 const Wrapper = styled.div`
   display: flex;
@@ -81,6 +82,7 @@ const OrderType: Record<ICheckoutOrderTypes, {
 const MenuFeatures: FunctionComponent = () => {
   const selectedOrderType = useAppSelector(selectOrderType)
   const siblingsData = useAppSelector(selectSiblings)
+  const languageCode = useAppSelector(selectLanguageCode)
   const dispatch = useAppDispatch()
   const orderTypeData = selectedOrderType && OrderType[selectedOrderType]
 
@@ -95,7 +97,7 @@ const MenuFeatures: FunctionComponent = () => {
         <p>{orderTypeData.title}</p>
       </OrderTypeContainer>}
     </OrderTypeView>
-    {siblingsData.length > 0 && <ChangeRestaurantButton href="/menu">CHANGE STORE</ChangeRestaurantButton>}
+    {siblingsData.length > 0 && <ChangeRestaurantButton href={`/${languageCode}/menu`}>CHANGE STORE</ChangeRestaurantButton>}
   </Wrapper>
 }
 

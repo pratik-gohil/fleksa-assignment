@@ -5,13 +5,15 @@ import { BREAKPOINTS } from "../../../../constants/grid-system-configuration";
 
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
 import { selectCart } from "../../../../redux/slices/cart.slices.redux";
-import { selectLanguage, selectShowCart, updateShowLogin } from "../../../../redux/slices/configuration.slices.redux";
+import { selectLanguage, selectLanguageCode, selectShowCart, updateShowLogin } from "../../../../redux/slices/configuration.slices.redux";
 import { selectIsUserLoggedIn } from "../../../../redux/slices/user.slices.redux";
 import CartAddRemoveButton from "./add-remove.cart.common.templateOne.components";
 import SvgCartEmpty from "../../../../public/assets/svg/cart-empty.svg";
 import { useEffect } from "react";
 import { useState } from "react";
 import LoginAllPages from "../login/login.common.templateOne.components";
+import formatCurrency from "../../../../utils/formatCurrency";
+import { selectDeliveryFinances, selectOrderType } from "../../../../redux/slices/checkout.slices.redux";
 
 const Wrapper = styled.div<{ showCart: boolean }>`
   position: fixed;
@@ -144,21 +146,48 @@ const TextChooseDishes = styled(TextFeelingHungry)`
   margin: 0 0 ${props => props.theme.dimen.X4}px 0;
 `
 
+const MinimumOrderMessage = styled.p`
+  font-size: 16px;
+  font-weight: 400;
+  background: #f0f0f0;
+  padding: 4px 8px;
+  border-radius: ${props => props.theme.borderRadius}px;
+  margin: 0 0 ${props => props.theme.dimen.X4}px 0;
+`
+
 const Cart: FunctionComponent = ({}) => {
   const router = useRouter()
   const [ cartItemKeys, setCartItemKeys ] = useState<Array<string>>([])
   const showCart = useAppSelector(selectShowCart)
   const language = useAppSelector(selectLanguage)
   const cartData = useAppSelector(selectCart)
+  const orderType = useAppSelector(selectOrderType)
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn)
+  const languageCode = useAppSelector(selectLanguageCode)
+  const deliveryFinances = useAppSelector(selectDeliveryFinances)
   const dispatch = useAppDispatch()
+
+  const [ orderPossible, setOrderPossible ] = useState(false)
   
   useEffect(() => {
     setCartItemKeys(cartData.items? Object.keys(cartData.items): [])
   }, [ cartData ])
 
+  useEffect(() => {
+    let tempIsPossible = false
+    if (orderType === "DELIVERY") {
+      tempIsPossible = deliveryFinances && deliveryFinances.amount
+        ? cartData.cartCost > deliveryFinances.amount
+        : false
+    } else {
+      tempIsPossible = cartItemKeys.length > 0
+    }
+
+    setOrderPossible(tempIsPossible)
+  }, [ cartItemKeys, cartData.cartCost, deliveryFinances?.amount, deliveryFinances?.charges ])
+
   function onClickOrderButton() {
-    if (cartItemKeys.length > 0) {
+    if (orderPossible) {
       isLoggedIn? router.push("/checkout"): dispatch(updateShowLogin(true))
     }
   }
@@ -173,22 +202,25 @@ const Cart: FunctionComponent = ({}) => {
             <Column1>
               <ItemTitle>{cartItem.mainName[language]} <span>{cartItem.partName && "(" + cartItem.partName[language] + ")"}</span></ItemTitle>
               {((cartItem.sideProducts && cartItem.sideProducts.length > 0) || (cartItem.choice && cartItem.choice.length > 0))
-                && <ItemTitleAdditional>{cartItem.choice?.map(i => i.name[language]).join(", ")}, {cartItem.sideProducts?.map(i => i.name[language]).join(", ")}</ItemTitleAdditional>}
+                && <ItemTitleAdditional>{cartItem.choice?.map(i => i.name[language]).join(", ")}
+                {(cartItem.sideProducts && cartItem.sideProducts.length > 0) && ", "} 
+                {cartItem.sideProducts?.map(i => i.name[language]).join(", ")}</ItemTitleAdditional>}
             </Column1>
             <Column2>
               <CartAddRemoveButton cartItem={cartItem} />
             </Column2>
             <Column3>
-              <Price>€ {cartItem.totalCost.toFixed(2)}</Price>
+              <Price>{formatCurrency(cartItem.totalCost, languageCode)}</Price>
             </Column3>
           </ListItem>
         })}
         <ListItem key="info-cart">
           <CartCost>
             <ItemTitle>Total</ItemTitle>
-            <Price>€{cartData.cartCost.toFixed(2)}</Price>
+            <Price>{formatCurrency(cartData.cartCost, languageCode)}</Price>
           </CartCost>
         </ListItem>
+        {!orderPossible && <MinimumOrderMessage>Minimum cart value required to place an order is {deliveryFinances?.amount && formatCurrency(deliveryFinances?.amount, languageCode)}.</MinimumOrderMessage>}
       </>: <ListItem key="empty-cart">
         <CartEmptyContainer>
             <SvgCartEmpty />
@@ -198,7 +230,7 @@ const Cart: FunctionComponent = ({}) => {
       </ListItem>}
     </List>
 
-    <OrderButton isActive={cartItemKeys.length > 0} onClick={onClickOrderButton}>ORDER</OrderButton>
+    <OrderButton isActive={orderPossible} onClick={onClickOrderButton}>ORDER</OrderButton>
 
     <LoginAllPages callback={() => router.push("/checkout")} />
   </Wrapper>

@@ -6,8 +6,9 @@ import { ICategoryProductChoiceOptions } from "../../../../interfaces/common/cat
 import { ILanguageData } from "../../../../interfaces/common/language-data.common.interfaces";
 import { IType } from "../../../../interfaces/common/types.common.interfaces";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
-import { selectLanguage } from "../../../../redux/slices/configuration.slices.redux";
+import { selectLanguage, selectLanguageCode } from "../../../../redux/slices/configuration.slices.redux";
 import { selectItemSelectionChoice, updateItemSelectionChoice } from "../../../../redux/slices/item-selection.slices.redux";
+import formatCurrency from "../../../../utils/formatCurrency";
 
 export interface IChoiceData {
   name_json: ILanguageData
@@ -69,6 +70,7 @@ export const StyledOptionsRadioButtonContainer = styled.div`
 
 const MenuPageOptionsList: FunctionComponent<IPropsMenuPageCategoryListItem> = ({ productId, choiceIndex, getNextIndex, choice, selectedOption, setSelectedOption }) => {
   const language = useAppSelector(selectLanguage)
+  const languageCode = useAppSelector(selectLanguageCode)
   const optionData = useAppSelector(state => selectItemSelectionChoice(state, productId))
   const dispatch = useAppDispatch()
   const [ optionKey ] = useState(getNextIndex())
@@ -110,7 +112,7 @@ const MenuPageOptionsList: FunctionComponent<IPropsMenuPageCategoryListItem> = (
             <StyledOptionsRadioButton multiselect={false} selected={index === selectedIndex?.product_index} />
             <span style={{ margin: 0, padding: 12 }}>{option.name_json[language]}</span>
           </StyledOptionsRadioButtonContainer>
-          {option.price > 0 && <span style={{ margin: 0, padding: 12 }}>+€{option.price}</span>}
+          {option.price > 0 && <span style={{ margin: 0, padding: 12 }}>+{formatCurrency(option.price, languageCode)}</span>}
         </StyledOptionsListItem>)}
       </StyledOptionsList>
     </StyledOptionsListContainer>

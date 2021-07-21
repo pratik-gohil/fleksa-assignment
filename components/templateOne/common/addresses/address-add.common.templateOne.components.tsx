@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import PyApiHttpPostAddress from '../../../../http/pyapi/address/post.address.pyapi.http';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
-import { selectConfiguration, selectSelectedMenuUrlpath } from '../../../../redux/slices/configuration.slices.redux';
+import { selectConfiguration, selectLanguageCode, selectSelectedMenuUrlpath } from '../../../../redux/slices/configuration.slices.redux';
 import {
   selectAddressByType,
   selectBearerToken,
@@ -21,7 +21,7 @@ import NodeApiHttpPostCreateNewAddressRequest from '../../../../http/nodeapi/acc
 import NodeApiHttpPostUpdateAddressRequest from '../../../../http/nodeapi/account/post.update-address.nodeapi.http';
 import { LS_GUEST_USER_ADDRESS } from '../../../../constants/keys-local-storage.constants';
 import { updateError } from '../../../../redux/slices/common.slices.redux';
-import { updateSelectedAddressId } from '../../../../redux/slices/checkout.slices.redux';
+import { updateDeliveryFinances, updateSelectedAddressId } from '../../../../redux/slices/checkout.slices.redux';
 import { updateShowAddAddress, updateShowOrderTypeSelect } from '../../../../redux/slices/menu.slices.redux';
 
 import SvgHome from '../../../../public/assets/svg/address/home.svg';
@@ -202,6 +202,7 @@ const AddressAdd: FunctionComponent = () => {
   const refAddressInput = useRef<HTMLInputElement>(null);
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
   const bearerToken = useAppSelector(selectBearerToken);
+  const languageCode = useAppSelector(selectLanguageCode)
   const configuration = useAppSelector(selectConfiguration);
   const [addressType, setAddressType] = useState<AddressTypes>('HOME');
   const addressByType = useAppSelector((state) => selectAddressByType(state, addressType));
@@ -241,7 +242,6 @@ const AddressAdd: FunctionComponent = () => {
   async function geocodeLatLng(location: { lat: number; lng: number }) {
     const geocoder = new google.maps.Geocoder();
     const response = await geocoder.geocode({ location }, null)
-    console.log(response)
 
     const place = response.results[0]
     if (place) {
@@ -332,6 +332,7 @@ const AddressAdd: FunctionComponent = () => {
       });
 
       if (response?.can_deliver) {
+        dispatch(updateDeliveryFinances(response.details))
         if (isLoggedIn && bearerToken) {
           if (addressId) {
             await updateExistingAddress(bearerToken, addressId);
@@ -480,7 +481,7 @@ const AddressAdd: FunctionComponent = () => {
           <InputContainer>
             <Error>
               {t('@addressPart1')}
-              <a href="/contact-us"> {t('@contact')} </a>
+              <a href={`/${languageCode}/contact-us`}> {t('@contact')} </a>
               {t('@addressPart2')}
             </Error>
           </InputContainer>

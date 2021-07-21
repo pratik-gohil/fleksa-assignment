@@ -8,6 +8,12 @@ const SLICE_NAME = 'checkout';
 export type ICheckoutPaymentMethods = 'CASH' | 'STRIPE' | 'PAYPAL';
 export type ICheckoutOrderTypes = 'PICKUP' | 'DELIVERY' | 'DINE_IN' | 'RESERVATION';
 
+export interface IDeliveryFinances {
+  amount: number|null // min amout for delivery
+  charges: number|null
+  free_from: number|null
+}
+
 export interface ICheckoutSliceState {
   orderType: ICheckoutOrderTypes | null;
   paymentMethod: ICheckoutPaymentMethods;
@@ -16,6 +22,7 @@ export interface ICheckoutSliceState {
   wantAt: { date: ILabelValue; time: ILabelValue } | null;
   showDateTimeSelect: boolean;
   selectedAddressId: number|null
+  deliveryFinances: IDeliveryFinances|null
   promoCode: {
     code: string
     value: number
@@ -31,6 +38,7 @@ const initialState: ICheckoutSliceState = {
   wantAt: null,
   showDateTimeSelect: false,
   selectedAddressId: null,
+  deliveryFinances: null,
   promoCode: null
 };
 
@@ -56,6 +64,9 @@ export const CheckoutSlice = createSlice({
     updateShowDateTimeSelect(state, action) {
       state.showDateTimeSelect = action.payload;
     },
+    updateDeliveryFinances(state, action) {
+      state.deliveryFinances = action.payload;
+    },
     updateClearCheckout(state) {
       state.orderType = null;
       state.paymentMethod = 'CASH';
@@ -64,6 +75,7 @@ export const CheckoutSlice = createSlice({
       state.wantAt = null;
       state.showDateTimeSelect = false;
       state.selectedAddressId = null;
+      state.deliveryFinances = null
       state.promoCode = null;
     },
     updateSelectedAddressId(state, action) {
@@ -92,8 +104,11 @@ export const {
   updateShowDateTimeSelect,
   updateSelectedAddressId,
   updatePromoCode,
+  updateDeliveryFinances,
 } = CheckoutSlice.actions;
 
+
+export const selectDeliveryFinances = (state: RootState) => state.checkout.deliveryFinances;
 export const selectPaymentMethod = (state: RootState) => state.checkout.paymentMethod;
 export const selectTip = (state: RootState) => state.checkout.tip;
 export const selectOrderType = (state: RootState) => state.checkout.orderType;

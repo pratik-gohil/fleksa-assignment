@@ -46,13 +46,7 @@ export default class MyDocument extends Document {
             }}
           ></script>
 
-          {(((this.props as any).pathname as string).startsWith('/menu') ||
-            ((this.props as any).pathname as string) === '/checkout' ||
-            ((this.props as any).pathname as string) === '/account/addresses') && (
-            <script
-              src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY}&libraries=places`}
-            ></script>
-          )}
+          <script src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY}&libraries=places`}></script>
 
           {/* <!-- Start of HubSpot Embed Code --> */}
           <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/19546797.js"></script>

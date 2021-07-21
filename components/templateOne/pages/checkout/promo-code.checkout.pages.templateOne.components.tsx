@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
 import { selectCart } from "../../../../redux/slices/cart.slices.redux";
 import { selectOrderType, selectPromoCode, selectTip, updatePromoCode } from "../../../../redux/slices/checkout.slices.redux";
 import { updateError } from "../../../../redux/slices/common.slices.redux";
-import { selectConfiguration, selectLanguage, selectSelectedMenu } from "../../../../redux/slices/configuration.slices.redux";
+import { selectConfiguration, selectLanguage, selectLanguageCode, selectSelectedMenu } from "../../../../redux/slices/configuration.slices.redux";
 import { selectBearerToken } from "../../../../redux/slices/user.slices.redux";
 import { checkoutFinalAmount } from "../../../../utils/checkout.utils";
 import { getPrductsFromCartData } from "../../../../utils/products.utils";
@@ -20,6 +20,7 @@ import EditContainer from "./edit-container.checkout.pages.templateOne.component
 
 import SvgTag from "../../../../public/assets/svg/tag.svg"
 import SvgCross from "../../../../public/assets/svg/cross.svg"
+import formatCurrency from "../../../../utils/formatCurrency";
 
 const ApplyButton = styled.div`
   padding: ${props => props.theme.dimen.X2}px ${props => props.theme.dimen.X4*2}px;
@@ -74,6 +75,7 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
   const shopId = useAppSelector(selectSelectedMenu)
   const tipData = useAppSelector(selectTip)
   const promoCodeData = useAppSelector(selectPromoCode)
+  const languageCode = useAppSelector(selectLanguageCode)
 
   const [ editing, setEditing ] = useState(false)
   const [ coupon, setCoupon ] = useState(promoCodeData?.code || "")
@@ -124,7 +126,7 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
         {editing? <EditContainer>
           {promoCodeData? <AppliedPromoContainer>
             <SvgTag className="svg-tag-yellow" />
-            <TextSaved>YAY! You saved <strong style={{ marginLeft: 4 }}>€{promoCodeData.value.toFixed(2)}</strong></TextSaved>
+            <TextSaved>YAY! You saved <strong style={{ marginLeft: 4 }}>{formatCurrency(promoCodeData.value, languageCode)}</strong></TextSaved>
             <RemovePromo onClick={() => dispatch(updatePromoCode(null))}>
               <SvgCross />
             </RemovePromo>

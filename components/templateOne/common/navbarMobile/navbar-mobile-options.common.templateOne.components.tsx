@@ -12,6 +12,7 @@ import SvgContact from '../../../../public/assets/svg/contact.svg';
 import LegalLinks from '../footer/legal.footer.common.templateOne.components';
 import NavUserProfile from '../navbarDesktop/nav-profile-image.templateOne.components';
 import { selectCustomer, selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
+import { selectLanguageCode } from '../../../../redux/slices/configuration.slices.redux';
 
 const SvgLoginIconPath = '/assets/svg/login.svg';
 
@@ -100,6 +101,7 @@ const NavbarMobileOptions: FunctionComponent<IPropsNavbarMobileOptions> = ({ isO
   const customerData = useAppSelector(selectCustomer);
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
   const offersData = useAppSelector(selectOffers);
+  const languageCode = useAppSelector(selectLanguageCode)
 
   const { t } = useTranslation('header');
 
@@ -110,31 +112,31 @@ const NavbarMobileOptions: FunctionComponent<IPropsNavbarMobileOptions> = ({ isO
           {
             title: shopData?.name,
             icon: SvgRestaurant,
-            link: '/',
+            link: `/${languageCode}/`,
             show: true,
           },
           {
             title: t('@reservation'),
             icon: SvgReservation,
-            link: '/reservation',
+            link: `/${languageCode}/reservation`,
             show: true,
           },
           {
             title: t('@gallery'),
             icon: SvgGallery,
-            link: '/gallery',
+            link: `/${languageCode}/gallery`,
             show: true,
           },
           {
             title: t('@offers'),
             icon: SvgGallery,
-            link: '/offers',
+            link: `/${languageCode}/offers`,
             show: offersData.length > 0,
           },
           {
             title: t('@contact'),
             icon: SvgContact,
-            link: '/contact-us',
+            link: `/${languageCode}/contact-us`,
             show: true,
           },
         ].map((item) =>
@@ -156,13 +158,13 @@ const NavbarMobileOptions: FunctionComponent<IPropsNavbarMobileOptions> = ({ isO
         {isLoggedIn ? (
           <ListItem key="account">
             <NavUserProfile />
-            <LinkItem href="/account">
+            <LinkItem href={`/${languageCode}/account`}>
               <Title>{customerData.name}</Title>
             </LinkItem>
           </ListItem>
         ) : (
           <ListItem key="login">
-            <LinkItem href={'/login'}>
+            <LinkItem href={`/${languageCode}/login`}>
               <IconContainer>
                 <Icon src={SvgLoginIconPath} />
               </IconContainer>

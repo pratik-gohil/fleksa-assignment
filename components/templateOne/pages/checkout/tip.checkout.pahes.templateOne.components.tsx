@@ -5,6 +5,8 @@ import styled, { css } from "styled-components";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
 import { selectCart } from "../../../../redux/slices/cart.slices.redux";
 import { selectTip, updateTip } from "../../../../redux/slices/checkout.slices.redux";
+import { selectLanguageCode } from "../../../../redux/slices/configuration.slices.redux";
+import formatCurrency from "../../../../utils/formatCurrency";
 import { StyledCheckoutCard, StyledCheckoutTitle } from "./customer-info.checkout.pages.templateOne.components";
 
 const TipOptionsList = styled.div`
@@ -58,6 +60,7 @@ const CheckoutPageTip: FunctionComponent = ({}) => {
   const tipData = useAppSelector(selectTip)
   const cartData = useAppSelector(selectCart)
   const dispatch = useAppDispatch()
+  const languageCode = useAppSelector(selectLanguageCode)
   const [ otherTip, setOtherTip ] = useState(false)
 
   const tipOptions = tipPercentage[cartData.cartCost > 10? 0: 1].map(percent => Math.ceil((cartData.cartCost * percent) / 100))
@@ -77,7 +80,7 @@ const CheckoutPageTip: FunctionComponent = ({}) => {
           setOtherTip(false)
           onChangeTip(isSelected? null: amount)
           }}>
-          <p>€{amount}</p>
+          <p>{formatCurrency(amount, languageCode)}</p>
         </TipOptionsItem>
       })}
       <TipOptionsItem key="custom" isSelected={otherTip}>

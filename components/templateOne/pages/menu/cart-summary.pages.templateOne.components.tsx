@@ -3,7 +3,8 @@ import styled from "styled-components"
 import { BREAKPOINTS } from "../../../../constants/grid-system-configuration"
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux"
 import { selectCart } from "../../../../redux/slices/cart.slices.redux"
-import { updateShowCart } from "../../../../redux/slices/configuration.slices.redux"
+import { selectLanguageCode, updateShowCart } from "../../../../redux/slices/configuration.slices.redux"
+import formatCurrency from "../../../../utils/formatCurrency"
 
 const WrapperCartSummary = styled.div`
   display: flex;
@@ -28,12 +29,13 @@ const Text = styled.p`
 
 const MenuPageCartSummary: FunctionComponent = ({}) => {
   const cartData = useAppSelector(selectCart)
+  const languageCode = useAppSelector(selectLanguageCode)
   const dispatch = useAppDispatch()
 
   const itemsInCart = Object.keys(cartData.items).reduce((acc, i) => cartData.items[i].quantity + acc, 0)
 
   return <WrapperCartSummary>
-    <Text><strong>{itemsInCart} Item | €{cartData.cartCost.toFixed(2)}</strong></Text>
+    <Text><strong>{itemsInCart} Item | {formatCurrency(cartData.cartCost, languageCode)}</strong></Text>
     <Text onClick={() => dispatch(updateShowCart(true))}><strong>Proceed</strong></Text>
   </WrapperCartSummary>
 }
