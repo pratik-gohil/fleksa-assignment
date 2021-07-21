@@ -73,7 +73,7 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
         <EditButton onClick={() => setEditableName(!editableName)} />
       </EditContainer>
       <EditContainer>
-        <Text>Email</Text>
+        <Text>{t('@email')}</Text>
         {editableEmail || !userData.email ? (
           <StyledCheckoutInput
             type="text"
