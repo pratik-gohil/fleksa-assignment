@@ -58,6 +58,7 @@ export default class RestaurantTimingUtils {
     const nearestTopRound = isReservation ? 10 : 10;
     const tillAccept = deliveryType ? 30 : 15;
     const lastAsapMinutes = deliveryType ? 60 : 30;
+    let currentlyOpened = false;
 
     const initialDifference = deliveryType ? interval.delivery_time : interval.pickup_time;
 
@@ -94,6 +95,8 @@ export default class RestaurantTimingUtils {
             hours: now.hours(),
             minutes: tmp + initialDifference,
           });
+
+          currentlyOpened = true;
         } else
           now.set({
             hours: open.hours(),
@@ -112,7 +115,7 @@ export default class RestaurantTimingUtils {
       result = ([] as Array<{ value: string; label: string; break?: boolean }>).concat(...result);
     });
 
-    if (isToday && result.length) result[0].label = language === 'english' ? 'As soon as possible' : 'So schnell wie möglich';
+    if (isToday && currentlyOpened && result.length) result[0].label = language === 'english' ? 'As soon as possible' : 'So schnell wie möglich';
 
     return result;
   }
