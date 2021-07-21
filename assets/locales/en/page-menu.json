@@ -1,3 +1,13 @@
 {
-  
+  "@store-hours": "Opening Hours",
+  "@delivery-hours": "DELIVERY HOURS",
+  "@delivery": "Delivery",
+  "@pickup": "Pickup",
+  "@dine-in": "Dine-In",
+  "@order": "MENU",
+  "@not-deliverable": "Sorry, We don't deliver to your address",
+  "@search": "Search to see which locations deliver to you",
+  "@closed": "Closed",
+  "@where-deliver": "Where to deliver?",
+  "@optional": "Optional"
 }

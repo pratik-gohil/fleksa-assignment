@@ -1,3 +1,13 @@
 {
-  
+  "@store-hours": "Öffnungszeiten",
+  "@delivery-hours": "LIEFERZEITEN",
+  "@delivery": "Lieferung",
+  "@pickup": "Abholung",
+  "@dine-in": "Dine-In",
+  "@order": "SPEISEKARTE",
+  "@not-deliverable": "Entschuldigung, wir liefern nicht an Ihre Adresse",
+  "@search": "Suchen Sie, um zu sehen, welche Standorte Sie beliefern",
+  "@closed": "Geschlossen",
+  "@where-deliver": "Wohin liefern?",
+  "@optional": "Optional"
 }

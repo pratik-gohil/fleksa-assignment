@@ -50,95 +50,74 @@ export default class RestaurantTimingUtils {
    * @returns - Array of array timing list for each period
    */
   public generateTimeList({ date, timingsData, type, interval, isReservation, language }: IPropsGenerateTimeList) {
-    const weekDay = moment(date.value).format('dddd').toUpperCase();
-    const day = timingsData[weekDay] as ITimingsDay;
+    let result: Array<{ value: string; label: string; break?: boolean }> = [];
 
     const deliveryType = type === 'DELIVERY';
 
-    // TODO: Set adjacent time interval depends on order type
     const adjacentPeriodIntervel = isReservation ? 30 : 10;
-    const initialDifference = deliveryType ? +interval.delivery_time : +interval.pickup_time;
+    const nearestTopRound = isReservation ? 10 : 10;
+    const tillAccept = deliveryType ? 30 : 15;
+    const lastAsapMinutes = deliveryType ? 60 : 30;
+    let currentlyOpened = false;
 
-    let timingList: Array<{ value: string; label: string; break?: boolean }> = [];
+    const initialDifference = deliveryType ? interval.delivery_time : interval.pickup_time;
 
-    // TODO: If delivery time available of the shop pick delivery object instead of shop object
+    const weekDay = moment(new Date(date.value)).format('dddd').toUpperCase();
+    const day = timingsData[weekDay] as ITimingsDay;
+
     const processPayload = deliveryType ? day.delivery : day.shop;
 
-    // ! Check if type is delivery but the delivery not available in the shop then return empty array for delivery timing
-    if (!processPayload.availability || !processPayload.timings) return [];
+    if (!processPayload.availability) return [];
 
-    // TODO: Loop throw each timing object for generating list
-    processPayload.timings.forEach((t, i) => {
-      // For adding break intervals
-      if (processPayload.timings?.[i - 1] && isReservation && timingList.length) {
-        console.log('break : ', processPayload.timings[i - 1].close, ' to ', processPayload.timings[i].open);
+    let now = moment();
+    const isToday = weekDay === now.format('dddd').toUpperCase();
 
-        const break_start = moment(processPayload.timings[i - 1].close, 'h:mm a');
-        const break_end = moment(processPayload.timings[i].open, 'h:mm a');
-
-        while (break_start < break_end) {
-          timingList.push({
-            value: break_start.format('HH:mm'),
-            label: `${break_start.format('HH:mm')} - ${break_start.add(adjacentPeriodIntervel, 'm').format('HH:mm')}`,
-            break: true,
-          });
-        }
-      }
-
-      //   TODO: Round current time to the nearest 15 or 45
-      let now = moment();
+    processPayload?.timings?.forEach((t, _i) => {
       const open = moment(t.open, 'h:mm a');
       const close = moment(t.close, 'h:mm a');
-      const todayDayCheck = weekDay === now.format('dddd').toUpperCase();
 
-      let nearestRound = isReservation ? 10 : 10;
-      let temp = nearestRound;
-      const skipMinutes = deliveryType ? 30 : 10; // ? want to skip the initial time addition
+      if (isToday) {
+        //   TODO: Only process if current time not exceed closed time of break
+        if (now > close || close.diff(now, 'minutes') <= tillAccept) return;
 
-      // TODO: Only for current day
-      if (todayDayCheck) {
-        const minute = now.minutes();
+        if (close.diff(now, 'minutes') <= lastAsapMinutes)
+          return result.push({
+            value: now.format('HH:mm'),
+            label: `${now.format('HH:mm')} - ${now.add(adjacentPeriodIntervel, 'm').format('HH:mm')}`,
+            break: false,
+          });
 
-        // TODO: Set adjacent delivery or pickup initial time
-        temp = Math.ceil(minute / nearestRound) * nearestRound;
+        // TODO:  Only round if the now inbetween period
+        if (open.diff(now, 'minutes') < 0) {
+          const tmp = Math.ceil(now.minutes() / nearestTopRound) * nearestTopRound;
 
-        if (close.diff(now, 'minutes') + 1 > skipMinutes + initialDifference)
           now.set({
             hours: now.hours(),
-            minutes: isReservation ? temp : temp + initialDifference,
+            minutes: tmp + initialDifference,
           });
-        else
+
+          currentlyOpened = true;
+        } else
           now.set({
-            hours: now.hours(),
-            minutes: temp,
+            hours: open.hours(),
+            minutes: open.minutes() + initialDifference, // ? Add initial difference if it's last break time
           });
-      }
+      } else now = open; // Set now to open if not today
 
-      let setStartingDiff = parseInt(`${open.minutes() + initialDifference / 10}`, 10) * 10;
-
-      let trackTime = moment(`${open.hours()}:${setStartingDiff % 60}`, 'h:mm a');
-
-      setStartingDiff = parseInt(`${now.minutes() / 10}`, 10) * 10;
-
-      // TODO: Check now time includes shop opening time or not
-      if (trackTime <= now && todayDayCheck) trackTime = moment(`${now.hours()}:${setStartingDiff}`, 'h:mm a');
-
-      while (trackTime < close && close.diff(trackTime, 'minutes') + 1 >= skipMinutes)
-        // TODO: Add the time to the list
-        timingList.push({
-          value: trackTime.format('HH:mm'),
-          label: `${trackTime.format('HH:mm')} - ${trackTime.add(adjacentPeriodIntervel, 'm').format('HH:mm')}`,
+      // TODO: generate till closing time
+      while (now < close)
+        result.push({
+          value: now.format('HH:mm'),
+          label: `${now.format('HH:mm')} - ${now.add(adjacentPeriodIntervel, 'm').format('HH:mm')}`,
           break: false,
         });
 
-      // TODO: Merge all arrya into single array
-      timingList = timingList.concat(...timingList);
-
-      // TODO: Change asap for current day first time of the time list
-      if (todayDayCheck && timingList.length) timingList[0].label = language === 'english' ? 'As soon as possible' : 'So schnell wie möglich';
+      result = ([] as Array<{ value: string; label: string; break?: boolean }>).concat(...result);
     });
 
-    return timingList;
+    if (isToday && currentlyOpened && result.length) result[0].label = language === 'english' ? 'As soon as possible' : 'So schnell wie möglich';
+
+    return result;
   }
 }
 

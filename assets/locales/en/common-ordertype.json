@@ -1,0 +1,9 @@
+{
+  "@order-details": "ORDER DETAILS",
+  "@delivery": "Delivery",
+  "@pickup": "Pickup",
+  "@dine-in": "Dine-In",
+  "@quote-pickup": "I'll pick it up myself",
+  "@dine-in-pickup": "I'll eat at the restaurant",
+  "@quote-delivery": ""
+}

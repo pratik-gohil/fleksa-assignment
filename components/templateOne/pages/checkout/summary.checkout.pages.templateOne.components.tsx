@@ -1,3 +1,4 @@
+import { useTranslation } from 'next-i18next';
 import React, { FunctionComponent, useState } from 'react';
 import { useEffect } from 'react';
 import { Row, Col } from 'react-grid-system';
@@ -21,7 +22,7 @@ import { selectAddressById } from '../../../../redux/slices/user.slices.redux';
 import RestaurantTimingUtils from '../../../../utils/restaurant-timings.utils';
 import AddressAdd from '../../common/addresses/address-add.common.templateOne.components';
 import OrderTypeManager from '../../common/orderType/order-type-manager.menu.pages.templateOne.components';
-import { StyledCheckoutCard, StyledCheckoutText, StyledCheckoutTitle } from './customer-info.checkout.pages.templateOne.components';
+import { StyledCheckoutCard, StyledCheckoutText } from './customer-info.checkout.pages.templateOne.components';
 import CheckoutDateTime from './date-time-selector.checkout.pages.templateOne.components';
 import EditButton from './edit-button.checkout.pages.templateOne.components';
 import EditContainer from './edit-container.checkout.pages.templateOne.components';
@@ -49,6 +50,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
   const showDateTimeSelect = useAppSelector(selectShowDateTimeSelect);
   const selectedAddress = useAppSelector((state) => selectAddressById(state, checkoutAddressId));
   const dispatch = useAppDispatch();
+  const { t } = useTranslation('page-checkout');
 
   const [addressData, setAddressData] = useState<IAddress | null | undefined>(undefined);
 
@@ -88,7 +90,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
 
   return (
     <StyledCheckoutCard>
-      <StyledCheckoutTitle>SUMMARY</StyledCheckoutTitle>
+      {/* <StyledCheckoutTitle>{t('@summary')}</StyledCheckoutTitle> */}
       <Row>
         <Col xs={12}>
           <EditContainer>
@@ -97,22 +99,16 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
           </EditContainer>
           {orderType === 'DELIVERY' ? (
             <>
-            <AddressSelected>
-              {[selectedAddress?.area, selectedAddress?.address]
-                .filter((i) => i && i.length)
-                .join(', ')}
-            </AddressSelected>
-            <AddressSelected style={{ marginTop: -4}}>
-              {[selectedAddress?.postal_code, selectedAddress?.city]
-                .filter((i) => i && i.length)
-                .join(', ')}
-            </AddressSelected>
+              <AddressSelected>{[selectedAddress?.area, selectedAddress?.address].filter((i) => i && i.length).join(', ')}</AddressSelected>
+              <AddressSelected style={{ marginTop: -4 }}>
+                {[selectedAddress?.postal_code, selectedAddress?.city].filter((i) => i && i.length).join(', ')}
+              </AddressSelected>
             </>
           ) : (
             <></>
           )}
           <EditContainer>
-            <StyledCheckoutText>{wantAtData ? `${wantAtData?.date.label} (${wantAtData?.time.label})` : 'Select Time'}</StyledCheckoutText>
+            <StyledCheckoutText>{wantAtData ? `${wantAtData?.date.label} (${wantAtData?.time.label})` : t('@select-time')}</StyledCheckoutText>
             <EditButton onClick={() => dispatch(updateShowDateTimeSelect(true))} />
           </EditContainer>
         </Col>
