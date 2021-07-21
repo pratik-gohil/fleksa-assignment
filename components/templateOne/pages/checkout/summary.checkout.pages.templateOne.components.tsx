@@ -96,11 +96,18 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
             <EditButton onClick={() => dispatch(updateShowOrderTypeSelect(true))} />
           </EditContainer>
           {orderType === 'DELIVERY' ? (
+            <>
             <AddressSelected>
-              {[selectedAddress?.floor, selectedAddress?.area, selectedAddress?.address, selectedAddress?.city, selectedAddress?.postal_code]
+              {[selectedAddress?.area, selectedAddress?.address]
                 .filter((i) => i && i.length)
                 .join(', ')}
             </AddressSelected>
+            <AddressSelected style={{ marginTop: -4}}>
+              {[selectedAddress?.postal_code, selectedAddress?.city]
+                .filter((i) => i && i.length)
+                .join(', ')}
+            </AddressSelected>
+            </>
           ) : (
             <></>
           )}
