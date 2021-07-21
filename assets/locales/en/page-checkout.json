@@ -13,5 +13,11 @@
   "@order-and-pay": "ORDER AND PAY",
   "@credit-card": "CREDIT CARD",
   "@payment": "PAYMENT",
-  "@agreement": "By clicking on ORDER AND PAY you agree with the contents of the shopping cart, the data you filled out, our Privacy Policy and Terms of use."
+  "@agreement": "By clicking on ORDER AND PAY you agree with the contents of the shopping cart, the data you filled out, our Privacy Policy and Terms of use.",
+  "@cart": "CART",
+  "@subtotal": "Subtotal",
+  "@discount": "Discount",
+  "@tip-cart": "Tip",
+  "@delivery": "Delivery",
+  "@total": "Total"
 }

@@ -1,3 +1,23 @@
 {
-  "@reach": ""
+  "@reach": "WIE KÖNNEN WIR DICH ERREICHEN?",
+  "@phone": "Telefon",
+  "@name": "Name",
+  "@summary": "ZUSAMMENFASSUNG",
+  "@select-time": "Wählen Sie Zeit",
+  "@comments": "KOMMENTARE",
+  "@promo": "GUTSCHEINCODE",
+  "@saved": "YAY! Du hast gespeichert",
+  "@apply": "ANWENDEN",
+  "@tip": "TRINKGELD",
+  "@other": "Andere",
+  "@order-and-pay": "KOSTENPFLICHTIG BESTELLEN",
+  "@credit-card": "KREDITKARTE",
+  "@payment": "ZAHLUNG",
+  "@agreement": "Durch Klicken auf KOSTENPFLICHTIG BESTELLEN stimmen Sie dem Inhalt des Warenkorbs, den von Ihnen ausgefüllten Daten, unseren AGB und Datenschutzerklärung zu.",
+  "@cart": "WARENKORB",
+  "@subtotal": "Zwischensumme",
+  "@discount": "Rabatt",
+  "@tip-cart": "Trinkgeld",
+  "@delivery": "Lieferung",
+  "@total": "Gesamt"
 }
