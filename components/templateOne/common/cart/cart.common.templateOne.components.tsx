@@ -166,23 +166,28 @@ const Cart: FunctionComponent = ({}) => {
   const languageCode = useAppSelector(selectLanguageCode)
   const deliveryFinances = useAppSelector(selectDeliveryFinances)
   const dispatch = useAppDispatch()
+
+  const [ orderPossible, setOrderPossible ] = useState(false)
   
   useEffect(() => {
     setCartItemKeys(cartData.items? Object.keys(cartData.items): [])
   }, [ cartData ])
 
-  function isOrderPossible() {
+  useEffect(() => {
+    let tempIsPossible = false
     if (orderType === "DELIVERY") {
-      return deliveryFinances && deliveryFinances.amount
+      tempIsPossible = deliveryFinances && deliveryFinances.amount
         ? cartData.cartCost > deliveryFinances.amount
         : false
     } else {
-      return cartItemKeys.length > 0
+      tempIsPossible = cartItemKeys.length > 0
     }
-  }
+
+    setOrderPossible(tempIsPossible)
+  }, [ cartItemKeys, cartData.cartCost, deliveryFinances?.amount, deliveryFinances?.charges ])
 
   function onClickOrderButton() {
-    if (isOrderPossible()) {
+    if (orderPossible) {
       isLoggedIn? router.push("/checkout"): dispatch(updateShowLogin(true))
     }
   }
@@ -215,7 +220,7 @@ const Cart: FunctionComponent = ({}) => {
             <Price>{formatCurrency(cartData.cartCost, languageCode)}</Price>
           </CartCost>
         </ListItem>
-        {!isOrderPossible() && <MinimumOrderMessage>Minimum cart value required to place an order is {deliveryFinances?.amount && formatCurrency(deliveryFinances?.amount, languageCode)}.</MinimumOrderMessage>}
+        {!orderPossible && <MinimumOrderMessage>Minimum cart value required to place an order is {deliveryFinances?.amount && formatCurrency(deliveryFinances?.amount, languageCode)}.</MinimumOrderMessage>}
       </>: <ListItem key="empty-cart">
         <CartEmptyContainer>
             <SvgCartEmpty />
@@ -225,7 +230,7 @@ const Cart: FunctionComponent = ({}) => {
       </ListItem>}
     </List>
 
-    <OrderButton isActive={isOrderPossible()} onClick={onClickOrderButton}>ORDER</OrderButton>
+    <OrderButton isActive={orderPossible} onClick={onClickOrderButton}>ORDER</OrderButton>
 
     <LoginAllPages callback={() => router.push("/checkout")} />
   </Wrapper>

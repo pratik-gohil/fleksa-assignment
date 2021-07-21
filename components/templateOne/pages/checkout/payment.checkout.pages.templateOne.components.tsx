@@ -9,7 +9,7 @@ import NodeApiHttpPostOrder from "../../../../http/nodeapi/order/post.order.node
 import { IMakeOrderProducts } from "../../../../interfaces/http/nodeapi/order/post.order.nodeapi.http";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
 import { selectCart } from "../../../../redux/slices/cart.slices.redux";
-import { selectPaymentMethod, updatePaymentMethod, ICheckoutPaymentMethods, selectTip, selectComment, selectOrderType, ICheckoutOrderTypes, selectWantAt, selectSelectedAddressId, selectPromoCode } from "../../../../redux/slices/checkout.slices.redux";
+import { selectPaymentMethod, updatePaymentMethod, ICheckoutPaymentMethods, selectTip, selectComment, selectOrderType, ICheckoutOrderTypes, selectWantAt, selectSelectedAddressId, selectPromoCode, selectDeliveryFinances } from "../../../../redux/slices/checkout.slices.redux";
 import { selectConfiguration, selectSelectedMenu } from "../../../../redux/slices/configuration.slices.redux";
 import { selectShop } from "../../../../redux/slices/index.slices.redux";
 import { selectBearerToken, selectCustomer } from "../../../../redux/slices/user.slices.redux";
@@ -83,6 +83,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   const router = useRouter()
   const [ orderButtonLoading, setOrderButtonLoading ] = useState(false)
   const [ orderCanBePlaced, setOrderCanBePlaced ] = useState(false)
+  const deliveryFinances = useAppSelector(selectDeliveryFinances)
   const paymentMethodData = useAppSelector(selectPaymentMethod)
   const addressId = useAppSelector(selectSelectedAddressId)
   const shopMenuId = useAppSelector(selectSelectedMenu)
@@ -133,6 +134,16 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
     return /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i.test(mail)
   }
 
+  function isOrderPossible() {
+    if (orderType === "DELIVERY") {
+      return deliveryFinances && deliveryFinances.amount
+        ? cartData.cartCost > deliveryFinances.amount
+        : false
+    } else {
+      return true
+    }
+  }
+
   useEffect(() => {
     const canPlace = !!(bearerToken
       && shopData?.id
@@ -143,6 +154,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
       && customerData.phone
       && customerData.country_code
       && wantAtData
+      && isOrderPossible()
     )
     setOrderCanBePlaced(canPlace)
   }, [
