@@ -252,20 +252,6 @@ const Cart: FunctionComponent = ({}) => {
                 )
               );
             })}
-            <ListItem key="info-cart">
-              <CartCost>
-                <ItemTitle>{t('@total')}</ItemTitle>
-                <Price>{formatCurrency(cartData.cartCost, languageCode)}</Price>
-              </CartCost>
-            </ListItem>
-            {!orderPossible && (
-              noOrderTypeAvailable
-                ? <MinimumOrderMessage>
-                  {t('@min-amount-1')} {deliveryFinances?.amount && formatCurrency(deliveryFinances?.amount, languageCode)}
-                  {t('@min-amount-2')}
-                </MinimumOrderMessage>
-                : <MinimumOrderMessage>Minimum cart value required to place an order is {deliveryFinances?.amount && formatCurrency(deliveryFinances?.amount, languageCode)}.</MinimumOrderMessage>
-            )}
           </>
         ) : (
           <ListItem key="empty-cart">
@@ -278,10 +264,18 @@ const Cart: FunctionComponent = ({}) => {
         )}
         <ListItem key="info-cart">
           <CartCost>
-            <ItemTitle>Total</ItemTitle>
+            <ItemTitle>{t('@total')}</ItemTitle>
             <Price>{formatCurrency(cartData.cartCost, languageCode)}</Price>
           </CartCost>
         </ListItem>
+        {!orderPossible && (
+          noOrderTypeAvailable
+            ? <MinimumOrderMessage>Restaurant is not accepting any orders at the moment.</MinimumOrderMessage>
+            : <MinimumOrderMessage>
+              {t('@min-amount-1')} {deliveryFinances?.amount && formatCurrency(deliveryFinances?.amount, languageCode)}
+              {t('@min-amount-2')}
+            </MinimumOrderMessage>
+        )}
     </List>
 
     <OrderButton isActive={orderPossible} onClick={onClickOrderButton}>{t('@order')}</OrderButton>
