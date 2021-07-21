@@ -112,8 +112,7 @@ export default class RestaurantTimingUtils {
       result = ([] as Array<{ value: string; label: string; break?: boolean }>).concat(...result);
     });
 
-    if (isToday && result.length)
-      result[0].label = language === 'english' ? `As soon as possible(${result[0].value})` : `So schnell wie möglich(${result[0].value})`;
+    if (isToday && result.length) result[0].label = language === 'english' ? 'As soon as possible' : 'So schnell wie möglich';
 
     return result;
   }
