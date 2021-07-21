@@ -9,7 +9,7 @@ const LoginPageTemplateOne = dynamic(import('../templates/one/login.one.template
 
 const templateList = [LoginPageTemplateOne];
 
-export const getServerSideProps = IndexStoreWrapper.getStaticProps(async (ctx) => {
+export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ctx) => {
   try {
     const { redirect, responseIndex } = await getServerSidePropsCommon(ctx, false);
     if (redirect) return redirect;

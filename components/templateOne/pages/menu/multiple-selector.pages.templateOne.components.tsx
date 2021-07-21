@@ -1,7 +1,8 @@
 import React, { FunctionComponent, useState } from "react";
 
 import { useAppSelector } from "../../../../redux/hooks.redux";
-import { selectLanguage } from "../../../../redux/slices/configuration.slices.redux";
+import { selectLanguage, selectLanguageCode } from "../../../../redux/slices/configuration.slices.redux";
+import formatCurrency from "../../../../utils/formatCurrency";
 import { IChoiceDataWithId } from "./multiple-select.pages.templateOne.components";
 import { StyledOptionsWrapper, StyledOptionsTitleContainer, StyledOptionsListContainer, StyledOptionsList, StyledOptionsListItem, StyledOptionsRadioButton, StyledOptionsRadioButtonContainer } from "./options-list.menu.pages.templateOne.components";
 
@@ -17,6 +18,7 @@ export interface IPropsMenuPageCategoryListItem {
 
 const MenuPageMultipleSelector: FunctionComponent<IPropsMenuPageCategoryListItem> = ({ choice, selectedOption, selectionMultipleId, setSelectionMultipleId, getNextIndex, setSelectedOption }) => {
   const language = useAppSelector(selectLanguage)
+  const languageCode = useAppSelector(selectLanguageCode)
   const [ optionKey ] = useState(getNextIndex())
 
   const isOptionOpen = selectedOption === optionKey
@@ -40,7 +42,7 @@ const MenuPageMultipleSelector: FunctionComponent<IPropsMenuPageCategoryListItem
             <StyledOptionsRadioButton multiselect={false} selected={option.id === selectionMultipleId} />
             <span style={{ margin: 0, padding: 12 }}>{option.name_json[language]}</span>
           </StyledOptionsRadioButtonContainer>
-          {option.price > 0 && <span style={{ margin: 0, padding: 12 }}>+€{option.price}</span>}
+          {option.price > 0 && <span style={{ margin: 0, padding: 12 }}>+{formatCurrency(option.price, languageCode)}</span>}
         </StyledOptionsListItem>)}
       </StyledOptionsList>
     </StyledOptionsListContainer>

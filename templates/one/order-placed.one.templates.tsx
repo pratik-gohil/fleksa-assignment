@@ -2,6 +2,8 @@ import React, { FunctionComponent } from 'react';
 import { Col, Container, Row } from 'react-grid-system';
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../constants/grid-system-configuration';
+import { useAppSelector } from '../../redux/hooks.redux';
+import { selectLanguageCode } from '../../redux/slices/configuration.slices.redux';
 
 const OrderPlacedImage = '/assets/svg/success/order_placed.svg';
 
@@ -42,6 +44,8 @@ const Image = styled.img`
 `;
 
 const OrderPlacedPageTemplateOne: FunctionComponent = ({}) => {
+  const languageCode = useAppSelector(selectLanguageCode)
+  
   return (
     <Wrapper>
       <Container>
@@ -49,7 +53,7 @@ const OrderPlacedPageTemplateOne: FunctionComponent = ({}) => {
           <Col style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
             <Title>Your order is placed successfully</Title>
             <Image src={OrderPlacedImage} alt="person jumping" />
-            <ViewManageButton href="/account/order-history">View or Manage Order</ViewManageButton>
+            <ViewManageButton href={`/${languageCode}/account/order-history`}>View or Manage Order</ViewManageButton>
           </Col>
         </Row>
       </Container>

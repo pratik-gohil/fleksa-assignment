@@ -1,4 +1,5 @@
 import { AddressTypes } from "../../../../components/templateOne/common/addresses/address-manager.common.templateOne.components"
+import { IDeliveryFinances } from "../../../../redux/slices/checkout.slices.redux"
 
 export interface IPyApiHttpPostAddressRequestData {
   area: string
@@ -23,14 +24,7 @@ type IPyApiHttpPostAddressResponseCannotDeliver = {
 
 type IPyApiHttpPostAddressResponseCanDeliver = {
   can_deliver: true
-  details: {
-    amount: number
-    charges: number
-    free_from: number
-  }
-  amount: number
-  charges: number
-  free_from: null
+  details: IDeliveryFinances
   is_customer: boolean
 }
 

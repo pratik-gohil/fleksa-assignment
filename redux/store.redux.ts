@@ -39,6 +39,7 @@ const makeStore = () => configureStore({
             comment: '',
             wantAt: null,
             showDateTimeSelect: false,
+            deliveryFinances: null,
             selectedAddressId: null,
           },
   },

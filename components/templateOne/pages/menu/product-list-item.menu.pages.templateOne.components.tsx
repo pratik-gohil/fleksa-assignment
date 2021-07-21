@@ -3,12 +3,13 @@ import styled, { css } from "styled-components";
 
 import { useAppSelector } from "../../../../redux/hooks.redux";
 import { BREAKPOINTS } from "../../../../constants/grid-system-configuration";
-import { selectLanguage } from "../../../../redux/slices/configuration.slices.redux";
+import { selectLanguage, selectLanguageCode } from "../../../../redux/slices/configuration.slices.redux";
 import { ICategoryProduct } from "../../../../interfaces/common/category.common.interfaces";
 import MenuPageChoiceList from "./choice-list.menu.pages.templateOne.components";
 import AddButton from "../../common/addButton/add-button.common.templateOne.components";
 import { memo } from "react";
 import MenuPageSides from "./sides.menu.pages.templateOne.components";
+import formatCurrency from "../../../../utils/formatCurrency";
 
 export interface IPropsMenuPageCategoryListItem {
   product: ICategoryProduct
@@ -113,6 +114,7 @@ const RecipeCost = styled.p`
 
 const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem> = ({ product, isOpen, setOpenItemId }) => {
   const language = useAppSelector(selectLanguage)
+  const languageCode = useAppSelector(selectLanguageCode)
   const [ selectedOption, setSelectedOption ] = useState<number|undefined>(1)
 
   let optionsIndex = 0
@@ -134,7 +136,7 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
         <ClosedViewInfoContainerSection1>
           <RecipeName>{product.name_json[language]}</RecipeName>
           <RecipeDescription>{product.description_json[language]}</RecipeDescription>
-          <RecipeCost>€ {product.price}</RecipeCost>
+          <RecipeCost>{formatCurrency(product.price, languageCode)}</RecipeCost>
         </ClosedViewInfoContainerSection1>
         <ClosedViewInfoContainerSection2>
           {product.image && <ClosedViewInfoImage src={product.image} loading="lazy" isOpen={isOpen} />}

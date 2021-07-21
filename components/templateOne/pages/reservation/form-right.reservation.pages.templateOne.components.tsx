@@ -7,6 +7,7 @@ import { selectAddress, selectTimings } from '../../../../redux/slices/index.sli
 import moment from 'moment';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { useTranslation } from 'next-i18next';
+import { selectLanguage } from '../../../../redux/slices/configuration.slices.redux';
 
 const Wrapper = styled.div`
   margin: 0;
@@ -158,6 +159,7 @@ const timeUtils = new RestaurantTimingUtils();
 const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGuest }: IFormRightInputsProps) => {
   const timingsData = useAppSelector(selectTimings);
   const addressData = useAppSelector(selectAddress);
+  const currentLanguage = useAppSelector(selectLanguage);
   const [timingList, setTimingList] = useState<ILabelValue[]>([]);
   const { t } = useTranslation('reservation');
 
@@ -182,6 +184,7 @@ const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGue
           delivery_time: addressData?.delivery_time,
         },
         isReservation: true,
+        language: currentLanguage,
       });
 
       if (timeData.length) {

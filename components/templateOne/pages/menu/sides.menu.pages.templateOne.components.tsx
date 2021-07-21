@@ -2,10 +2,11 @@ import React, { FunctionComponent, useState } from "react";
 
 import { ICategoryProductSideProducts } from "../../../../interfaces/common/category.common.interfaces";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
-import { selectLanguage } from "../../../../redux/slices/configuration.slices.redux";
+import { selectLanguage, selectLanguageCode } from "../../../../redux/slices/configuration.slices.redux";
 import { selectSidesArray } from "../../../../redux/slices/menu.slices.redux";
 import { selectItemSelectionSideProduct, updateItemSelectionAddSideProduct, updateItemSelectionRemoveSideProduct } from "../../../../redux/slices/item-selection.slices.redux";
 import { StyledOptionsWrapper, StyledOptionsTitleContainer, StyledOptionsListContainer, StyledOptionsList, StyledOptionsListItem, StyledOptionsRadioButton, StyledOptionsRadioButtonContainer } from "./options-list.menu.pages.templateOne.components";
+import formatCurrency from "../../../../utils/formatCurrency";
 
 export interface IPropsMenuPageCategoryListItem {
   selectedOption: number|undefined
@@ -18,6 +19,7 @@ export interface IPropsMenuPageCategoryListItem {
 
 const MenuPageSides: FunctionComponent<IPropsMenuPageCategoryListItem> = ({ productId, selectedOption, sideProduct, getNextIndex, setSelectedOption }) => {
   const language = useAppSelector(selectLanguage)
+  const languageCode = useAppSelector(selectLanguageCode)
   const sidesList = useAppSelector(state => selectSidesArray(state, sideProduct.option_ids))
   const selectedSides = useAppSelector(state => selectItemSelectionSideProduct(state, productId))
   const dispatch = useAppDispatch()
@@ -50,7 +52,7 @@ const MenuPageSides: FunctionComponent<IPropsMenuPageCategoryListItem> = ({ prod
             <StyledOptionsRadioButton multiselect={true} selected={selectedSides? selectedSides[option.id] !== undefined: false} />
             <span style={{ margin: 0, padding: 12 }}>{option.name_json[language]}</span>
           </StyledOptionsRadioButtonContainer>
-          {option.price > 0 && <span style={{ margin: 0, padding: 12 }}>+€{option.price}</span>}
+          {option.price > 0 && <span style={{ margin: 0, padding: 12 }}>+{formatCurrency(option.price, languageCode)}</span>}
         </StyledOptionsListItem>)}
       </StyledOptionsList>
     </StyledOptionsListContainer>

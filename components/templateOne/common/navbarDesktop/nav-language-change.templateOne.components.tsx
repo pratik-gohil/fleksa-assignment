@@ -41,8 +41,11 @@ const Title = styled.h2`
 const NavLanguageChange: FunctionComponent<IPropsNavLanguageChange> = ({ showTitle=false, style }) => {
   const language = useAppSelector(selectLanguage)
   const router = useRouter()
-  
-  return <Link href="" locale={router.locale === "en"? "de": "en"}>
+
+  return <Link href={{
+    pathname: router.pathname,
+    query: router.query
+  }} locale={router.locale === "en"? "de": "en"}>
     <FlagContainer style={style}>
       <FlagImage src={router.locale === "en"? SvgFlagUnitedKingdom: SvgFlagGerman} />
       {showTitle && <Title>{language.toUpperCase()}</Title>}
