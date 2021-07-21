@@ -157,7 +157,7 @@ const IndexMultiRestaurantShowCase: FunctionComponent = ({}) => {
       <Container>
         <Row>
           <Col>
-            <Title>{t('OTHER RESTAURANTS')}</Title>
+            <Title>{t('@our-location')}</Title>
 
             <HorizontalList childCount={siblings.length}>
               {siblings.map((sibling) => {
@@ -166,7 +166,7 @@ const IndexMultiRestaurantShowCase: FunctionComponent = ({}) => {
                     <Card onClick={() => router.push(`/menu/${sibling.id}`)}>
                       <ImageContainer>
                         {sibling.logo && (
-                          <Image src={sibling.cover_json.images?.[0]} layout="fill" loading="lazy" objectFit="cover" alt="Other Restaurant" />
+                          <Image src={sibling.cover_json.images?.[0]} layout="fill" loading="lazy" objectFit="cover" alt={t('@our-location')} />
                         )}
                       </ImageContainer>
 

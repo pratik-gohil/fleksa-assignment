@@ -1,3 +1,4 @@
+import { useTranslation } from 'next-i18next';
 import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
@@ -52,7 +53,8 @@ const Icon = styled.img`
 
 const LegalLinks: FunctionComponent = () => {
   const socialData = useAppSelector(selectShop)?.social;
-  const languageCode = useAppSelector(selectLanguageCode)
+  const languageCode = useAppSelector(selectLanguageCode);
+  const { t } = useTranslation('footer');
   const socialLinks = {
     facebook: socialData?.facebook ?? 'https://www.facebook.com/fleksaofficial',
     instagram: socialData?.instagram ?? 'https://www.instagram.com/fleksaofficial/',
@@ -75,7 +77,8 @@ const LegalLinks: FunctionComponent = () => {
         </IconContainer>
       </SocialMediaLinks>
       <Text>
-        <a href={`/${languageCode}/terms`}>Terms & Conditions</a> | <a href={`/${languageCode}/privacy-policy`}>Privacy Policy</a> | <a href={`/${languageCode}/imprint`}>Imprint</a>
+        <a href={`/${languageCode}/terms`}>{t('@terms')}</a> | <a href={`/${languageCode}/privacy-policy`}>{t('@policy')}</a> |{' '}
+        <a href={`/${languageCode}/imprint`}>{t('@imprint')}</a>
       </Text>
     </Wrapper>
   );
