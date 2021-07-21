@@ -21,7 +21,7 @@ const PoweredBy: FunctionComponent = () => {
     <>
       <PoweredByText>
         Powered By
-        <img src="assets/svg/fleksa-logo.svg" />
+        <img src="/assets/svg/fleksa-logo.svg" />
       </PoweredByText>
       <Text>©2021 Fleksa</Text>
     </>
