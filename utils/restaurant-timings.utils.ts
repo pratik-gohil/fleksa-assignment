@@ -68,10 +68,10 @@ export default class RestaurantTimingUtils {
 
     if (!processPayload.availability) return [];
 
-    let now = moment(new Date('07/21/2021, 3:46:00 PM'));
+    let now = moment();
     const isToday = weekDay === now.format('dddd').toUpperCase();
 
-    processPayload?.timings?.forEach((t, i) => {
+    processPayload?.timings?.forEach((t, _i) => {
       const open = moment(t.open, 'h:mm a');
       const close = moment(t.close, 'h:mm a');
 
@@ -98,7 +98,7 @@ export default class RestaurantTimingUtils {
         } else
           now.set({
             hours: open.hours(),
-            minutes: i === 1 ? open.minutes() + initialDifference : open.minutes(), // ? Add initial difference if it's last break time
+            minutes: open.minutes() + initialDifference, // ? Add initial difference if it's last break time
           });
       } else now = open; // Set now to open if not today
 
