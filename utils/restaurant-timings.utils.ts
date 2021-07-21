@@ -86,7 +86,6 @@ export default class RestaurantTimingUtils {
             break: false,
           });
 
-        console.log(open.diff(now, 'minutes'));
         // TODO:  Only round if the now inbetween period
         if (open.diff(now, 'minutes') < 0) {
           const tmp = Math.ceil(now.minutes() / nearestTopRound) * nearestTopRound;
