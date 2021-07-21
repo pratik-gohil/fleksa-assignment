@@ -56,7 +56,7 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
 
   return (
     <StyledCheckoutCard>
-      <StyledCheckoutTitle>{t('@reach')}</StyledCheckoutTitle>
+      {/* <StyledCheckoutTitle>{t('@reach')}</StyledCheckoutTitle> */}
       <EditContainer>
         <Text>{t('@name')}</Text>
         {editableName || !userData.name ? (

@@ -22,7 +22,7 @@ import { selectAddressById } from '../../../../redux/slices/user.slices.redux';
 import RestaurantTimingUtils from '../../../../utils/restaurant-timings.utils';
 import AddressAdd from '../../common/addresses/address-add.common.templateOne.components';
 import OrderTypeManager from '../../common/orderType/order-type-manager.menu.pages.templateOne.components';
-import { StyledCheckoutCard, StyledCheckoutText, StyledCheckoutTitle } from './customer-info.checkout.pages.templateOne.components';
+import { StyledCheckoutCard, StyledCheckoutText } from './customer-info.checkout.pages.templateOne.components';
 import CheckoutDateTime from './date-time-selector.checkout.pages.templateOne.components';
 import EditButton from './edit-button.checkout.pages.templateOne.components';
 import EditContainer from './edit-container.checkout.pages.templateOne.components';
@@ -90,7 +90,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
 
   return (
     <StyledCheckoutCard>
-      <StyledCheckoutTitle>{t('@summary')}</StyledCheckoutTitle>
+      {/* <StyledCheckoutTitle>{t('@summary')}</StyledCheckoutTitle> */}
       <Row>
         <Col xs={12}>
           <EditContainer>
