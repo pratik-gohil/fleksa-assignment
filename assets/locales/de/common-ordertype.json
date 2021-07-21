@@ -1,0 +1,9 @@
+{
+  "@order-details": "BESTELLDETAILS",
+  "@delivery": "Lieferung",
+  "@pickup": "Abholung",
+  "@dine-in": "Dine-In",
+  "@quote-pickup": "Ich hole es selbst ab",
+  "@dine-in-pickup": "Ich esse im Restaurant",
+  "@quote-delivery": ""
+}
