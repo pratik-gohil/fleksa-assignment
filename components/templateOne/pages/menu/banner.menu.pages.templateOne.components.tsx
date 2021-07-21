@@ -1,23 +1,24 @@
-import React, { FunctionComponent } from "react";
-import styled from "styled-components";
-import Image from "next/image";
-import { useAppSelector } from "../../../../redux/hooks.redux";
-import { selectOffers, selectShop, selectSiblings } from "../../../../redux/slices/index.slices.redux";
-import { Col, Container, Row } from "react-grid-system";
-import { selectLanguage, selectSelectedMenu } from "../../../../redux/slices/configuration.slices.redux";
-import MenuFeatures from "./feature.menu.pages.templateOne.components";
+import React, { FunctionComponent } from 'react';
+import styled from 'styled-components';
+import Image from 'next/image';
+import { useAppSelector } from '../../../../redux/hooks.redux';
+import { selectOffers, selectShop, selectSiblings } from '../../../../redux/slices/index.slices.redux';
+import { Col, Container, Row } from 'react-grid-system';
+import { selectLanguage, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
+import MenuFeatures from './feature.menu.pages.templateOne.components';
 
-import SvgTag from "../../../../public/assets/svg/tag.svg"
-import { BREAKPOINTS } from "../../../../constants/grid-system-configuration";
+import SvgTag from '../../../../public/assets/svg/tag.svg';
+import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
+import { useTranslation } from 'next-i18next';
 
 const BannerContainer = styled.section`
   height: 500px;
   position: relative;
-  border-bottom: ${props => props.theme.border};
+  border-bottom: ${(props) => props.theme.border};
   @media (min-width: ${BREAKPOINTS.lg}px) {
     height: 400px;
   }
-`
+`;
 
 const ContentTop = styled.div`
   position: absolute;
@@ -29,12 +30,12 @@ const ContentTop = styled.div`
   color: #fff;
   display: flex;
   align-items: center;
-`
+`;
 
 const ContentTopContent = styled.div`
   width: 100%;
   height: auto;
-`
+`;
 
 const Title = styled.h1`
   font-size: 30px;
@@ -42,12 +43,12 @@ const Title = styled.h1`
   @media (min-width: ${BREAKPOINTS.lg}px) {
     font-size: 40px;
   }
-`
+`;
 
 const SubTitle = styled.h2`
   font-size: 18px;
   font-weight: 400;
-`
+`;
 
 const OffersWrapper = styled.div`
   position: relative;
@@ -55,18 +56,18 @@ const OffersWrapper = styled.div`
   @media (min-width: ${BREAKPOINTS.lg}px) {
     margin-top: 0;
   }
-`
+`;
 
 const OffersContainer = styled.div`
   background: rgba(0, 0, 0, 0.2);
-  border: ${props => props.theme.border};
+  border: ${(props) => props.theme.border};
   border-color: rgba(255, 255, 255, 0.8);
-  border-radius: ${props => props.theme.borderRadius}px;
+  border-radius: ${(props) => props.theme.borderRadius}px;
   max-height: 200px;
   overflow: auto;
   padding-top: 12px;
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
   &::-webkit-scrollbar {
     display: none;
   }
@@ -74,7 +75,7 @@ const OffersContainer = styled.div`
     color: #fff;
     margin: 0;
   }
-`
+`;
 
 const OfferTitle = styled.p`
   position: absolute;
@@ -84,13 +85,13 @@ const OfferTitle = styled.p`
   margin: 0;
   padding: 6px 12px;
   background: #222;
-  border-radius: ${props => props.theme.borderRadius}px;
-`
+  border-radius: ${(props) => props.theme.borderRadius}px;
+`;
 
 const Text = styled.p`
   padding-left: 6px;
   font-size: 14px;
-`
+`;
 
 const OfferItem = styled.div`
   display: flex;
@@ -102,7 +103,7 @@ const OfferItem = styled.div`
     height: 20px;
     display: block;
   }
-`
+`;
 
 const WrapperContainer = styled.div`
   display: flex;
@@ -114,7 +115,7 @@ const WrapperContainer = styled.div`
   @media (min-width: ${BREAKPOINTS.lg}px) {
     flex-direction: row;
   }
-`
+`;
 
 const Wrapper = styled.div`
   display: flex;
@@ -123,60 +124,72 @@ const Wrapper = styled.div`
   @media (min-width: ${BREAKPOINTS.lg}px) {
     min-width: 400px;
   }
-`
+`;
 
 const MenuPageBanner: FunctionComponent = ({}) => {
-  const language = useAppSelector(selectLanguage)
-  const shopData = useAppSelector(selectShop)
-  const offersData = useAppSelector(selectOffers)
-  const menuId = useAppSelector(selectSelectedMenu)
-  const siblingData = useAppSelector(selectSiblings)
+  const language = useAppSelector(selectLanguage);
+  const shopData = useAppSelector(selectShop);
+  const offersData = useAppSelector(selectOffers);
+  const menuId = useAppSelector(selectSelectedMenu);
+  const siblingData = useAppSelector(selectSiblings);
+  const { t } = useTranslation('page-menu-id');
 
-  let shopName: string|undefined
-  let shopCategory: string|undefined
-  const sibling = siblingData.filter(i => i.id == menuId)[0]
+  let shopName: string | undefined;
+  let shopCategory: string | undefined;
+  const sibling = siblingData.filter((i) => i.id == menuId)[0];
 
   if (sibling) {
-    shopName = sibling.name
-    shopCategory = sibling.category_json[language]
+    shopName = sibling.name;
+    shopCategory = sibling.category_json[language];
   } else {
-    shopName = shopData?.name
-    shopCategory = shopData?.category_json[language]
+    shopName = shopData?.name;
+    shopCategory = shopData?.category_json[language];
   }
 
-  return <BannerContainer>
-    {shopData?.cover && <Image src={shopData.cover} loading="eager" layout="fill" objectFit="cover" />}
-    <ContentTop>
-      <ContentTopContent>
-        <Container>
-          <Row>
-            <Col>
-              <WrapperContainer>
-                <Wrapper>
-                  <Title>{shopName}</Title>
-                  <SubTitle>{shopCategory}</SubTitle>
-                  <MenuFeatures />
-                </Wrapper>
-                {offersData.length > 0 && <Wrapper>
-                  <OffersWrapper>
-                    <OffersContainer>
-                      <OfferTitle>OFFER</OfferTitle>
-                      {offersData.map(i => {
-                        return <OfferItem key={i.code}>
-                          <SvgTag />
-                          <Text><strong>{i.provided}% OFF - {i.code}</strong> {i.description_json && i.description_json[language]}</Text>
-                        </OfferItem>
-                      })}
-                    </OffersContainer>
-                  </OffersWrapper>
-                </Wrapper>}
-              </WrapperContainer>
-            </Col>
-          </Row>
-        </Container>
-      </ContentTopContent>
-    </ContentTop>
-  </BannerContainer>
-}
+  return (
+    <BannerContainer>
+      {shopData?.cover && <Image src={shopData.cover} loading="eager" layout="fill" objectFit="cover" />}
+      <ContentTop>
+        <ContentTopContent>
+          <Container>
+            <Row>
+              <Col>
+                <WrapperContainer>
+                  <Wrapper>
+                    <Title>{shopName}</Title>
+                    <SubTitle>{shopCategory}</SubTitle>
+                    <MenuFeatures />
+                  </Wrapper>
+                  {offersData.length > 0 && (
+                    <Wrapper>
+                      <OffersWrapper>
+                        <OffersContainer>
+                          <OfferTitle>{t('@offer')}</OfferTitle>
+                          {offersData.map((i) => {
+                            return (
+                              <OfferItem key={i.code}>
+                                <SvgTag />
+                                <Text>
+                                  <strong>
+                                    {i.provided}% {t('@off')} - {i.code}
+                                  </strong>{' '}
+                                  {i.description_json && i.description_json[language]}
+                                </Text>
+                              </OfferItem>
+                            );
+                          })}
+                        </OffersContainer>
+                      </OffersWrapper>
+                    </Wrapper>
+                  )}
+                </WrapperContainer>
+              </Col>
+            </Row>
+          </Container>
+        </ContentTopContent>
+      </ContentTop>
+    </BannerContainer>
+  );
+};
 
-export default MenuPageBanner
+export default MenuPageBanner;

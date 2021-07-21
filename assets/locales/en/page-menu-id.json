@@ -1,0 +1,16 @@
+{
+  "@delivery": "Delivery",
+  "@pickup": "Pickup",
+  "@dine-in": "Dine-In",
+  "@offer": "OFFER",
+  "@change-shop": "CHANGE SHOP",
+  "@off": "OFF",
+  "@search": "Search here",
+  "@your-cart": "Your Cart",
+  "@order": "Checkout",
+  "@total": "Total",
+  "@hungry": "Feeling hungry?",
+  "@choose": "Choose delicious dishes from the menu to place an order.",
+  "@min-amount-1": "Minimum cart value required to place an order is ",
+  "@min-amount-2": "."
+}

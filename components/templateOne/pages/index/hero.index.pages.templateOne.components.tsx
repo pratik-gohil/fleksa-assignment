@@ -137,7 +137,7 @@ const IndexPageHero: FunctionComponent = ({}) => {
   const language = useAppSelector(selectLanguage);
   const shopData = useAppSelector(selectShop);
   const timingsData = useAppSelector(selectTimings);
-  const languageCode = useAppSelector(selectLanguageCode)
+  const languageCode = useAppSelector(selectLanguageCode);
   const selectedMenuId = useAppSelector(selectSelectedMenu);
   const { t } = useTranslation('page-index');
 
@@ -146,6 +146,7 @@ const IndexPageHero: FunctionComponent = ({}) => {
     next?: {
       day: string;
       time: string;
+      dayNumber?: string;
     };
   }>({
     available: false,
@@ -179,7 +180,8 @@ const IndexPageHero: FunctionComponent = ({}) => {
                   <>
                     <OrderButton href={selectedMenuId ? `/menu/${selectedMenuId}` : '/menu'}>{t('@pre-online')}</OrderButton>
                     <SubTitle2>
-                      {t('@next-hours')} {t(`@${shop.next?.day.toUpperCase()}`)}, {shop.next?.time}
+                      {t('@next-hours')} {shop.next?.dayNumber ? ` ${shop.next?.dayNumber} ,` : ''} {t(`@${shop.next?.day.toUpperCase()}`)},{' '}
+                      {shop.next?.time}
                     </SubTitle2>
                   </>
                 )}
