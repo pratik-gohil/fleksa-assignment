@@ -1,0 +1,16 @@
+{
+  "@delivery": "Lieferung",
+  "@pickup": "Abholung",
+  "@dine-in": "Dine-In",
+  "@offer": "ANGEBOTE",
+  "@change-shop": "SHOP ÄNDERN",
+  "@off": "AUS",
+  "@search": "Suche hier",
+  "@your-cart": "Warenkorb",
+  "@order": "Zur Kasse",
+  "@total": "Gesamt",
+  "@hungry": "Hungrig?",
+  "@choose": "Wählen Sie köstliche Gerichte aus der Karte, um eine Bestellung aufzugeben.",
+  "@min-amount-1": "Leider können Sie noch nicht bestellen, der Mindestbestellbetrag beträgt ",
+  "@min-amount-2": " ohne Lieferkosten."
+}
