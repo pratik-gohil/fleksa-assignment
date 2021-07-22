@@ -57,7 +57,7 @@ const Title = styled.h1`
   margin: 0;
   padding: 0;
   width: 80%;
-
+  text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
   @media (max-width: ${BREAKPOINTS.sm}px) {
     font-weight: 600;
     line-height: 1.2;
@@ -69,7 +69,7 @@ const SubTitle = styled.h2`
   padding: 0;
   margin: 0;
   font-size: clamp(1rem, 1.8rem, 3vw);
-
+  text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
   @media (max-width: ${BREAKPOINTS.sm}px) {
     padding-top: 0.5rem;
     font-weight: 400;
@@ -133,6 +133,30 @@ const SubTitle2 = styled(SubTitle)`
   }
 `;
 
+const Carousel = styled.div`
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  transition-duration: 500ms;
+`
+
+const CarouselSlide = styled.div<{ translateX: number }>`
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  float: left;
+  transition-duration: 500ms;
+  transform: translateX(${props => props.translateX}%);
+`
+
+const slideChangeDealy = 5000;
+
 const IndexPageHero: FunctionComponent = ({}) => {
   const language = useAppSelector(selectLanguage);
   const shopData = useAppSelector(selectShop);
@@ -140,6 +164,24 @@ const IndexPageHero: FunctionComponent = ({}) => {
   const languageCode = useAppSelector(selectLanguageCode);
   const selectedMenuId = useAppSelector(selectSelectedMenu);
   const { t } = useTranslation('page-index');
+
+  const [ carouselImages, setCarouselImages ] = useState<Array<string>>(shopData?.cover_json?.images || [])
+  const [ activeSlide, setActiveSlide ] = useState(0)
+
+  useEffect(() => {
+    if (shopData?.cover_json?.images && shopData?.cover_json?.images.length > 1) {
+      if (activeSlide > carouselImages.length - 2) {
+        const temp = carouselImages.concat(shopData?.cover_json?.images)
+        setCarouselImages(temp)
+      }
+      let timer1 = setTimeout(() => {
+        setActiveSlide(activeSlide+1)
+      }, slideChangeDealy);
+      return () => {
+        clearTimeout(timer1);
+      };
+    }
+  }, [ activeSlide ]);
 
   const [shop, setShop] = useState<{
     available: boolean;
@@ -163,9 +205,21 @@ const IndexPageHero: FunctionComponent = ({}) => {
   return (
     <WrapperSection>
       <ImageContainer>
-        {shopData?.cover_json?.images?.length && (
-          <Image src={shopData?.cover_json.images[shopData?.cover_json.images.length - 1]} layout="fill" loading="eager" objectFit="cover" />
-        )}
+        <Carousel >
+          {carouselImages?.map((image, index) => {
+            let translateX
+            if (index === activeSlide) {
+              translateX = 0
+            } else if (index > activeSlide) {
+              translateX = 100
+            } else {
+              translateX = -100
+            }
+            return <CarouselSlide translateX={translateX}>
+              <Image src={image} layout="fill" loading={index === 0? "eager": "lazy"} objectFit="cover" />
+            </CarouselSlide>
+          })}
+        </Carousel>
       </ImageContainer>
 
       <ContentContainer>

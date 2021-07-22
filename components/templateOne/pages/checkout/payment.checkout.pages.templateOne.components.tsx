@@ -91,7 +91,7 @@ const OrderButtonCashContainer = styled.div<{ active: boolean }>`
 `;
 
 const OrderButton = styled.div`
-  font-size: 24px;
+  font-size: clamp(16px, 24px, 3vw);
   font-weight: 700;
 `;
 
@@ -149,7 +149,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
             severity: 'error',
           }),
         );
-        throw new Error(response.message)
+        throw new Error(response.message);
       }
       return response;
     } catch (error) {
