@@ -9,7 +9,7 @@ import { ITimingsDay } from '../../interfaces/common/shop.common.interfaces';
 import { ICheckoutOrderTypes, updateClearCheckout, updateOrderType, updateSelectedAddressId } from '../../redux/slices/checkout.slices.redux';
 import { updateClearCart } from '../../redux/slices/cart.slices.redux';
 import PyApiHttpPostAddress from '../../http/pyapi/address/post.address.pyapi.http';
-import { selectConfiguration } from '../../redux/slices/configuration.slices.redux';
+import { selectConfiguration, selectLanguageCode } from '../../redux/slices/configuration.slices.redux';
 import { ISibling } from '../../interfaces/common/sibling.common.interfaces';
 import { IGuestAddress } from '../../components/templateOne/common/addresses/address-add.common.templateOne.components';
 import { LS_GUEST_USER_ADDRESS } from '../../constants/keys-local-storage.constants';
@@ -222,6 +222,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
   const addressData = useAppSelector((state) => selectAddressByType(state, 'HOME'));
   const configuration = useAppSelector(selectConfiguration);
   const { t } = useTranslation('page-menu');
+  const languageCode = useAppSelector(selectLanguageCode);
 
   const [restaurantsToShow, setRestaurantsToShow] = useState<Array<ISibling> | undefined>(undefined);
   const [deliveryFilterData, setDeliveryFilterData] = useState<Array<ISibling>>();
@@ -531,7 +532,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
                     </p>
                   </Address>
                 </InfoContainer>
-                <OrderButton href={`/menu/${sibling.id}`}>{t('@order')}</OrderButton>
+                <OrderButton href={`/${languageCode}/menu/${sibling.id}`}>{t('@order')}</OrderButton>
               </InfoWithOrderButton>
               <TimingContainerHolder>
                 <TimingContainer>
