@@ -68,7 +68,7 @@ const OrderType: Record<
     logo: SvgDelivery,
   },
   PICKUP: {
-    title: 'TAKEAWAY',
+    title: 'PICKUP',
     logo: SvgPickup,
   },
   DINE_IN: {
@@ -100,7 +100,7 @@ const MenuFeatures: FunctionComponent = () => {
         {selectedOrderType && orderTypeData && (
           <OrderTypeContainer onClick={onClickOrderType}>
             <orderTypeData.logo />
-            <p>{orderTypeData.title}</p>
+            <p>{t(`@${orderTypeData.title.toLowerCase()}`).toUpperCase()}</p>
           </OrderTypeContainer>
         )}
       </OrderTypeView>
