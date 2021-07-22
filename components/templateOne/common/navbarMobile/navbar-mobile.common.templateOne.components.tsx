@@ -6,7 +6,7 @@ import SvgCart from '../../../../public/assets/svg/cart.svg';
 import SvgHome from '../../../../public/assets/svg/home.svg';
 import SvgOptions from '../../../../public/assets/svg/options.svg';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
-import { selectSelectedMenu, selectShowCart, updateShowCart } from '../../../../redux/slices/configuration.slices.redux';
+import { selectLanguageCode, selectSelectedMenu, selectShowCart, updateShowCart } from '../../../../redux/slices/configuration.slices.redux';
 import { useRouter } from 'next/dist/client/router';
 import { useState } from 'react';
 import NavbarMobileOptions from './navbar-mobile-options.common.templateOne.components';
@@ -86,6 +86,7 @@ const NavbarMobile: FunctionComponent = ({}) => {
   const selectedMenuId = useAppSelector(selectSelectedMenu);
   const showCart = useAppSelector(selectShowCart);
   const dispatch = useAppDispatch();
+  const languageCode = useAppSelector(selectLanguageCode);
 
   const toggleCart = () => dispatch(updateShowCart(!showCart));
   const toggleOptions = () => setShowOptions(!showOptions);
@@ -96,13 +97,13 @@ const NavbarMobile: FunctionComponent = ({}) => {
         {[
           {
             title: 'Home',
-            link: '/',
+            link: `/${languageCode}/`,
             icon: SvgHome,
             isActive: !showOptions && !showCart && router.pathname === '/',
           },
           {
             title: 'Menu',
-            link: selectedMenuId ? `/menu/${selectedMenuId}` : '/menu',
+            link: selectedMenuId ? `/${languageCode}/menu/${selectedMenuId}` : '/menu',
             icon: SvgMenu,
             isActive: !showOptions && !showCart && router.pathname.startsWith('/menu'),
           },
