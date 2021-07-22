@@ -12,5 +12,6 @@
   "@hungry": "Feeling hungry?",
   "@choose": "Choose delicious dishes from the menu to place an order.",
   "@min-amount-1": "Minimum cart value required to place an order is ",
-  "@min-amount-2": "."
+  "@min-amount-2": ".",
+  "@not-accept": "The restaurant is not accepting any orders at the moment."
 }
