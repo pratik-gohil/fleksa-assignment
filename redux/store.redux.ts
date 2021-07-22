@@ -41,6 +41,7 @@ const makeStore = () => configureStore({
             showDateTimeSelect: false,
             deliveryFinances: null,
             selectedAddressId: null,
+            promoCode: null,
           },
   },
   middleware: (getDefaultMiddleware) => {

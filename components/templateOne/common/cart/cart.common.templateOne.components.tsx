@@ -1,20 +1,22 @@
-import { useRouter } from 'next/dist/client/router';
-import React, { FunctionComponent } from 'react';
-import styled from 'styled-components';
-import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
+import { useRouter } from "next/dist/client/router";
+import React, { FunctionComponent } from "react";
+import styled from "styled-components";
+import { BREAKPOINTS } from "../../../../constants/grid-system-configuration";
 
-import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
-import { selectCart } from '../../../../redux/slices/cart.slices.redux';
-import { selectLanguage, selectLanguageCode, selectShowCart, updateShowLogin } from '../../../../redux/slices/configuration.slices.redux';
-import { selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
-import CartAddRemoveButton from './add-remove.cart.common.templateOne.components';
-import SvgCartEmpty from '../../../../public/assets/svg/cart-empty.svg';
-import { useEffect } from 'react';
-import { useState } from 'react';
-import LoginAllPages from '../login/login.common.templateOne.components';
-import formatCurrency from '../../../../utils/formatCurrency';
-import { selectDeliveryFinances, selectOrderType } from '../../../../redux/slices/checkout.slices.redux';
-import { useTranslation } from 'next-i18next';
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks.redux";
+import { selectCart } from "../../../../redux/slices/cart.slices.redux";
+import { selectLanguage, selectLanguageCode, selectSelectedMenu, selectShowCart, updateShowLogin } from "../../../../redux/slices/configuration.slices.redux";
+import { selectIsUserLoggedIn } from "../../../../redux/slices/user.slices.redux";
+import CartAddRemoveButton from "./add-remove.cart.common.templateOne.components";
+import SvgCartEmpty from "../../../../public/assets/svg/cart-empty.svg";
+import { useEffect } from "react";
+import { useState } from "react";
+import LoginAllPages from "../login/login.common.templateOne.components";
+import formatCurrency from "../../../../utils/formatCurrency";
+import { selectDeliveryFinances, selectOrderType } from "../../../../redux/slices/checkout.slices.redux";
+import { selectAddress, selectShop, selectSiblings } from "../../../../redux/slices/index.slices.redux";
+import { IAddress } from "../../../../interfaces/common/address.common.interfaces";
+import { useTranslation } from "next-i18next";
 
 const Wrapper = styled.div<{ showCart: boolean }>`
   position: fixed;
@@ -156,28 +158,54 @@ const MinimumOrderMessage = styled.p`
 `;
 
 const Cart: FunctionComponent = ({}) => {
-  const router = useRouter();
-  const [cartItemKeys, setCartItemKeys] = useState<Array<string>>([]);
-  const showCart = useAppSelector(selectShowCart);
-  const language = useAppSelector(selectLanguage);
-  const cartData = useAppSelector(selectCart);
-  const orderType = useAppSelector(selectOrderType);
-  const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
-  const languageCode = useAppSelector(selectLanguageCode);
-  const deliveryFinances = useAppSelector(selectDeliveryFinances);
-  const dispatch = useAppDispatch();
+  const router = useRouter()
+  const [ cartItemKeys, setCartItemKeys ] = useState<Array<string>>([])
+  const showCart = useAppSelector(selectShowCart)
+  const language = useAppSelector(selectLanguage)
+  const cartData = useAppSelector(selectCart)
+  const shopData = useAppSelector(selectShop)
+  const address = useAppSelector(selectAddress)
+  const siblings = useAppSelector(selectSiblings)
+  const orderType = useAppSelector(selectOrderType)
+  const isLoggedIn = useAppSelector(selectIsUserLoggedIn)
+  const languageCode = useAppSelector(selectLanguageCode)
+  const selectedMenuId = useAppSelector(selectSelectedMenu)
+  const deliveryFinances = useAppSelector(selectDeliveryFinances)
+  const dispatch = useAppDispatch()
   const { t } = useTranslation('page-menu-id');
 
-  const [orderPossible, setOrderPossible] = useState(false);
+  const [ orderPossible, setOrderPossible ] = useState(false)
+  const [ noOrderTypeAvailable, setNoOrderTypeAvailable ] = useState(false)
+  const [ addressData, setAddressData ] = useState<IAddress|null|undefined>()
 
+  useEffect(() => {
+    if (shopData?.id == selectedMenuId) {
+      setAddressData(address);
+    } else {
+      setAddressData(siblings.find((item) => item.id == selectedMenuId)?.address);
+    }
+  }, []);
+  
   useEffect(() => {
     setCartItemKeys(cartData.items ? Object.keys(cartData.items) : []);
   }, [cartData]);
 
   useEffect(() => {
-    let tempIsPossible = false;
-    if (orderType === 'DELIVERY') {
-      tempIsPossible = deliveryFinances && deliveryFinances.amount ? cartData.cartCost > deliveryFinances.amount : false;
+    console.log(addressData?.has_delivery, addressData?.has_pickup, addressData?.has_dinein)
+    let tempIsPossible = false
+    if (!addressData?.has_delivery
+      && !addressData?.has_pickup
+      && !addressData?.has_dinein) {
+      setOrderPossible(false)
+      setNoOrderTypeAvailable(true)
+      return
+    } else {
+      setNoOrderTypeAvailable(false)
+    }
+    if (orderType === "DELIVERY") {
+      tempIsPossible = deliveryFinances && deliveryFinances.amount
+        ? cartData.cartCost > deliveryFinances.amount
+        : false
     } else {
       tempIsPossible = cartItemKeys.length > 0;
     }
@@ -230,12 +258,10 @@ const Cart: FunctionComponent = ({}) => {
                 <Price>{formatCurrency(cartData.cartCost, languageCode)}</Price>
               </CartCost>
             </ListItem>
-            {!orderPossible && (
-              <MinimumOrderMessage>
-                {t('@min-amount-1')} {deliveryFinances?.amount && formatCurrency(deliveryFinances?.amount, languageCode)}
-                {t('@min-amount-2')}
-              </MinimumOrderMessage>
-            )}
+            {!orderPossible && <MinimumOrderMessage>
+              {t('@min-amount-1')} {deliveryFinances?.amount && formatCurrency(deliveryFinances?.amount, languageCode)}
+              {t('@min-amount-2')}
+            </MinimumOrderMessage>}
           </>
         ) : (
           <ListItem key="empty-cart">
@@ -246,15 +272,14 @@ const Cart: FunctionComponent = ({}) => {
             </CartEmptyContainer>
           </ListItem>
         )}
-      </List>
+        {noOrderTypeAvailable && <MinimumOrderMessage>Restaurant is not accepting any orders at the moment.</MinimumOrderMessage>}
+    </List>
 
-      <OrderButton isActive={orderPossible} onClick={onClickOrderButton}>
-        {t('@order')}
-      </OrderButton>
+    <OrderButton isActive={orderPossible} onClick={onClickOrderButton}>{t('@order')}</OrderButton>
 
-      <LoginAllPages callback={() => router.push('/checkout')} />
-    </Wrapper>
-  );
-};
+    <LoginAllPages callback={() => router.push("/checkout")} />
+  </Wrapper>
+  )
+}
 
-export default Cart;
+export default Cart

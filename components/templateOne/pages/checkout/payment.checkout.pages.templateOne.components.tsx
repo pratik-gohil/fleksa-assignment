@@ -35,6 +35,7 @@ import SvgCash from '../../../../public/assets/svg/cash.svg';
 import SvgCard from '../../../../public/assets/svg/card.svg';
 import SvgPaypal from '../../../../public/assets/svg/paypal.svg';
 import { useTranslation } from 'next-i18next';
+import { updateError } from '../../../../redux/slices/common.slices.redux';
 
 const PaymentMethodList = styled.ul`
   display: flex;
@@ -133,13 +134,23 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
           payment_method: paymentMethodData,
           tip: tipData ? tipData : undefined,
           offer: {
-            is_applicable: promoCode !== null,
+            is_applicable: !!promoCode && promoCode.token.length > 0,
             token: promoCode?.token || '',
           },
           description: comment,
           order_type: orderType as ICheckoutOrderTypes,
         },
       });
+      if (!response.result) {
+        dispatch(
+          updateError({
+            show: true,
+            message: response.message,
+            severity: 'error',
+          }),
+        );
+        throw new Error(response.message)
+      }
       return response;
     } catch (error) {
       throw error;

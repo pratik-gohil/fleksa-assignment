@@ -6,7 +6,7 @@ import { BREAKPOINTS } from '../../constants/grid-system-configuration';
 import { useAppSelector } from '../../redux/hooks.redux';
 import { selectAddress, selectOwner, selectShop } from '../../redux/slices/index.slices.redux';
 
-const fleksaLogoPath = 'assets/png/fleksa-logo-black.png';
+const fleksaLogoPath = '/assets/png/fleksa-logo-black.png';
 
 const Wrapper = styled.div`
   width: 50%;

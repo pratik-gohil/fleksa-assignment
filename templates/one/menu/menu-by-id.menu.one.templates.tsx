@@ -16,8 +16,11 @@ import { LS_GUEST_USER_ADDRESS } from '../../../constants/keys-local-storage.con
 import { useTranslation } from 'next-i18next';
 import { selectCart } from '../../../redux/slices/cart.slices.redux';
 import PyApiHttpPostAddress from '../../../http/pyapi/address/post.address.pyapi.http';
-import { selectConfiguration, selectSelectedMenuUrlpath } from '../../../redux/slices/configuration.slices.redux';
+import { selectConfiguration, selectSelectedMenu, selectSelectedMenuUrlpath } from '../../../redux/slices/configuration.slices.redux';
 import { selectAddressByType, selectIsUserLoggedIn } from '../../../redux/slices/user.slices.redux';
+import { selectAddress, selectShop, selectSiblings } from '../../../redux/slices/index.slices.redux';
+import { useState } from 'react';
+import { IAddress } from '../../../interfaces/common/address.common.interfaces';
 
 const SideViewLeft = styled.div`
   display: none;
@@ -63,16 +66,29 @@ const Disclaimer = styled.p`
 const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
   const { t } = useTranslation('disclaimer');
   const cartData = useAppSelector(selectCart);
+  const shopData = useAppSelector(selectShop);
+  const address = useAppSelector(selectAddress);
+  const siblings = useAppSelector(selectSiblings);
   const orderType = useAppSelector(selectOrderType);
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
   const showAddAddress = useAppSelector(selectShowAddress);
   const configuration = useAppSelector(selectConfiguration);
+  const selectedMenuId = useAppSelector(selectSelectedMenu);
   const deliveryFinances = useAppSelector(selectDeliveryFinances)
   const checkoutAddressId = useAppSelector(selectSelectedAddressId);
   const showSelectOrderType = useAppSelector(selectShowOrderTypeSelect);
   const selectedMenuUrlpath = useAppSelector(selectSelectedMenuUrlpath);
   const addressByType = useAppSelector((state) => selectAddressByType(state, "HOME"));
   const dispatch = useAppDispatch()
+  const [ addressData, setAddressData ] = useState<IAddress|null|undefined>()
+
+  useEffect(() => {
+    if (shopData?.id == selectedMenuId) {
+      setAddressData(address);
+    } else {
+      setAddressData(siblings.find((item) => item.id == selectedMenuId)?.address);
+    }
+  }, []);
 
   useEffect(() => {
     getAddressInfo()
@@ -141,7 +157,9 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
         {cartData.cartCost > 0 && <MenuPageCartSummary />}
       </div>
       {(showSelectOrderType || orderType === null) && !showAddAddress ? (
-        <OrderTypeManager key="key-ajkndalkwdmalkwmdlkw" />
+        (addressData?.has_delivery
+          || addressData?.has_pickup
+          || addressData?.has_dinein ) && <OrderTypeManager key="key-ajkndalkwdmalkwmdlkw" />
       ) : (
         (showAddAddress ||
           (orderType === 'DELIVERY' &&
