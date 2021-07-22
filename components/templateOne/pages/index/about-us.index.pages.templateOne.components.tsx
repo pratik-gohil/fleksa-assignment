@@ -95,7 +95,7 @@ const IndexPageAboutUs: FunctionComponent = ({}) => {
   const languageCode = useAppSelector(selectLanguageCode)
 
   const imagesData = []
-  if (shopData?.cover_json.images?.length) imagesData.push(shopData?.cover_json.images[0])
+  if (shopData?.cover_json?.images?.length) imagesData.push(shopData?.cover_json.images[0])
   if (images[0]) imagesData.push(images[0])
   if (images[1]) imagesData.push(images[1])
 

@@ -22,6 +22,7 @@ import SvgTag from '../../../../public/assets/svg/tag.svg';
 import SvgCross from '../../../../public/assets/svg/cross.svg';
 import formatCurrency from '../../../../utils/formatCurrency';
 import { useTranslation } from 'next-i18next';
+import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 
 const ApplyButton = styled.div`
   padding: ${(props) => props.theme.dimen.X2}px ${(props) => props.theme.dimen.X4 * 2}px;
@@ -32,6 +33,13 @@ const ApplyButton = styled.div`
   cursor: pointer;
   border: ${(props) => props.theme.border};
   border-radius: ${(props) => props.theme.borderRadius}px;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    width: 40%;
+    padding: 0.5rem 0;
+    font-size: 14px;
+    text-align: center;
+  }
 `;
 
 const AppliedPromoContainer = styled.div`
