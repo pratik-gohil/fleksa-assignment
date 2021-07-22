@@ -179,9 +179,7 @@ const IndexPageHero: FunctionComponent = ({}) => {
                 <SubTitle>{shopData?.category_json[language]}</SubTitle>
 
                 {shop.available ? (
-                  <OrderButton href={selectedMenuId ? `/${languageCode}/menu/${languageCode}/${selectedMenuId}` : '/menu'}>
-                    {t('@order-online')}
-                  </OrderButton>
+                  <OrderButton href={selectedMenuId ? `/${languageCode}/menu/${selectedMenuId}` : '/menu'}>{t('@order-online')}</OrderButton>
                 ) : (
                   <>
                     <OrderButton href={selectedMenuId ? `/${languageCode}/menu/${selectedMenuId}` : '/menu'}>{t('@pre-online')}</OrderButton>
