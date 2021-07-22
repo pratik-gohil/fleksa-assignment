@@ -162,7 +162,7 @@ const IndexPageHero: FunctionComponent = ({}) => {
 
   return (
     <WrapperSection>
-      <ImageContainer>{shopData?.cover && <Image src={shopData?.cover} layout="fill" loading="eager" objectFit="cover" />}</ImageContainer>
+      <ImageContainer>{shopData?.cover_json?.images?.length && <Image src={shopData?.cover_json.images[shopData?.cover_json.images.length-1]} layout="fill" loading="eager" objectFit="cover" />}</ImageContainer>
 
       <ContentContainer>
         <Wrapper>
