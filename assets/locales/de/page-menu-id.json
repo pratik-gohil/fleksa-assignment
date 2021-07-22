@@ -12,5 +12,6 @@
   "@hungry": "Hungrig?",
   "@choose": "Wählen Sie köstliche Gerichte aus der Karte, um eine Bestellung aufzugeben.",
   "@min-amount-1": "Leider können Sie noch nicht bestellen, der Mindestbestellbetrag beträgt ",
-  "@min-amount-2": " ohne Lieferkosten."
+  "@min-amount-2": " ohne Lieferkosten.",
+  "@not-accept": "Das Restaurant nimmt im Moment keine Bestellungen an."
 }
