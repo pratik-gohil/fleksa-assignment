@@ -233,10 +233,10 @@ const IndexPageHero: FunctionComponent = ({}) => {
                 <SubTitle>{shopData?.category_json[language]}</SubTitle>
 
                 {shop.available ? (
-                  <OrderButton href={selectedMenuId ? `/menu/${selectedMenuId}` : '/menu'}>{t('@order-online')}</OrderButton>
+                  <OrderButton href={selectedMenuId ? `/${languageCode}/menu/${selectedMenuId}` : '/menu'}>{t('@order-online')}</OrderButton>
                 ) : (
                   <>
-                    <OrderButton href={selectedMenuId ? `/menu/${selectedMenuId}` : '/menu'}>{t('@pre-online')}</OrderButton>
+                    <OrderButton href={selectedMenuId ? `/${languageCode}/menu/${selectedMenuId}` : '/menu'}>{t('@pre-online')}</OrderButton>
                     <SubTitle2>
                       {t('@next-hours')} {shop.next?.dayNumber ? ` ${shop.next?.dayNumber} ,` : ''} {t(`@${shop.next?.day.toUpperCase()}`)},{' '}
                       {shop.next?.time}

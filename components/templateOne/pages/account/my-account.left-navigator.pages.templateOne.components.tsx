@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
+import { selectLanguageCode } from '../../../../redux/slices/configuration.slices.redux';
 
 const Wrapper = styled.div`
   background: ${(p) => p.theme.textDarkColor};
@@ -97,12 +98,13 @@ const ActiveUnderline = styled.span<{ active: boolean }>`
 export const MyAccountLeftSection = () => {
   const customerData = useAppSelector(selectCustomer);
   const router = useRouter();
+  const languageCode = useAppSelector(selectLanguageCode);
   const { t } = useTranslation('account');
 
-  const [dynamicLink, setDynamicLink] = useState('/account');
+  const [dynamicLink, setDynamicLink] = useState(`/${languageCode}/account`);
 
   useEffect(() => {
-    if (window.matchMedia('(max-width: 576px)').matches) setDynamicLink('/account/edit');
+    if (window.matchMedia('(max-width: 576px)').matches) setDynamicLink(`/${languageCode}/account/edit`);
   }, []);
 
   return (
@@ -119,11 +121,11 @@ export const MyAccountLeftSection = () => {
           {t('@profile')}
           <ActiveUnderline active={router.pathname === '/account'} />
         </Link>
-        <Link href="/account/order-history" active={router.pathname === '/account/order-history'}>
+        <Link href={`/${languageCode}/account/order-history`} active={router.pathname === '/account/order-history'}>
           {t('@my-orders')}
           <ActiveUnderline active={router.pathname === '/account/order-history'} />
         </Link>
-        <Link href="/account/addresses" active={router.pathname === '/account/addresses'}>
+        <Link href={`/${languageCode}/account/addresses`} active={router.pathname === '/account/addresses'}>
           {t('@address')}
           <ActiveUnderline active={router.pathname === '/account/addresses'} />
         </Link>
