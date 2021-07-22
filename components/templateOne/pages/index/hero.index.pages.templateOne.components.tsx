@@ -162,7 +162,11 @@ const IndexPageHero: FunctionComponent = ({}) => {
 
   return (
     <WrapperSection>
-      <ImageContainer>{shopData?.cover_json?.images?.length && <Image src={shopData?.cover_json.images[shopData?.cover_json.images.length-1]} layout="fill" loading="eager" objectFit="cover" />}</ImageContainer>
+      <ImageContainer>
+        {shopData?.cover_json?.images?.length && (
+          <Image src={shopData?.cover_json.images[shopData?.cover_json.images.length - 1]} layout="fill" loading="eager" objectFit="cover" />
+        )}
+      </ImageContainer>
 
       <ContentContainer>
         <Wrapper>
@@ -175,10 +179,10 @@ const IndexPageHero: FunctionComponent = ({}) => {
                 <SubTitle>{shopData?.category_json[language]}</SubTitle>
 
                 {shop.available ? (
-                  <OrderButton href={selectedMenuId ? `/menu/${selectedMenuId}` : '/menu'}>{t('@order-online')}</OrderButton>
+                  <OrderButton href={selectedMenuId ? `/menu/${languageCode}/${selectedMenuId}` : '/menu'}>{t('@order-online')}</OrderButton>
                 ) : (
                   <>
-                    <OrderButton href={selectedMenuId ? `/menu/${selectedMenuId}` : '/menu'}>{t('@pre-online')}</OrderButton>
+                    <OrderButton href={selectedMenuId ? `/menu/${languageCode}/${selectedMenuId}` : '/menu'}>{t('@pre-online')}</OrderButton>
                     <SubTitle2>
                       {t('@next-hours')} {shop.next?.dayNumber ? ` ${shop.next?.dayNumber} ,` : ''} {t(`@${shop.next?.day.toUpperCase()}`)},{' '}
                       {shop.next?.time}
