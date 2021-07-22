@@ -79,13 +79,16 @@ export default class RestaurantTimingUtils {
       if (isToday) {
         //   TODO: Only process if current time not exceed closed time of break
         if (now > close || close.diff(now, 'minutes') <= tillAccept) return;
+        console.log('diff =>  ', close.diff(now, 'minutes'), ' asap ', lastAsapMinutes);
 
-        if (close.diff(now, 'minutes') <= lastAsapMinutes)
+        if (close.diff(now, 'minutes') <= lastAsapMinutes) {
+          currentlyOpened = true;
           return result.push({
             value: now.format('HH:mm'),
             label: `${now.format('HH:mm')} - ${now.add(adjacentPeriodIntervel, 'm').format('HH:mm')}`,
             break: false,
           });
+        }
 
         // TODO:  Only round if the now inbetween period
         if (open.diff(now, 'minutes') < 0) {
@@ -116,6 +119,8 @@ export default class RestaurantTimingUtils {
     });
 
     if (isToday && currentlyOpened && result.length) result[0].label = language === 'english' ? 'As soon as possible' : 'So schnell wie möglich';
+
+    console.log('result => ', result);
 
     return result;
   }
