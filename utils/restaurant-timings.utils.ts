@@ -72,14 +72,16 @@ export default class RestaurantTimingUtils {
     let now = moment();
     const isToday = weekDay === now.format('dddd').toUpperCase();
 
+    // console.log(now.format('HH:mm'));
+
     processPayload?.timings?.forEach((t, _i) => {
       const open = moment(t.open, 'h:mm a');
       const close = moment(t.close, 'h:mm a');
 
+      // console.log('diff => ', close.diff(now, 'minutes'), ' asap ', lastAsapMinutes);
       if (isToday) {
         //   TODO: Only process if current time not exceed closed time of break
-        if (now > close || close.diff(now, 'minutes') <= tillAccept) return;
-        console.log('diff =>  ', close.diff(now, 'minutes'), ' asap ', lastAsapMinutes);
+        if (now > close || close.diff(now, 'minutes') + 1 < tillAccept) return;
 
         if (close.diff(now, 'minutes') <= lastAsapMinutes) {
           currentlyOpened = true;
@@ -108,19 +110,23 @@ export default class RestaurantTimingUtils {
       } else now = open; // Set now to open if not today
 
       // TODO: generate till closing time
-      while (now < close)
+      while (now < close || close.diff(now, 'minutes') === 0) {
         result.push({
           value: now.format('HH:mm'),
           label: `${now.format('HH:mm')} - ${now.add(adjacentPeriodIntervel, 'm').format('HH:mm')}`,
           break: false,
         });
 
+        // ? To prevent exceeded interval issue
+        if (now > close) break;
+      }
+
       result = ([] as Array<{ value: string; label: string; break?: boolean }>).concat(...result);
     });
 
     if (isToday && currentlyOpened && result.length) result[0].label = language === 'english' ? 'As soon as possible' : 'So schnell wie möglich';
 
-    console.log('result => ', result);
+    // console.log('result => ', result);
 
     return result;
   }
