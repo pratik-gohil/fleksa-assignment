@@ -3,6 +3,10 @@ import { ILanguageData } from './language-data.common.interfaces';
 export interface IShop {
   category_json: ILanguageData;
   cover: string;
+  cover_json: {
+    images: Array<string>
+    updated_at: string
+  }
   description_text_json: ILanguageData;
   description_title_json: ILanguageData;
   id: number;
