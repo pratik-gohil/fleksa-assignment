@@ -155,7 +155,7 @@ const CarouselSlide = styled.div<{ translateX: number }>`
   transform: translateX(${props => props.translateX}%);
 `
 
-const slideChangeDealy = 3000;
+const slideChangeDealy = 5000;
 
 const IndexPageHero: FunctionComponent = ({}) => {
   const language = useAppSelector(selectLanguage);
