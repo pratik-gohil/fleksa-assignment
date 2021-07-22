@@ -133,7 +133,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
           payment_method: paymentMethodData,
           tip: tipData ? tipData : undefined,
           offer: {
-            is_applicable: promoCode !== null,
+            is_applicable: promoCode !== null && promoCode.token.length > 0,
             token: promoCode?.token || '',
           },
           description: comment,
