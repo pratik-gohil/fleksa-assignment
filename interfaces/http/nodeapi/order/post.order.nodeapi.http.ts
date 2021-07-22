@@ -40,6 +40,7 @@ export interface INodeApiHttpPostOrderRequestData {
 export interface IOrderResponseCash {
   _paymentMethod: "CASH"
   result: boolean
+  message: string
   data: {
     order_id: number
   }
@@ -52,6 +53,7 @@ export interface IOrderResponsePaypal {
   order_id: number
   amount: number
   merchant_id: string
+  message: string
 }
 
 export interface IOrderResponseStripe {
@@ -60,6 +62,7 @@ export interface IOrderResponseStripe {
   client_secret: string
   amount: number
   merchant_id: string
+  message: string
 }
 
 export type INodeApiHttpPostOrderResponse = IOrderResponseCash | IOrderResponsePaypal | IOrderResponseStripe
