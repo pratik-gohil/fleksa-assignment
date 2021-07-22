@@ -1,12 +1,13 @@
 const { i18n } = require('./next-i18next.config');
 const withPWA = require('next-pwa');
+const runtimeCaching = require('next-pwa/cache');
 
 module.exports = withPWA({
   generateEtags: false,
   pwa: {
     dest: 'public',
+    runtimeCaching,
     disable: process.env.REACT_APP_PAYPAL === 'development',
-    register: true,
   },
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     config.module.rules.push({
