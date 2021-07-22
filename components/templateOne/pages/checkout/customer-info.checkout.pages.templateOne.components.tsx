@@ -3,6 +3,7 @@ import React, { FunctionComponent } from 'react';
 import { useState } from 'react';
 
 import styled from 'styled-components';
+import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { selectCustomer, updateCustomerEmail, updateCustomerName } from '../../../../redux/slices/user.slices.redux';
 import EditButton from './edit-button.checkout.pages.templateOne.components';
@@ -40,6 +41,12 @@ export const StyledCheckoutText = styled.p`
   padding: ${(props) => props.theme.dimen.X4}px 0;
   margin: 0;
   word-wrap: break-word;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
 `;
 
 const Text = styled.p`

@@ -3,6 +3,7 @@ import React, { FunctionComponent } from 'react';
 import { useState } from 'react';
 
 import styled, { css } from 'styled-components';
+import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { selectCart } from '../../../../redux/slices/cart.slices.redux';
 import { selectTip, updateTip } from '../../../../redux/slices/checkout.slices.redux';
@@ -38,6 +39,11 @@ const TipOptionsItem = styled.div<{ isSelected: boolean }>`
     justify-content: center;
     cursor: pointer;
     padding: ${(props) => props.theme.dimen.X4}px;
+
+    @media (max-width: ${BREAKPOINTS.sm}px) {
+      font-size: 14px;
+      padding: 0.5rem 0;
+    }
   }
 
   span {
