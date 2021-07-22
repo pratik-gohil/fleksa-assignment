@@ -77,7 +77,7 @@ const CheckoutPageTemplateOne: FunctionComponent = ({}) => {
 
   return <PayPalScriptProvider options={{
     debug: false,
-    "client-id": "sb",
+    "client-id": process.env.NEXT_PUBLIC_REACT_APP_PAYPAL_KEY as string,
     currency: "EUR",
   }}>
     <Container>
