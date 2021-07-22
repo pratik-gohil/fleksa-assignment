@@ -22,7 +22,7 @@ import {
   selectPromoCode,
   selectDeliveryFinances,
 } from '../../../../redux/slices/checkout.slices.redux';
-import { selectConfiguration, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
+import { selectConfiguration, selectLanguageCode, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
 import { selectShop } from '../../../../redux/slices/index.slices.redux';
 import { selectBearerToken, selectCustomer } from '../../../../redux/slices/user.slices.redux';
 import { getPrductsFromCartData } from '../../../../utils/products.utils';
@@ -114,6 +114,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   const cartData = useAppSelector(selectCart);
   const tipData = useAppSelector(selectTip);
   const dispatch = useAppDispatch();
+  const languageCode = useAppSelector(selectLanguageCode);
   const { t } = useTranslation('page-checkout');
 
   async function createOrder() {
@@ -186,7 +187,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   }, [bearerToken, shopData?.id, customerData.name, customerData.email, customerData.phone, customerData.country_code, wantAtData]);
 
   async function onPaymentDone() {
-    router.push('/order-placed');
+    router.push(`/${languageCode}/order-placed`);
   }
 
   async function onClickCashOrderButton() {

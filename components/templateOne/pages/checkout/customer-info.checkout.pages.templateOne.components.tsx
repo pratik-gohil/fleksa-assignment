@@ -32,6 +32,10 @@ export const StyledCheckoutInput = styled.input`
   border: ${(props) => props.theme.border};
   border-radius: ${(props) => props.theme.borderRadius}px;
   padding: ${(props) => props.theme.dimen.X4}px;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    width: 60%;
+  }
 `;
 
 export const StyledCheckoutText = styled.p`
