@@ -204,7 +204,7 @@ const Cart: FunctionComponent = ({}) => {
     }
     if (orderType === "DELIVERY") {
       tempIsPossible = deliveryFinances && deliveryFinances.amount
-        ? cartData.cartCost > deliveryFinances.amount
+        ? cartData.cartCost >= deliveryFinances.amount
         : false
     } else {
       tempIsPossible = cartItemKeys.length > 0;
