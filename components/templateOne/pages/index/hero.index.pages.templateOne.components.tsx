@@ -57,7 +57,7 @@ const Title = styled.h1`
   margin: 0;
   padding: 0;
   width: 80%;
-  text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
+  text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
   @media (max-width: ${BREAKPOINTS.sm}px) {
     font-weight: 600;
     line-height: 1.2;
@@ -69,7 +69,7 @@ const SubTitle = styled.h2`
   padding: 0;
   margin: 0;
   font-size: clamp(1rem, 1.8rem, 3vw);
-  text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
+  text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
   @media (max-width: ${BREAKPOINTS.sm}px) {
     padding-top: 0.5rem;
     font-weight: 400;
@@ -165,21 +165,22 @@ const IndexPageHero: FunctionComponent = ({}) => {
   const selectedMenuId = useAppSelector(selectSelectedMenu);
   const { t } = useTranslation('page-index');
 
-  const [ carouselImages, setCarouselImages ] = useState<Array<string>>([])
+  const [ carouselImages, setCarouselImages ] = useState<Array<string>>(shopData?.cover_json?.images || [])
   const [ activeSlide, setActiveSlide ] = useState(0)
 
   useEffect(() => {
-    if (shopData?.cover_json?.images && activeSlide > carouselImages.length - 2) {
-      const temp = carouselImages.concat(shopData?.cover_json?.images)
-      setCarouselImages(temp)
+    if (shopData?.cover_json?.images && shopData?.cover_json?.images.length > 1) {
+      if (activeSlide > carouselImages.length - 2) {
+        const temp = carouselImages.concat(shopData?.cover_json?.images)
+        setCarouselImages(temp)
+      }
+      let timer1 = setTimeout(() => {
+        setActiveSlide(activeSlide+1)
+      }, slideChangeDealy);
+      return () => {
+        clearTimeout(timer1);
+      };
     }
-    let timer1 = setTimeout(() => {
-      setActiveSlide(activeSlide+1)
-    }, slideChangeDealy);
-
-    return () => {
-      clearTimeout(timer1);
-    };
   }, [ activeSlide ]);
 
   const [shop, setShop] = useState<{
