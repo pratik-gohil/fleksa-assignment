@@ -140,7 +140,7 @@ const Carousel = styled.div`
   height: 100%;
   overflow: hidden;
   transition-duration: 500ms;
-`
+`;
 
 const CarouselSlide = styled.div<{ translateX: number }>`
   position: absolute;
@@ -152,8 +152,8 @@ const CarouselSlide = styled.div<{ translateX: number }>`
   height: 100%;
   float: left;
   transition-duration: 500ms;
-  transform: translateX(${props => props.translateX}%);
-`
+  transform: translateX(${(props) => props.translateX}%);
+`;
 
 const slideChangeDealy = 5000;
 
@@ -165,23 +165,23 @@ const IndexPageHero: FunctionComponent = ({}) => {
   const selectedMenuId = useAppSelector(selectSelectedMenu);
   const { t } = useTranslation('page-index');
 
-  const [ carouselImages, setCarouselImages ] = useState<Array<string>>(shopData?.cover_json?.images || [])
-  const [ activeSlide, setActiveSlide ] = useState(0)
+  const [carouselImages, setCarouselImages] = useState<Array<string>>(shopData?.cover_json?.images || []);
+  const [activeSlide, setActiveSlide] = useState(0);
 
   useEffect(() => {
     if (shopData?.cover_json?.images && shopData?.cover_json?.images.length > 1) {
       if (activeSlide > carouselImages.length - 2) {
-        const temp = carouselImages.concat(shopData?.cover_json?.images)
-        setCarouselImages(temp)
+        const temp = carouselImages.concat(shopData?.cover_json?.images);
+        setCarouselImages(temp);
       }
       let timer1 = setTimeout(() => {
-        setActiveSlide(activeSlide+1)
+        setActiveSlide(activeSlide + 1);
       }, slideChangeDealy);
       return () => {
         clearTimeout(timer1);
       };
     }
-  }, [ activeSlide ]);
+  }, [activeSlide]);
 
   const [shop, setShop] = useState<{
     available: boolean;
@@ -199,25 +199,28 @@ const IndexPageHero: FunctionComponent = ({}) => {
   });
 
   useEffect(() => {
+    console.log('isShopOpened => ', isShopOpened(timingsData));
     setShop(isShopOpened(timingsData));
   }, []);
 
   return (
     <WrapperSection>
       <ImageContainer>
-        <Carousel >
+        <Carousel>
           {carouselImages?.map((image, index) => {
-            let translateX
+            let translateX;
             if (index === activeSlide) {
-              translateX = 0
+              translateX = 0;
             } else if (index > activeSlide) {
-              translateX = 100
+              translateX = 100;
             } else {
-              translateX = -100
+              translateX = -100;
             }
-            return <CarouselSlide translateX={translateX}>
-              <Image src={image} layout="fill" loading={index === 0? "eager": "lazy"} objectFit="cover" />
-            </CarouselSlide>
+            return (
+              <CarouselSlide translateX={translateX}>
+                <Image src={image} layout="fill" loading={index === 0 ? 'eager' : 'lazy'} objectFit="cover" />
+              </CarouselSlide>
+            );
           })}
         </Carousel>
       </ImageContainer>
