@@ -76,6 +76,10 @@ const CategoryTitleSticky = styled.h3`
   background: #fff;
   z-index: 1;
   padding: ${props => props.theme.dimen.X4}px 0 ${props => props.theme.dimen.X4}px;
+  span {
+    font-size: 16px;
+    font-weight: 400;
+  }
   @media (min-width: ${BREAKPOINTS.lg}px) {
     top: ${props => props.theme.navDesktop.height}px;
     padding: 0 0 ${props => props.theme.dimen.X4}px;
@@ -105,9 +109,13 @@ const MenuPageCategoryList: FunctionComponent = ({}) => {
             <CategoryTitle>
               {category.name_json[language]}
               <br />
-              <span>{category.description_json[language]}</span>
+              {category.description_json && <span>{category.description_json[language]}</span>}
             </CategoryTitle>
-          </CategoryImageContainer>: <CategoryTitleSticky>{category.name_json[language]}</CategoryTitleSticky>}
+          </CategoryImageContainer>: <CategoryTitleSticky>
+            {category.name_json[language]}
+              <br />
+            {category.description_json && <span>{category.description_json[language]}testts</span>}
+          </CategoryTitleSticky>}
           <List>
             {category.products.map(product => <MenuPageProductListItem
               key={product.id}
