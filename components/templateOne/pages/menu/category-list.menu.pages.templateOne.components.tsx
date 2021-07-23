@@ -25,8 +25,6 @@ const CategoryImageContainer = styled.div`
   margin: 0 -15px;
   height: 200px;
   top: -80px;
-  border-top-left-radius: ${props => props.theme.borderRadius}px;
-  border-top-right-radius: ${props => props.theme.borderRadius}px;
   overflow: hidden;
   @media (min-width: ${BREAKPOINTS.lg}px) {
     margin: inherit;
