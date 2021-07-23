@@ -99,9 +99,9 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
           </EditContainer>
           {orderType === 'DELIVERY' ? (
             <>
-              <AddressSelected>{[selectedAddress?.area, selectedAddress?.address].filter((i) => i && i.length).join(', ')}</AddressSelected>
+              <AddressSelected>{selectedAddress?.address}</AddressSelected>
               <AddressSelected style={{ marginTop: -4 }}>
-                {[selectedAddress?.postal_code, selectedAddress?.city].filter((i) => i && i.length).join(', ')}
+                {selectedAddress?.postal_code} {selectedAddress?.city}
               </AddressSelected>
             </>
           ) : (
