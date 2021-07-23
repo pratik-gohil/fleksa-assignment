@@ -158,11 +158,12 @@ export function isShopOpened(timings: ITimings | null) {
     return {
       ...availability,
       next: {
-        day: moment(currentDayTimings?.shop?.timings[currentDayTimings.shop?.timings.length - 1]?.open, 'h:mm a').format('dddd'),
-        time: moment(currentDayTimings?.shop?.timings[currentDayTimings.shop?.timings.length - 1]?.open, 'h:mm a').format('HH:mm'),
+        day: moment(currentDayTimings?.shop?.timings[0]?.open, 'h:mm a').add(0, 'days').calendar().split(' at ')[0],
+        time: moment(currentDayTimings?.shop?.timings[0]?.open, 'h:mm a').format('HH:mm'),
       },
     };
   }
+
   // TODO: Check currently after the close time
   else if (currentDay.diff(moment(currentDayTimings.shop?.timings[currentDayTimings.shop?.timings.length - 1]?.close, 'h:mm a'), 'minutes') >= 0) {
     return goNextDay(timings, currentDay);
@@ -187,7 +188,7 @@ export function isShopOpened(timings: ITimings | null) {
 }
 
 const goNextDay = (timings: ITimings, currentDay: moment.Moment) => {
-  const nextDay = moment(currentDay.add(1, 'days'));
+  const nextDay = moment(currentDay.add(0, 'days'));
   let day = nextDay.format('dddd').toUpperCase();
 
   while (true) {
