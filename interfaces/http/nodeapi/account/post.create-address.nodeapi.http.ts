@@ -10,7 +10,6 @@ export interface INodeApiHttpPostCreateNewAddressRequestData {
   country?: string;
   postal_code: string;
   address_type: Allowed_address_type;
-  proximity?: string;
   area?: string;
 }
 

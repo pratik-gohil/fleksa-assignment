@@ -6,7 +6,7 @@ import { ApiHttpCommon } from '../../base.http';
 import NetNodeApi from '../net.nodeapi.http';
 
 export default class NodeApiHttpPostCreateNewAddressRequest extends ApiHttpCommon {
-  public async post({ floor, address, address_type, city, country, postal_code, proximity, state }: INodeApiHttpPostCreateNewAddressRequestData) {
+  public async post({ floor, address, address_type, city, country, postal_code, state }: INodeApiHttpPostCreateNewAddressRequestData) {
     try {
       const response = await new NetNodeApi(this.configuration, this.bearerToken).post<INodeApiHttpPostCreateNewAddressResponseData>({
         path: 'customer/create/address',
@@ -17,7 +17,6 @@ export default class NodeApiHttpPostCreateNewAddressRequest extends ApiHttpCommo
           city,
           country: country || '',
           postal_code,
-          proximity: proximity || '',
           state: state || '',
         },
       });
