@@ -315,7 +315,6 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
         city,
         postal_code: postalCode,
         address_type: type as Allowed_address_type,
-        proximity,
         area,
       });
 
