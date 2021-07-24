@@ -5,6 +5,7 @@ export type Url = {
   host: string;
   route: string;
   date?: Date;
+  priority?: number;
 };
 
 export const ReadManifestFile = (basePath: string): object => {
@@ -58,13 +59,14 @@ export const GetPathsFromBuildFolder = (dir: string, urlList: Array<Url>, host: 
   return urlList;
 };
 
-const GetUrlElement = ({ host, route, date }: Url): string => {
+const GetUrlElement = ({ host, route, date, priority }: Url): string => {
   if (date) {
-    return `<url><loc>${host}${route}</loc><lastmod>${date}</lastmod></url>`;
+    return `<url><loc>${host}${route}</loc><lastmod>${date}</lastmod><priority>${priority || 1}</priority></url>`;
   } else return `<url><loc>${host}${route}</loc></url>`;
 };
 
-export const GetSitemapXml = (urls: Array<Url>): string => `<?xml version="1.0" encoding="UTF-8"?>
-        <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-        ${urls.map((url) => GetUrlElement(url)).join('')}
-        </urlset>`;
+export const GetSitemapXml = (urls: Array<Url>): string =>
+  `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls
+    .map((url) => GetUrlElement(url))
+    .join('')}</urlset>
+        `;
