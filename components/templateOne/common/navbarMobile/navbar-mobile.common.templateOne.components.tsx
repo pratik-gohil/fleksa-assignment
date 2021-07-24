@@ -12,7 +12,7 @@ import { useState } from 'react';
 import NavbarMobileOptions from './navbar-mobile-options.common.templateOne.components';
 
 const WrapperHeader = styled.header`
-  height: ${(props) => props.theme.navMobile.height}px;
+  height: calc(${(props) => props.theme.navMobile.height}px + env(safe-area-inset-bottom));
   background: ${(props) => props.theme.navMobile.backgroundColor};
   position: fixed;
   left: 0;
@@ -41,7 +41,6 @@ const ListItem = styled.li<{ isActive: boolean }>`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
   svg {
     width: 28px;
     height: 28px;

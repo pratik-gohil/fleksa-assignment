@@ -197,7 +197,6 @@ const Cart: FunctionComponent = ({}) => {
   }, [cartData]);
 
   useEffect(() => {
-    console.log(addressData?.has_delivery, addressData?.has_pickup, addressData?.has_dinein);
     let tempIsPossible = false;
     if (!addressData?.has_delivery && !addressData?.has_pickup && !addressData?.has_dinein) {
       setOrderPossible(false);
