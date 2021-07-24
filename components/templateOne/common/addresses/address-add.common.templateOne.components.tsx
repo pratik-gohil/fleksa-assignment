@@ -183,7 +183,7 @@ const AddressTypeName = styled.p`
 
 const InputWithAutoLocate = styled.div`
   position: relative;
-`
+`;
 
 const Autolocate = styled.div`
   position: absolute;
@@ -192,7 +192,7 @@ const Autolocate = styled.div`
   width: 46px;
   height: 46px;
   padding: 12px;
-`
+`;
 
 let autoComplete: google.maps.places.Autocomplete;
 
@@ -202,7 +202,7 @@ const AddressAdd: FunctionComponent = () => {
   const refAddressInput = useRef<HTMLInputElement>(null);
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
   const bearerToken = useAppSelector(selectBearerToken);
-  const languageCode = useAppSelector(selectLanguageCode)
+  const languageCode = useAppSelector(selectLanguageCode);
   const configuration = useAppSelector(selectConfiguration);
   const [addressType, setAddressType] = useState<AddressTypes>('HOME');
   const addressByType = useAppSelector((state) => selectAddressByType(state, addressType));
@@ -222,7 +222,7 @@ const AddressAdd: FunctionComponent = () => {
   }, []);
 
   function onAddressChange(placeReceived?: google.maps.places.PlaceResult) {
-    resetAddressData()
+    resetAddressData();
     const place = placeReceived || autoComplete.getPlace();
     if (place.address_components) {
       for (let component of place.address_components) {
@@ -241,24 +241,22 @@ const AddressAdd: FunctionComponent = () => {
 
   async function geocodeLatLng(location: { lat: number; lng: number }) {
     const geocoder = new google.maps.Geocoder();
-    const response = await geocoder.geocode({ location }, null)
+    const response = await geocoder.geocode({ location }, null);
 
-    const place = response.results[0]
+    const place = response.results[0];
     if (place) {
-      onAddressChange(place)
+      onAddressChange(place);
     }
   }
 
   function updateCurrentPosition() {
-    navigator.geolocation.getCurrentPosition(
-      (position: GeolocationPosition) => {
-        const pos = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        };
-        geocodeLatLng(pos)
-      }
-    );
+    navigator.geolocation.getCurrentPosition((position: GeolocationPosition) => {
+      const pos = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      };
+      geocodeLatLng(pos);
+    });
   }
 
   useEffect(() => {
@@ -272,7 +270,7 @@ const AddressAdd: FunctionComponent = () => {
         setAddressFloor(addressByType.floor || '');
         setAddressPostalCode(addressByType.postal_code);
       } else {
-        resetAddressData()
+        resetAddressData();
       }
     }
   }, [addressByType]);
@@ -332,7 +330,8 @@ const AddressAdd: FunctionComponent = () => {
       });
 
       if (response?.can_deliver) {
-        dispatch(updateDeliveryFinances(response.details))
+        dispatch(updateDeliveryFinances(response.details));
+
         if (isLoggedIn && bearerToken) {
           if (addressId) {
             await updateExistingAddress(bearerToken, addressId);
@@ -366,6 +365,7 @@ const AddressAdd: FunctionComponent = () => {
       city: addressCity,
       postal_code: addressPostalCode,
     });
+
     if (!response.result) {
       dispatch(
         updateError({
@@ -376,6 +376,7 @@ const AddressAdd: FunctionComponent = () => {
       );
       return;
     }
+
     dispatch(updateNewCustomerAddress(response?.data?.address));
     dispatch(updateSelectedAddressId(response.data?.address.id));
     dispatch(updateShowAddAddress(false));
@@ -421,6 +422,7 @@ const AddressAdd: FunctionComponent = () => {
             <SvgCross />
           </CloseButton>
         </TitleContainer>
+
         <InputContainer>
           <InputItem>
             <Label>{t('@streetAddress')}</Label>
@@ -432,6 +434,7 @@ const AddressAdd: FunctionComponent = () => {
             </InputWithAutoLocate>
           </InputItem>
         </InputContainer>
+
         <InputContainer>
           <InputItem>
             <Label>{t('@additionalDeliveryInfo')}</Label>
