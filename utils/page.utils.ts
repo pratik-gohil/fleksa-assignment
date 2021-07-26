@@ -9,7 +9,7 @@ import NodeApiHttpGetUserOrderHistory from '../http/nodeapi/account/get.account.
 import NodeApiHttpGetUserParticularOrder from '../http/nodeapi/account/get.order-view-by-id.nodeapi.http';
 import NodeApiHttpGetUserAllAddress from '../http/nodeapi/account/get.account.all-address.nodeapi.http';
 
-const multiRestaurantHosts = ['127.0.0.1:3000', 'localhost:3000', 'newqa.fleksa.de', 'localhost:3214', '192.168.1.3:3000'];
+const multiRestaurantHosts = ['127.0.0.1:3000', 'localhost:3000', 'newqa.fleksa.de', 'localhost:3214', '192.168.1.14:3000'];
 
 const testingHosts = [
   'roma.fleksa.com',

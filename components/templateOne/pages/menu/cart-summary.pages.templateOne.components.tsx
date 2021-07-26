@@ -15,7 +15,7 @@ const WrapperCartSummary = styled.div`
   position: fixed;
   left: 0;
   right: 0;
-  bottom: ${props => props.theme.navMobile.height}px;
+  bottom: calc(${(props) => props.theme.navMobile.height}px + env(safe-area-inset-bottom));
   z-index: 1;
   @media (min-width: ${BREAKPOINTS.lg}px) {
     display: none;
