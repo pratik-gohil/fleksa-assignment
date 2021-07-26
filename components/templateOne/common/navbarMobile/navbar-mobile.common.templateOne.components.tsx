@@ -133,7 +133,7 @@ const NavbarMobile: FunctionComponent = ({}) => {
           );
         })}
       </List>
-      <NavbarMobileOptions isOpen={showOptions} />
+      <NavbarMobileOptions isOpen={showOptions} toggleOptions={toggleOptions} />
     </WrapperHeader>
   );
 };
