@@ -10,12 +10,18 @@ export interface IPyApiHttpPostAddressRequestData {
   addressType: AddressTypes
   urlpath: string
   postalCode: number
+  token?: string
 }
 
 export interface IPyApiHttpPostAddressAllRequestData {
   shopId: number
-  area: string
+  city: string
+  floor: string
+  address: string
+  addressType: AddressTypes
   postalCode: string
+  area?: string
+  token?: string
 }
 
 type IPyApiHttpPostAddressResponseCannotDeliver = {
@@ -37,7 +43,10 @@ export type IPyApiHttpPostAddressResponse = {
 type ResponseDeliveryPossible = {
   customer: {
     is_customer: boolean
-  }, 
+    details?: {
+      customer_address_id: number
+    }
+  }
   description: string
   possibilities: Record<string, {
     is_available: boolean
@@ -46,7 +55,7 @@ type ResponseDeliveryPossible = {
 }
 
 type ResponseDeliveryNotPossible = {
-
+  description: string
   result: false
 }
 
