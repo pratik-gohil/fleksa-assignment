@@ -56,6 +56,7 @@ const CheckoutPageTemplateOne: FunctionComponent = ({}) => {
         addressType: guestAddress.address_type,
         city: guestAddress.city,
         postalCode: guestAddress.postal_code,
+        area: '',
         token: bearerToken
       })
       console.log(response)

@@ -20,7 +20,7 @@ export interface IPyApiHttpPostAddressAllRequestData {
   address: string
   addressType: AddressTypes
   postalCode: string
-  area?: string
+  area: string
   token?: string
 }
 
