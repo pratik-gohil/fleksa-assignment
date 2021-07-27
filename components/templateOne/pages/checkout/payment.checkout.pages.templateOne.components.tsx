@@ -164,7 +164,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
 
   function isOrderPossible() {
     if (orderType === 'DELIVERY') {
-      return deliveryFinances && deliveryFinances.amount ? cartData.cartCost > deliveryFinances.amount : false;
+      return deliveryFinances && deliveryFinances.amount ? cartData.cartCost >= deliveryFinances.amount : false;
     } else {
       return true;
     }

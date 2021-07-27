@@ -379,8 +379,12 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
   async function getAvaibleBasedOnAdress({ area = '', postalCode = '', main = '', city = '' }) {
     if (shopData?.id) {
       const response = await new PyApiHttpPostAddress(configuration).postAll({
-        shopId: shopData?.id,
+        floor: '',
+        address: '',
+        addressType: "HOME",
+        city: '',
         area,
+        shopId: shopData?.id,
         postalCode,
       });
       if (response && response.result) {
