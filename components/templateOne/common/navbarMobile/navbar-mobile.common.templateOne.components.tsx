@@ -41,6 +41,7 @@ const ListItem = styled.li<{ isActive: boolean }>`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding-bottom: env(safe-area-inset-bottom);
   svg {
     width: 28px;
     height: 28px;
@@ -133,7 +134,7 @@ const NavbarMobile: FunctionComponent = ({}) => {
           );
         })}
       </List>
-      <NavbarMobileOptions isOpen={showOptions} />
+      <NavbarMobileOptions isOpen={showOptions} toggleOptions={toggleOptions} />
     </WrapperHeader>
   );
 };

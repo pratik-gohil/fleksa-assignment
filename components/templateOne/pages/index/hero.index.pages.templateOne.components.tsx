@@ -177,6 +177,7 @@ const IndexPageHero: FunctionComponent = ({}) => {
       let timer1 = setTimeout(() => {
         setActiveSlide(activeSlide + 1);
       }, slideChangeDealy);
+
       return () => {
         clearTimeout(timer1);
       };
@@ -199,7 +200,6 @@ const IndexPageHero: FunctionComponent = ({}) => {
   });
 
   useEffect(() => {
-    console.log('isShopOpened => ', isShopOpened(timingsData));
     setShop(isShopOpened(timingsData));
   }, []);
 
@@ -209,15 +209,12 @@ const IndexPageHero: FunctionComponent = ({}) => {
         <Carousel>
           {carouselImages?.map((image, index) => {
             let translateX;
-            if (index === activeSlide) {
-              translateX = 0;
-            } else if (index > activeSlide) {
-              translateX = 100;
-            } else {
-              translateX = -100;
-            }
+            if (index === activeSlide) translateX = 0;
+            else if (index > activeSlide) translateX = 100;
+            else translateX = -100;
+
             return (
-              <CarouselSlide translateX={translateX}>
+              <CarouselSlide translateX={translateX} key={index}>
                 <Image src={image} layout="fill" loading={index === 0 ? 'eager' : 'lazy'} objectFit="cover" />
               </CarouselSlide>
             );
