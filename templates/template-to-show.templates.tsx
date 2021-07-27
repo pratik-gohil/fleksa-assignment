@@ -1,5 +1,5 @@
 import { NextSeo } from 'next-seo';
-import React, { ComponentType, FunctionComponent } from 'react';
+import React, { ComponentType, FunctionComponent, useEffect } from 'react';
 import { ThemeProvider } from 'styled-components';
 import PageContainer, { IPropsPageContainer } from '../components/templateOne/common/page-container.commom.templateOne.components';
 import { PwaMeta } from '../components/templateOne/common/pwa/pwa.common.templateOne.components';
@@ -10,6 +10,8 @@ import { IMeta } from '../interfaces/common/metea.common.interfaces';
 import { useAppSelector } from '../redux/hooks.redux';
 import { selectLanguageCode } from '../redux/slices/configuration.slices.redux';
 import { selectImages, selectShop } from '../redux/slices/index.slices.redux';
+
+declare const window: any;
 
 export interface IPropsTemplateToShow {
   templateList: Array<ComponentType>;
@@ -29,6 +31,23 @@ const TemplateToShow: FunctionComponent<IPropsTemplateToShow> = ({ meta, templat
   if (meta?.image) {
     imagesForSeo.unshift({ url: meta.image });
   }
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'serviceWorker' in navigator && window.workbox !== undefined) {
+      const wb = window.workbox as any
+      const promptNewVersionAvailable = () => {
+        wb.messageSkipWaiting()
+        setTimeout(() => {
+          window.location.reload()
+        }, 300);
+      }
+
+      wb.addEventListener('waiting', promptNewVersionAvailable)
+
+      // never forget to call register as auto register is turned off in next.config.js
+      wb.register()
+    }
+  }, [])
 
   const ViewTemplate = templateList[templateNumber];
   return (

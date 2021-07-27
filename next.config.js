@@ -7,6 +7,8 @@ module.exports = withPWA({
   pwa: {
     dest: 'public',
     runtimeCaching,
+    register: false,
+    skipWaiting: false,
     disable: process.env.REACT_APP_PAYPAL === 'development',
   },
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
