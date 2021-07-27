@@ -8,19 +8,15 @@ import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import PyApiHttpPostAddress from '../../../../http/pyapi/address/post.address.pyapi.http';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
-import { selectConfiguration, selectLanguageCode, selectSelectedMenuUrlpath } from '../../../../redux/slices/configuration.slices.redux';
+import { selectConfiguration, selectLanguageCode, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
 import {
   selectAddressByType,
   selectBearerToken,
   selectIsUserLoggedIn,
-  updateExistCustomerAddress,
-  updateNewCustomerAddress,
+  updateExistCustomerAddressOrAddNew,
 } from '../../../../redux/slices/user.slices.redux';
 import { AddressTypes } from './address-manager.common.templateOne.components';
-import NodeApiHttpPostCreateNewAddressRequest from '../../../../http/nodeapi/account/post.create-address.nodeapi.http';
-import NodeApiHttpPostUpdateAddressRequest from '../../../../http/nodeapi/account/post.update-address.nodeapi.http';
 import { LS_GUEST_USER_ADDRESS } from '../../../../constants/keys-local-storage.constants';
-import { updateError } from '../../../../redux/slices/common.slices.redux';
 import { updateDeliveryFinances, updateSelectedAddressId } from '../../../../redux/slices/checkout.slices.redux';
 import { updateShowAddAddress, updateShowOrderTypeSelect } from '../../../../redux/slices/menu.slices.redux';
 
@@ -29,6 +25,7 @@ import SvgWork from '../../../../public/assets/svg/address/work.svg';
 import SvgMap from '../../../../public/assets/svg/address/map.svg';
 import SvgCross from '../../../../public/assets/svg/cross.svg';
 import SvgAutolocate from '../../../../public/assets/svg/autolocate.svg';
+import { IParticularAddress } from '../../../../interfaces/common/customer.common.interfaces';
 
 export interface IGuestAddress {
   floor: string;
@@ -199,6 +196,7 @@ let autoComplete: google.maps.places.Autocomplete;
 const AddressAdd: FunctionComponent = () => {
   const { t } = useTranslation('add-address');
   const dispatch = useAppDispatch();
+  const shopId = useAppSelector(selectSelectedMenu)
   const refAddressInput = useRef<HTMLInputElement>(null);
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
   const bearerToken = useAppSelector(selectBearerToken);
@@ -206,12 +204,11 @@ const AddressAdd: FunctionComponent = () => {
   const configuration = useAppSelector(selectConfiguration);
   const [addressType, setAddressType] = useState<AddressTypes>('HOME');
   const addressByType = useAppSelector((state) => selectAddressByType(state, addressType));
-  const selectedMenuUrlpath = useAppSelector(selectSelectedMenuUrlpath);
 
   const [errorMessage, setErrorMessage] = useState<string>();
-  const [addressId, setAddressId] = useState<number | null>(null);
+  
   const [addressMain, setAddressMain] = useState('');
-  const [addressStreet, setAddressStreet] = useState('');
+  const [_, setAddressStreet] = useState('');
   const [addressArea, setAddressArea] = useState('');
   const [addressCity, setAddressCity] = useState('');
   const [addressPostalCode, setAddressPostalCode] = useState('');
@@ -263,7 +260,6 @@ const AddressAdd: FunctionComponent = () => {
     setErrorMessage(undefined);
     if (isLoggedIn) {
       if (addressByType) {
-        setAddressId(addressByType.id);
         setAddressMain(addressByType.address || '');
         setAddressCity(addressByType.city);
         setAddressArea(addressByType.area || '');
@@ -276,7 +272,6 @@ const AddressAdd: FunctionComponent = () => {
   }, [addressByType]);
 
   function resetAddressData() {
-    setAddressId(null);
     setAddressMain('');
     setAddressCity('');
     setAddressArea('');
@@ -317,27 +312,37 @@ const AddressAdd: FunctionComponent = () => {
 
   async function onClickSubmit() {
     setErrorMessage(undefined);
-    if (selectedMenuUrlpath) {
-      const response = await new PyApiHttpPostAddress(configuration).post({
+    if (shopId) {
+      const response = await new PyApiHttpPostAddress(configuration).postAll({
         area: addressArea,
-        street: addressStreet,
         city: addressCity,
         floor: addressFloor,
         address: addressMain,
         addressType: addressType,
-        urlpath: selectedMenuUrlpath,
-        postalCode: Number(addressPostalCode),
+        shopId,
+        postalCode: addressPostalCode,
+        token: bearerToken
       });
 
-      if (response?.can_deliver) {
-        dispatch(updateDeliveryFinances(response.details));
+      console.log(response)
 
-        if (isLoggedIn && bearerToken) {
-          if (addressId) {
-            await updateExistingAddress(bearerToken, addressId);
-          } else {
-            await addNewAddress(bearerToken);
+      if (response?.result && response.possibilities[shopId]) {
+        dispatch(updateDeliveryFinances(response.possibilities[shopId].details));
+
+        if (isLoggedIn && bearerToken && response.customer.details) {
+          const addressData: IParticularAddress = {
+            id: response.customer.details?.customer_address_id,
+            address_type: addressType,
+            floor: addressFloor,
+            address: addressMain,
+            country: '',
+            postal_code: addressPostalCode,
+            city: addressCity,
+            state: '',
           }
+          dispatch(updateExistCustomerAddressOrAddNew(addressData));
+          dispatch(updateSelectedAddressId(response.customer.details?.customer_address_id));
+          dispatch(updateShowAddAddress(false));
         } else {
           const guestAddress: IGuestAddress = {
             floor: addressFloor,
@@ -356,60 +361,8 @@ const AddressAdd: FunctionComponent = () => {
     }
   }
 
-  async function addNewAddress(bearerToken: string) {
-    if (!isLoggedIn) return;
-    const response = await new NodeApiHttpPostCreateNewAddressRequest(configuration, bearerToken).post({
-      floor: addressFloor,
-      address: addressMain,
-      address_type: addressType,
-      city: addressCity,
-      postal_code: addressPostalCode,
-    });
-
-    if (!response.result) {
-      dispatch(
-        updateError({
-          show: true,
-          message: response.message,
-          severity: 'error',
-        }),
-      );
-      return;
-    }
-
-    dispatch(updateNewCustomerAddress(response?.data?.address));
-    dispatch(updateSelectedAddressId(response.data?.address.id));
-    dispatch(updateShowAddAddress(false));
-  }
-
   function onClickClose() {
     dispatch(updateShowOrderTypeSelect(true));
-    dispatch(updateShowAddAddress(false));
-  }
-
-  async function updateExistingAddress(bearerToken: string, addressId: number) {
-    if (!isLoggedIn) return;
-    await new NodeApiHttpPostUpdateAddressRequest(configuration, bearerToken).post({
-      customer_address_id: addressId,
-      updating_values: {
-        floor: addressFloor,
-        address: addressMain,
-        address_type: addressType,
-        city: addressCity,
-        postal_code: addressPostalCode,
-      },
-    });
-    dispatch(
-      updateExistCustomerAddress({
-        ...addressByType,
-        floor: addressFloor,
-        address: addressMain,
-        address_type: addressType,
-        city: addressCity,
-        postal_code: addressPostalCode,
-      }),
-    );
-    dispatch(updateSelectedAddressId(addressId));
     dispatch(updateShowAddAddress(false));
   }
 

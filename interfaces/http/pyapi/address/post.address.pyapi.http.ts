@@ -1,5 +1,6 @@
 import { AddressTypes } from "../../../../components/templateOne/common/addresses/address-manager.common.templateOne.components"
 import { IDeliveryFinances } from "../../../../redux/slices/checkout.slices.redux"
+import { IParticularAddress } from "../../../common/customer.common.interfaces"
 
 export interface IPyApiHttpPostAddressRequestData {
   area: string
@@ -21,7 +22,7 @@ export interface IPyApiHttpPostAddressAllRequestData {
   addressType: AddressTypes
   postalCode: string
   area: string
-  token?: string
+  token?: string|null
 }
 
 type IPyApiHttpPostAddressResponseCannotDeliver = {
@@ -45,10 +46,12 @@ type ResponseDeliveryPossible = {
     is_customer: boolean
     details?: {
       customer_address_id: number
+      address: IParticularAddress
     }
   }
   description: string
   possibilities: Record<string, {
+    details: IDeliveryFinances
     is_available: boolean
   }>
   result: true
