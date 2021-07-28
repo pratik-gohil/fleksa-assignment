@@ -84,18 +84,13 @@ const Button = styled.a`
   cursor: pointer;
   text-decoration: none;
 
-  &:first-of-type {
-    border-bottom-left-radius: 10px;
-  }
-  &:last-of-type {
-    border-bottom-right-radius: 10px;
-  }
+  border-bottom-left-radius: 10px;
 
   &:nth-child(2):hover {
     filter: brightness(1.3);
   }
 `;
-const Receipt = styled.a<{ back: string }>`
+const ReOrderButton = styled.button<{ back: string }>`
   background-color: ${(p) => (p.back ? p.theme.textDarkColor : 'white')};
   border: 1px solid ${(p) => p.theme.textDarkColor};
   color: ${(p) => (!p.back ? p.theme.textDarkColor : 'white')};
@@ -104,6 +99,7 @@ const Receipt = styled.a<{ back: string }>`
   justify-content: center;
   flex: 1;
   padding: 1em;
+  font-size: 1rem;
   font-weight: 600;
   outline: none;
   cursor: pointer;
@@ -147,9 +143,7 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
 
       <ButtonContainer>
         <Button href={`/account/order/${order.id}`}>{t('@review-now')}</Button>
-        <Receipt target="_blank" rel="noopener noreferrer" back="fill" href={order?.pdf_url}>
-          {t('@re-order')}
-        </Receipt>
+        <ReOrderButton back="fill">{t('@re-order')}</ReOrderButton>
       </ButtonContainer>
     </Container>
   );
