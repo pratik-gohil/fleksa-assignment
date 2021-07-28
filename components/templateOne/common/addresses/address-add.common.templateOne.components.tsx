@@ -326,7 +326,7 @@ const AddressAdd: FunctionComponent = () => {
 
       console.log(response)
 
-      if (response?.result && response.possibilities[shopId]) {
+      if (response?.result && response.possibilities[shopId].is_available) {
         dispatch(updateDeliveryFinances(response.possibilities[shopId].details));
 
         if (isLoggedIn && bearerToken && response.customer.details) {
