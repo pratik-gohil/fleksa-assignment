@@ -9,9 +9,9 @@ export type ICheckoutPaymentMethods = 'CASH' | 'STRIPE' | 'PAYPAL';
 export type ICheckoutOrderTypes = 'PICKUP' | 'DELIVERY' | 'DINE_IN' | 'RESERVATION';
 
 export interface IDeliveryFinances {
-  amount: number|null // min amout for delivery
-  charges: number|null
-  free_from: number|null
+  amount: number | null; // min amout for delivery
+  charges: number | null;
+  free_from: number | null;
 }
 
 export interface ICheckoutSliceState {
@@ -21,13 +21,13 @@ export interface ICheckoutSliceState {
   comment: string;
   wantAt: { date: ILabelValue; time: ILabelValue } | null;
   showDateTimeSelect: boolean;
-  selectedAddressId: number|null
-  deliveryFinances: IDeliveryFinances|null
+  selectedAddressId: number | null;
+  deliveryFinances: IDeliveryFinances | null;
   promoCode: {
-    code: string
-    value: number
-    token: string
-  } | null
+    code: string;
+    value: number;
+    token: string;
+  } | null;
 }
 
 const initialState: ICheckoutSliceState = {
@@ -39,7 +39,7 @@ const initialState: ICheckoutSliceState = {
   showDateTimeSelect: false,
   selectedAddressId: null,
   deliveryFinances: null,
-  promoCode: null
+  promoCode: null,
 };
 
 export const CheckoutSlice = createSlice({
@@ -75,15 +75,18 @@ export const CheckoutSlice = createSlice({
       state.wantAt = null;
       state.showDateTimeSelect = false;
       state.selectedAddressId = null;
-      state.deliveryFinances = null
+      state.deliveryFinances = null;
       state.promoCode = null;
     },
     updateSelectedAddressId(state, action) {
       state.selectedAddressId = action.payload;
     },
     updatePromoCode(state, action) {
-      state.promoCode = action.payload
-    }
+      state.promoCode = action.payload;
+    },
+    updateCheckout(state, action) {
+      state = { ...state, ...action.payload };
+    },
   },
   extraReducers: {
     [HYDRATE]: (state) => {
@@ -105,8 +108,8 @@ export const {
   updateSelectedAddressId,
   updatePromoCode,
   updateDeliveryFinances,
+  updateCheckout,
 } = CheckoutSlice.actions;
-
 
 export const selectDeliveryFinances = (state: RootState) => state.checkout.deliveryFinances;
 export const selectPaymentMethod = (state: RootState) => state.checkout.paymentMethod;

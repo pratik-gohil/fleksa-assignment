@@ -1,8 +1,15 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import { IParticularOrder } from '../../../../../interfaces/common/customer.common.interfaces';
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../../constants/grid-system-configuration';
 import { useTranslation } from 'next-i18next';
+import NodeApiHttpGetUserParticularOrder from '../../../../../http/nodeapi/account/get.order-view-by-id.nodeapi.http';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks.redux';
+import { selectBearerToken } from '../../../../../redux/slices/user.slices.redux';
+import { selectConfiguration } from '../../../../../redux/slices/configuration.slices.redux';
+import LoadingIndicator from '../../../common/loadingIndicator/loading-indicator.common.templateOne.components';
+import { updateCheckout } from '../../../../../redux/slices/checkout.slices.redux';
+import { updateError } from '../../../../../redux/slices/common.slices.redux';
 
 const Container = styled.div`
   max-width: 500px;
@@ -113,7 +120,48 @@ interface IMyAccountOrderProps {
 
 export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order }) => {
   const customDate = new Date(`${order.created_at}`);
+  const bearerToken = useAppSelector(selectBearerToken);
+  const configuration = useAppSelector(selectConfiguration);
+
   const { t } = useTranslation('account');
+  const dispatch = useAppDispatch();
+
+  const [loading, setLoading] = useState(false);
+
+  const handleReorderButtonClick = async () => {
+    try {
+      setLoading(true);
+      const response = await new NodeApiHttpGetUserParticularOrder(configuration, bearerToken as any).get({
+        order_id: order.id,
+      });
+
+      if (!response || !response.result)
+        return dispatch(
+          updateError({
+            show: true,
+            message: 'Re-order is not possible at the moment.',
+            severity: 'error',
+          }),
+        );
+
+      dispatch(
+        updateCheckout({
+          orderType: response.data?.order.order_type,
+          paymentMethod: response?.data?.order.payment_method,
+          wantAt: response.data?.order.want_at,
+          selectedAddressId: response.data?.order.is_delivery ? response.data?.order.delivery_address?.id : null,
+          deliveryFinances: {
+            charges: response.data?.order.is_delivery ? response.data?.order.price.delivery_fee : null,
+          },
+        }),
+      );
+
+      console.log('respon ', response);
+      setLoading(false);
+    } catch (e) {
+      console.error('error => ', e);
+    }
+  };
 
   return (
     <Container>
@@ -143,7 +191,9 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
 
       <ButtonContainer>
         <Button href={`/account/order/${order.id}`}>{t('@review-now')}</Button>
-        <ReOrderButton back="fill">{t('@re-order')}</ReOrderButton>
+        <ReOrderButton back="fill" onClick={handleReorderButtonClick}>
+          {loading ? <LoadingIndicator width={20} /> : t('@re-order')}
+        </ReOrderButton>
       </ButtonContainer>
     </Container>
   );

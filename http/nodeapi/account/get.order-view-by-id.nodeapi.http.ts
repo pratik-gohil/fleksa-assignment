@@ -14,6 +14,10 @@ export default class NodeApiHttpGetUserParticularOrder extends ApiHttpCommon {
       return response;
     } catch (error) {
       console.error(error);
+      return {
+        result: false,
+        message: 'Try again later.',
+      };
     }
   }
 }

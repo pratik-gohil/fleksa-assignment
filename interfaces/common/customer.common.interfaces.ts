@@ -1,4 +1,4 @@
-import { AddressTypes } from "../../components/templateOne/common/addresses/address-manager.common.templateOne.components";
+import { AddressTypes } from '../../components/templateOne/common/addresses/address-manager.common.templateOne.components';
 
 export interface ICustomer {
   name: string;
@@ -64,7 +64,7 @@ export interface IParticularOrderBriefInfo {
   description: string;
   status: string;
   is_delivery: boolean;
-  delivery_address?: IDeliveryAddress;
+  delivery_address?: IParticularAddress;
   payment_method: string;
   pdf_url?: string;
   price: {
