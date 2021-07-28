@@ -67,6 +67,12 @@ export const CheckoutSlice = createSlice({
     updateDeliveryFinances(state, action) {
       state.deliveryFinances = action.payload;
     },
+    updateSelectedAddressId(state, action) {
+      state.selectedAddressId = action.payload;
+    },
+    updatePromoCode(state, action) {
+      state.promoCode = action.payload;
+    },
     updateClearCheckout(state) {
       state.orderType = null;
       state.paymentMethod = 'CASH';
@@ -78,14 +84,15 @@ export const CheckoutSlice = createSlice({
       state.deliveryFinances = null;
       state.promoCode = null;
     },
-    updateSelectedAddressId(state, action) {
-      state.selectedAddressId = action.payload;
-    },
-    updatePromoCode(state, action) {
-      state.promoCode = action.payload;
-    },
     updateCheckout(state, action) {
-      state = { ...state, ...action.payload };
+      state.orderType = action.payload.orderType || state.orderType;
+      state.paymentMethod = action.payload.paymentMethod || state.paymentMethod;
+      state.tip = action.payload.tip || state.tip;
+      state.comment = action.payload.comment || state.comment;
+      state.wantAt = action.payload.wantAt || state.wantAt;
+      state.selectedAddressId = action.payload.selectedAddressId || state.selectedAddressId;
+      state.deliveryFinances = action.payload.deliveryFinances || state.deliveryFinances;
+      state.promoCode = action.payload.promoCode || state.promoCode;
     },
   },
   extraReducers: {
