@@ -10,6 +10,7 @@ import { selectConfiguration } from '../../../../../redux/slices/configuration.s
 import LoadingIndicator from '../../../common/loadingIndicator/loading-indicator.common.templateOne.components';
 import { updateCheckout } from '../../../../../redux/slices/checkout.slices.redux';
 import { updateError } from '../../../../../redux/slices/common.slices.redux';
+import moment from 'moment';
 
 const Container = styled.div`
   max-width: 500px;
@@ -179,12 +180,9 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
         <Right>
           <Price>&euro; {order.amount.toFixed(2).replace('.', ',')}</Price>
           <TimeDate>
-            {customDate.toLocaleString('default', {
-              hour12: false,
-              timeStyle: 'short',
-            })}
+            {moment(customDate).format('HH:mm')}
             <Dot>.</Dot>
-            {customDate.toLocaleString('default', { dateStyle: 'medium' })}
+            {moment(customDate).format('ll')}
           </TimeDate>
         </Right>
       </TextContainer>
