@@ -1,3 +1,5 @@
-declare let self: ServiceWorkerGlobalScope
+// declare let self: ServiceWorkerGlobalScope;
 
-console.error('Updating to new version')
+// console.error('Updating to new version');
+
+export {};
