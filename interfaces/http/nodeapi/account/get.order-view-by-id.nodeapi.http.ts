@@ -1,4 +1,4 @@
-import { IParticularOrder } from '../../../common/customer.common.interfaces';
+import { IParticularOrderBriefInfo } from '../../../common/customer.common.interfaces';
 
 export interface INodeApiHttpGetUserParticularOrderRequestData {
   order_id: number;
@@ -6,7 +6,8 @@ export interface INodeApiHttpGetUserParticularOrderRequestData {
 
 export interface INodeApiHttpGetUserParticularOrderResponse {
   result: boolean;
-  data: {
-    order?: Array<IParticularOrder>;
+  data?: {
+    order: IParticularOrderBriefInfo;
   };
+  message?: string;
 }
