@@ -99,7 +99,7 @@ export async function getServerSidePropsCommon(
         const particularOrder = await new NodeApiHttpGetUserParticularOrder(configuration, bearerToken).get({
           order_id: ctx.query.id,
         });
-        ctx.store.dispatch(updateCustomer({ ...userData?.data.customer, current_order: particularOrder?.data.order }));
+        ctx.store.dispatch(updateCustomer({ ...userData?.data.customer, current_order: particularOrder?.data?.order }));
       }
 
       // TODO: Request for all address order page
