@@ -64,7 +64,6 @@ const ReservationTemplateOne: FunctionComponent = ({}) => {
     label: '',
   });
   const [totalGuest, setTotalGuest] = useState('2');
-  const [isAvailable, setIsAvailable] = useState(false);
 
   return (
     <ReservationContainer>
@@ -88,11 +87,10 @@ const ReservationTemplateOne: FunctionComponent = ({}) => {
                       setDate={setDate}
                       totalGuest={totalGuest}
                       setTotalGuest={setTotalGuest}
-                      setIsAvailable={setIsAvailable}
                     />
                   </Col>
                   <Col xl={6} lg={6} sm={12}>
-                    <FormLeftInputs time={time} date={date} totalGuest={totalGuest} isAvailable={isAvailable} />
+                    <FormLeftInputs time={time} date={date} totalGuest={totalGuest} />
                   </Col>
                 </Row>
               </FormContainer>

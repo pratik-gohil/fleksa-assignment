@@ -9,7 +9,7 @@ import LoginAllPages from '../../common/login/login.common.templateOne.component
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { updateError } from '../../../../redux/slices/common.slices.redux';
 import { selectConfiguration, updateShowLogin } from '../../../../redux/slices/configuration.slices.redux';
-import { selectShop } from '../../../../redux/slices/index.slices.redux';
+import { selectAddress, selectShop } from '../../../../redux/slices/index.slices.redux';
 import { selectBearerToken, selectCustomer, selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
 import { ILabelValue } from '../../../../utils/restaurant-timings.utils';
 import { useRouter } from 'next/router';
@@ -123,14 +123,14 @@ interface IFormLeftInputsProps {
   date: string;
   time: ILabelValue;
   totalGuest: string;
-  isAvailable: boolean;
 }
 
-const FormLeftInputs = ({ date, time, totalGuest, isAvailable }: IFormLeftInputsProps) => {
+const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
   const bearerToken = useAppSelector(selectBearerToken);
   const configuration = useAppSelector(selectConfiguration);
   const shopData = useAppSelector(selectShop);
   const customerData = useAppSelector(selectCustomer);
+  const addressData = useAppSelector(selectAddress);
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -261,7 +261,7 @@ const FormLeftInputs = ({ date, time, totalGuest, isAvailable }: IFormLeftInputs
           {t('@agreement')} <LinkText href="#">{t('@terms')}</LinkText> {t('@and')} <LinkText href="#">{t('@policy')}</LinkText>
         </Acknowledgement>
 
-        <ReservationButton onClick={handleReserveButtonClick} type="button" disabled={!isAvailable}>
+        <ReservationButton onClick={handleReserveButtonClick} type="button" disabled={!addressData?.has_reservations}>
           {loading ? <LoadingIndicator width={20} /> : <ButtonText> {t('@reserve-now')} </ButtonText>}
         </ReservationButton>
 

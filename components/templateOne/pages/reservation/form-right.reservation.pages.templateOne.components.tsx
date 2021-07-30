@@ -157,33 +157,24 @@ interface IFormRightInputsProps {
   setTotalGuest: React.Dispatch<React.SetStateAction<string>>;
   setDate: React.Dispatch<React.SetStateAction<string>>;
   setTime: React.Dispatch<React.SetStateAction<ILabelValue>>;
-  setIsAvailable: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const timeUtils = new RestaurantTimingUtils();
 
-const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGuest, setIsAvailable }: IFormRightInputsProps) => {
+const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGuest }: IFormRightInputsProps) => {
   const timingsData = useAppSelector(selectTimings);
   const addressData = useAppSelector(selectAddress);
   const currentLanguage = useAppSelector(selectLanguage);
   const [timingList, setTimingList] = useState<ILabelValue[]>([]);
   const { t } = useTranslation('reservation');
 
-  const handleDateChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDate(e.target.value);
-  };
+  const handleDateChange = async (e: React.ChangeEvent<HTMLInputElement>) => setDate(e.target.value);
 
   // TODO: this is called when user selects or changes  date
   useEffect(() => {
-    if (!date) return;
+    if (!date || !addressData?.has_reservations) return;
 
     if (date && timingsData && addressData?.prepare_time && addressData?.delivery_time) {
-      // TODO: Today with not available
-      if (moment(date).format('dddd').toUpperCase() === moment().format('dddd').toUpperCase() && !addressData?.has_reservations) {
-        setIsAvailable(false);
-        return setTimingList([]);
-      }
-
       const timeData = timeUtils.generateTimeList({
         date: {
           value: moment(date).format().toUpperCase(),
@@ -201,14 +192,12 @@ const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGue
 
       if (timeData.length) {
         setTimingList(timeData);
-        setIsAvailable(true);
 
         setTime({
           value: timeData[0]?.value || '-',
           label: '',
         });
       } else {
-        setIsAvailable(false);
         setDate(moment(date).add(1, 'days').format('YYYY-MM-DD'));
       } // ? Set next day if not exist
     }
