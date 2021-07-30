@@ -48,7 +48,7 @@ export async function getServerSidePropsCommon(
     const host: string = isMultiRestaurantHost ? restaurantDomain || 'roma.fleksa.com' : ctx.req.headers.host;
     const testHost = testingHosts.includes(host);
     const baseUrlPyApi = testHost ? 'https://myqa.fleksa.com' : 'https://my.fleksa.com';
-    const baseUrlNodeApi = testHost ? 'https://newqa.fleksa.de' : 'https://new.fleksa.de';
+    const baseUrlNodeApi = testHost ? 'http://newqa.fleksa.de' : 'https://new.fleksa.de';
 
     ctx.store.dispatch(updateLanguage((ctx as any).locale));
     const configuration: IConfiguration = {
