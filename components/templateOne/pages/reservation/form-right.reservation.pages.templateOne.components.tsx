@@ -145,6 +145,11 @@ const IndigationText = styled.p`
   color: rgba(0, 0, 0, 0.4);
 `;
 
+const Dashed = styled.span`
+  text-align: center;
+  display: block;
+`;
+
 interface IFormRightInputsProps {
   date: string;
   time: ILabelValue;
@@ -152,11 +157,12 @@ interface IFormRightInputsProps {
   setTotalGuest: React.Dispatch<React.SetStateAction<string>>;
   setDate: React.Dispatch<React.SetStateAction<string>>;
   setTime: React.Dispatch<React.SetStateAction<ILabelValue>>;
+  setIsAvailable: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const timeUtils = new RestaurantTimingUtils();
 
-const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGuest }: IFormRightInputsProps) => {
+const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGuest, setIsAvailable }: IFormRightInputsProps) => {
   const timingsData = useAppSelector(selectTimings);
   const addressData = useAppSelector(selectAddress);
   const currentLanguage = useAppSelector(selectLanguage);
@@ -172,6 +178,12 @@ const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGue
     if (!date) return;
 
     if (date && timingsData && addressData?.prepare_time && addressData?.delivery_time) {
+      // TODO: Today with not available
+      if (moment(date).format('dddd').toUpperCase() === moment().format('dddd').toUpperCase() && !addressData?.has_reservations) {
+        setIsAvailable(false);
+        return setTimingList([]);
+      }
+
       const timeData = timeUtils.generateTimeList({
         date: {
           value: moment(date).format().toUpperCase(),
@@ -189,12 +201,16 @@ const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGue
 
       if (timeData.length) {
         setTimingList(timeData);
+        setIsAvailable(true);
 
         setTime({
           value: timeData[0]?.value || '-',
           label: '',
         });
-      } else setDate(moment(date).add(1, 'days').format('YYYY-MM-DD')); // ? Set next day if not exist
+      } else {
+        setIsAvailable(false);
+        setDate(moment(date).add(1, 'days').format('YYYY-MM-DD'));
+      } // ? Set next day if not exist
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -226,9 +242,7 @@ const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGue
             </InputBoxDateTime>
           </Col>
           <Col xl={3} lg={3}>
-            <InputBox visible={!!timingList.length}>
-              <ChoosenTime>{time.value}</ChoosenTime>
-            </InputBox>
+            <InputBox visible={!!timingList.length}>{timingList.length ? <ChoosenTime>{time.value}</ChoosenTime> : <Dashed>-</Dashed>}</InputBox>
           </Col>
         </Row>
         <Row nogutter>

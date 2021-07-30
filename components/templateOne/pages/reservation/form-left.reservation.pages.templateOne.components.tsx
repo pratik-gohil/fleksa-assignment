@@ -96,7 +96,7 @@ const ReservationButton = styled.button`
   font-size: 1em;
   font-weight: 600;
   color: white;
-  background-color: ${(p) => p.theme.textDarkColor};
+  background-color: ${(p) => (p.disabled ? 'rgba(0, 0, 0, 0.4)' : p.theme.textDarkColor)};
   width: 100%;
   margin: 0 auto;
   border: none;
@@ -107,9 +107,9 @@ const ReservationButton = styled.button`
   align-items: center;
   justify-content: center;
 
-  cursor: pointer;
+  cursor: ${(p) => (p.disabled ? 'not-allowed' : 'pointer')};
   &:hover {
-    filter: brightness(1.3);
+    filter: ${(p) => (p.disabled ? 'brightness(1)' : 'brightness(1.3)')};
   }
 
   @media (min-width: 576px) {
@@ -123,9 +123,10 @@ interface IFormLeftInputsProps {
   date: string;
   time: ILabelValue;
   totalGuest: string;
+  isAvailable: boolean;
 }
 
-const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
+const FormLeftInputs = ({ date, time, totalGuest, isAvailable }: IFormLeftInputsProps) => {
   const bearerToken = useAppSelector(selectBearerToken);
   const configuration = useAppSelector(selectConfiguration);
   const shopData = useAppSelector(selectShop);
@@ -260,7 +261,7 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
           {t('@agreement')} <LinkText href="#">{t('@terms')}</LinkText> {t('@and')} <LinkText href="#">{t('@policy')}</LinkText>
         </Acknowledgement>
 
-        <ReservationButton onClick={handleReserveButtonClick} type="button">
+        <ReservationButton onClick={handleReserveButtonClick} type="button" disabled={!isAvailable}>
           {loading ? <LoadingIndicator width={20} /> : <ButtonText> {t('@reserve-now')} </ButtonText>}
         </ReservationButton>
 
