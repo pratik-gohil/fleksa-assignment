@@ -2,7 +2,7 @@ import { useTranslation } from 'next-i18next';
 import { Fragment, FunctionComponent } from 'react';
 import styled from 'styled-components';
 import { useAppSelector } from '../../../../redux/hooks.redux';
-import { selectOffers, selectShop } from '../../../../redux/slices/index.slices.redux';
+import { selectAddress, selectOffers, selectShop } from '../../../../redux/slices/index.slices.redux';
 import NavLanguageChange from '../navbarDesktop/nav-language-change.templateOne.components';
 
 import SvgRestaurant from '../../../../public/assets/svg/restaurant.svg';
@@ -110,6 +110,7 @@ const TempHider = styled.div`
 
 const NavbarMobileOptions: FunctionComponent<IPropsNavbarMobileOptions> = ({ isOpen, toggleOptions }) => {
   const shopData = useAppSelector(selectShop);
+  const addressData = useAppSelector(selectAddress);
   const customerData = useAppSelector(selectCustomer);
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
   const offersData = useAppSelector(selectOffers);
@@ -132,7 +133,7 @@ const NavbarMobileOptions: FunctionComponent<IPropsNavbarMobileOptions> = ({ isO
               title: t('@reservation'),
               icon: SvgReservation,
               link: `/${languageCode}/reservation`,
-              show: true,
+              show: addressData?.has_reservations,
             },
             {
               title: t('@gallery'),

@@ -148,10 +148,7 @@ export const isShopOpened: any = (
   let payload = (timings[dayName] as ITimingsDay).shop;
 
   // TODO: Switch the payload if it's today and the pickup was false only delivery available
-  if (isToday && optional.has_delivery && !optional.has_pickup) {
-    payload = (timings[dayName] as ITimingsDay).delivery;
-    console.log('payload ', payload);
-  }
+  if (isToday && optional.has_delivery && !optional.has_pickup) payload = (timings[dayName] as ITimingsDay).delivery;
 
   // TODO: Return after checked all the days
   if (count === 7)
