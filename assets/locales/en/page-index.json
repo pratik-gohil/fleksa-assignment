@@ -1,6 +1,8 @@
 {
   "@order-online": "ORDER NOW",
   "@pre-online": "PRE-ORDER",
+  "@discover": "DISCOVER",
+  "@closed": "Currently unavailable",
   "@favourite-dishes-title": "OUR MOST POPULAR DISHES",
   "@customer-review-title": "WHAT OUR CUSTOMERS SAY ABOUT US",
   "@our-location": "Our Locations",

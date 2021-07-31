@@ -147,15 +147,13 @@ export const isShopOpened: any = (timings: ITimings, currentDay: moment.Moment, 
   if (count === 7)
     return {
       availability: false,
+      isClosed: true,
     };
 
   if (!payload.shop.availability) return isShopOpened(timings, moment(currentDay).add(1, 'days'), count + 1);
 
   // TODO: Check different conditions for today only
   if (isToday && payload.shop.timings) {
-    console.log('payload ', payload.shop?.timings);
-    console.log('current time ', currentDay.format('HH:mm'));
-
     // TODO: Check currently before the open time
     if (currentDay.diff(moment(payload?.shop?.timings[0]?.open, 'h:mm a'), 'minutes') <= 0) {
       return {
@@ -164,6 +162,7 @@ export const isShopOpened: any = (timings: ITimings, currentDay: moment.Moment, 
           day: moment(payload?.shop?.timings[0]?.open, 'h:mm a').add(0, 'days').calendar().split(' at ')[0],
           time: moment(payload?.shop?.timings[0]?.open, 'h:mm a').format('HH:mm'),
         },
+        isClosed: false,
       };
     }
 
@@ -178,6 +177,7 @@ export const isShopOpened: any = (timings: ITimings, currentDay: moment.Moment, 
           day: moment(payload?.shop?.timings[1]?.open, 'h:mm a').add(0, 'days').calendar().split(' at ')[0],
           time: moment(payload?.shop?.timings[1]?.open, 'h:mm a').format('HH:mm'),
         },
+        isClosed: false,
       };
     // TODO: Check currently after the close time
     else if (currentDay.diff(moment(payload.shop?.timings[payload.shop?.timings.length - 1]?.close, 'h:mm a'), 'minutes') >= 0)
@@ -185,11 +185,13 @@ export const isShopOpened: any = (timings: ITimings, currentDay: moment.Moment, 
     else
       return {
         availability: true,
+        isClosed: false,
       };
   } else if (payload.shop.timings) {
     // TODO: Just simply return the next day payload
     return {
       availability: false,
+      isClosed: false,
       next: {
         day: currentDay.add(0, 'days').calendar().split(' at ')[0],
         time: moment(payload?.shop?.timings[0]?.open, 'h:mm a').format('HH:mm'),

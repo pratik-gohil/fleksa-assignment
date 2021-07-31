@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 import { isShopOpened } from '../../../../utils/restaurant-timings.utils';
 import { useAppSelector } from '../../../../redux/hooks.redux';
-import { selectShop, selectTimings } from '../../../../redux/slices/index.slices.redux';
+import { selectAddress, selectShop, selectTimings } from '../../../../redux/slices/index.slices.redux';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { selectLanguage, selectLanguageCode, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
 import { useTranslation } from 'react-i18next';
@@ -158,12 +158,22 @@ const CarouselSlide = styled.div<{ translateX: number }>`
 
 const slideChangeDealy = 5000;
 
+const INITIAL_TIMING_STATE = {
+  availability: false,
+  isClosed: false,
+  next: {
+    day: '',
+    time: '',
+  },
+};
+
 const IndexPageHero: FunctionComponent = ({}) => {
   const language = useAppSelector(selectLanguage);
   const shopData = useAppSelector(selectShop);
   const timingsData = useAppSelector(selectTimings);
   const languageCode = useAppSelector(selectLanguageCode);
   const selectedMenuId = useAppSelector(selectSelectedMenu);
+  const addressData = useAppSelector(selectAddress);
   const { t } = useTranslation('page-index');
 
   const [carouselImages, setCarouselImages] = useState<Array<string>>(shopData?.cover_json?.images || []);
@@ -187,21 +197,21 @@ const IndexPageHero: FunctionComponent = ({}) => {
 
   const [shop, setShop] = useState<{
     availability: boolean;
+    isClosed: boolean;
     next?: {
       day: string;
       time: string;
       dayNumber?: string;
     };
-  }>({
-    availability: false,
-    next: {
-      day: '',
-      time: '',
-    },
-  });
+  }>(INITIAL_TIMING_STATE);
 
   useEffect(() => {
-    console.log(isShopOpened(timingsData, moment()));
+    if (!addressData?.has_delivery && !addressData?.has_pickup && !addressData?.has_dinein && !addressData?.has_reservations)
+      return setShop({
+        availability: false,
+        isClosed: true,
+      });
+
     setShop(isShopOpened(timingsData, moment()));
   }, []);
 
@@ -236,13 +246,18 @@ const IndexPageHero: FunctionComponent = ({}) => {
 
                 {shop.availability ? (
                   <OrderButton href={selectedMenuId ? `/${languageCode}/menu/${selectedMenuId}` : '/menu'}>{t('@order-online')}</OrderButton>
-                ) : (
+                ) : !shop.isClosed ? (
                   <>
                     <OrderButton href={selectedMenuId ? `/${languageCode}/menu/${selectedMenuId}` : '/menu'}>{t('@pre-online')}</OrderButton>
                     <SubTitle2>
                       {t('@next-hours')} {shop.next?.dayNumber ? ` ${shop.next?.dayNumber} ,` : ''} {t(`@${shop.next?.day.toUpperCase()}`)},{' '}
                       {shop.next?.time}
                     </SubTitle2>
+                  </>
+                ) : (
+                  <>
+                    <OrderButton href={selectedMenuId ? `/${languageCode}/menu/${selectedMenuId}` : '/menu'}>{t('@discover')}</OrderButton>
+                    <SubTitle2>{t('@closed')}</SubTitle2>
                   </>
                 )}
               </Col>
