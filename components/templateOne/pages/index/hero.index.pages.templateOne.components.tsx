@@ -212,7 +212,7 @@ const IndexPageHero: FunctionComponent = ({}) => {
         isClosed: true,
       });
 
-    setShop(isShopOpened(timingsData, moment()));
+    setShop(isShopOpened(timingsData, moment(), { has_pickup: addressData.has_pickup, has_delivery: addressData.has_delivery }));
   }, []);
 
   return (

@@ -136,11 +136,22 @@ export default class RestaurantTimingUtils {
  * @param timings Array of timings object
  * @returns boolean
  */
-export const isShopOpened: any = (timings: ITimings, currentDay: moment.Moment, currentCount?: number) => {
+export const isShopOpened: any = (
+  timings: ITimings,
+  currentDay: moment.Moment,
+  optional: { has_pickup: boolean; has_delivery: boolean },
+  currentCount?: number,
+) => {
   const dayName = currentDay.format('dddd').toUpperCase();
-  const payload = (timings[dayName] as ITimingsDay).shop;
   const count = currentCount || 0;
   const isToday = count === 0;
+  let payload = (timings[dayName] as ITimingsDay).shop;
+
+  // TODO: Switch the payload if it's today and the pickup was false only delivery available
+  if (isToday && optional.has_delivery && !optional.has_pickup) {
+    payload = (timings[dayName] as ITimingsDay).delivery;
+    console.log('payload ', payload);
+  }
 
   // TODO: Return after checked all the days
   if (count === 7)
@@ -149,7 +160,7 @@ export const isShopOpened: any = (timings: ITimings, currentDay: moment.Moment, 
       isClosed: true,
     };
 
-  if (!payload.availability) return isShopOpened(timings, moment(currentDay).add(1, 'days'), count + 1);
+  if (!payload.availability) return isShopOpened(timings, moment(currentDay).add(1, 'days'), optional, count + 1);
 
   // TODO: Check different conditions for today only
   if (isToday && payload.timings) {
@@ -180,7 +191,7 @@ export const isShopOpened: any = (timings: ITimings, currentDay: moment.Moment, 
       };
     // TODO: Check currently after the close time
     else if (currentDay.diff(moment(payload?.timings[payload?.timings.length - 1]?.close, 'h:mm a'), 'minutes') >= 0)
-      return isShopOpened(timings, moment(currentDay).add(1, 'days'), count + 1);
+      return isShopOpened(timings, moment(currentDay).add(1, 'days'), optional, count + 1);
     else
       return {
         availability: true,
