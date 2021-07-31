@@ -2,7 +2,7 @@ import { useTranslation } from 'next-i18next';
 import { Fragment, FunctionComponent } from 'react';
 import styled from 'styled-components';
 import { useAppSelector } from '../../../../redux/hooks.redux';
-import { selectAddress, selectOffers, selectShop } from '../../../../redux/slices/index.slices.redux';
+import { selectAddress, selectImages, selectOffers, selectShop } from '../../../../redux/slices/index.slices.redux';
 import NavLanguageChange from '../navbarDesktop/nav-language-change.templateOne.components';
 
 import SvgRestaurant from '../../../../public/assets/svg/restaurant.svg';
@@ -115,6 +115,7 @@ const NavbarMobileOptions: FunctionComponent<IPropsNavbarMobileOptions> = ({ isO
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
   const offersData = useAppSelector(selectOffers);
   const languageCode = useAppSelector(selectLanguageCode);
+  const imagesData = useAppSelector(selectImages);
 
   const { t } = useTranslation('header');
 
@@ -139,7 +140,7 @@ const NavbarMobileOptions: FunctionComponent<IPropsNavbarMobileOptions> = ({ isO
               title: t('@gallery'),
               icon: SvgGallery,
               link: `/${languageCode}/gallery`,
-              show: true,
+              show: imagesData.length > 0,
             },
             {
               title: t('@offers'),
