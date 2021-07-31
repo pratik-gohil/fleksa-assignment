@@ -34,15 +34,14 @@ interface ITimingsOpenClose {
 
 export interface ITimingsDay {
   available?: boolean;
-  delivery: {
-    availability: boolean;
-    timings: Array<ITimingsOpenClose> | undefined;
-  };
-  shop: {
-    availability: boolean;
-    timings: Array<ITimingsOpenClose> | undefined;
-  };
+  delivery: ITimeObject;
+  shop: ITimeObject;
   updated_at?: string;
+}
+
+export interface ITimeObject {
+  availability: boolean;
+  timings: Array<ITimingsOpenClose> | undefined;
 }
 
 export interface ITimingsHoliday {

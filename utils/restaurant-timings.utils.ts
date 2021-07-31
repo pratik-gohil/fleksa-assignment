@@ -137,9 +137,8 @@ export default class RestaurantTimingUtils {
  * @returns boolean
  */
 export const isShopOpened: any = (timings: ITimings, currentDay: moment.Moment, currentCount?: number) => {
-  console.log('current ', currentDay, ' timing ', timings);
   const dayName = currentDay.format('dddd').toUpperCase();
-  const payload = timings[dayName] as ITimingsDay;
+  const payload = (timings[dayName] as ITimingsDay).shop;
   const count = currentCount || 0;
   const isToday = count === 0;
 
@@ -150,17 +149,17 @@ export const isShopOpened: any = (timings: ITimings, currentDay: moment.Moment, 
       isClosed: true,
     };
 
-  if (!payload.shop.availability) return isShopOpened(timings, moment(currentDay).add(1, 'days'), count + 1);
+  if (!payload.availability) return isShopOpened(timings, moment(currentDay).add(1, 'days'), count + 1);
 
   // TODO: Check different conditions for today only
-  if (isToday && payload.shop.timings) {
+  if (isToday && payload.timings) {
     // TODO: Check currently before the open time
-    if (currentDay.diff(moment(payload?.shop?.timings[0]?.open, 'h:mm a'), 'minutes') <= 0) {
+    if (currentDay.diff(moment(payload?.timings[0]?.open, 'h:mm a'), 'minutes') <= 0) {
       return {
         availability: false,
         next: {
-          day: moment(payload?.shop?.timings[0]?.open, 'h:mm a').add(0, 'days').calendar().split(' at ')[0],
-          time: moment(payload?.shop?.timings[0]?.open, 'h:mm a').format('HH:mm'),
+          day: moment(payload?.timings[0]?.open, 'h:mm a').add(0, 'days').calendar().split(' at ')[0],
+          time: moment(payload?.timings[0]?.open, 'h:mm a').format('HH:mm'),
         },
         isClosed: false,
       };
@@ -168,33 +167,33 @@ export const isShopOpened: any = (timings: ITimings, currentDay: moment.Moment, 
 
     // TODO: Check currently between the break times
     else if (
-      !!payload.shop?.timings.length &&
-      currentDay.isBetween(moment(payload.shop?.timings[0]?.close, 'h:mm a'), moment(payload.shop?.timings[1]?.open, 'h:mm a'))
+      !!payload?.timings.length &&
+      currentDay.isBetween(moment(payload?.timings[0]?.close, 'h:mm a'), moment(payload?.timings[1]?.open, 'h:mm a'))
     )
       return {
         availability: false,
         next: {
-          day: moment(payload?.shop?.timings[1]?.open, 'h:mm a').add(0, 'days').calendar().split(' at ')[0],
-          time: moment(payload?.shop?.timings[1]?.open, 'h:mm a').format('HH:mm'),
+          day: moment(payload?.timings[1]?.open, 'h:mm a').add(0, 'days').calendar().split(' at ')[0],
+          time: moment(payload?.timings[1]?.open, 'h:mm a').format('HH:mm'),
         },
         isClosed: false,
       };
     // TODO: Check currently after the close time
-    else if (currentDay.diff(moment(payload.shop?.timings[payload.shop?.timings.length - 1]?.close, 'h:mm a'), 'minutes') >= 0)
+    else if (currentDay.diff(moment(payload?.timings[payload?.timings.length - 1]?.close, 'h:mm a'), 'minutes') >= 0)
       return isShopOpened(timings, moment(currentDay).add(1, 'days'), count + 1);
     else
       return {
         availability: true,
         isClosed: false,
       };
-  } else if (payload.shop.timings) {
+  } else if (payload.timings) {
     // TODO: Just simply return the next day payload
     return {
       availability: false,
       isClosed: false,
       next: {
         day: currentDay.add(0, 'days').calendar().split(' at ')[0],
-        time: moment(payload?.shop?.timings[0]?.open, 'h:mm a').format('HH:mm'),
+        time: moment(payload?.timings[0]?.open, 'h:mm a').format('HH:mm'),
         dayNumber: count > 1 ? currentDay.add(0, 'days').format('D') : undefined,
       },
     };
