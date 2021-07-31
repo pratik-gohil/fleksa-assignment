@@ -9,6 +9,7 @@ import { selectShop, selectTimings } from '../../../../redux/slices/index.slices
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { selectLanguage, selectLanguageCode, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
 import { useTranslation } from 'react-i18next';
+import moment from 'moment';
 
 const WrapperSection = styled.section`
   height: calc(100vh - ${(props) => props.theme.navMobile.height}px);
@@ -185,14 +186,14 @@ const IndexPageHero: FunctionComponent = ({}) => {
   }, [activeSlide]);
 
   const [shop, setShop] = useState<{
-    available: boolean;
+    availability: boolean;
     next?: {
       day: string;
       time: string;
       dayNumber?: string;
     };
   }>({
-    available: false,
+    availability: false,
     next: {
       day: '',
       time: '',
@@ -200,7 +201,8 @@ const IndexPageHero: FunctionComponent = ({}) => {
   });
 
   useEffect(() => {
-    setShop(isShopOpened(timingsData));
+    console.log(isShopOpened(timingsData, moment()));
+    setShop(isShopOpened(timingsData, moment()));
   }, []);
 
   return (
@@ -232,7 +234,7 @@ const IndexPageHero: FunctionComponent = ({}) => {
                 <Title>{shopData?.name}</Title>
                 <SubTitle>{shopData?.category_json[language]}</SubTitle>
 
-                {shop.available ? (
+                {shop.availability ? (
                   <OrderButton href={selectedMenuId ? `/${languageCode}/menu/${selectedMenuId}` : '/menu'}>{t('@order-online')}</OrderButton>
                 ) : (
                   <>

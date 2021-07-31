@@ -136,77 +136,65 @@ export default class RestaurantTimingUtils {
  * @param timings Array of timings object
  * @returns boolean
  */
-export function isShopOpened(timings: ITimings | null) {
-  let availability = {
-    available: false,
-    next: {
-      day: '',
-      time: '',
-    },
-  };
+export const isShopOpened: any = (timings: ITimings, currentDay: moment.Moment, currentCount?: number) => {
+  console.log('current ', currentDay, ' timing ', timings);
+  const dayName = currentDay.format('dddd').toUpperCase();
+  const payload = timings[dayName] as ITimingsDay;
+  const count = currentCount || 0;
+  const isToday = count === 0;
 
-  if (!timings) return availability;
-
-  const currentDay = moment();
-  const weekDay = currentDay.format('dddd').toUpperCase();
-  const currentDayTimings = timings[weekDay] as ITimingsDay;
-
-  if (!currentDayTimings?.shop.availability || !currentDayTimings.shop.timings) return goNextDay(timings, currentDay);
-
-  // TODO: Check currently before the open time
-  if (currentDay.diff(moment(currentDayTimings.shop?.timings[0]?.open, 'h:mm a'), 'minutes') <= 0) {
+  // TODO: Return after checked all the days
+  if (count === 7)
     return {
-      ...availability,
-      next: {
-        day: moment(currentDayTimings?.shop?.timings[0]?.open, 'h:mm a').add(0, 'days').calendar().split(' at ')[0],
-        time: moment(currentDayTimings?.shop?.timings[0]?.open, 'h:mm a').format('HH:mm'),
-      },
+      availability: false,
     };
-  }
 
-  // TODO: Check currently after the close time
-  else if (currentDay.diff(moment(currentDayTimings.shop?.timings[currentDayTimings.shop?.timings.length - 1]?.close, 'h:mm a'), 'minutes') >= 0) {
-    return goNextDay(timings, currentDay);
-  }
-  // TODO: Check currently between the break times
-  else if (
-    currentDay.isBetween(moment(currentDayTimings.shop?.timings[0]?.close, 'h:mm a'), moment(currentDayTimings.shop?.timings[1]?.open, 'h:mm a')) &&
-    !!currentDayTimings.shop?.timings.length
-  ) {
-    return {
-      ...availability,
-      next: {
-        day: moment(currentDayTimings?.shop?.timings[1]?.open, 'h:mm a').add(0, 'days').calendar().split(' at ')[0],
-        time: moment(currentDayTimings?.shop?.timings[1]?.open, 'h:mm a').format('HH:mm'),
-      },
-    };
-  } else {
-    return {
-      available: true,
-    };
-  }
-}
+  if (!payload.shop.availability) return isShopOpened(timings, moment(currentDay).add(1, 'days'), count + 1);
 
-const goNextDay = (timings: ITimings, currentDay: moment.Moment) => {
-  const nextDay = moment(currentDay.add(0, 'days'));
-  let day = nextDay.format('dddd').toUpperCase();
+  // TODO: Check different conditions for today only
+  if (isToday && payload.shop.timings) {
+    console.log('payload ', payload.shop?.timings);
+    console.log('current time ', currentDay.format('HH:mm'));
 
-  while (true) {
-    const processDay = timings[day] as ITimingsDay;
-
-    if (!processDay?.shop.timings || !processDay?.shop.availability) {
-      day = nextDay.add(1, 'days').format('dddd').toUpperCase();
-
-      continue;
-    } else {
+    // TODO: Check currently before the open time
+    if (currentDay.diff(moment(payload?.shop?.timings[0]?.open, 'h:mm a'), 'minutes') <= 0) {
       return {
-        available: false,
+        availability: false,
         next: {
-          day: nextDay.add(0, 'days').calendar().split(' at ')[0],
-          time: moment(processDay?.shop?.timings[0]?.open, 'h:mm a').format('HH:mm'),
-          dayNumber: nextDay.diff(currentDay, 'days') + 1 > 1 ? nextDay.add(0, 'days').format('D') : undefined,
+          day: moment(payload?.shop?.timings[0]?.open, 'h:mm a').add(0, 'days').calendar().split(' at ')[0],
+          time: moment(payload?.shop?.timings[0]?.open, 'h:mm a').format('HH:mm'),
         },
       };
     }
+
+    // TODO: Check currently between the break times
+    else if (
+      !!payload.shop?.timings.length &&
+      currentDay.isBetween(moment(payload.shop?.timings[0]?.close, 'h:mm a'), moment(payload.shop?.timings[1]?.open, 'h:mm a'))
+    )
+      return {
+        availability: false,
+        next: {
+          day: moment(payload?.shop?.timings[1]?.open, 'h:mm a').add(0, 'days').calendar().split(' at ')[0],
+          time: moment(payload?.shop?.timings[1]?.open, 'h:mm a').format('HH:mm'),
+        },
+      };
+    // TODO: Check currently after the close time
+    else if (currentDay.diff(moment(payload.shop?.timings[payload.shop?.timings.length - 1]?.close, 'h:mm a'), 'minutes') >= 0)
+      return isShopOpened(timings, moment(currentDay).add(1, 'days'), count + 1);
+    else
+      return {
+        availability: true,
+      };
+  } else if (payload.shop.timings) {
+    // TODO: Just simply return the next day payload
+    return {
+      availability: false,
+      next: {
+        day: currentDay.add(0, 'days').calendar().split(' at ')[0],
+        time: moment(payload?.shop?.timings[0]?.open, 'h:mm a').format('HH:mm'),
+        dayNumber: count > 1 ? currentDay.add(0, 'days').format('D') : undefined,
+      },
+    };
   }
 };

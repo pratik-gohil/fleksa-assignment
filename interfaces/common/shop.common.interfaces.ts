@@ -4,9 +4,9 @@ export interface IShop {
   category_json: ILanguageData;
   cover: string;
   cover_json: {
-    images: Array<string>
-    updated_at: string
-  }
+    images: Array<string>;
+    updated_at: string;
+  };
   description_text_json: ILanguageData;
   description_title_json: ILanguageData;
   id: number;
@@ -33,7 +33,7 @@ interface ITimingsOpenClose {
 }
 
 export interface ITimingsDay {
-  available: boolean;
+  available?: boolean;
   delivery: {
     availability: boolean;
     timings: Array<ITimingsOpenClose> | undefined;
@@ -42,7 +42,7 @@ export interface ITimingsDay {
     availability: boolean;
     timings: Array<ITimingsOpenClose> | undefined;
   };
-  updated_at: string;
+  updated_at?: string;
 }
 
 export interface ITimingsHoliday {
