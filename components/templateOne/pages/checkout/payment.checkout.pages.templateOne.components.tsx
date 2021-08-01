@@ -43,8 +43,8 @@ const PaymentMethodList = styled.ul`
   margin: 0 -${(props) => props.theme.dimen.X4}px;
 `;
 
-const PaymentMethodItems = styled.li<{ isActive: boolean }>`
-  display: flex;
+const PaymentMethodItems = styled.li<{ isActive: boolean; show: boolean }>`
+  display: ${(p) => (p.show ? 'flex' : 'none')};
   flex: 1;
   margin: ${(props) => props.theme.dimen.X4}px;
   padding: ${(props) => props.theme.dimen.X4}px;
@@ -238,19 +238,27 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
               {
                 method: 'CASH' as ICheckoutPaymentMethods,
                 icon: SvgCash,
+                show: true,
               },
               {
                 method: 'STRIPE' as ICheckoutPaymentMethods,
                 icon: SvgCard,
+                show: shopData?.stripe_available,
               },
               {
                 method: 'PAYPAL' as ICheckoutPaymentMethods,
                 icon: SvgPaypal,
+                show: shopData?.paypal_available,
               },
             ].map((item) => {
               const isActive = paymentMethodData === item.method;
               return (
-                <PaymentMethodItems key={item.method} isActive={isActive} onClick={() => dispatch(updatePaymentMethod(item.method))}>
+                <PaymentMethodItems
+                  show={item.show || false}
+                  key={item.method}
+                  isActive={isActive}
+                  onClick={() => dispatch(updatePaymentMethod(item.method))}
+                >
                   <item.icon />
                 </PaymentMethodItems>
               );
