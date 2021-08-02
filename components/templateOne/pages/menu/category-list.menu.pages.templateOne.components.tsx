@@ -124,7 +124,7 @@ const MenuPageCategoryList: FunctionComponent = ({}) => {
                 .split(' ')
                 .join('-')}
             >
-              {category.image ? (
+              {!!category.image ? (
                 <CategoryImageContainer>
                   <CategoryImage src={category.image} alt="category image" />
                   <CategoryTitle>
