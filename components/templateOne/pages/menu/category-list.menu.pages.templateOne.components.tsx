@@ -110,7 +110,7 @@ const MenuPageCategoryList: FunctionComponent = ({}) => {
             >
               {category.image ? (
                 <CategoryImageContainer>
-                  <CategoryImage src={category.image} />
+                  <CategoryImage src={category.image} alt="category image" />
                   <CategoryTitle>
                     {category.name_json[language]}
                     <br />
