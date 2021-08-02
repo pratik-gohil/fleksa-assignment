@@ -91,10 +91,12 @@ const CateogryDescription = styled.p`
   padding: 0 0.5rem 0.5rem 0.5rem;
   margin: 0;
 
-  flex: 1 1 auto;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    flex: 1 1 auto;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
 `;
 const CategoryStickyTitle = styled.h3`
   padding: 0;
