@@ -114,14 +114,14 @@ const MenuPageCategoryList: FunctionComponent = ({}) => {
                   <CategoryTitle>
                     {category.name_json[language]}
                     <br />
-                    {category.description_json && <span>{category.description_json[language]}</span>}
+                    {!!category.description_json?.[language] && <span>{category.description_json[language]}</span>}
                   </CategoryTitle>
                 </CategoryImageContainer>
               ) : (
                 <CategoryTitleSticky>
                   {category.name_json[language]}
                   <br />
-                  {category.description_json}
+                  {!!category.description_json?.[language] && category.description_json[language]}
                 </CategoryTitleSticky>
               )}
               <List>
