@@ -71,7 +71,7 @@ const CategoryTitleSticky = styled.h3`
   right: 0;
   background: #fff;
   z-index: 1;
-  padding: ${(props) => props.theme.dimen.X4}px 0 ${(props) => props.theme.dimen.X4}px;
+  /* padding: ${(props) => props.theme.dimen.X4}px 0 ${(props) => props.theme.dimen.X4}px; */
   span {
     font-size: 16px;
     font-weight: 400;
@@ -85,6 +85,20 @@ const CategoryTitleSticky = styled.h3`
 const Space = styled.div`
   width: 100%;
   height: 100px;
+`;
+
+const CateogryDescription = styled.p`
+  padding: 0 0.5rem 0.5rem 0.5rem;
+  margin: 0;
+
+  flex: 1 1 auto;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+`;
+const CategoryStickyTitle = styled.h3`
+  padding: 0;
+  margin: 0;
 `;
 
 const MenuPageCategoryList: FunctionComponent = ({}) => {
@@ -118,11 +132,12 @@ const MenuPageCategoryList: FunctionComponent = ({}) => {
                   </CategoryTitle>
                 </CategoryImageContainer>
               ) : (
-                <CategoryTitleSticky>
-                  {category.name_json[language]}
-                  <br />
-                  {!!category.description_json?.[language] && category.description_json[language]}
-                </CategoryTitleSticky>
+                <>
+                  <CategoryTitleSticky>
+                    <CategoryStickyTitle>{category.name_json[language]}</CategoryStickyTitle>
+                    <CateogryDescription>{!!category.description_json?.[language] && category.description_json[language]}</CateogryDescription>
+                  </CategoryTitleSticky>
+                </>
               )}
               <List>
                 {category.products.map((product) => (
