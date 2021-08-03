@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { Row, Col, Container } from 'react-grid-system';
 import { BREAKPOINTS } from '../../constants/grid-system-configuration';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks.redux';
-import { selectConfiguration } from '../../redux/slices/configuration.slices.redux';
+import { selectConfiguration, selectLanguageCode } from '../../redux/slices/configuration.slices.redux';
 import { selectShop } from '../../redux/slices/index.slices.redux';
 import { updateError } from '../../redux/slices/common.slices.redux';
 import { BasicContactUsInformation } from '../../components/templateOne/pages/contact-us/basic-information.contact-us.pages.templateOne.components';
@@ -205,6 +205,7 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
   const [loading, setLoading] = useState(false);
   const [checked, setChecked] = useState(false);
 
+  const languageCode = useAppSelector(selectLanguageCode);
   const configuration = useAppSelector(selectConfiguration);
   const shopData = useAppSelector(selectShop);
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
@@ -324,7 +325,8 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
               <AgreementBox>
                 <Checkbox type="checkbox" checked={checked} onChange={() => setChecked(!checked)} />
                 <Acknowledgement>
-                  {t('@accept')} <a href="#">{t('@terms')}</a> {t('@and')} <a href="#">{t('@policy')}</a>
+                  {t('@accept')} <a href={`/${languageCode}/terms`}>{t('@terms')}</a> {t('@and')}{' '}
+                  <a href={`/${languageCode}/privacy-policy`}>{t('@policy')}</a>
                 </Acknowledgement>
               </AgreementBox>
 
