@@ -10,10 +10,15 @@
     document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
   }
 
-  window.location.replace('/');
+  setTimeout(() => {
+    window.location.reload('/');
+  }, 1000);
 })();
 
 navigator.serviceWorker.getRegistrations().then(function(registrations) {
   for(let registration of registrations) {
    registration.unregister()
+   setTimeout(() => {
+    window.location.reload('/');
+   }, 1000);
  } })
