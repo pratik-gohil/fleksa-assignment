@@ -8,7 +8,12 @@ import MenuPageCategorySidebar from '../../../components/templateOne/pages/menu/
 import OrderTypeManager from '../../../components/templateOne/common/orderType/order-type-manager.menu.pages.templateOne.components';
 import { BREAKPOINTS } from '../../../constants/grid-system-configuration';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks.redux';
-import { selectDeliveryFinances, selectOrderType, selectSelectedAddressId, updateDeliveryFinances } from '../../../redux/slices/checkout.slices.redux';
+import {
+  selectDeliveryFinances,
+  selectOrderType,
+  selectSelectedAddressId,
+  updateDeliveryFinances,
+} from '../../../redux/slices/checkout.slices.redux';
 import { selectShowAddress, selectShowOrderTypeSelect, updateShowAddAddress } from '../../../redux/slices/menu.slices.redux';
 import AddressAdd, { IGuestAddress } from '../../../components/templateOne/common/addresses/address-add.common.templateOne.components';
 import MenuPageCartSummary from '../../../components/templateOne/pages/menu/cart-summary.pages.templateOne.components';
@@ -74,13 +79,13 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
   const showAddAddress = useAppSelector(selectShowAddress);
   const configuration = useAppSelector(selectConfiguration);
   const selectedMenuId = useAppSelector(selectSelectedMenu);
-  const deliveryFinances = useAppSelector(selectDeliveryFinances)
+  const deliveryFinances = useAppSelector(selectDeliveryFinances);
   const checkoutAddressId = useAppSelector(selectSelectedAddressId);
   const showSelectOrderType = useAppSelector(selectShowOrderTypeSelect);
   const selectedMenuUrlpath = useAppSelector(selectSelectedMenuUrlpath);
-  const addressByType = useAppSelector((state) => selectAddressByType(state, "HOME"));
-  const dispatch = useAppDispatch()
-  const [ addressData, setAddressData ] = useState<IAddress|null|undefined>()
+  const addressByType = useAppSelector((state) => selectAddressByType(state, 'HOME'));
+  const dispatch = useAppDispatch();
+  const [addressData, setAddressData] = useState<IAddress | null | undefined>();
 
   useEffect(() => {
     if (shopData?.id == selectedMenuId) {
@@ -91,38 +96,38 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
   }, []);
 
   useEffect(() => {
-    getAddressInfo()
-  }, [ addressByType ])
+    getAddressInfo();
+  }, [addressByType]);
 
   async function getAddressInfo() {
-    if (selectedMenuUrlpath && deliveryFinances === null && orderType === "DELIVERY") {
-      let postalCode: number|null = null
+    if (selectedMenuUrlpath && deliveryFinances === null && orderType === 'DELIVERY') {
+      let postalCode: number | null = null;
       if (isLoggedIn) {
-        postalCode = Number(addressByType?.postal_code)
+        postalCode = Number(addressByType?.postal_code);
       } else {
         const guestAddressString = window.localStorage.getItem(LS_GUEST_USER_ADDRESS);
         if (guestAddressString) {
           const guestAddress = JSON.parse(guestAddressString) as IGuestAddress;
-          if (guestAddress.address_type === "HOME") {
-            postalCode = Number(guestAddress.postal_code)
+          if (guestAddress.address_type === 'HOME') {
+            postalCode = Number(guestAddress.postal_code);
           }
         }
       }
       if (!postalCode || isNaN(postalCode)) {
-        dispatch(updateShowAddAddress(true))
-        return
+        dispatch(updateShowAddAddress(true));
+        return;
       }
       const response = await new PyApiHttpPostAddress(configuration).post({
-        area: "",
-        street: "",
-        city: "",
-        floor: "",
-        address: "",
-        addressType: "HOME",
+        area: '',
+        street: '',
+        city: '',
+        floor: '',
+        address: '',
+        addressType: 'HOME',
         urlpath: selectedMenuUrlpath,
         postalCode,
       });
-      if (response?.can_deliver) dispatch(updateDeliveryFinances(response?.details))
+      if (response?.can_deliver) dispatch(updateDeliveryFinances(response?.details));
     }
   }
 
@@ -132,6 +137,7 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
       <SideViewLeftMobile>
         <MenuPageCategorySidebar />
       </SideViewLeftMobile>
+
       <Container>
         <Row>
           <Col sm={12} md={12} lg={3} xxl={3}>
@@ -153,20 +159,16 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
           </Col>
         </Row>
       </Container>
-      <div>
-        {cartData.cartCost > 0 && <MenuPageCartSummary />}
-      </div>
-      {(showSelectOrderType || orderType === null) && !showAddAddress ? (
-        (addressData?.has_delivery
-          || addressData?.has_pickup
-          || addressData?.has_dinein ) && <OrderTypeManager key="key-ajkndalkwdmalkwmdlkw" />
-      ) : (
-        (showAddAddress ||
-          (orderType === 'DELIVERY' &&
-            checkoutAddressId === null &&
-            orderType === 'DELIVERY' &&
-            !window.localStorage.getItem(LS_GUEST_USER_ADDRESS))) && <AddressAdd />
-      )}
+
+      <div>{cartData.cartCost > 0 && <MenuPageCartSummary />}</div>
+
+      {(showSelectOrderType || orderType === null) && !showAddAddress
+        ? (addressData?.has_delivery || addressData?.has_pickup || addressData?.has_dinein) && <OrderTypeManager key="key-ajkndalkwdmalkwmdlkw" />
+        : (showAddAddress ||
+            (orderType === 'DELIVERY' &&
+              checkoutAddressId === null &&
+              orderType === 'DELIVERY' &&
+              !window.localStorage.getItem(LS_GUEST_USER_ADDRESS))) && <AddressAdd />}
     </>
   );
 };

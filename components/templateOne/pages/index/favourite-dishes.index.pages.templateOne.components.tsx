@@ -140,7 +140,7 @@ const IndexPageFavouriteDishes: FunctionComponent = ({}) => {
   const language = useAppSelector(selectLanguage);
   const siblingsData = useAppSelector(selectSiblings);
   const productsData = useAppSelector(selectProducts);
-  const languageCode = useAppSelector(selectLanguageCode)
+  const languageCode = useAppSelector(selectLanguageCode);
 
   return !!productsData.length && siblingsData.length <= 1 ? (
     <WrapperSection>
@@ -154,7 +154,16 @@ const IndexPageFavouriteDishes: FunctionComponent = ({}) => {
                 return (
                   <HorizontalListItem key={product.id} responsive={responsive}>
                     <Card>
-                      <ImageContainer>{product.image && <Image src={product.image} layout="fill" loading="lazy" objectFit="cover" />}</ImageContainer>
+                      <ImageContainer>
+                        {
+                          <Image
+                            src={product.image || 'https://fleksa-cdn.s3.eu-central-1.amazonaws.com/fleksa/img/product-default-popular.png'}
+                            layout="fill"
+                            loading="lazy"
+                            objectFit="cover"
+                          />
+                        }
+                      </ImageContainer>
 
                       <InfoContainer>
                         <InfoContainerTop>
