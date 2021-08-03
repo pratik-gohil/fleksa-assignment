@@ -1,15 +1,19 @@
-self.addEventListener('activate', function(event) {
-  event.waitUntil(
-    caches.keys().then(function(cacheNames) {
-      return Promise.all(
-        cacheNames.filter(function(cacheName) {
-          // Return true if you want to remove this cache,
-          // but remember that caches are shared across
-          // the whole origin
-        }).map(function(cacheName) {
-          return caches.delete(cacheName);
-        })
-      );
-    })
-  );
-});
+(() => {
+  caches.keys().then((keyList) => Promise.all(keyList.map((key) => caches.delete(key))));
+
+  console.error("Code worked----")
+  var cookies = document.cookie.split(';');
+  for (var i = 0; i < cookies.length; i++) {
+    var cookie = cookies[i];
+    var eqPos = cookie.indexOf('=');
+    var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+    document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  }
+
+  window.location.replace('/');
+})();
+
+navigator.serviceWorker.getRegistrations().then(function(registrations) {
+  for(let registration of registrations) {
+   registration.unregister()
+ } })
