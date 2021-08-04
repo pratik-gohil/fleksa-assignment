@@ -113,6 +113,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
           </EditContainer>
         </Col>
       </Row>
+
       <div>
         {(showSelectOrderType || orderType === null) && !showAddAddress ? (
           <OrderTypeManager key="key-ajkndalkwdmalkwmdlkw" />
