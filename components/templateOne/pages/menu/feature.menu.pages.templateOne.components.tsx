@@ -9,6 +9,7 @@ import { updateShowOrderTypeSelect } from '../../../../redux/slices/menu.slices.
 import { selectSiblings } from '../../../../redux/slices/index.slices.redux';
 import { selectLanguageCode } from '../../../../redux/slices/configuration.slices.redux';
 import { useTranslation } from 'next-i18next';
+import SvgEdit from '../../../../public/assets/svg/edit.svg';
 
 const Wrapper = styled.div`
   display: flex;
@@ -17,17 +18,33 @@ const Wrapper = styled.div`
   margin-top: ${(props) => props.theme.dimen.X4 * 3}px;
 `;
 
+const EditButton = styled.div`
+  padding: 0 0.5rem;
+`;
+
+const ButtonContainer = styled.div`
+  border: ${(props) => props.theme.border};
+  border-radius: ${(props) => props.theme.borderRadius}px;
+  padding: 0 ${(props) => props.theme.dimen.X4}px;
+  margin: 0 ${(props) => props.theme.dimen.X4}px;
+  background: #f9f9f9;
+  display: flex;
+  align-items: center;
+
+  svg {
+    width: auto;
+    height: 24px;
+    display: block;
+    padding-left: 0.5rem;
+  }
+`;
+
 const ChangeRestaurantButton = styled.a`
   display: flex;
   justify-content: center;
   align-items: center;
   height: 50px;
   font-weight: 700;
-  border: ${(props) => props.theme.border};
-  border-radius: ${(props) => props.theme.borderRadius}px;
-  padding: 0 ${(props) => props.theme.dimen.X4}px;
-  margin: 0 ${(props) => props.theme.dimen.X4}px;
-  background: #f9f9f9;
   color: #222;
 `;
 
@@ -44,6 +61,7 @@ const OrderTypeContainer = styled.div`
     width: auto;
     height: 24px;
     display: block;
+    padding-left: 0.5rem;
   }
   p {
     margin: 0 0 0 ${(props) => props.theme.dimen.X4}px;
@@ -101,10 +119,21 @@ const MenuFeatures: FunctionComponent = () => {
           <OrderTypeContainer onClick={onClickOrderType}>
             <orderTypeData.logo />
             <p>{t(`@${orderTypeData.title.toLowerCase()}`).toUpperCase()}</p>
+            <EditButton>
+              <SvgEdit />
+            </EditButton>
           </OrderTypeContainer>
         )}
       </OrderTypeView>
-      {siblingsData.length > 0 && <ChangeRestaurantButton href={`/${languageCode}/menu`}>{t('@change-shop')}</ChangeRestaurantButton>}
+
+      {siblingsData.length > 0 && (
+        <ButtonContainer>
+          <ChangeRestaurantButton href={`/${languageCode}/menu`}>{t('@change-shop')}</ChangeRestaurantButton>
+          <EditButton>
+            <SvgEdit />
+          </EditButton>
+        </ButtonContainer>
+      )}
     </Wrapper>
   );
 };
