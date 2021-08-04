@@ -289,12 +289,15 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
 
       marker.addListener('click', () => {
         if (tempSelId) markers[tempSelId].infoWindow.close();
+
         setSelectedId(sibling.id);
+
         infoWindow.open({
           anchor: marker,
           map,
           shouldFocus: false,
         });
+
         document.getElementById(`sibling-item-id${sibling.id}`)?.scrollIntoView({
           behavior: 'smooth',
         });
