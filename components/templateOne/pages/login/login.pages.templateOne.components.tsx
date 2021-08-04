@@ -160,6 +160,7 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
       phoneNumber = phoneNumber.substring(1);
       setPhone(countryCode + phoneNumber);
     }
+
     try {
       if (phoneNumber.length < 9 || phoneNumber.length > 11) {
         dispatch(
@@ -175,6 +176,7 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
         countryCode,
         phone: phoneNumber,
         shopId: shopData?.id as unknown as number,
+        languageCode,
       });
 
       if (!response?.result) {
@@ -211,7 +213,6 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
           otp,
           customerId,
           shopId: shopData?.id as unknown as number,
-          languageCode,
         });
 
         if (!response?.result) {
