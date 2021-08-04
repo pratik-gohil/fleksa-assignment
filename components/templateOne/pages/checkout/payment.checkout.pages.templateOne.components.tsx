@@ -170,6 +170,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
     }
   }
 
+  // TODO: Control orderButton active state
   useEffect(() => {
     const canPlace = !!(
       bearerToken &&
@@ -183,8 +184,9 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
       wantAtData &&
       isOrderPossible()
     );
+
     setOrderCanBePlaced(canPlace);
-  }, [bearerToken, shopData?.id, customerData.name, customerData.email, customerData.phone, customerData.country_code, wantAtData]);
+  }, [bearerToken, shopData?.id, customerData.name, customerData.email, customerData.phone, customerData.country_code, wantAtData, deliveryFinances]);
 
   async function onPaymentDone() {
     router.push(`/${languageCode}/order-placed`);
