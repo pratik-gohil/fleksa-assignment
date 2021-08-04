@@ -12,7 +12,7 @@ import LoadingIndicator from '../../common/loadingIndicator/loading-indicator.co
 import NodeApiHttpPostVerify from '../../../../http/nodeapi/verify/post.verify.nodeapi.http';
 import { COOKIE_BEARER_TOKEN } from '../../../../constants/keys-cookies.constants';
 import { updateBearerToken } from '../../../../redux/slices/user.slices.redux';
-import { selectConfiguration } from '../../../../redux/slices/configuration.slices.redux';
+import { selectConfiguration, selectLanguageCode } from '../../../../redux/slices/configuration.slices.redux';
 import { updateError } from '../../../../redux/slices/common.slices.redux';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -138,6 +138,7 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
   const [otpBig, setOtpBig] = useState(false);
   const [customerId, setCustomerId] = useState<number | undefined>();
   const { t } = useTranslation('login');
+  const languageCode = useAppSelector(selectLanguageCode);
 
   const router = useRouter();
 
@@ -210,6 +211,7 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
           otp,
           customerId,
           shopId: shopData?.id as unknown as number,
+          languageCode,
         });
 
         if (!response?.result) {
