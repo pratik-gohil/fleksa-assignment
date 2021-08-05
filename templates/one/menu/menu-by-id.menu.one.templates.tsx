@@ -21,11 +21,12 @@ import { LS_GUEST_USER_ADDRESS } from '../../../constants/keys-local-storage.con
 import { useTranslation } from 'next-i18next';
 import { selectCart } from '../../../redux/slices/cart.slices.redux';
 import PyApiHttpPostAddress from '../../../http/pyapi/address/post.address.pyapi.http';
-import { selectConfiguration, selectSelectedMenu, selectSelectedMenuUrlpath } from '../../../redux/slices/configuration.slices.redux';
+import { selectConfiguration, selectSelectedMenu } from '../../../redux/slices/configuration.slices.redux';
 import { selectAddressByType, selectIsUserLoggedIn } from '../../../redux/slices/user.slices.redux';
 import { selectAddress, selectShop, selectSiblings } from '../../../redux/slices/index.slices.redux';
 import { useState } from 'react';
 import { IAddress } from '../../../interfaces/common/address.common.interfaces';
+import { AddressTypes } from '../../../components/templateOne/common/addresses/address-manager.common.templateOne.components';
 
 const SideViewLeft = styled.div`
   display: none;
@@ -82,7 +83,6 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
   const deliveryFinances = useAppSelector(selectDeliveryFinances);
   const checkoutAddressId = useAppSelector(selectSelectedAddressId);
   const showSelectOrderType = useAppSelector(selectShowOrderTypeSelect);
-  const selectedMenuUrlpath = useAppSelector(selectSelectedMenuUrlpath);
   const addressByType = useAppSelector((state) => selectAddressByType(state, 'HOME'));
   const dispatch = useAppDispatch();
   const [addressData, setAddressData] = useState<IAddress | null | undefined>();
@@ -100,34 +100,37 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
   }, [addressByType]);
 
   async function getAddressInfo() {
-    if (selectedMenuUrlpath && deliveryFinances === null && orderType === 'DELIVERY') {
+    console.log(deliveryFinances, orderType, selectedMenuId)
+    if (orderType === 'DELIVERY' && selectedMenuId) {
+      let addressType: AddressTypes|undefined;
       let postalCode: number | null = null;
       if (isLoggedIn) {
         postalCode = Number(addressByType?.postal_code);
+        addressType = addressByType?.address_type
       } else {
         const guestAddressString = window.localStorage.getItem(LS_GUEST_USER_ADDRESS);
         if (guestAddressString) {
           const guestAddress = JSON.parse(guestAddressString) as IGuestAddress;
-          if (guestAddress.address_type === 'HOME') {
-            postalCode = Number(guestAddress.postal_code);
-          }
+          postalCode = Number(guestAddress.postal_code);
+          addressType = guestAddress.address_type;
         }
       }
-      if (!postalCode || isNaN(postalCode)) {
+      if (!postalCode || isNaN(postalCode) || !addressType) {
         dispatch(updateShowAddAddress(true));
         return;
       }
-      const response = await new PyApiHttpPostAddress(configuration).post({
-        area: '',
-        street: '',
-        city: '',
+      const response = await new PyApiHttpPostAddress(configuration).postAll({
         floor: '',
+        shopId: selectedMenuId,
         address: '',
-        addressType: 'HOME',
-        urlpath: selectedMenuUrlpath,
-        postalCode,
+        addressType,
+        city: '',
+        area: '',
+        postalCode: String(postalCode)
       });
-      if (response?.can_deliver) dispatch(updateDeliveryFinances(response?.details));
+      if (response?.result && response.possibilities[selectedMenuId].is_available) {
+        dispatch(updateDeliveryFinances(response.possibilities[selectedMenuId].details));
+      }
     }
   }
 

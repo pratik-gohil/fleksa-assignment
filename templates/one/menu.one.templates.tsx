@@ -278,8 +278,8 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
 
       const marker = new google.maps.Marker({
         position,
-        icon: shopData?.logo && {
-          url: shopData?.logo,
+        icon: {
+          url: '/assets/png/restaurant.png',
           scaledSize: new google.maps.Size(40, 40),
           origin: new google.maps.Point(0, 0),
           anchor: new google.maps.Point(0, 0),
@@ -289,12 +289,15 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
 
       marker.addListener('click', () => {
         if (tempSelId) markers[tempSelId].infoWindow.close();
+
         setSelectedId(sibling.id);
+
         infoWindow.open({
           anchor: marker,
           map,
           shouldFocus: false,
         });
+
         document.getElementById(`sibling-item-id${sibling.id}`)?.scrollIntoView({
           behavior: 'smooth',
         });
@@ -310,7 +313,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
 
     currentLocationMarker = new google.maps.Marker({
       icon: {
-        url: '/assets/png/person.png',
+        url: '/assets/png/user.png',
         scaledSize: new google.maps.Size(40, 40),
         origin: new google.maps.Point(0, 0),
         anchor: new google.maps.Point(0, 0),
@@ -381,7 +384,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
       const response = await new PyApiHttpPostAddress(configuration).postAll({
         floor: '',
         address: '',
-        addressType: "HOME",
+        addressType: 'HOME',
         city: '',
         area,
         shopId: shopData?.id,
@@ -498,13 +501,17 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
 
   useEffect(() => {
     const tempRestaurantsToShow = filterName === 'has_delivery' ? deliveryFilterData : siblingsData.filter((sibling) => sibling.address[filterName]);
+
     setRestaurantsToShow(tempRestaurantsToShow);
+
     Object.keys(markers).map((i) => markers[i].marker.setMap(tempRestaurantsToShow?.find((o) => o.id === Number(i)) ? map : null));
+
     if (selectedId) markers[selectedId].infoWindow.close();
     setSelectedId(null);
   }, [filterName, deliveryFilterData]);
 
   let restaurantListView: ReactNode;
+
   if (restaurantsToShow && restaurantsToShow.length > 0) {
     restaurantListView = restaurantsToShow.map((sibling) => {
       const area = sibling.address?.area ? sibling.address?.area + ' ' : '';
@@ -626,8 +633,9 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
           {restaurantListView}
         </List>
       </FullHeightColumnLeft>
+
       <FullHeightColumnRight>
-        <MapContainer id="map"></MapContainer>
+        <MapContainer id="map" />
       </FullHeightColumnRight>
     </ColumnContainer>
   );
