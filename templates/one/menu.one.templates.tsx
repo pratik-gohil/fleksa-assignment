@@ -262,7 +262,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
   useEffect(noDeliveryOptionsAvailable, []);
 
   useEffect(() => {
-    if (tempSelId) markers[tempSelId].infoWindow.close();
+    if (tempSelId) markers[tempSelId]?.infoWindow.close();
 
     if (selectedId)
       markers[selectedId]?.infoWindow.open({
@@ -350,7 +350,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
       });
 
       marker.addListener('click', () => {
-        if (tempSelId) markers[tempSelId].infoWindow.close();
+        if (tempSelId) markers[tempSelId]?.infoWindow.close();
 
         setSelectedId(sibling.id);
 
