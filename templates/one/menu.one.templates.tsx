@@ -18,6 +18,7 @@ import NodeApiHttpPostCreateNewAddressRequest from '../../http/nodeapi/account/p
 import { updateError } from '../../redux/slices/common.slices.redux';
 import NodeApiHttpPostUpdateAddressRequest from '../../http/nodeapi/account/post.update-address.nodeapi.http';
 import { useTranslation } from 'next-i18next';
+import SvgAutolocate from '../../public/assets/svg/autolocate.svg';
 
 type Filters = 'has_pickup' | 'has_delivery' | 'has_dinein';
 
@@ -201,6 +202,27 @@ const EnterAddress = styled.div`
   text-align: center;
 `;
 
+const Autolocate = styled.div`
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 46px;
+  height: 46px;
+  padding: 12px;
+`;
+
+const InputWithAutoLocate = styled.div`
+  position: relative;
+  display: flex;
+  flex: 1;
+`;
+
+const SvgLocationImage = styled.img`
+  width: 100px;
+  height: 100px;
+  margin: 1rem 0;
+`;
+
 let map: google.maps.Map;
 let autoComplete: google.maps.places.Autocomplete;
 const markers: Record<
@@ -211,6 +233,8 @@ const markers: Record<
   }
 > = {};
 let currentLocationMarker: google.maps.Marker;
+let latlngbounds: google.maps.LatLngBounds;
+
 let tempSelId: number | null = null;
 
 const MenuPageTemplateOne: FunctionComponent = ({}) => {
@@ -223,6 +247,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
   const configuration = useAppSelector(selectConfiguration);
   const { t } = useTranslation('page-menu');
   const languageCode = useAppSelector(selectLanguageCode);
+  const [locationPermission, setLocationPermission] = useState('not-prompt');
 
   const [restaurantsToShow, setRestaurantsToShow] = useState<Array<ISibling> | undefined>(undefined);
   const [deliveryFilterData, setDeliveryFilterData] = useState<Array<ISibling>>();
@@ -237,11 +262,10 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
   useEffect(noDeliveryOptionsAvailable, []);
 
   useEffect(() => {
-    if (tempSelId) {
-      markers[tempSelId].infoWindow.close();
-    }
+    if (tempSelId) markers[tempSelId].infoWindow.close();
+
     if (selectedId)
-      markers[selectedId].infoWindow.open({
+      markers[selectedId]?.infoWindow.open({
         anchor: markers[selectedId].marker,
         map,
         shouldFocus: false,
@@ -249,18 +273,56 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
     tempSelId = selectedId;
   }, [selectedId]);
 
+  useEffect(() => {
+    initMap();
+    if (typeof window !== 'undefined') {
+      dispatch(updateClearCart());
+      dispatch(updateClearCheckout());
+      setFilterAndOrderType('has_delivery');
+    }
+  }, []);
+
+  useEffect(() => {
+    if (window !== 'undefined' && refAddressInput.current) {
+      autoComplete = new google.maps.places.Autocomplete(refAddressInput.current, {
+        types: ['geocode'],
+      });
+
+      autoComplete.setFields(['address_component', 'geometry']);
+      autoComplete.addListener('place_changed', onAddressChange);
+    }
+  }, [refAddressInput]);
+
+  useEffect(() => {
+    const tempRestaurantsToShow =
+      filterName === 'has_delivery' && locationPermission === 'granted'
+        ? deliveryFilterData
+        : siblingsData.filter((sibling) => sibling.address[filterName]);
+
+    setRestaurantsToShow(tempRestaurantsToShow);
+
+    Object.keys(markers).map((i) => markers[i].marker.setMap(tempRestaurantsToShow?.find((o) => o.id === Number(i)) ? map : null));
+
+    if (selectedId) markers[selectedId]?.infoWindow.close();
+
+    setSelectedId(null);
+  }, [filterName, deliveryFilterData]);
+
   function initMap() {
     map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
-      zoom: 16,
+      zoom: 20,
       mapId: '3a7840eca8fbb359',
     });
-    const latlngbounds = new google.maps.LatLngBounds();
+
+    latlngbounds = new google.maps.LatLngBounds();
 
     google.maps.event.addListener(map, 'click', function () {
       Object.keys(markers).map((i) => markers[i].infoWindow.close());
     });
 
-    siblingsData.map((sibling) => {
+    siblingsData.forEach((sibling) => {
+      if (!sibling.address.lat || !sibling.address.lon) return; // ? Skip the marker if not lat and lon exist
+
       latlngbounds.extend(new google.maps.LatLng(sibling.address.lat, sibling.address.lon));
       const position = new google.maps.LatLng(sibling.address.lat, sibling.address.lon);
 
@@ -322,7 +384,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
     });
 
     if (navigator.geolocation) {
-      updateCurrentPosition(latlngbounds, true);
+      updateCurrentPositionByPermission();
     }
   }
 
@@ -336,7 +398,31 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
     }
   }
 
-  function updateCurrentPosition(latlngbounds: google.maps.LatLngBounds, setCurrentAddress: boolean) {
+  async function updateCurrentPositionByPermission() {
+    console.log('permission called');
+
+    if (navigator.geolocation) {
+      navigator.permissions.query({ name: 'geolocation' }).then(function (result) {
+        if (result.state === 'granted') {
+          setLocationPermission('granted');
+          updateCurrentPosition(true);
+          // TODO: If granted then you can directly call your function here
+        } else if (result.state === 'prompt') {
+          setLocationPermission('prompt');
+          updateCurrentPosition(true);
+        } else if (result.state === 'denied') {
+          setLocationPermission('denied');
+          // TODO: If denied then you have to show instructions to enable location
+          console.log('Permission denied!');
+        }
+      });
+    } else {
+      setLocationPermission('none');
+      alert('Sorry Not available!');
+    }
+  }
+
+  function updateCurrentPosition(setCurrentAddress: boolean) {
     navigator.geolocation.getCurrentPosition((position: GeolocationPosition) => {
       const pos = {
         lat: position.coords.latitude,
@@ -350,6 +436,8 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
 
       currentLocationMarker.setPosition(pos);
       currentLocationMarker.setMap(map);
+
+      setLocationPermission('granted');
     });
   }
 
@@ -370,15 +458,6 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
     dispatch(updateOrderType(orderType));
   }
 
-  useEffect(() => {
-    initMap();
-    if (typeof window !== 'undefined') {
-      dispatch(updateClearCart());
-      dispatch(updateClearCheckout());
-      setFilterAndOrderType('has_delivery');
-    }
-  }, []);
-
   async function getAvaibleBasedOnAdress({ area = '', postalCode = '', main = '', city = '' }) {
     if (shopData?.id) {
       const response = await new PyApiHttpPostAddress(configuration).postAll({
@@ -387,7 +466,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
         addressType: 'HOME',
         city: '',
         area,
-        shopId: shopData?.id,
+        shopId: shopData.id,
         postalCode,
       });
 
@@ -501,29 +580,6 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
     }
   }
 
-  useEffect(() => {
-    if (window !== 'undefined' && refAddressInput.current) {
-      autoComplete = new google.maps.places.Autocomplete(refAddressInput.current, {
-        types: ['geocode'],
-      });
-
-      autoComplete.setFields(['address_component', 'geometry']);
-      autoComplete.addListener('place_changed', onAddressChange);
-    }
-  }, [refAddressInput]);
-
-  useEffect(() => {
-    const tempRestaurantsToShow = filterName === 'has_delivery' ? deliveryFilterData : siblingsData.filter((sibling) => sibling.address[filterName]);
-
-    setRestaurantsToShow(tempRestaurantsToShow);
-
-    Object.keys(markers).map((i) => markers[i].marker.setMap(tempRestaurantsToShow?.find((o) => o.id === Number(i)) ? map : null));
-
-    if (selectedId) markers[selectedId].infoWindow.close();
-
-    setSelectedId(null);
-  }, [filterName, deliveryFilterData]);
-
   let restaurantListView: ReactNode;
 
   if (restaurantsToShow && restaurantsToShow.length > 0) {
@@ -561,10 +617,9 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
                 <OrderButton href={`/${languageCode}/menu/${sibling.id}`}>{t('@order')}</OrderButton>
               </InfoWithOrderButton>
               <TimingContainerHolder>
-
                 <TimingContainer>
                   <TimingContainerTitle>{t('@store-hours')}</TimingContainerTitle>
-                  
+
                   <TimingContainerTiming>
                     {(sibling.timings[day] as ITimingsDay).shop?.timings?.map((t) => `${t.open} - ${t.close}`).join(', ') || (
                       <span style={{ color: 'red', fontWeight: 500 }}>{t('@closed')}</span>
@@ -593,6 +648,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
         restaurantListView = (
           <EnterAddress>
             <p>{t('@not-deliverable')}</p>
+            <SvgLocationImage src="/assets/png/location.png" />
           </EnterAddress>
         );
       } else {
@@ -628,17 +684,24 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
             </SelectionItem>
           ))}
         </SelectionContainer>
+
         <List>
           <InputContainer visible={filterName === 'has_delivery'}>
-            <Input
-              style={{
-                flex: 1,
-              }}
-              value={addressMain}
-              onChange={(e) => setAddressMain(e.target.value)}
-              ref={refAddressInput}
-              placeholder={t('@where-deliver')}
-            />
+            <InputWithAutoLocate>
+              <Input
+                style={{
+                  flex: 1,
+                }}
+                value={addressMain}
+                onChange={(e) => setAddressMain(e.target.value)}
+                ref={refAddressInput}
+                placeholder={t('@where-deliver')}
+              />
+              <Autolocate onClick={updateCurrentPositionByPermission}>
+                <SvgAutolocate />
+              </Autolocate>
+            </InputWithAutoLocate>
+
             <Input
               style={{
                 width: 100,
@@ -649,6 +712,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
               placeholder={t('@optional')}
             />
           </InputContainer>
+
           {restaurantListView}
         </List>
       </FullHeightColumnLeft>
