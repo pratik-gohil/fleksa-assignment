@@ -390,9 +390,12 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
         shopId: shopData?.id,
         postalCode,
       });
+
       if (response && response.result) {
         const possibilities = Object.keys(response.possibilities).filter((i) => response.possibilities[i].is_available);
+
         setDeliveryFilterData(siblingsData.filter((i) => possibilities.indexOf(String(i.id)) !== -1));
+
         if (possibilities.length > 0) {
           if (isLoggedIn && bearerToken) {
             if (addressData?.id) {
@@ -408,6 +411,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
               city: city,
               postal_code: postalCode,
             };
+
             // save the address to local storage. Add on server when checkout opens
             window.localStorage.setItem(LS_GUEST_USER_ADDRESS, JSON.stringify(guestAddress));
           }
@@ -426,6 +430,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
 
   async function addNewAddress(bearerToken: string, postalCode: string, main: string, city: string) {
     if (!isLoggedIn) return;
+
     const response = await new NodeApiHttpPostCreateNewAddressRequest(configuration, bearerToken).post({
       floor: addressFloor,
       address: main,
@@ -433,6 +438,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
       city: city,
       postal_code: postalCode,
     });
+
     if (!response.result) {
       dispatch(
         updateError({
@@ -443,11 +449,13 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
       );
       return;
     }
+
     dispatch(updateSelectedAddressId(response.data?.address.id));
   }
 
   async function updateExistingAddress(bearerToken: string, addressId: number, postalCode: string, main: string, city: string) {
     if (!isLoggedIn) return;
+
     await new NodeApiHttpPostUpdateAddressRequest(configuration, bearerToken).post({
       customer_address_id: addressId,
       updating_values: {
@@ -458,6 +466,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
         postal_code: postalCode,
       },
     });
+
     dispatch(updateSelectedAddressId(addressId));
   }
 
@@ -467,6 +476,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
     let postalCode: string | undefined = undefined;
     let main: string | undefined = undefined;
     let city: string | undefined = undefined;
+
     if (place.address_components) {
       for (let component of place.address_components) {
         if (component.types[0] === 'route') {
@@ -483,7 +493,9 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
         }
       }
     }
+
     currentLocationMarker.setPosition(place.geometry?.location);
+
     if (postalCode) {
       getAvaibleBasedOnAdress({ area, postalCode, main, city });
     }
@@ -494,6 +506,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
       autoComplete = new google.maps.places.Autocomplete(refAddressInput.current, {
         types: ['geocode'],
       });
+
       autoComplete.setFields(['address_component', 'geometry']);
       autoComplete.addListener('place_changed', onAddressChange);
     }
@@ -507,6 +520,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
     Object.keys(markers).map((i) => markers[i].marker.setMap(tempRestaurantsToShow?.find((o) => o.id === Number(i)) ? map : null));
 
     if (selectedId) markers[selectedId].infoWindow.close();
+
     setSelectedId(null);
   }, [filterName, deliveryFilterData]);
 
@@ -520,6 +534,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
       const postalCode = sibling.address?.postal_code || '';
 
       const day = new Date().toLocaleString('en-us', { weekday: 'long' }).toUpperCase();
+
       return (
         <ListItem
           key={`${sibling.id}`}
@@ -546,16 +561,20 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
                 <OrderButton href={`/${languageCode}/menu/${sibling.id}`}>{t('@order')}</OrderButton>
               </InfoWithOrderButton>
               <TimingContainerHolder>
+
                 <TimingContainer>
                   <TimingContainerTitle>{t('@store-hours')}</TimingContainerTitle>
+                  
                   <TimingContainerTiming>
                     {(sibling.timings[day] as ITimingsDay).shop?.timings?.map((t) => `${t.open} - ${t.close}`).join(', ') || (
                       <span style={{ color: 'red', fontWeight: 500 }}>{t('@closed')}</span>
                     )}
                   </TimingContainerTiming>
                 </TimingContainer>
+
                 <TimingContainer>
                   <TimingContainerTitle>{t('@delivery-hours')}</TimingContainerTitle>
+
                   <TimingContainerTiming>
                     {(sibling.timings[day] as ITimingsDay).delivery?.timings?.map((t) => `${t.open} - ${t.close}`).join(', ') || (
                       <span style={{ color: 'red', fontWeight: 500 }}>{t('@closed')}</span>
