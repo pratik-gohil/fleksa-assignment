@@ -145,8 +145,6 @@ const OrderTypeManager: FunctionComponent = () => {
       ? (JSON.parse(window.localStorage.getItem('@LS_GUEST_USER_ADDRESS') ?? '') as IParticularAddress)
       : undefined;
 
-    console.log('selectAddressById ', choosenAddressId);
-
     if (isLoggedIn && choosenAddressId) {
       const correspondAddress = useAppSelector((state) => selectAddressById(state, choosenAddressId));
       return `${correspondAddress?.area ?? ''} ${correspondAddress?.address ?? ''}, ${correspondAddress?.postal_code} ${correspondAddress?.city}`;
