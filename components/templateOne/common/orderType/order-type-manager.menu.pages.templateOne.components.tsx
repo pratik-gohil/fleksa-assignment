@@ -60,7 +60,7 @@ const Title = styled.h3`
 `;
 
 const SubTitle = styled.h4<{ selected: boolean }>`
-  padding: 0;
+  padding: 0.5rem 0;
   margin: 0;
   font-size: 16px;
   font-weight: 400;
@@ -141,15 +141,16 @@ const OrderTypeManager: FunctionComponent = () => {
   }
 
   function getSelectedAddress() {
-    let guestAddress = JSON.parse(window.localStorage.getItem('@LS_GUEST_USER_ADDRESS') ?? '') as IParticularAddress;
+    let guestAddress = window.localStorage.getItem('@LS_GUEST_USER_ADDRESS')
+      ? (JSON.parse(window.localStorage.getItem('@LS_GUEST_USER_ADDRESS') ?? '') as IParticularAddress)
+      : undefined;
 
-    console.log('guest ', guestAddress);
+    console.log('selectAddressById ', choosenAddressId);
 
-    if (isLoggedIn && selectAddressById) {
+    if (isLoggedIn && choosenAddressId) {
       const correspondAddress = useAppSelector((state) => selectAddressById(state, choosenAddressId));
-      console.log('correspondAddress ', correspondAddress);
-      return `${correspondAddress?.area ?? ''} ${correspondAddress?.address}, ${correspondAddress?.postal_code} ${correspondAddress?.city}`;
-    } else if (guestAddress) {
+      return `${correspondAddress?.area ?? ''} ${correspondAddress?.address ?? ''}, ${correspondAddress?.postal_code} ${correspondAddress?.city}`;
+    } else if (guestAddress && !isLoggedIn) {
       return `${guestAddress?.area ?? ''} ${guestAddress?.address}, ${guestAddress?.postal_code} ${guestAddress?.city}`;
     }
 
