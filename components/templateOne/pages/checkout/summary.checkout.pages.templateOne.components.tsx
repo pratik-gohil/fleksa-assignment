@@ -108,7 +108,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
             <></>
           )}
           <EditContainer>
-            <StyledCheckoutText>{wantAtData ? `${wantAtData?.date.label} (${wantAtData?.time.label})` : t('@select-time')}</StyledCheckoutText>
+            <StyledCheckoutText>{wantAtData ? `${wantAtData?.date?.label} (${wantAtData?.time?.label})` : t('@select-time')}</StyledCheckoutText>
             <EditButton onClick={() => dispatch(updateShowDateTimeSelect(true))} />
           </EditContainer>
         </Col>
