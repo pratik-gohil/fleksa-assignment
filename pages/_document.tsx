@@ -1,5 +1,6 @@
 import Document, { Html, Head, Main, NextScript, DocumentContext } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
+import isWebView from 'is-webview';
 
 export default class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
@@ -46,38 +47,17 @@ export default class MyDocument extends Document {
             }}
           ></script>
 
-          <script src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY}&libraries=places`}></script>
+          <script
+            src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY}&libraries=places`}
+          ></script>
 
-          {/* <!-- Start of HubSpot Embed Code --> */}
-          <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/19546797.js"></script>
-          {/* <!-- End of HubSpot Embed Code --> */}
+          {!isWebView(navigator.userAgent) && (
+            <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/19546797.js"></script>
+          )}
         </Head>
         <body>
           <Main />
-          {/* <button
-            type="button"
-            id="hs_show_banner_button"
-            style={{
-              backgroundColor: '#202020',
-              border: '1px solid #202020',
-              borderRadius: '3px',
-              padding: '10px 16px',
-              textDecoration: 'none',
-              color: '#fff',
-              fontFamily: 'inherit',
-              fontSize: 'inherit',
-              fontWeight: 'normal',
-              lineHeight: 'inherit',
-              textAlign: 'left',
-              textShadow: 'none',
-            }}
-            onClick={function () {
-              var _hsp = (window._hsp = window._hsp || []);
-              _hsp.push(['showBanner']);
-            }}
-          >
-            Cookie Settings
-          </button> */}
+
           <NextScript />
         </body>
       </Html>
