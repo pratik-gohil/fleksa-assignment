@@ -51,6 +51,7 @@ export default class MyDocument extends Document {
             src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY}&libraries=places`}
           ></script>
 
+          {/* Load cookie only for web browser  */}
           {!isWebView(navigator.userAgent) && (
             <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/19546797.js"></script>
           )}
