@@ -2,7 +2,13 @@ import { Fragment, FunctionComponent, useEffect } from 'react';
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
-import { ICheckoutOrderTypes, selectOrderType, updateOrderType, updateSelectedAddressId } from '../../../../redux/slices/checkout.slices.redux';
+import {
+  ICheckoutOrderTypes,
+  selectOrderType,
+  selectSelectedAddressId,
+  updateOrderType,
+  updateSelectedAddressId,
+} from '../../../../redux/slices/checkout.slices.redux';
 import SvgDelivery from '../../../../public/assets/svg/delivery.svg';
 import SvgPickup from '../../../../public/assets/svg/pickup.svg';
 import SvgDinein from '../../../../public/assets/svg/dinein.svg';
@@ -13,6 +19,8 @@ import { selectAddress, selectShop, selectSiblings } from '../../../../redux/sli
 import { useState } from 'react';
 import { IAddress } from '../../../../interfaces/common/address.common.interfaces';
 import { useTranslation } from 'next-i18next';
+import { selectAddressById, selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
+import { IParticularAddress } from '../../../../interfaces/common/customer.common.interfaces';
 
 const Wrapper = styled.div`
   position: fixed;
@@ -52,7 +60,7 @@ const Title = styled.h3`
 `;
 
 const SubTitle = styled.h4<{ selected: boolean }>`
-  padding: 0;
+  padding: 0.5rem 0;
   margin: 0;
   font-size: 16px;
   font-weight: 400;
@@ -112,6 +120,8 @@ const OrderTypeManager: FunctionComponent = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation('common-ordertype');
   const [addressData, setAddressData] = useState<IAddress | null | undefined>(undefined);
+  const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
+  const choosenAddressId = useAppSelector(selectSelectedAddressId);
 
   function onClickDelivery(orderType: ICheckoutOrderTypes) {
     dispatch(updateOrderType(orderType));
@@ -128,6 +138,23 @@ const OrderTypeManager: FunctionComponent = () => {
   function onClickDineIn(orderType: ICheckoutOrderTypes) {
     dispatch(updateOrderType(orderType));
     dispatch(updateShowOrderTypeSelect(false));
+  }
+
+  function getSelectedAddress() {
+    if (typeof window === 'undefined') return '';
+
+    let guestAddress = window.localStorage.getItem('@LS_GUEST_USER_ADDRESS')
+      ? (JSON.parse(window.localStorage.getItem('@LS_GUEST_USER_ADDRESS') ?? '') as IParticularAddress)
+      : undefined;
+
+    if (isLoggedIn && choosenAddressId) {
+      const correspondAddress = useAppSelector((state) => selectAddressById(state, choosenAddressId));
+      return `${correspondAddress?.area ?? ''} ${correspondAddress?.address ?? ''}, ${correspondAddress?.postal_code} ${correspondAddress?.city}`;
+    } else if (guestAddress && !isLoggedIn) {
+      return `${guestAddress?.area ?? ''} ${guestAddress?.address}, ${guestAddress?.postal_code} ${guestAddress?.city}`;
+    }
+
+    return '';
   }
 
   useEffect(() => {
@@ -147,7 +174,7 @@ const OrderTypeManager: FunctionComponent = () => {
           {[
             {
               title: t('@delivery'),
-              subTitle: t('@quote-delivery'),
+              subTitle: getSelectedAddress(),
               orderType: 'DELIVERY' as ICheckoutOrderTypes,
               logo: SvgDelivery,
               onClick: onClickDelivery,
@@ -173,6 +200,7 @@ const OrderTypeManager: FunctionComponent = () => {
             if (item.visible) {
               const selected = item.orderType === orderType;
               const centerContent = item.subTitle !== null && item.subTitle.length === 0;
+
               return (
                 <ListItem key={item.title} selected={selected} onClick={() => item.onClick(item.orderType)}>
                   <item.logo />

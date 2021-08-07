@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import LoadingIndicator from '../../common/loadingIndicator/loading-indicator.common.templateOne.components';
 import { useTranslation } from 'next-i18next';
+import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 
 export interface IPropsCheckoutPageOrderButtonStripeForm {
   createOrder(): Promise<INodeApiHttpPostOrderResponse>;
@@ -39,6 +40,11 @@ const OrderButton = styled.div`
   font-size: 24px;
   font-weight: 700;
   font-family: ${(props) => props.theme.fontFamily};
+  color: ${(p) => p.theme.textDarkColor};
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    font-size: 16px;
+  }
 `;
 
 const CheckoutPageOrderButtonStripeForm: FunctionComponent<IPropsCheckoutPageOrderButtonStripeForm> = ({
