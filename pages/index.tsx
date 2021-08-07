@@ -1,10 +1,12 @@
 import dynamic from 'next/dynamic';
 import React from 'react';
+import isWebView from 'is-webview';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { updateProducts, updateReviews } from '../redux/slices/index.slices.redux';
 import IndexStoreWrapper from '../redux/store.redux';
 import TemplateToShow from '../templates/template-to-show.templates';
 import { getServerSidePropsCommon } from '../utils/page.utils';
+import { useEffect } from 'react';
 
 const IndexPageTemplateOne = dynamic(import('../templates/one/index.one.templates'));
 
@@ -31,6 +33,14 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ct
 });
 
 function Home({ templateNumber, meta }: any) {
+  useEffect(() => {
+    console.log('isWebView', isWebView(navigator.userAgent));
+    if (isWebView(navigator.userAgent)) {
+      // do whatever is needed for a WebView display
+      alert("It's a adroid/iOS");
+    }
+  }, []);
+
   return <TemplateToShow meta={meta} templateList={templateList} templateNumber={templateNumber} />;
 }
 
