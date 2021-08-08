@@ -34,20 +34,20 @@ const TemplateToShow: FunctionComponent<IPropsTemplateToShow> = ({ meta, templat
 
   useEffect(() => {
     if (typeof window !== 'undefined' && 'serviceWorker' in navigator && window.workbox !== undefined) {
-      const wb = window.workbox as any
+      const wb = window.workbox as any;
       const promptNewVersionAvailable = () => {
-        wb.messageSkipWaiting()
-        setTimeout(() => {
-          window.location.reload()
-        }, 300);
-      }
+        wb.messageSkipWaiting();
+        // setTimeout(() => {
+        //   window.location.reload()
+        // }, 300);
+      };
 
-      wb.addEventListener('waiting', promptNewVersionAvailable)
+      wb.addEventListener('waiting', promptNewVersionAvailable);
 
       // never forget to call register as auto register is turned off in next.config.js
-      wb.register()
+      wb.register();
     }
-  }, [])
+  }, []);
 
   const ViewTemplate = templateList[templateNumber];
   return (
