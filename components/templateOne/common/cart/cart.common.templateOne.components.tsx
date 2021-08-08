@@ -181,7 +181,7 @@ const Cart: FunctionComponent = ({}) => {
   const { t } = useTranslation('page-menu-id');
 
   const [orderPossible, setOrderPossible] = useState(false);
-  const [noOrderTypeAvailable, setNoOrderTypeAvailable] = useState(false);
+  const [noOrderTypeAvailable, setNoOrderTypeAvailable] = useState(true);
   const [addressData, setAddressData] = useState<IAddress | null | undefined>();
 
   useEffect(() => {
@@ -198,26 +198,18 @@ const Cart: FunctionComponent = ({}) => {
 
   useEffect(() => {
     let tempIsPossible = false;
-    if (!addressData?.has_delivery && !addressData?.has_pickup && !addressData?.has_dinein) {
-      setOrderPossible(false);
-      setNoOrderTypeAvailable(true);
-      return;
-    } else {
-      setNoOrderTypeAvailable(false);
-    }
-    if (orderType === 'DELIVERY') {
-      tempIsPossible = deliveryFinances && deliveryFinances.amount ? cartData.cartCost >= deliveryFinances.amount : false;
-    } else {
-      tempIsPossible = cartItemKeys.length > 0;
-    }
+
+    if (addressData?.has_delivery || addressData?.has_pickup || addressData?.has_dinein) setNoOrderTypeAvailable(false);
+    else return;
+
+    if (orderType === 'DELIVERY') tempIsPossible = deliveryFinances && deliveryFinances.amount ? cartData.cartCost >= deliveryFinances.amount : false;
+    else tempIsPossible = cartItemKeys.length > 0;
 
     setOrderPossible(tempIsPossible);
-  }, [cartItemKeys, cartData.cartCost, deliveryFinances?.amount, deliveryFinances?.charges]);
+  }, [cartItemKeys, cartData.cartCost, deliveryFinances?.amount, deliveryFinances?.charges, orderType]);
 
   function onClickOrderButton() {
-    if (orderPossible) {
-      isLoggedIn ? router.push('/checkout') : dispatch(updateShowLogin(true));
-    }
+    if (orderPossible) isLoggedIn ? router.push('/checkout') : dispatch(updateShowLogin(true));
   }
 
   return (
@@ -253,13 +245,15 @@ const Cart: FunctionComponent = ({}) => {
                 )
               );
             })}
+
             <ListItem key="info-cart">
               <CartCost>
                 <ItemTitle>{t('@total')}</ItemTitle>
                 <Price>{formatCurrency(cartData.cartCost, languageCode)}</Price>
               </CartCost>
             </ListItem>
-            {!orderPossible && (
+
+            {!orderPossible && !noOrderTypeAvailable && (
               <MinimumOrderMessage>
                 {t('@min-amount-1')} {deliveryFinances?.amount && formatCurrency(deliveryFinances?.amount, languageCode)}
                 {t('@min-amount-2')}
@@ -275,6 +269,7 @@ const Cart: FunctionComponent = ({}) => {
             </CartEmptyContainer>
           </ListItem>
         )}
+
         {noOrderTypeAvailable && <MinimumOrderMessage>{t('@not-accept')}</MinimumOrderMessage>}
       </List>
 
