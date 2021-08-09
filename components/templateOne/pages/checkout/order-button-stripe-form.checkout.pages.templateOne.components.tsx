@@ -95,7 +95,7 @@ const CheckoutPageOrderButtonStripeForm: FunctionComponent<IPropsCheckoutPageOrd
 
   return (
     <Form onSubmit={handleSubmit}>
-      <CardElementContainer>
+      {/* <CardElementContainer>
         <CardElement
           options={{
             hidePostalCode: true,
@@ -114,7 +114,7 @@ const CheckoutPageOrderButtonStripeForm: FunctionComponent<IPropsCheckoutPageOrd
             },
           }}
         />
-      </CardElementContainer>
+      </CardElementContainer> */}
       <SubmitButton type="submit" disabled={buttonDisabled}>
         {buttonLoading ? <LoadingIndicator /> : <OrderButton>{t('@order-and-pay')}</OrderButton>}
       </SubmitButton>
