@@ -8,6 +8,7 @@ import { useTranslation } from 'next-i18next';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { useAppDispatch } from '../../../../redux/hooks.redux';
 import { updateError } from '../../../../redux/slices/common.slices.redux';
+import Router from 'next/router';
 
 export interface IPropsCheckoutPageOrderButtonStripeForm {
   createOrder(): Promise<INodeApiHttpPostOrderResponse>;
@@ -77,6 +78,8 @@ const CheckoutPageOrderButtonStripeForm: FunctionComponent<IPropsCheckoutPageOrd
           show: true,
         }),
       );
+
+    Router.push(response.session.url);
 
     // if (!stripe || !elements) {
     // Stripe.js has not loaded yet. Make sure to disable
