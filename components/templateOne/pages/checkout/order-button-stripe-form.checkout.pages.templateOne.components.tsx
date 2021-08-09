@@ -1,11 +1,13 @@
 import React, { FormEvent, FunctionComponent } from 'react';
-import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+// import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { INodeApiHttpPostOrderResponse, IOrderResponseStripe } from '../../../../interfaces/http/nodeapi/order/post.order.nodeapi.http';
 import styled from 'styled-components';
 import { useState } from 'react';
 import LoadingIndicator from '../../common/loadingIndicator/loading-indicator.common.templateOne.components';
 import { useTranslation } from 'next-i18next';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
+import { useAppDispatch } from '../../../../redux/hooks.redux';
+import { updateError } from '../../../../redux/slices/common.slices.redux';
 
 export interface IPropsCheckoutPageOrderButtonStripeForm {
   createOrder(): Promise<INodeApiHttpPostOrderResponse>;
@@ -18,12 +20,12 @@ const Form = styled.form`
   flex-direction: column;
 `;
 
-const CardElementContainer = styled.div`
-  border: ${(props) => props.theme.border};
-  padding: ${(props) => props.theme.dimen.X4 * 2}px ${(props) => props.theme.dimen.X4}px;
-  border-radius: ${(props) => props.theme.borderRadius}px;
-  margin-bottom: ${(props) => props.theme.dimen.X4 * 2}px;
-`;
+// const CardElementContainer = styled.div`
+//   border: ${(props) => props.theme.border};
+//   padding: ${(props) => props.theme.dimen.X4 * 2}px ${(props) => props.theme.dimen.X4}px;
+//   border-radius: ${(props) => props.theme.borderRadius}px;
+//   margin-bottom: ${(props) => props.theme.dimen.X4 * 2}px;
+// `;
 
 const SubmitButton = styled.button`
   display: flex;
@@ -48,14 +50,15 @@ const OrderButton = styled.div`
 `;
 
 const CheckoutPageOrderButtonStripeForm: FunctionComponent<IPropsCheckoutPageOrderButtonStripeForm> = ({
-  onPaymentDone,
+  // onPaymentDone,
   createOrder,
   orderCanBePlaced,
 }) => {
   const [buttonLoading, setButtonLoading] = useState(false);
-  const stripe = useStripe();
-  const elements = useElements();
+  // const stripe = useStripe();
+  // const elements = useElements();
   const { t } = useTranslation('page-checkout');
+  const dispatch = useAppDispatch();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     // Block native form submission.
@@ -64,34 +67,44 @@ const CheckoutPageOrderButtonStripeForm: FunctionComponent<IPropsCheckoutPageOrd
 
     const response = (await createOrder()) as IOrderResponseStripe;
 
-    if (!stripe || !elements) {
-      // Stripe.js has not loaded yet. Make sure to disable
-      // form submission until Stripe.js has loaded.
-      return;
-    }
+    setButtonLoading(false);
+
+    if (!response.result)
+      return dispatch(
+        updateError({
+          severity: 'error',
+          message: response.message,
+          show: true,
+        }),
+      );
+
+    // if (!stripe || !elements) {
+    // Stripe.js has not loaded yet. Make sure to disable
+    // form submission until Stripe.js has loaded.
+    // return;
+    // }
 
     // Get a reference to a mounted CardElement. Elements knows how
     // to find your CardElement because there can only ever be one of
     // each type of element.
-    const cardElement = elements.getElement(CardElement);
+    // const cardElement = elements.getElement(CardElement);
 
-    if (!cardElement) return; // to supress type error
+    // if (!cardElement) return; // to supress type error
     // Use your card Element with other Stripe.js APIs
-    const { error, paymentIntent } = await stripe.confirmCardPayment(response.client_secret, {
-      payment_method: {
-        card: cardElement,
-      },
-    });
+    // const { error, paymentIntent } = await stripe.confirmCardPayment(response.client_secret, {
+    //   payment_method: {
+    //     card: cardElement,
+    //   },
+    // });
 
-    if (error) {
-      console.error('[error]', error);
-    } else if (paymentIntent?.id) {
-      await onPaymentDone();
-    }
-    setButtonLoading(false);
+    // if (error) {
+    // console.error('[error]', error);
+    // } else if (paymentIntent?.id) {
+    // await onPaymentDone();
+    // }
   };
 
-  const buttonDisabled = !stripe || !orderCanBePlaced || buttonLoading;
+  const buttonDisabled = !orderCanBePlaced || buttonLoading;
 
   return (
     <Form onSubmit={handleSubmit}>
