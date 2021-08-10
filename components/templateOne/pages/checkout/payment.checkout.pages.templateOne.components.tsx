@@ -4,7 +4,7 @@ import React, { FunctionComponent, useEffect } from 'react';
 import { useState } from 'react';
 import { Row, Col } from 'react-grid-system';
 
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import NodeApiHttpPostOrder from '../../../../http/nodeapi/order/post.order.nodeapi.http';
 import { IMakeOrderProducts } from '../../../../interfaces/http/nodeapi/order/post.order.nodeapi.http';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
@@ -29,7 +29,7 @@ import { getPrductsFromCartData } from '../../../../utils/products.utils';
 import LoadingIndicator from '../../common/loadingIndicator/loading-indicator.common.templateOne.components';
 import { StyledCheckoutCard, StyledCheckoutTitle } from './customer-info.checkout.pages.templateOne.components';
 import CheckoutPageOrderButtonPaypal from './order-button-paypal.checkout.pages.templateOne.components';
-import CheckoutPageOrderButtonStripe from './order-button-stripe.checkout.pages.templateOne.components';
+// import CheckoutPageOrderButtonStripe from './order-button-stripe.checkout.pages.templateOne.components';
 
 import SvgCash from '../../../../public/assets/svg/cash.svg';
 import SvgCard from '../../../../public/assets/svg/card.svg';
@@ -43,24 +43,20 @@ const PaymentMethodList = styled.ul`
   margin: 0 -${(props) => props.theme.dimen.X4}px;
 `;
 
-const PaymentMethodItems = styled.li<{ isActive: boolean; show: boolean }>`
-  display: ${(p) => (p.show ? 'flex' : 'none')};
+const PaymentMethodItems = styled.li<{ isActive: boolean }>`
+  display: flex;
   flex: 1;
   margin: ${(props) => props.theme.dimen.X4}px;
   padding: ${(props) => props.theme.dimen.X4}px;
   border: ${(props) => props.theme.border};
   justify-content: center;
   border-radius: ${(props) => props.theme.borderRadius}px;
-  ${(props) =>
-    props.isActive
-      ? css`
-          border-color: ${(props) => props.theme.primaryColor};
-          box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2);
-        `
-      : css`
-          box-shadow: 0 0 4px 0 transparent;
-        `}
+
+  border-color: ${(p) => (p.isActive ? p.theme.primaryColor : 'none')};
+  box-shadow: ${(p) => (p.isActive ? '0 0 4px 0 rgba(0, 0, 0, 0.2)' : '0 0 4px 0 transparent')};
+
   cursor: pointer;
+
   svg {
     display: block;
     height: 40px;
@@ -172,6 +168,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
 
   // TODO: Control orderButton active state
   useEffect(() => {
+    console.log('paymentMethodData ; ', paymentMethodData);
     const canPlace = !!(
       bearerToken &&
       shopData?.id &&
@@ -217,7 +214,11 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
       paymentTitle = paymentMethodData;
       break;
     case 'STRIPE':
-      orderButton = <CheckoutPageOrderButtonStripe onPaymentDone={onPaymentDone} createOrder={createOrder} orderCanBePlaced={orderCanBePlaced} />;
+      orderButton = (
+        <OrderButtonCashContainer onClick={onClickCashOrderButton} active={orderCanBePlaced}>
+          {orderButtonLoading ? <LoadingIndicator /> : <OrderButton>{t('@order-and-pay')}</OrderButton>}
+        </OrderButtonCashContainer>
+      );
       paymentTitle = t('@credit-card');
       break;
     case 'PAYPAL':
@@ -253,20 +254,21 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
                 show: shopData?.paypal_available,
               },
             ].map((item) => {
-              const isActive = paymentMethodData === item.method;
               return (
-                <PaymentMethodItems
-                  show={item.show || false}
-                  key={item.method}
-                  isActive={isActive}
-                  onClick={() => dispatch(updatePaymentMethod(item.method))}
-                >
-                  <item.icon />
-                </PaymentMethodItems>
+                item.show && (
+                  <PaymentMethodItems
+                    isActive={paymentMethodData === item.method}
+                    key={item.method}
+                    onClick={() => dispatch(updatePaymentMethod(item.method))}
+                  >
+                    <item.icon />
+                  </PaymentMethodItems>
+                )
               );
             })}
           </PaymentMethodList>
         </Col>
+
         <Col xs={12}>
           <OrderButtonContainer>{orderButton}</OrderButtonContainer>
         </Col>

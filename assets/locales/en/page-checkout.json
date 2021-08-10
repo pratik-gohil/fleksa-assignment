@@ -11,7 +11,7 @@
   "@apply": "APPLY",
   "@tip": "TIP",
   "@other": "Other",
-  "@credit-card": "CREDIT CARD",
+  "@credit-card": "STRIPE",
   "@payment": "PAYMENT",
   "@agreement-part-1": "By clicking on ",
   "@order-and-pay": "ORDER AND PAY",

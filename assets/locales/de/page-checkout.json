@@ -11,7 +11,7 @@
   "@apply": "ANWENDEN",
   "@tip": "TRINKGELD",
   "@other": "Andere",
-  "@credit-card": "KREDITKARTE",
+  "@credit-card": "STRIPE",
   "@payment": "ZAHLUNG",
   "@agreement-part-1": "Durch Klicken auf",
   "@order-and-pay": "KOSTENPFLICHTIG BESTELLEN",
