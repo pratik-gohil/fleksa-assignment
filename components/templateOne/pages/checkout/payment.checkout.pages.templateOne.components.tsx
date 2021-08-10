@@ -31,9 +31,10 @@ import { StyledCheckoutCard, StyledCheckoutTitle } from './customer-info.checkou
 import CheckoutPageOrderButtonPaypal from './order-button-paypal.checkout.pages.templateOne.components';
 // import CheckoutPageOrderButtonStripe from './order-button-stripe.checkout.pages.templateOne.components';
 
-import SvgCash from '../../../../public/assets/svg/cash.svg';
-import SvgCard from '../../../../public/assets/svg/card.svg';
-import SvgPaypal from '../../../../public/assets/svg/paypal.svg';
+// import SvgCash from '../../../../public/assets/svg/cash.svg';
+// import SvgCard from '../../../../public/assets/svg/card.svg';
+// import SvgPaypal from '../../../../public/assets/svg/paypal.svg';
+
 import { useTranslation } from 'next-i18next';
 import { updateError } from '../../../../redux/slices/common.slices.redux';
 
@@ -57,7 +58,7 @@ const PaymentMethodItems = styled.li<{ isActive: boolean }>`
 
   cursor: pointer;
 
-  svg {
+  img {
     display: block;
     height: 40px;
   }
@@ -85,6 +86,8 @@ const OrderButtonCashContainer = styled.div<{ active: boolean }>`
   border: ${(props) => props.theme.border};
   border-radius: 1000px;
 `;
+
+const PaymentIconImage = styled.img``;
 
 const OrderButton = styled.div`
   font-size: clamp(16px, 24px, 3vw);
@@ -240,17 +243,17 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
             {[
               {
                 method: 'CASH' as ICheckoutPaymentMethods,
-                icon: SvgCash,
+                img: <PaymentIconImage src="/assets/svg/cash.svg" alt="cash" />,
                 show: true,
               },
               {
                 method: 'STRIPE' as ICheckoutPaymentMethods,
-                icon: SvgCard,
+                img: <PaymentIconImage src="/assets/png/stripe-s.png" alt="stripe" />,
                 show: shopData?.stripe_available,
               },
               {
                 method: 'PAYPAL' as ICheckoutPaymentMethods,
-                icon: SvgPaypal,
+                img: <PaymentIconImage src="/assets/svg/paypal.svg" alt="paypal" />,
                 show: shopData?.paypal_available,
               },
             ].map((item) => {
@@ -261,7 +264,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
                     key={item.method}
                     onClick={() => dispatch(updatePaymentMethod(item.method))}
                   >
-                    <item.icon />
+                    {item.img}
                   </PaymentMethodItems>
                 )
               );
