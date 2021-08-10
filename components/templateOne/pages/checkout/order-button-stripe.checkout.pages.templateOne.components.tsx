@@ -7,7 +7,6 @@ import CheckoutPageOrderButtonStripeForm from './order-button-stripe-form.checko
 export interface IPropsCheckoutPageOrderButtonStripe {
   createOrder(): Promise<INodeApiHttpPostOrderResponse>;
   orderCanBePlaced: boolean;
-  onPaymentDone(): Promise<void>;
 }
 
 const stripeKey = process.env.NEXT_PUBLIC_REACT_APP_STRIPE_KEY;
@@ -21,10 +20,10 @@ if (stripeKey) {
   throw new Error('Stripe key not found');
 }
 
-const CheckoutPageOrderButtonStripe: FunctionComponent<IPropsCheckoutPageOrderButtonStripe> = ({ onPaymentDone, createOrder, orderCanBePlaced }) => {
+const CheckoutPageOrderButtonStripe: FunctionComponent<IPropsCheckoutPageOrderButtonStripe> = ({ createOrder, orderCanBePlaced }) => {
   return (
     <Elements stripe={stripePromise}>
-      <CheckoutPageOrderButtonStripeForm onPaymentDone={onPaymentDone} createOrder={createOrder} orderCanBePlaced={orderCanBePlaced} />
+      <CheckoutPageOrderButtonStripeForm createOrder={createOrder} orderCanBePlaced={orderCanBePlaced} />
     </Elements>
   );
 };

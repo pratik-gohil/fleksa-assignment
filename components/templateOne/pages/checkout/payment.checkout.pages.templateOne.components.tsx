@@ -29,7 +29,7 @@ import { getPrductsFromCartData } from '../../../../utils/products.utils';
 import LoadingIndicator from '../../common/loadingIndicator/loading-indicator.common.templateOne.components';
 import { StyledCheckoutCard, StyledCheckoutTitle } from './customer-info.checkout.pages.templateOne.components';
 import CheckoutPageOrderButtonPaypal from './order-button-paypal.checkout.pages.templateOne.components';
-// import CheckoutPageOrderButtonStripe from './order-button-stripe.checkout.pages.templateOne.components';
+import CheckoutPageOrderButtonStripe from './order-button-stripe.checkout.pages.templateOne.components';
 
 // import SvgCash from '../../../../public/assets/svg/cash.svg';
 // import SvgCard from '../../../../public/assets/svg/card.svg';
@@ -115,6 +115,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   const dispatch = useAppDispatch();
   const languageCode = useAppSelector(selectLanguageCode);
   const { t } = useTranslation('page-checkout');
+  const [currentMode, setCurrentMode] = useState(paymentMethodData);
 
   async function createOrder() {
     try {
@@ -169,6 +170,10 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
     }
   }
 
+  useEffect(() => {
+    setCurrentMode(paymentMethodData);
+  }, [paymentMethodData]);
+
   // TODO: Control orderButton active state
   useEffect(() => {
     console.log('paymentMethodData ; ', paymentMethodData);
@@ -217,11 +222,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
       paymentTitle = paymentMethodData;
       break;
     case 'STRIPE':
-      orderButton = (
-        <OrderButtonCashContainer onClick={onClickCashOrderButton} active={orderCanBePlaced}>
-          {orderButtonLoading ? <LoadingIndicator /> : <OrderButton>{t('@order-and-pay')}</OrderButton>}
-        </OrderButtonCashContainer>
-      );
+      orderButton = <CheckoutPageOrderButtonStripe createOrder={createOrder} orderCanBePlaced={orderCanBePlaced} />;
       paymentTitle = t('@credit-card');
       break;
     case 'PAYPAL':
@@ -260,7 +261,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
               return (
                 item.show && (
                   <PaymentMethodItems
-                    isActive={paymentMethodData === item.method}
+                    isActive={currentMode === item.method}
                     key={item.method}
                     onClick={() => dispatch(updatePaymentMethod(item.method))}
                   >
