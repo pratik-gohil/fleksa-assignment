@@ -23,7 +23,7 @@ export interface ICheckoutSliceState {
   showDateTimeSelect: boolean;
   selectedAddressId: number | null;
   deliveryFinances: IDeliveryFinances | null;
-  orderLabel: string;
+
   promoCode: {
     code: string;
     value: number;
@@ -41,7 +41,6 @@ const initialState: ICheckoutSliceState = {
   selectedAddressId: null,
   deliveryFinances: null,
   promoCode: null,
-  orderLabel: 'ORDER',
 };
 
 export const CheckoutSlice = createSlice({
@@ -75,9 +74,7 @@ export const CheckoutSlice = createSlice({
     updatePromoCode(state, action) {
       state.promoCode = action.payload;
     },
-    updateOrderLabel(state, action) {
-      state.orderLabel = action.payload;
-    },
+
     updateClearCheckout(state) {
       state.orderType = null;
       state.paymentMethod = 'CASH';
@@ -88,7 +85,6 @@ export const CheckoutSlice = createSlice({
       state.selectedAddressId = null;
       state.deliveryFinances = null;
       state.promoCode = null;
-      state.orderLabel = 'ORDER';
     },
     updateCheckout(state, action) {
       state.orderType = action.payload.orderType || state.orderType;
@@ -133,4 +129,3 @@ export const selectWantAt = (state: RootState) => state.checkout.wantAt;
 export const selectShowDateTimeSelect = (state: RootState) => state.checkout.showDateTimeSelect;
 export const selectSelectedAddressId = (state: RootState) => state.checkout.selectedAddressId;
 export const selectPromoCode = (state: RootState) => state.checkout.promoCode;
-export const selectOrderLabel = (state: RootState) => state.checkout.orderLabel;
