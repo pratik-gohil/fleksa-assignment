@@ -248,7 +248,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
               },
               {
                 method: 'STRIPE' as ICheckoutPaymentMethods,
-                img: <PaymentIconImage src="/assets/png/stripe-s.png" alt="stripe" />,
+                img: <PaymentIconImage src="/assets/png/stripe.png" alt="stripe" />,
                 show: shopData?.stripe_available,
               },
               {
