@@ -22,10 +22,10 @@ if (stripeKey) {
   throw new Error('Stripe key not found');
 }
 
-const CheckoutPageOrderButtonStripe: FunctionComponent<IPropsCheckoutPageOrderButtonStripe> = ({ createOrder, orderCanBePlaced }) => {
+const CheckoutPageOrderButtonStripe: FunctionComponent<IPropsCheckoutPageOrderButtonStripe> = ({ createOrder, orderCanBePlaced, shop }) => {
   return (
     <Elements stripe={stripePromise}>
-      <CheckoutPageOrderButtonStripeForm createOrder={createOrder} orderCanBePlaced={orderCanBePlaced} />
+      <CheckoutPageOrderButtonStripeForm createOrder={createOrder} orderCanBePlaced={orderCanBePlaced} shop={shop} />
     </Elements>
   );
 };

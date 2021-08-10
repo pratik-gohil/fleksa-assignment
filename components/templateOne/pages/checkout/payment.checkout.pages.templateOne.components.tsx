@@ -251,9 +251,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
       paymentTitle = t('@credit-card');
       break;
     case 'PAYPAL':
-      orderButton = (
-        <CheckoutPageOrderButtonPaypal onPaymentDone={onPaymentDone} createOrder={createOrder} orderCanBePlaced={orderCanBePlaced} shop={shop} />
-      );
+      orderButton = <CheckoutPageOrderButtonPaypal onPaymentDone={onPaymentDone} createOrder={createOrder} orderCanBePlaced={orderCanBePlaced} />;
       paymentTitle = paymentMethodData;
       break;
     default:
@@ -305,7 +303,10 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
         </Col>
         <Col xs={12}>
           <Disclaimer>
-            {t('@agreement-part-1')} <span style={{ textTransform: 'uppercase', fontWeight: 'bolder', color: '#333' }}>{t('@order-and-pay')}</span>{' '}
+            {t('@agreement-part-1')}{' '}
+            <span style={{ textTransform: 'uppercase', fontWeight: 'bolder', color: '#333' }}>
+              {!shop.availability && !shop.isClosed ? t('@pre-order-and-pay') : t('@order-and-pay')}
+            </span>{' '}
             {t('@agreement-part-2')}{' '}
             <a href="/privacy-policy" style={{ textDecoration: 'underline', color: '#333' }}>
               {' '}

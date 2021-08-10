@@ -8,10 +8,12 @@ import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { useAppDispatch } from '../../../../redux/hooks.redux';
 import { updateError } from '../../../../redux/slices/common.slices.redux';
 import Router from 'next/router';
+import { IShopAvailablity } from '../../../../interfaces/common/index.common.interfaces';
 
 export interface IPropsCheckoutPageOrderButtonStripeForm {
   createOrder(): Promise<INodeApiHttpPostOrderResponse>;
   orderCanBePlaced: boolean;
+  shop: IShopAvailablity;
 }
 
 const Form = styled.form`
@@ -41,7 +43,7 @@ const OrderButton = styled.div`
   }
 `;
 
-const CheckoutPageOrderButtonStripeForm: FunctionComponent<IPropsCheckoutPageOrderButtonStripeForm> = ({ createOrder, orderCanBePlaced }) => {
+const CheckoutPageOrderButtonStripeForm: FunctionComponent<IPropsCheckoutPageOrderButtonStripeForm> = ({ createOrder, orderCanBePlaced, shop }) => {
   const [buttonLoading, setButtonLoading] = useState(false);
 
   const { t } = useTranslation('page-checkout');
@@ -73,7 +75,11 @@ const CheckoutPageOrderButtonStripeForm: FunctionComponent<IPropsCheckoutPageOrd
   return (
     <Form onSubmit={handleSubmit}>
       <SubmitButton type="submit" disabled={buttonDisabled}>
-        {buttonLoading ? <LoadingIndicator /> : <OrderButton>{t('@order-and-pay')}</OrderButton>}
+        {buttonLoading ? (
+          <LoadingIndicator />
+        ) : (
+          <OrderButton>{!shop.availability && !shop.isClosed ? t('@pre-order-and-pay') : t('@order-and-pay')}</OrderButton>
+        )}
       </SubmitButton>
     </Form>
   );

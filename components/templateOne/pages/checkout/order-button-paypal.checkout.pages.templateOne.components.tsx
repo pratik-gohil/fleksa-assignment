@@ -1,7 +1,6 @@
 import { PayPalButtons } from '@paypal/react-paypal-js';
 import React, { FunctionComponent } from 'react';
 import NodeApiHttpPostPaypal from '../../../../http/nodeapi/paypal/post.paypal.nodeapi.http';
-import { IShopAvailablity } from '../../../../interfaces/common/index.common.interfaces';
 import { INodeApiHttpPostOrderResponse, IOrderResponsePaypal } from '../../../../interfaces/http/nodeapi/order/post.order.nodeapi.http';
 import { useAppSelector } from '../../../../redux/hooks.redux';
 import { selectConfiguration } from '../../../../redux/slices/configuration.slices.redux';
@@ -11,7 +10,6 @@ export interface IPropsCheckoutPageOrderButtonPaypal {
   createOrder(): Promise<INodeApiHttpPostOrderResponse>;
   orderCanBePlaced: boolean;
   onPaymentDone(): Promise<void>;
-  shop: IShopAvailablity;
 }
 
 const CheckoutPageOrderButtonPaypal: FunctionComponent<IPropsCheckoutPageOrderButtonPaypal> = ({ onPaymentDone, createOrder, orderCanBePlaced }) => {
