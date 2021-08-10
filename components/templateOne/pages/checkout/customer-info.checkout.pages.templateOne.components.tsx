@@ -67,9 +67,9 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
 
   return (
     <StyledCheckoutCard>
-      {/* <StyledCheckoutTitle>{t('@reach')}</StyledCheckoutTitle> */}
       <EditContainer>
         <Text>{t('@name')}</Text>
+
         {editableName || !userData.name ? (
           <StyledCheckoutInput
             type="text"
@@ -81,8 +81,10 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
         ) : (
           <StyledCheckoutText>{userData.name}</StyledCheckoutText>
         )}
+
         <EditButton onClick={() => setEditableName(!editableName)} />
       </EditContainer>
+
       <EditContainer>
         <Text>{t('@email')}</Text>
         {editableEmail || !userData.email ? (
@@ -91,18 +93,24 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
             placeholder="Email"
             value={userData.email || ''}
             onBlur={() => setEditableEmail(!(userData.email && userData.email.length > 0))}
-            onChange={(e) => dispatch(updateCustomerEmail(e.target.value))}
+            onChange={(e) => {
+              const trimedEmail = e.target.value.replace(/\s/g, '');
+              dispatch(updateCustomerEmail(trimedEmail));
+            }}
           />
         ) : (
           <StyledCheckoutText>{userData.email}</StyledCheckoutText>
         )}
         <EditButton onClick={() => setEditableEmail(!editableEmail)} />
       </EditContainer>
+
       <EditContainer>
         <Text>{t('@phone')}</Text>
+
         <StyledCheckoutText>
           +{userData.country_code} {userData.phone}
         </StyledCheckoutText>
+
         <EditButton disabled={true} />
       </EditContainer>
     </StyledCheckoutCard>
