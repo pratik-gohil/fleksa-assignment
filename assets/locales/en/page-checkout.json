@@ -27,5 +27,6 @@
   "@total": "Total",
   "@delivery": "Delivery",
   "@pickup": "Pickup",
-  "@dine-in": "Dine-In"
+  "@dine-in": "Dine-In",
+  "@required": "required"
 }

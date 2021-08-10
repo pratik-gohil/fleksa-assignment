@@ -28,5 +28,6 @@
   "@total": "Gesamt",
   "@delivery": "Lieferung",
   "@pickup": "Abholung",
-  "@dine-in": "Dine-In"
+  "@dine-in": "Dine-In",
+  "@required": "erforderlich"
 }
