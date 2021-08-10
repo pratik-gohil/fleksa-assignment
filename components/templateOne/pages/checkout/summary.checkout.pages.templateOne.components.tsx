@@ -90,7 +90,6 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
 
   return (
     <StyledCheckoutCard>
-      {/* <StyledCheckoutTitle>{t('@summary')}</StyledCheckoutTitle> */}
       <Row>
         <Col xs={12}>
           <EditContainer>
