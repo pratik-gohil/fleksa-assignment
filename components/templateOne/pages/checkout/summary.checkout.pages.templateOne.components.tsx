@@ -94,7 +94,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
       <Row>
         <Col xs={12}>
           <EditContainer>
-            <StyledCheckoutText>{orderType === 'DINE_IN' ? 'DINE-IN' : orderType}</StyledCheckoutText>
+            <StyledCheckoutText>{orderType === 'DINE_IN' ? t('@dine-in') : t(`@${orderType?.toLowerCase()}`)}</StyledCheckoutText>
             <EditButton onClick={() => dispatch(updateShowOrderTypeSelect(true))} />
           </EditContainer>
           {orderType === 'DELIVERY' ? (

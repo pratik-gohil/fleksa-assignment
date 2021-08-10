@@ -23,6 +23,9 @@
   "@subtotal": "Zwischensumme",
   "@discount": "Rabatt",
   "@tip-cart": "Trinkgeld",
+
+  "@total": "Gesamt",
   "@delivery": "Lieferung",
-  "@total": "Gesamt"
+  "@pickup": "Abholung",
+  "@dine-in": "Dine-In"
 }

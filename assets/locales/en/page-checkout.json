@@ -23,6 +23,8 @@
   "@subtotal": "Subtotal",
   "@discount": "Discount",
   "@tip-cart": "Tip",
+  "@total": "Total",
   "@delivery": "Delivery",
-  "@total": "Total"
+  "@pickup": "Pickup",
+  "@dine-in": "Dine-In"
 }
