@@ -38,13 +38,13 @@ import CheckoutPageOrderButtonStripe from './order-button-stripe.checkout.pages.
 import { useTranslation } from 'next-i18next';
 import { updateError } from '../../../../redux/slices/common.slices.redux';
 
-const PaymentMethodList = styled.ul`
+const PaymentMethodList = styled.div`
   display: flex;
   flex-direction: row;
   margin: 0 -${(props) => props.theme.dimen.X4}px;
 `;
 
-const PaymentMethodItems = styled.li<{ isActive: boolean }>`
+const PaymentMethodItems = styled.button<{ isActive: boolean }>`
   display: flex;
   flex: 1;
   margin: ${(props) => props.theme.dimen.X4}px;
@@ -52,6 +52,7 @@ const PaymentMethodItems = styled.li<{ isActive: boolean }>`
   border: ${(props) => props.theme.border};
   justify-content: center;
   border-radius: ${(props) => props.theme.borderRadius}px;
+  background: transparent;
 
   border-color: ${(p) => (p.isActive ? p.theme.primaryColor : 'none')};
   box-shadow: ${(p) => (p.isActive ? '0 0 4px 0 rgba(0, 0, 0, 0.2)' : '0 0 4px 0 transparent')};
@@ -115,7 +116,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   const dispatch = useAppDispatch();
   const languageCode = useAppSelector(selectLanguageCode);
   const { t } = useTranslation('page-checkout');
-  const [currentMode, setCurrentMode] = useState(paymentMethodData);
+  const [currentPaymentMethod, setCurrentPaymentMethod] = useState('CASH');
 
   async function createOrder() {
     try {
@@ -170,8 +171,10 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
     }
   }
 
+  // TODO: Set initial payment method
   useEffect(() => {
-    setCurrentMode(paymentMethodData);
+    setCurrentPaymentMethod(paymentMethodData);
+    dispatch(updatePaymentMethod(paymentMethodData));
   }, [paymentMethodData]);
 
   // TODO: Control orderButton active state
@@ -261,7 +264,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
               return (
                 item.show && (
                   <PaymentMethodItems
-                    isActive={currentMode === item.method}
+                    isActive={currentPaymentMethod === item.method}
                     key={item.method}
                     onClick={() => dispatch(updatePaymentMethod(item.method))}
                   >
