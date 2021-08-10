@@ -6,3 +6,13 @@ export interface IContent {
   title: string;
   type_: AllowedContentTypes;
 }
+
+export interface IShopAvailablity {
+  availability: boolean;
+  isClosed: boolean;
+  next?: {
+    day: string;
+    time: string;
+    dayNumber?: string;
+  };
+}

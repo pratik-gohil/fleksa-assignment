@@ -10,6 +10,7 @@ import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { selectLanguage, selectLanguageCode, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
+import { IShopAvailablity } from '../../../../interfaces/common/index.common.interfaces';
 
 const WrapperSection = styled.section`
   height: calc(100vh - ${(props) => props.theme.navMobile.height}px);
@@ -158,7 +159,7 @@ const CarouselSlide = styled.div<{ translateX: number }>`
 
 const slideChangeDealy = 5000;
 
-const INITIAL_TIMING_STATE = {
+export const INITIAL_TIMING_STATE = {
   availability: false,
   isClosed: false,
   next: {
@@ -195,15 +196,7 @@ const IndexPageHero: FunctionComponent = ({}) => {
     }
   }, [activeSlide]);
 
-  const [shop, setShop] = useState<{
-    availability: boolean;
-    isClosed: boolean;
-    next?: {
-      day: string;
-      time: string;
-      dayNumber?: string;
-    };
-  }>(INITIAL_TIMING_STATE);
+  const [shop, setShop] = useState<IShopAvailablity>(INITIAL_TIMING_STATE);
 
   useEffect(() => {
     if (!addressData?.has_delivery && !addressData?.has_pickup && !addressData?.has_dinein && !addressData?.has_reservations)

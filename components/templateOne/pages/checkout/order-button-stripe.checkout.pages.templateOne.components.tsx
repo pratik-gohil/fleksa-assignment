@@ -3,10 +3,12 @@ import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe, Stripe } from '@stripe/stripe-js';
 import { INodeApiHttpPostOrderResponse } from '../../../../interfaces/http/nodeapi/order/post.order.nodeapi.http';
 import CheckoutPageOrderButtonStripeForm from './order-button-stripe-form.checkout.pages.templateOne.components';
+import { IShopAvailablity } from '../../../../interfaces/common/index.common.interfaces';
 
 export interface IPropsCheckoutPageOrderButtonStripe {
   createOrder(): Promise<INodeApiHttpPostOrderResponse>;
   orderCanBePlaced: boolean;
+  shop: IShopAvailablity;
 }
 
 const stripeKey = process.env.NEXT_PUBLIC_REACT_APP_STRIPE_KEY;
