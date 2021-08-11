@@ -37,6 +37,12 @@ export const UserSlice = createSlice({
     updateCustomerName(state, action) {
       state.customer.name = action.payload;
     },
+    updateCustomerPhone(state, action) {
+      state.customer.phone = action.payload;
+    },
+    updateCustomerCountryCode(state, action) {
+      state.customer.country_code = action.payload;
+    },
     updateCustomerEmail(state, action) {
       state.customer.email = action.payload;
     },
@@ -90,6 +96,8 @@ export const {
   updateExistCustomerAddressOrAddNew,
   deleteCustomerAddress,
   updateCustomerEmailVerification,
+  updateCustomerPhone,
+  updateCustomerCountryCode,
 } = UserSlice.actions;
 
 export const selectIsUserLoggedIn = (state: RootState) => !!state.user.bearerToken;

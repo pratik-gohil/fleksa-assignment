@@ -5,7 +5,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
-import { selectCustomer, updateCustomerEmail, updateCustomerName } from '../../../../redux/slices/user.slices.redux';
+import { selectCustomer, updateCustomerEmail, updateCustomerName, updateCustomerPhone } from '../../../../redux/slices/user.slices.redux';
 import EditButton from './edit-button.checkout.pages.templateOne.components';
 import EditContainer from './edit-container.checkout.pages.templateOne.components';
 
@@ -54,8 +54,27 @@ export const StyledCheckoutText = styled.p`
 `;
 
 const Text = styled.p`
-  flex: 1;
-  min-width: 60px;
+  min-width: 200px;
+`;
+
+const PhoneInputContainer = styled.div`
+  display: flex;
+  flex: 2;
+  gap: 15px;
+`;
+
+const StyledCheckoutInputCountryCode = styled.input`
+  width: 20%;
+  border: ${(props) => props.theme.border};
+  border-radius: ${(props) => props.theme.borderRadius}px;
+  padding: ${(props) => props.theme.dimen.X4}px;
+`;
+
+const StyledCheckoutInputPhone = styled.input`
+  border: ${(props) => props.theme.border};
+  border-radius: ${(props) => props.theme.borderRadius}px;
+  padding: ${(props) => props.theme.dimen.X4}px;
+  width: 80%;
 `;
 
 const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
@@ -63,6 +82,8 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
   const { t } = useTranslation('page-checkout');
   const [editableName, setEditableName] = useState(!(userData.name && userData.name.length > 0));
   const [editableEmail, setEditableEmail] = useState(!(userData.email && userData.email.length > 0));
+  const [editablePhone, setEditablePhone] = useState(!(userData.phone && userData.phone.length > 0));
+
   const dispatch = useAppDispatch();
 
   return (
@@ -75,7 +96,7 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
             type="text"
             placeholder="Name"
             value={userData.name}
-            onBlur={() => setEditableName(!(userData.name && userData.name.length > 0))}
+            onBlur={() => setEditableName(!userData.name)}
             onChange={(e) => dispatch(updateCustomerName(e.target.value))}
           />
         ) : (
@@ -87,6 +108,7 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
 
       <EditContainer>
         <Text>{t('@email')}</Text>
+
         {editableEmail || !userData.email ? (
           <StyledCheckoutInput
             type="text"
@@ -101,17 +123,44 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
         ) : (
           <StyledCheckoutText>{userData.email}</StyledCheckoutText>
         )}
+
         <EditButton onClick={() => setEditableEmail(!editableEmail)} />
       </EditContainer>
 
       <EditContainer>
         <Text>{t('@phone')}</Text>
 
-        <StyledCheckoutText>
-          +{userData.country_code} {userData.phone}
-        </StyledCheckoutText>
+        {editablePhone || !userData.phone ? (
+          <PhoneInputContainer>
+            <StyledCheckoutInputCountryCode
+              type="number"
+              placeholder="Phone"
+              value={userData.phone || ''}
+              onBlur={() => setEditablePhone(!userData.phone)}
+              onChange={(e) => {
+                const trimedPhone = e.target.value.replace(/\s/g, '');
+                dispatch(updateCustomerPhone(trimedPhone));
+              }}
+            />
 
-        <EditButton disabled={true} />
+            <StyledCheckoutInputPhone
+              type="number"
+              placeholder="Phone"
+              value={userData.phone || ''}
+              onBlur={() => setEditablePhone(!userData.phone)}
+              onChange={(e) => {
+                const trimedPhone = e.target.value.replace(/\s/g, '');
+                dispatch(updateCustomerPhone(trimedPhone));
+              }}
+            />
+          </PhoneInputContainer>
+        ) : (
+          <StyledCheckoutText>
+            +{userData.country_code} {userData.phone}
+          </StyledCheckoutText>
+        )}
+
+        <EditButton onClick={() => setEditablePhone(!editablePhone)} />
       </EditContainer>
     </StyledCheckoutCard>
   );

@@ -199,9 +199,8 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
 
   // TODO: Control orderButton active state
   useEffect(() => {
-    console.log('paymentMethodData ; ', paymentMethodData);
+    
     const canPlace = !!(
-      bearerToken &&
       shopData?.id &&
       customerData.name &&
       customerData.name.length &&
