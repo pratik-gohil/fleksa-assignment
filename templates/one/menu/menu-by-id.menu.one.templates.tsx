@@ -8,12 +8,7 @@ import MenuPageCategorySidebar from '../../../components/templateOne/pages/menu/
 import OrderTypeManager from '../../../components/templateOne/common/orderType/order-type-manager.menu.pages.templateOne.components';
 import { BREAKPOINTS } from '../../../constants/grid-system-configuration';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks.redux';
-import {
-  selectDeliveryFinances,
-  selectOrderType,
-  selectSelectedAddressId,
-  updateDeliveryFinances,
-} from '../../../redux/slices/checkout.slices.redux';
+import { selectOrderType, selectSelectedAddressId, updateDeliveryFinances } from '../../../redux/slices/checkout.slices.redux';
 import { selectShowAddress, selectShowOrderTypeSelect, updateShowAddAddress } from '../../../redux/slices/menu.slices.redux';
 import AddressAdd, { IGuestAddress } from '../../../components/templateOne/common/addresses/address-add.common.templateOne.components';
 import MenuPageCartSummary from '../../../components/templateOne/pages/menu/cart-summary.pages.templateOne.components';
@@ -80,7 +75,6 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
   const showAddAddress = useAppSelector(selectShowAddress);
   const configuration = useAppSelector(selectConfiguration);
   const selectedMenuId = useAppSelector(selectSelectedMenu);
-  const deliveryFinances = useAppSelector(selectDeliveryFinances);
   const checkoutAddressId = useAppSelector(selectSelectedAddressId);
   const showSelectOrderType = useAppSelector(selectShowOrderTypeSelect);
   const addressByType = useAppSelector((state) => selectAddressByType(state, 'HOME'));
@@ -100,13 +94,12 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
   }, [addressByType]);
 
   async function getAddressInfo() {
-    console.log(deliveryFinances, orderType, selectedMenuId)
     if (orderType === 'DELIVERY' && selectedMenuId) {
-      let addressType: AddressTypes|undefined;
+      let addressType: AddressTypes | undefined;
       let postalCode: number | null = null;
       if (isLoggedIn) {
         postalCode = Number(addressByType?.postal_code);
-        addressType = addressByType?.address_type
+        addressType = addressByType?.address_type;
       } else {
         const guestAddressString = window.localStorage.getItem(LS_GUEST_USER_ADDRESS);
         if (guestAddressString) {
@@ -126,7 +119,7 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
         addressType,
         city: '',
         area: '',
-        postalCode: String(postalCode)
+        postalCode: String(postalCode),
       });
       if (response?.result && response.possibilities[selectedMenuId].is_available) {
         dispatch(updateDeliveryFinances(response.possibilities[selectedMenuId].details));

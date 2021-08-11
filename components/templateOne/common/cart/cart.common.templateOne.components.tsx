@@ -5,13 +5,7 @@ import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { selectCart } from '../../../../redux/slices/cart.slices.redux';
-import {
-  selectLanguage,
-  selectLanguageCode,
-  selectSelectedMenu,
-  selectShowCart,
-  updateShowLogin,
-} from '../../../../redux/slices/configuration.slices.redux';
+import { selectLanguage, selectLanguageCode, selectSelectedMenu, selectShowCart } from '../../../../redux/slices/configuration.slices.redux';
 import { selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
 import CartAddRemoveButton from './add-remove.cart.common.templateOne.components';
 import SvgCartEmpty from '../../../../public/assets/svg/cart-empty.svg';
@@ -173,11 +167,9 @@ const Cart: FunctionComponent = ({}) => {
   const address = useAppSelector(selectAddress);
   const siblings = useAppSelector(selectSiblings);
   const orderType = useAppSelector(selectOrderType);
-  const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
   const languageCode = useAppSelector(selectLanguageCode);
   const selectedMenuId = useAppSelector(selectSelectedMenu);
   const deliveryFinances = useAppSelector(selectDeliveryFinances);
-  const dispatch = useAppDispatch();
   const { t } = useTranslation('page-menu-id');
 
   const [orderPossible, setOrderPossible] = useState(false);
@@ -209,7 +201,7 @@ const Cart: FunctionComponent = ({}) => {
   }, [cartItemKeys, cartData.cartCost, deliveryFinances?.amount, deliveryFinances?.charges, orderType]);
 
   function onClickOrderButton() {
-    if (orderPossible) isLoggedIn ? router.push('/checkout') : dispatch(updateShowLogin(true));
+    if (orderPossible) router.push('/checkout');
   }
 
   return (
