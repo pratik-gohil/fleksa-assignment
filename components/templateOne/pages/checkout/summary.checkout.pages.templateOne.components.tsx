@@ -135,7 +135,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
                 <MinAmount>
                   <NotVerifyIcon src="assets/png/information.png" alt="info" />
                   <NotVerifyText>
-                    Min €{deliveryFinances?.amount} {t('@required')}
+                    {t('@min-required')} €{deliveryFinances?.amount}  
                   </NotVerifyText>
                 </MinAmount>
               )}
