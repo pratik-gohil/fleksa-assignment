@@ -23,6 +23,7 @@ export interface ICheckoutSliceState {
   showDateTimeSelect: boolean;
   selectedAddressId: number | null;
   deliveryFinances: IDeliveryFinances | null;
+
   promoCode: {
     code: string;
     value: number;
@@ -73,6 +74,7 @@ export const CheckoutSlice = createSlice({
     updatePromoCode(state, action) {
       state.promoCode = action.payload;
     },
+
     updateClearCheckout(state) {
       state.orderType = null;
       state.paymentMethod = 'CASH';

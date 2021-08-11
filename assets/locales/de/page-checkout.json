@@ -11,10 +11,11 @@
   "@apply": "ANWENDEN",
   "@tip": "TRINKGELD",
   "@other": "Andere",
-  "@credit-card": "KREDITKARTE",
+  "@credit-card": "STRIPE",
   "@payment": "ZAHLUNG",
   "@agreement-part-1": "Durch Klicken auf",
   "@order-and-pay": "KOSTENPFLICHTIG BESTELLEN",
+  "@pre-order-and-pay": "VORBESTELLEN UND BEZAHLEN",
   "@agreement-part-2": "stimmen Sie dem Inhalt des Warenkorbs, den von Ihnen ausgefüllten Daten, unseren",
   "@policy": "AGB",
   "@and": "und",
@@ -23,6 +24,10 @@
   "@subtotal": "Zwischensumme",
   "@discount": "Rabatt",
   "@tip-cart": "Trinkgeld",
+
+  "@total": "Gesamt",
   "@delivery": "Lieferung",
-  "@total": "Gesamt"
+  "@pickup": "Abholung",
+  "@dine-in": "Dine-In",
+  "@min-required": "Minimum Order Value: "
 }

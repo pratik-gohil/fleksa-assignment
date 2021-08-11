@@ -7,7 +7,9 @@ import { LS_GUEST_USER_ADDRESS } from '../../../../constants/keys-local-storage.
 import { IAddress } from '../../../../interfaces/common/address.common.interfaces';
 
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
+import { selectCart } from '../../../../redux/slices/cart.slices.redux';
 import {
+  selectDeliveryFinances,
   selectOrderType,
   selectSelectedAddressId,
   selectShowDateTimeSelect,
@@ -32,6 +34,27 @@ const AddressSelected = styled.p`
   margin: -12px 0 0 0;
 `;
 
+const NotVerifyText = styled.p`
+  color: #ff0000;
+  font-size: 0.8rem;
+`;
+
+const TextContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 5px;
+`;
+
+const MinAmount = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 5px;
+`;
+
+const NotVerifyIcon = styled.img`
+  height: 20px;
+`;
+
 const timings = new RestaurantTimingUtils();
 
 const CheckoutPageSummary: FunctionComponent = ({}) => {
@@ -49,17 +72,27 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
   const showSelectOrderType = useAppSelector(selectShowOrderTypeSelect);
   const showDateTimeSelect = useAppSelector(selectShowDateTimeSelect);
   const selectedAddress = useAppSelector((state) => selectAddressById(state, checkoutAddressId));
+  const deliveryFinances = useAppSelector(selectDeliveryFinances);
+  const cartData = useAppSelector(selectCart);
+
+  const [minAmountCheck, setMinAmountCheck] = useState(false);
+
   const dispatch = useAppDispatch();
   const { t } = useTranslation('page-checkout');
 
   const [addressData, setAddressData] = useState<IAddress | null | undefined>(undefined);
 
-  useEffect(() => {
-    if (shopData?.id == selectedMenuId) {
-      setAddressData(address);
+  function isOrderPossible() {
+    if (orderType === 'DELIVERY') {
+      return deliveryFinances && deliveryFinances.amount ? cartData.cartCost >= deliveryFinances.amount : false;
     } else {
-      setAddressData(siblings.find((item) => item.id == selectedMenuId)?.address);
+      return true;
     }
+  }
+
+  useEffect(() => {
+    if (shopData?.id == selectedMenuId) setAddressData(address);
+    else setAddressData(siblings.find((item) => item.id == selectedMenuId)?.address);
   }, []);
 
   useEffect(() => {
@@ -86,15 +119,28 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
       }
     }
     if (!foundDateTime) updateWantAt(null);
+
+    if (orderType === 'DELIVERY') setMinAmountCheck(isOrderPossible());
   }, [orderType, addressData?.prepare_time, addressData?.delivery_time]);
 
   return (
     <StyledCheckoutCard>
-      {/* <StyledCheckoutTitle>{t('@summary')}</StyledCheckoutTitle> */}
       <Row>
         <Col xs={12}>
           <EditContainer>
-            <StyledCheckoutText>{orderType === 'DINE_IN' ? 'DINE-IN' : orderType}</StyledCheckoutText>
+            <TextContainer>
+              <StyledCheckoutText>{orderType === 'DINE_IN' ? t('@dine-in') : t(`@${orderType?.toLowerCase()}`)}</StyledCheckoutText>
+
+              {orderType === 'DELIVERY' && !minAmountCheck && (
+                <MinAmount>
+                  <NotVerifyIcon src="assets/png/information.png" alt="info" />
+                  <NotVerifyText>
+                    {t('@min-required')} €{deliveryFinances?.amount}  
+                  </NotVerifyText>
+                </MinAmount>
+              )}
+            </TextContainer>
+
             <EditButton onClick={() => dispatch(updateShowOrderTypeSelect(true))} />
           </EditContainer>
           {orderType === 'DELIVERY' ? (

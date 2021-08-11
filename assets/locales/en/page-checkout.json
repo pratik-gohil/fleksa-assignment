@@ -11,10 +11,11 @@
   "@apply": "APPLY",
   "@tip": "TIP",
   "@other": "Other",
-  "@credit-card": "CREDIT CARD",
+  "@credit-card": "STRIPE",
   "@payment": "PAYMENT",
   "@agreement-part-1": "By clicking on ",
   "@order-and-pay": "ORDER AND PAY",
+  "@pre-order-and-pay": "PRE-ORDER AND PAY",
   "@agreement-part-2": "you agree with the contents of the shopping cart, the data you filled out, our ",
   "@policy": "Privacy Policy",
   "@and": "and",
@@ -23,6 +24,9 @@
   "@subtotal": "Subtotal",
   "@discount": "Discount",
   "@tip-cart": "Tip",
+  "@total": "Total",
   "@delivery": "Delivery",
-  "@total": "Total"
+  "@pickup": "Pickup",
+  "@dine-in": "Dine-In",
+  "@min-required": "Mindestbestellwert: "
 }

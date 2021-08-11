@@ -10,64 +10,67 @@ import { LS_CART, LS_CHECKOUT } from '../constants/keys-local-storage.constants'
 import { CheckoutSlice } from './slices/checkout.slices.redux';
 import { CommonSlice } from './slices/common.slices.redux';
 
-const makeStore = () => configureStore({
-  reducer: {
-    cart: CartSlice.reducer,
-    menu: MenuSlice.reducer,
-    user: UserSlice.reducer,
-    index: IndexSlice.reducer,
-    checkout: CheckoutSlice.reducer,
-    configuration: ConfigurationSlice.reducer,
-    itemSelection: ItemSelectionSlice.reducer,
-    common: CommonSlice.reducer,
-  },
-  preloadedState: {
-    cart:
-      typeof window !== 'undefined' && localStorage.getItem(LS_CART)
-        ? JSON.parse(localStorage.getItem(LS_CART) as string)
-        : {
-            items: {},
-            cartCost: 0,
-          },
-    checkout:
-      typeof window !== 'undefined' && localStorage.getItem(LS_CHECKOUT)
-        ? JSON.parse(localStorage.getItem(LS_CHECKOUT) as string)
-        : {
-            orderType: null,
-            paymentMethod: 'CASH',
-            tip: null,
-            comment: '',
-            wantAt: null,
-            showDateTimeSelect: false,
-            deliveryFinances: null,
-            selectedAddressId: null,
-            promoCode: null,
-          },
-  },
-  middleware: (getDefaultMiddleware) => {
-    return getDefaultMiddleware({
-      serializableCheck: true,
-      immutableCheck: true,
-    });
-  },
-});
-
-
-const wrapper = createWrapper(() => {
-  const store = makeStore()
-  store.subscribe(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const state = store.getState();
-        localStorage.setItem(LS_CART, JSON.stringify(state.cart));
-        localStorage.setItem(LS_CHECKOUT, JSON.stringify(state.checkout));
-      } catch (error) {
-        console.error(error);
-      }
-    }
+const makeStore = () =>
+  configureStore({
+    reducer: {
+      cart: CartSlice.reducer,
+      menu: MenuSlice.reducer,
+      user: UserSlice.reducer,
+      index: IndexSlice.reducer,
+      checkout: CheckoutSlice.reducer,
+      configuration: ConfigurationSlice.reducer,
+      itemSelection: ItemSelectionSlice.reducer,
+      common: CommonSlice.reducer,
+    },
+    preloadedState: {
+      cart:
+        typeof window !== 'undefined' && localStorage.getItem(LS_CART)
+          ? JSON.parse(localStorage.getItem(LS_CART) as string)
+          : {
+              items: {},
+              cartCost: 0,
+            },
+      checkout:
+        typeof window !== 'undefined' && localStorage.getItem(LS_CHECKOUT)
+          ? JSON.parse(localStorage.getItem(LS_CHECKOUT) as string)
+          : {
+              orderType: null,
+              paymentMethod: 'CASH',
+              tip: null,
+              comment: '',
+              wantAt: null,
+              showDateTimeSelect: false,
+              deliveryFinances: null,
+              selectedAddressId: null,
+              promoCode: null,
+            },
+    },
+    middleware: (getDefaultMiddleware) => {
+      return getDefaultMiddleware({
+        serializableCheck: true,
+        immutableCheck: true,
+      });
+    },
   });
-  return store
-}, { debug: false });
+
+const wrapper = createWrapper(
+  () => {
+    const store = makeStore();
+    store.subscribe(() => {
+      if (typeof window !== 'undefined') {
+        try {
+          const state = store.getState();
+          localStorage.setItem(LS_CART, JSON.stringify(state.cart));
+          localStorage.setItem(LS_CHECKOUT, JSON.stringify(state.checkout));
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    });
+    return store;
+  },
+  { debug: false },
+);
 
 export default wrapper;
 

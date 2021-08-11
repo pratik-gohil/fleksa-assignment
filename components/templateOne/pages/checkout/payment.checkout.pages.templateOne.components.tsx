@@ -4,7 +4,7 @@ import React, { FunctionComponent, useEffect } from 'react';
 import { useState } from 'react';
 import { Row, Col } from 'react-grid-system';
 
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import NodeApiHttpPostOrder from '../../../../http/nodeapi/order/post.order.nodeapi.http';
 import { IMakeOrderProducts } from '../../../../interfaces/http/nodeapi/order/post.order.nodeapi.http';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
@@ -23,7 +23,7 @@ import {
   selectDeliveryFinances,
 } from '../../../../redux/slices/checkout.slices.redux';
 import { selectConfiguration, selectLanguageCode, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
-import { selectShop } from '../../../../redux/slices/index.slices.redux';
+import { selectAddress, selectShop, selectTimings } from '../../../../redux/slices/index.slices.redux';
 import { selectBearerToken, selectCustomer } from '../../../../redux/slices/user.slices.redux';
 import { getPrductsFromCartData } from '../../../../utils/products.utils';
 import LoadingIndicator from '../../common/loadingIndicator/loading-indicator.common.templateOne.components';
@@ -31,37 +31,38 @@ import { StyledCheckoutCard, StyledCheckoutTitle } from './customer-info.checkou
 import CheckoutPageOrderButtonPaypal from './order-button-paypal.checkout.pages.templateOne.components';
 import CheckoutPageOrderButtonStripe from './order-button-stripe.checkout.pages.templateOne.components';
 
-import SvgCash from '../../../../public/assets/svg/cash.svg';
-import SvgCard from '../../../../public/assets/svg/card.svg';
-import SvgPaypal from '../../../../public/assets/svg/paypal.svg';
+// import SvgCash from '../../../../public/assets/svg/cash.svg';
+// import SvgCard from '../../../../public/assets/svg/card.svg';
+// import SvgPaypal from '../../../../public/assets/svg/paypal.svg';
+
 import { useTranslation } from 'next-i18next';
 import { updateError } from '../../../../redux/slices/common.slices.redux';
+import { INITIAL_TIMING_STATE } from '../index/hero.index.pages.templateOne.components';
+import { isShopOpened } from '../../../../utils/restaurant-timings.utils';
+import { IShopAvailablity } from '../../../../interfaces/common/index.common.interfaces';
 
-const PaymentMethodList = styled.ul`
+const PaymentMethodList = styled.div`
   display: flex;
   flex-direction: row;
   margin: 0 -${(props) => props.theme.dimen.X4}px;
 `;
 
-const PaymentMethodItems = styled.li<{ isActive: boolean; show: boolean }>`
-  display: ${(p) => (p.show ? 'flex' : 'none')};
+const PaymentMethodItems = styled.button<{ isActive: boolean }>`
+  display: flex;
   flex: 1;
   margin: ${(props) => props.theme.dimen.X4}px;
   padding: ${(props) => props.theme.dimen.X4}px;
   border: ${(props) => props.theme.border};
   justify-content: center;
   border-radius: ${(props) => props.theme.borderRadius}px;
-  ${(props) =>
-    props.isActive
-      ? css`
-          border-color: ${(props) => props.theme.primaryColor};
-          box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2);
-        `
-      : css`
-          box-shadow: 0 0 4px 0 transparent;
-        `}
+  background: transparent;
+
+  border-color: ${(p) => (p.isActive ? p.theme.primaryColor : 'none')};
+  box-shadow: ${(p) => (p.isActive ? '0 0 4px 0 rgba(0, 0, 0, 0.2)' : '0 0 4px 0 transparent')};
+
   cursor: pointer;
-  svg {
+
+  img {
     display: block;
     height: 40px;
   }
@@ -90,6 +91,8 @@ const OrderButtonCashContainer = styled.div<{ active: boolean }>`
   border-radius: 1000px;
 `;
 
+const PaymentIconImage = styled.img``;
+
 const OrderButton = styled.div`
   font-size: clamp(16px, 24px, 3vw);
   font-weight: 700;
@@ -115,7 +118,12 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   const tipData = useAppSelector(selectTip);
   const dispatch = useAppDispatch();
   const languageCode = useAppSelector(selectLanguageCode);
+  const address = useAppSelector(selectAddress);
+  const timingsData = useAppSelector(selectTimings);
+
   const { t } = useTranslation('page-checkout');
+  const [currentPaymentMethod, setCurrentPaymentMethod] = useState('CASH');
+  const [shop, setShop] = useState<IShopAvailablity>(INITIAL_TIMING_STATE);
 
   async function createOrder() {
     try {
@@ -159,7 +167,9 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   }
 
   function isEmailValid(mail: string) {
-    return /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i.test(mail);
+    return /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i.test(
+      mail.replace(/\s/g, ''),
+    );
   }
 
   function isOrderPossible() {
@@ -170,8 +180,26 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
     }
   }
 
+  // TODO: Pre order checking
+  useEffect(() => {
+    if (!address?.has_delivery && !address?.has_pickup && !address?.has_dinein && !address?.has_reservations)
+      return setShop({
+        availability: false,
+        isClosed: true,
+      });
+
+    setShop(isShopOpened(timingsData, moment(), { has_pickup: address.has_pickup, has_delivery: address.has_delivery }));
+  }, []);
+
+  // TODO: Set initial payment method
+  useEffect(() => {
+    setCurrentPaymentMethod(paymentMethodData);
+    dispatch(updatePaymentMethod(paymentMethodData));
+  }, [paymentMethodData]);
+
   // TODO: Control orderButton active state
   useEffect(() => {
+    console.log('paymentMethodData ; ', paymentMethodData);
     const canPlace = !!(
       bearerToken &&
       shopData?.id &&
@@ -211,13 +239,17 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
     case 'CASH':
       orderButton = (
         <OrderButtonCashContainer onClick={onClickCashOrderButton} active={orderCanBePlaced}>
-          {orderButtonLoading ? <LoadingIndicator /> : <OrderButton>{t('@order-and-pay')}</OrderButton>}
+          {orderButtonLoading ? (
+            <LoadingIndicator />
+          ) : (
+            <OrderButton>{!shop.availability && !shop.isClosed ? t('@pre-order-and-pay') : t('@order-and-pay')}</OrderButton>
+          )}
         </OrderButtonCashContainer>
       );
       paymentTitle = paymentMethodData;
       break;
     case 'STRIPE':
-      orderButton = <CheckoutPageOrderButtonStripe onPaymentDone={onPaymentDone} createOrder={createOrder} orderCanBePlaced={orderCanBePlaced} />;
+      orderButton = <CheckoutPageOrderButtonStripe createOrder={createOrder} orderCanBePlaced={orderCanBePlaced} shop={shop} />;
       paymentTitle = t('@credit-card');
       break;
     case 'PAYPAL':
@@ -239,40 +271,44 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
             {[
               {
                 method: 'CASH' as ICheckoutPaymentMethods,
-                icon: SvgCash,
+                img: <PaymentIconImage src="/assets/svg/cash.svg" alt="cash" />,
                 show: true,
               },
               {
                 method: 'STRIPE' as ICheckoutPaymentMethods,
-                icon: SvgCard,
+                img: <PaymentIconImage src="/assets/png/stripe.png" alt="stripe" />,
                 show: shopData?.stripe_available,
               },
               {
                 method: 'PAYPAL' as ICheckoutPaymentMethods,
-                icon: SvgPaypal,
+                img: <PaymentIconImage src="/assets/svg/paypal.svg" alt="paypal" />,
                 show: shopData?.paypal_available,
               },
             ].map((item) => {
-              const isActive = paymentMethodData === item.method;
               return (
-                <PaymentMethodItems
-                  show={item.show || false}
-                  key={item.method}
-                  isActive={isActive}
-                  onClick={() => dispatch(updatePaymentMethod(item.method))}
-                >
-                  <item.icon />
-                </PaymentMethodItems>
+                item.show && (
+                  <PaymentMethodItems
+                    isActive={currentPaymentMethod === item.method}
+                    key={item.method}
+                    onClick={() => dispatch(updatePaymentMethod(item.method))}
+                  >
+                    {item.img}
+                  </PaymentMethodItems>
+                )
               );
             })}
           </PaymentMethodList>
         </Col>
+
         <Col xs={12}>
           <OrderButtonContainer>{orderButton}</OrderButtonContainer>
         </Col>
         <Col xs={12}>
           <Disclaimer>
-            {t('@agreement-part-1')} <span style={{ textTransform: 'uppercase', fontWeight: 'bolder', color: '#333' }}>{t('@order-and-pay')}</span>{' '}
+            {t('@agreement-part-1')}{' '}
+            <span style={{ textTransform: 'uppercase', fontWeight: 'bolder', color: '#333' }}>
+              {!shop.availability && !shop.isClosed ? t('@pre-order-and-pay') : t('@order-and-pay')}
+            </span>{' '}
             {t('@agreement-part-2')}{' '}
             <a href="/privacy-policy" style={{ textDecoration: 'underline', color: '#333' }}>
               {' '}
