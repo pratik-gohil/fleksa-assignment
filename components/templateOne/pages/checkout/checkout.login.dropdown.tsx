@@ -195,6 +195,7 @@ const CheckoutLoginDropdown = () => {
                 fontFamily: 'Poppins',
                 display: 'inline-block',
                 fontSize: otpBig ? 60 : 40,
+                margin: otpBig ? '0.3rem' : 0,
                 padding: 0,
                 border: '1px solid rgba(0, 0, 0, 0.1)',
                 borderRadius: 4,

@@ -1,5 +1,6 @@
-import { FunctionComponent } from "react";
-import styled from "styled-components";
+import { FunctionComponent } from 'react';
+import styled from 'styled-components';
+import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 
 const Wrapper = styled.div`
   display: flex;
@@ -7,12 +8,14 @@ const Wrapper = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-`
 
-const EditContainer:FunctionComponent = ({ children }) => {
-  return <Wrapper>
-    {children}
-  </Wrapper>
-}
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    margin: 0.5rem;
+  }
+`;
 
-export default EditContainer
+const EditContainer: FunctionComponent = ({ children }) => {
+  return <Wrapper>{children}</Wrapper>;
+};
+
+export default EditContainer;

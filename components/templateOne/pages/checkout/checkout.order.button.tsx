@@ -42,11 +42,11 @@ const CheckoutOrderAndPayButton: FunctionComponent<ICheckoutOrderAndPayButtonPro
   const dispatch = useAppDispatch();
 
   const handleProceedButtonClick = async () => {
-    console.log('process button clicked');
     dispatch(updateCheckoutLogin(true));
   };
 
   useEffect(() => {
+    console.log('isCheckoutLogin ', isCheckoutLogin);
     dispatch(updateCheckoutLogin(false)); // ? Fix inital render glitch on checkout button overlfow
   }, []);
 

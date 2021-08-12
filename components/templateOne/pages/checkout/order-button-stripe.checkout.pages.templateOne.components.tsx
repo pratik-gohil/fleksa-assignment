@@ -60,7 +60,7 @@ const CheckoutPageOrderButtonStripe: FunctionComponent<IPropsCheckoutPageOrderBu
   return (
     <Elements stripe={stripePromise}>
       <CheckoutOrderAndPayButton
-        orderPlaceFunction={() => handleSubmit()}
+        orderPlaceFunction={handleSubmit}
         shop={shop}
         orderButtonLoading={buttonLoading}
         orderCanBePlaced={orderCanBePlaced}

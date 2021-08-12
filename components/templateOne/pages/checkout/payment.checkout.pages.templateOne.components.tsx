@@ -36,6 +36,7 @@ import { INITIAL_TIMING_STATE } from '../index/hero.index.pages.templateOne.comp
 import { isShopOpened } from '../../../../utils/restaurant-timings.utils';
 import { IShopAvailablity } from '../../../../interfaces/common/index.common.interfaces';
 import CheckoutOrderAndPayButton from './checkout.order.button';
+import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 
 const PaymentMethodList = styled.div`
   display: flex;
@@ -49,6 +50,7 @@ const PaymentMethodItems = styled.button<{ isActive: boolean }>`
   padding: ${(props) => props.theme.dimen.X4}px;
   border: ${(props) => props.theme.border};
   justify-content: center;
+  align-items: center;
   border-radius: ${(props) => props.theme.borderRadius}px;
   background: transparent;
   height: 100px;
@@ -62,6 +64,23 @@ const PaymentMethodItems = styled.button<{ isActive: boolean }>`
     display: block;
     width: 100%;
     height: 100%;
+  }
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    /* margin: 0 0.5rem; */
+    padding: 0;
+    border: none;
+    box-shadow: none;
+    border-color: none;
+    height: max-content;
+    align-items: center;
+
+    img {
+      border: ${(props) => props.theme.border};
+      box-shadow: ${(p) => (p.isActive ? '0 0 4px 0 rgba(0, 0, 0, 0.2)' : '0 0 4px 0 transparent')};
+      border-color: ${(p) => (p.isActive ? p.theme.primaryColor : 'none')};
+      /* padding: 0.5rem; */
+    }
   }
 `;
 

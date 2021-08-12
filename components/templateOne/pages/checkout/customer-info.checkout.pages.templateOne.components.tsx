@@ -62,12 +62,20 @@ export const StyledCheckoutText = styled.p`
 
 const Text = styled.p`
   min-width: 200px;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    display: none;
+  }
 `;
 
 const PhoneInputContainer = styled.div`
   display: flex;
   flex: 2;
   gap: 15px;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    gap: 10px;
+  }
 `;
 
 const StyledCheckoutInputCountryCode = styled.input`
@@ -82,10 +90,18 @@ const StyledCheckoutInputCountryCode = styled.input`
     -webkit-appearance: none;
     margin: 0;
   }
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    width: 25%;
+  }
 `;
 
 const StyledCheckoutInputPhone = styled(StyledCheckoutInputCountryCode)`
   width: 80%;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    width: 75%;
+  }
 `;
 
 const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
