@@ -3,7 +3,7 @@ import { AddressTypes } from '../../components/templateOne/common/addresses/addr
 export interface ICustomer {
   name: string;
   email?: string;
-  country_code?: number;
+  country_code?: string;
   phone?: string;
   email_verified: number;
   phone_verified: number;

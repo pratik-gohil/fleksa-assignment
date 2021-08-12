@@ -16,7 +16,7 @@ const initialState: IUserSliceState = {
   customer: {
     name: '',
     email: '',
-    country_code: 49,
+    country_code: '49',
     phone: '',
     email_verified: 0,
     phone_verified: 0,
