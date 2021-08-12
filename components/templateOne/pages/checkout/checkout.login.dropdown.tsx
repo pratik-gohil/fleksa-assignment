@@ -13,25 +13,28 @@ import { updateCheckoutLogin } from '../../../../redux/slices/checkout.slices.re
 import { updateError } from '../../../../redux/slices/common.slices.redux';
 import { selectConfiguration, selectLanguageCode } from '../../../../redux/slices/configuration.slices.redux';
 import { selectShop } from '../../../../redux/slices/index.slices.redux';
-import { updateBearerToken } from '../../../../redux/slices/user.slices.redux';
+import { selectCustomer, updateBearerToken } from '../../../../redux/slices/user.slices.redux';
 import LoadingIndicator from '../../common/loadingIndicator/loading-indicator.common.templateOne.components';
 
 const OTP_LENGTH = 5;
 
 const CheckoutLoginDropdown = () => {
-  const [, setCookie] = useCookies([COOKIE_BEARER_TOKEN]);
-  const [otp, setOtp] = useState('');
-  const [phone, setPhone] = useState('');
-  const [countryCode, setCountryCode] = useState<number>(49);
-  const [otpBig, setOtpBig] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [customerId, setCustomerId] = useState<number | undefined>();
-
   const { t } = useTranslation('page-checkout');
   const shopData = useAppSelector(selectShop);
   const configuration = useAppSelector(selectConfiguration);
   const dispatch = useAppDispatch();
   const languageCode = useAppSelector(selectLanguageCode);
+  const customerData = useAppSelector(selectCustomer);
+  const [, setCookie] = useCookies([COOKIE_BEARER_TOKEN]);
+
+  const [otp, setOtp] = useState('');
+  const [phone, setPhone] = useState(`${customerData.country_code}${customerData.phone}` || '');
+  const [countryCode, setCountryCode] = useState<number>(49);
+  const [otpBig, setOtpBig] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [customerId, setCustomerId] = useState<number | undefined>();
+
+  console.log('country code ', countryCode);
 
   async function finishLogin(bearerToken: string) {
     dispatch(updateBearerToken(bearerToken));
@@ -158,6 +161,7 @@ const CheckoutLoginDropdown = () => {
             enableSearch
             specialLabel={t('@phone')}
             onChange={(ph, data) => {
+              console.log('data ', data);
               if ((data as any).dialCode !== countryCode) {
                 setCountryCode((data as any).dialCode);
               }
