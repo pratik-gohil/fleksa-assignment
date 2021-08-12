@@ -26,7 +26,6 @@ import { selectConfiguration, selectLanguageCode, selectSelectedMenu } from '../
 import { selectAddress, selectShop, selectTimings } from '../../../../redux/slices/index.slices.redux';
 import { selectBearerToken, selectCustomer, selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
 import { getPrductsFromCartData } from '../../../../utils/products.utils';
-import LoadingIndicator from '../../common/loadingIndicator/loading-indicator.common.templateOne.components';
 import { StyledCheckoutCard, StyledCheckoutTitle } from './customer-info.checkout.pages.templateOne.components';
 import CheckoutPageOrderButtonPaypal from './order-button-paypal.checkout.pages.templateOne.components';
 import CheckoutPageOrderButtonStripe from './order-button-stripe.checkout.pages.templateOne.components';
@@ -36,6 +35,7 @@ import { updateError } from '../../../../redux/slices/common.slices.redux';
 import { INITIAL_TIMING_STATE } from '../index/hero.index.pages.templateOne.components';
 import { isShopOpened } from '../../../../utils/restaurant-timings.utils';
 import { IShopAvailablity } from '../../../../interfaces/common/index.common.interfaces';
+import CheckoutOrderAndPayButton from './checkout.order.button';
 
 const PaymentMethodList = styled.div`
   display: flex;
@@ -78,23 +78,7 @@ const OrderButtonContainer = styled.div`
   margin-top: ${(props) => props.theme.dimen.X4}px;
 `;
 
-const OrderButtonCashContainer = styled.div<{ active: boolean }>`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 55px;
-  background-color: ${(props) => (props.active ? props.theme.primaryColor : '#aaa')};
-  cursor: pointer;
-  border: ${(props) => props.theme.border};
-  border-radius: 1000px;
-`;
-
 const PaymentIconImage = styled.img``;
-
-const OrderButton = styled.div`
-  font-size: clamp(16px, 24px, 3vw);
-  font-weight: 700;
-`;
 
 const CheckoutPagePayment: FunctionComponent = ({}) => {
   const router = useRouter();
@@ -230,30 +214,35 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
     }
   }
 
-  let paymentTitle: string | undefined = undefined;
-  let orderButton;
+  let paymentTitle = paymentMethodData; // /? Default title
+  let orderButton = (
+    <CheckoutOrderAndPayButton
+      shop={shop}
+      orderButtonLoading={orderButtonLoading}
+      orderCanBePlaced={orderCanBePlaced}
+      orderPlaceFunction={onClickCashOrderButton}
+    />
+  ); // ? Default payent method CASH
+
   switch (paymentMethodData) {
-    case 'CASH':
-      orderButton = (
-        <OrderButtonCashContainer onClick={onClickCashOrderButton} active={orderCanBePlaced}>
-          {orderButtonLoading ? (
-            <LoadingIndicator />
-          ) : isLoggedIn ? (
-            <OrderButton>{!shop.availability && !shop.isClosed ? t('@pre-order-and-pay') : t('@order-and-pay')}</OrderButton>
-          ) : (
-            <OrderButton>{t('@proceed')}</OrderButton>
-          )}
-        </OrderButtonCashContainer>
-      );
-      paymentTitle = paymentMethodData;
-      break;
     case 'STRIPE':
-      orderButton = <CheckoutPageOrderButtonStripe createOrder={createOrder} orderCanBePlaced={orderCanBePlaced} shop={shop} />;
+      orderButton = (
+        <CheckoutPageOrderButtonStripe
+          createOrder={createOrder}
+          orderCanBePlaced={orderCanBePlaced}
+          shop={shop}
+          setOrderButtonLoading={setOrderButtonLoading}
+          buttonLoading={orderButtonLoading}
+        />
+      );
       paymentTitle = t('@credit-card');
       break;
     case 'PAYPAL':
-      orderButton = <CheckoutPageOrderButtonPaypal onPaymentDone={onPaymentDone} createOrder={createOrder} orderCanBePlaced={orderCanBePlaced} />;
-      paymentTitle = paymentMethodData;
+      orderButton = isLoggedIn ? (
+        <CheckoutPageOrderButtonPaypal onPaymentDone={onPaymentDone} createOrder={createOrder} orderCanBePlaced={orderCanBePlaced} />
+      ) : (
+        orderButton
+      );
       break;
     default:
       break;
@@ -264,6 +253,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
       <StyledCheckoutTitle>
         {t('@payment')} {paymentTitle ? `(${paymentTitle})` : ''}
       </StyledCheckoutTitle>
+
       <Row>
         <Col xs={12}>
           <PaymentMethodList>
