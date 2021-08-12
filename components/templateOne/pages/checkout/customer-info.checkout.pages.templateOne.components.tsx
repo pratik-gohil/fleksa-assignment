@@ -38,6 +38,7 @@ export const StyledCheckoutInput = styled.input`
   border: ${(props) => props.theme.border};
   border-radius: ${(props) => props.theme.borderRadius}px;
   padding: ${(props) => props.theme.dimen.X4}px;
+  font-size: 1rem;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     width: 60%;
@@ -74,6 +75,7 @@ const StyledCheckoutInputCountryCode = styled.input`
   border: ${(props) => props.theme.border};
   border-radius: ${(props) => props.theme.borderRadius}px;
   padding: ${(props) => props.theme.dimen.X4}px;
+  font-size: 1rem;
 
   &[type='number']::-webkit-inner-spin-button,
   &[type='number']::-webkit-outer-spin-button {
