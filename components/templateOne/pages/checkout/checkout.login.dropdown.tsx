@@ -34,8 +34,6 @@ const CheckoutLoginDropdown = () => {
   const [loading, setLoading] = useState(false);
   const [customerId, setCustomerId] = useState<number | undefined>();
 
-  console.log('country code ', countryCode);
-
   async function finishLogin(bearerToken: string) {
     dispatch(updateBearerToken(bearerToken));
     setCookie(COOKIE_BEARER_TOKEN, bearerToken, {
@@ -161,7 +159,6 @@ const CheckoutLoginDropdown = () => {
             enableSearch
             specialLabel={t('@phone')}
             onChange={(ph, data) => {
-              console.log('data ', data);
               if ((data as any).dialCode !== countryCode) {
                 setCountryCode((data as any).dialCode);
               }
