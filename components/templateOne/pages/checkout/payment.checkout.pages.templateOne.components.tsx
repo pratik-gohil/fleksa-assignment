@@ -24,7 +24,7 @@ import {
 } from '../../../../redux/slices/checkout.slices.redux';
 import { selectConfiguration, selectLanguageCode, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
 import { selectAddress, selectShop, selectTimings } from '../../../../redux/slices/index.slices.redux';
-import { selectBearerToken, selectCustomer } from '../../../../redux/slices/user.slices.redux';
+import { selectBearerToken, selectCustomer, selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
 import { getPrductsFromCartData } from '../../../../utils/products.utils';
 import LoadingIndicator from '../../common/loadingIndicator/loading-indicator.common.templateOne.components';
 import { StyledCheckoutCard, StyledCheckoutTitle } from './customer-info.checkout.pages.templateOne.components';
@@ -118,6 +118,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   const languageCode = useAppSelector(selectLanguageCode);
   const address = useAppSelector(selectAddress);
   const timingsData = useAppSelector(selectTimings);
+  const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
 
   const { t } = useTranslation('page-checkout');
   const [currentPaymentMethod, setCurrentPaymentMethod] = useState('CASH');
@@ -237,8 +238,10 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
         <OrderButtonCashContainer onClick={onClickCashOrderButton} active={orderCanBePlaced}>
           {orderButtonLoading ? (
             <LoadingIndicator />
-          ) : (
+          ) : isLoggedIn ? (
             <OrderButton>{!shop.availability && !shop.isClosed ? t('@pre-order-and-pay') : t('@order-and-pay')}</OrderButton>
+          ) : (
+            <OrderButton>{t('@proceed')}</OrderButton>
           )}
         </OrderButtonCashContainer>
       );
