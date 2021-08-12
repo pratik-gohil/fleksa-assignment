@@ -39,7 +39,6 @@ import CheckoutOrderAndPayButton from './checkout.order.button';
 
 const PaymentMethodList = styled.div`
   display: flex;
-  flex-direction: row;
   margin: 0 -${(props) => props.theme.dimen.X4}px;
 `;
 
@@ -74,7 +73,7 @@ const Disclaimer = styled.p`
   font-size: 12px;
 `;
 
-const OrderButtonContainer = styled.div`
+const OrderButtonTopLevelContainer = styled.div`
   margin-top: ${(props) => props.theme.dimen.X4}px;
 `;
 
@@ -290,7 +289,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
         </Col>
 
         <Col xs={12}>
-          <OrderButtonContainer>{orderButton}</OrderButtonContainer>
+          <OrderButtonTopLevelContainer>{orderButton}</OrderButtonTopLevelContainer>
         </Col>
 
         <Col xs={12}>

@@ -76,7 +76,7 @@ export const CheckoutSlice = createSlice({
     updatePromoCode(state, action) {
       state.promoCode = action.payload;
     },
-    updateUpdateCheckoutLogin(state, action) {
+    updateCheckoutLogin(state, action) {
       state.checkoutLogin = action.payload;
     },
 
@@ -124,7 +124,7 @@ export const {
   updatePromoCode,
   updateDeliveryFinances,
   updateCheckout,
-  updateUpdateCheckoutLogin,
+  updateCheckoutLogin,
 } = CheckoutSlice.actions;
 
 export const selectDeliveryFinances = (state: RootState) => state.checkout.deliveryFinances;
