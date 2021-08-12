@@ -43,6 +43,7 @@ const CheckoutLoginDropdown = () => {
       sameSite: 'lax',
     });
     await new Promise((resolve) => setTimeout(resolve, 500));
+    dispatch(updateCheckoutLogin(false));
   }
 
   async function onTapSendOtp() {
@@ -118,7 +119,6 @@ const CheckoutLoginDropdown = () => {
           return;
         }
 
-        dispatch(updateCheckoutLogin(false));
         await finishLogin(response.token);
       }
     } catch (error) {

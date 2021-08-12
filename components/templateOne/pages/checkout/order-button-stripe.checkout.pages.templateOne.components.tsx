@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import styled from 'styled-components';
+
 import Router from 'next/router';
 
 import { Elements } from '@stripe/react-stripe-js';
@@ -9,22 +9,6 @@ import { IShopAvailablity } from '../../../../interfaces/common/index.common.int
 import { useAppDispatch } from '../../../../redux/hooks.redux';
 import { updateError } from '../../../../redux/slices/common.slices.redux';
 import CheckoutOrderAndPayButton from './checkout.order.button';
-
-const Wrappper = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const SubmitButton = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 55px;
-  background-color: ${(props) => (props.disabled ? '#aaa' : props.theme.primaryColor)};
-  cursor: pointer;
-  border: ${(props) => props.theme.border};
-  border-radius: 1000px;
-`;
 
 export interface IPropsCheckoutPageOrderButtonStripe {
   createOrder(): Promise<INodeApiHttpPostOrderResponse>;
@@ -73,20 +57,14 @@ const CheckoutPageOrderButtonStripe: FunctionComponent<IPropsCheckoutPageOrderBu
     Router.push(response.session.url);
   };
 
-  const buttonDisabled = !orderCanBePlaced || buttonLoading;
-
   return (
     <Elements stripe={stripePromise}>
-      <Wrappper>
-        <SubmitButton type="submit" disabled={buttonDisabled}>
-          <CheckoutOrderAndPayButton
-            orderPlaceFunction={() => handleSubmit()}
-            shop={shop}
-            orderButtonLoading={buttonLoading}
-            orderCanBePlaced={orderCanBePlaced}
-          />
-        </SubmitButton>
-      </Wrappper>
+      <CheckoutOrderAndPayButton
+        orderPlaceFunction={() => handleSubmit()}
+        shop={shop}
+        orderButtonLoading={buttonLoading}
+        orderCanBePlaced={orderCanBePlaced}
+      />
     </Elements>
   );
 };
