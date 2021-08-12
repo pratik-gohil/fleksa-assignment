@@ -8,19 +8,16 @@ import { selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux
 import LoadingIndicator from '../../common/loadingIndicator/loading-indicator.common.templateOne.components';
 import CheckoutLoginDropdown from './checkout.login.dropdown';
 
-const OrderMidLevelContainer = styled.div<{ active: boolean; isLoggedIn: boolean; isCheckoutLogin: boolean }>`
-  display: ${(p) => (p.isCheckoutLogin ? 'none' : 'grid')};
-  place-items: center;
-  min-height: 55px;
-  background-color: ${(p) => (p.isLoggedIn ? (p.active ? p.theme.primaryColor : '#aaa') : p.theme.primaryColor)};
-  cursor: pointer;
-  border: ${(p) => p.theme.border};
-  border-radius: 1000px;
-`;
-
-const OrderButton = styled.div`
+const OrderButton = styled.div<{ active: boolean; isLoggedIn: boolean }>`
   font-size: clamp(16px, 24px, 3vw);
   font-weight: 700;
+  background-color: ${(p) => (p.isLoggedIn ? (p.active ? p.theme.primaryColor : '#aaa') : p.theme.primaryColor)};
+  display: grid;
+  place-items: center;
+  border-radius: 1000px;
+  border: ${(p) => p.theme.border};
+  cursor: pointer;
+  min-height: 55px;
 `;
 
 interface ICheckoutOrderAndPayButtonProps {
@@ -43,21 +40,26 @@ const CheckoutOrderAndPayButton: FunctionComponent<ICheckoutOrderAndPayButtonPro
   const dispatch = useAppDispatch();
 
   const handleProceedButtonClick = async () => {
+    console.log('process button clicked');
     dispatch(updateCheckoutLogin(true));
   };
 
   return !!isCheckoutLogin ? (
     <CheckoutLoginDropdown />
   ) : (
-    <OrderMidLevelContainer onClick={orderPlaceFunction} active={orderCanBePlaced} isLoggedIn={isLoggedIn} isCheckoutLogin={isCheckoutLogin}>
+    <OrderButton active={orderCanBePlaced} isLoggedIn={isLoggedIn} onClick={isLoggedIn ? orderPlaceFunction : handleProceedButtonClick}>
       {orderButtonLoading ? (
-        <LoadingIndicator />
+        <LoadingIndicator width={20} />
       ) : isLoggedIn ? (
-        <OrderButton>{!shop.availability && !shop.isClosed ? t('@pre-order-and-pay') : t('@order-and-pay')}</OrderButton>
+        !shop.availability && !shop.isClosed ? (
+          t('@pre-order-and-pay')
+        ) : (
+          t('@order-and-pay')
+        )
       ) : (
-        <OrderButton onClick={handleProceedButtonClick}>{t('@proceed')}</OrderButton>
+        t('@proceed')
       )}
-    </OrderMidLevelContainer>
+    </OrderButton>
   );
 };
 

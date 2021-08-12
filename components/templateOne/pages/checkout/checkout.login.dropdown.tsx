@@ -204,15 +204,7 @@ const CheckoutLoginDropdown = () => {
         )}
       </Container>
 
-      <ButtonContainer>
-        {loading ? (
-          <LoadingIndicator width={20} />
-        ) : !customerId ? (
-          <Button onClick={onTapSendOtp}>{t('@send')}</Button>
-        ) : (
-          <Button onClick={onTapSendOtp}>{t('@re-send')}</Button>
-        )}
-      </ButtonContainer>
+      <Button onClick={onTapSendOtp}>{loading ? <LoadingIndicator width={20} /> : !customerId ? t('@send') : t('@re-send')}</Button>
     </LoginContainer>
   );
 };
@@ -230,18 +222,14 @@ const Description = styled.p``;
 
 const InputContainer = styled.div``;
 
-const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 55px;
-  background-color: ${(p) => p.theme.primaryColor};
-  cursor: pointer;
-  border: ${(props) => props.theme.border};
-  border-radius: 1000px;
-`;
-
 const Button = styled.div`
   font-size: clamp(16px, 24px, 3vw);
   font-weight: 700;
+  background-color: ${(p) => p.theme.primaryColor};
+  display: grid;
+  place-items: center;
+  border-radius: 1000px;
+  border: ${(p) => p.theme.border};
+  cursor: pointer;
+  min-height: 55px;
 `;
