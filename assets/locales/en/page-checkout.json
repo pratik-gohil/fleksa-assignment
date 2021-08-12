@@ -29,5 +29,7 @@
   "@pickup": "Pickup",
   "@dine-in": "Dine-In",
   "@min-required": "Mindestbestellwert: ",
-  "@proceed": "Proceed"
+  "@proceed": "Proceed",
+  "@send": "Send",
+  "@re-send": "Send again"
 }
