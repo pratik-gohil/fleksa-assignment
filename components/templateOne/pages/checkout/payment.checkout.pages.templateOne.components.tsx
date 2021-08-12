@@ -31,10 +31,6 @@ import { StyledCheckoutCard, StyledCheckoutTitle } from './customer-info.checkou
 import CheckoutPageOrderButtonPaypal from './order-button-paypal.checkout.pages.templateOne.components';
 import CheckoutPageOrderButtonStripe from './order-button-stripe.checkout.pages.templateOne.components';
 
-// import SvgCash from '../../../../public/assets/svg/cash.svg';
-// import SvgCard from '../../../../public/assets/svg/card.svg';
-// import SvgPaypal from '../../../../public/assets/svg/paypal.svg';
-
 import { useTranslation } from 'next-i18next';
 import { updateError } from '../../../../redux/slices/common.slices.redux';
 import { INITIAL_TIMING_STATE } from '../index/hero.index.pages.templateOne.components';
@@ -50,12 +46,13 @@ const PaymentMethodList = styled.div`
 const PaymentMethodItems = styled.button<{ isActive: boolean }>`
   display: flex;
   flex: 1;
-  margin: ${(props) => props.theme.dimen.X4}px;
+  margin: 0 ${(props) => props.theme.dimen.X4}px;
   padding: ${(props) => props.theme.dimen.X4}px;
   border: ${(props) => props.theme.border};
   justify-content: center;
   border-radius: ${(props) => props.theme.borderRadius}px;
   background: transparent;
+  height: 100px;
 
   border-color: ${(p) => (p.isActive ? p.theme.primaryColor : 'none')};
   box-shadow: ${(p) => (p.isActive ? '0 0 4px 0 rgba(0, 0, 0, 0.2)' : '0 0 4px 0 transparent')};
@@ -64,7 +61,8 @@ const PaymentMethodItems = styled.button<{ isActive: boolean }>`
 
   img {
     display: block;
-    height: 40px;
+    width: 100%;
+    height: 100%;
   }
 `;
 
@@ -199,7 +197,6 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
 
   // TODO: Control orderButton active state
   useEffect(() => {
-    
     const canPlace = !!(
       shopData?.id &&
       customerData.name &&
@@ -269,19 +266,19 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
           <PaymentMethodList>
             {[
               {
-                method: 'CASH' as ICheckoutPaymentMethods,
-                img: <PaymentIconImage src="/assets/svg/cash.svg" alt="cash" />,
-                show: true,
-              },
-              {
                 method: 'STRIPE' as ICheckoutPaymentMethods,
-                img: <PaymentIconImage src="/assets/png/stripe.png" alt="stripe" />,
+                img: <PaymentIconImage src="/assets/svg/checkout/stripe.svg" alt="stripe" />,
                 show: shopData?.stripe_available,
               },
               {
                 method: 'PAYPAL' as ICheckoutPaymentMethods,
-                img: <PaymentIconImage src="/assets/svg/paypal.svg" alt="paypal" />,
+                img: <PaymentIconImage src="/assets/svg/checkout/paypal.svg" alt="paypal" />,
                 show: shopData?.paypal_available,
+              },
+              {
+                method: 'CASH' as ICheckoutPaymentMethods,
+                img: <PaymentIconImage src="/assets/svg/checkout/cash.svg" alt="cash" />,
+                show: true,
               },
             ].map((item) => {
               return (
@@ -302,6 +299,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
         <Col xs={12}>
           <OrderButtonContainer>{orderButton}</OrderButtonContainer>
         </Col>
+
         <Col xs={12}>
           <Disclaimer>
             {t('@agreement-part-1')}{' '}

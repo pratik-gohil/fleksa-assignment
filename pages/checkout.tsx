@@ -17,12 +17,13 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ct
   try {
     const requiresLogin = false;
     const { redirect, configuration, bearerToken, responseIndex, cookies } = await getServerSidePropsCommon(ctx, requiresLogin);
+
     if (redirect) return redirect;
 
     ctx.store.dispatch(updateSelectedMenu(cookies?.get(COOKIE_SELECTED_MENU_ID)));
     ctx.store.dispatch(updateSelectedMenuUrlpath(cookies?.get(COOKIE_SELECTED_MENU_URLPATH)));
 
-    if (requiresLogin) {
+    if (requiresLogin && configuration) {
       const addressResponse = await new NodeApiHttpGetUserAllAddress(configuration, bearerToken).get({});
       ctx.store.dispatch(updateLoadAddressesList(addressResponse?.data.customer_address));
     }
