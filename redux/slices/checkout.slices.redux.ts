@@ -32,7 +32,7 @@ export interface ICheckoutSliceState {
   } | null;
 }
 
-const initialState: ICheckoutSliceState = {
+export const checkoutInitialState: ICheckoutSliceState = {
   orderType: null,
   paymentMethod: 'CASH',
   tip: null,
@@ -47,7 +47,7 @@ const initialState: ICheckoutSliceState = {
 
 export const CheckoutSlice = createSlice({
   name: SLICE_NAME,
-  initialState,
+  initialState: checkoutInitialState,
   reducers: {
     updatePaymentMethod(state, action) {
       state.paymentMethod = action.payload;
