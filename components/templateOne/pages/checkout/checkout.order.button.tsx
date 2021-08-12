@@ -1,4 +1,5 @@
 import React, { FunctionComponent } from 'react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { IShopAvailablity } from '../../../../interfaces/common/index.common.interfaces';
@@ -43,6 +44,10 @@ const CheckoutOrderAndPayButton: FunctionComponent<ICheckoutOrderAndPayButtonPro
     console.log('process button clicked');
     dispatch(updateCheckoutLogin(true));
   };
+
+  useEffect(() => {
+    dispatch(updateCheckoutLogin(false)); // ? Fix inital render glitch on checkout button overlfow
+  }, []);
 
   return !!isCheckoutLogin ? (
     <CheckoutLoginDropdown />

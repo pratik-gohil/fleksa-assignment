@@ -117,7 +117,7 @@ const CheckoutLoginDropdown = () => {
           return;
         }
 
-        dispatch(updateCheckoutLogin(true));
+        dispatch(updateCheckoutLogin(false));
         await finishLogin(response.token);
       }
     } catch (error) {
