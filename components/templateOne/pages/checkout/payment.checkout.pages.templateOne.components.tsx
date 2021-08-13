@@ -230,7 +230,6 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   let paymentTitle = paymentMethodData; // /? Default title
   let orderButton = (
     <CheckoutOrderAndPayButton
-      shop={shop}
       orderButtonLoading={orderButtonLoading}
       orderCanBePlaced={orderCanBePlaced}
       orderPlaceFunction={onClickCashOrderButton}
@@ -243,7 +242,6 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
         <CheckoutPageOrderButtonStripe
           createOrder={createOrder}
           orderCanBePlaced={orderCanBePlaced}
-          shop={shop}
           setOrderButtonLoading={setOrderButtonLoading}
           buttonLoading={orderButtonLoading}
         />

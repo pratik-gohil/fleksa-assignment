@@ -5,7 +5,6 @@ import Router from 'next/router';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe, Stripe } from '@stripe/stripe-js';
 import { INodeApiHttpPostOrderResponse, IOrderResponseStripe } from '../../../../interfaces/http/nodeapi/order/post.order.nodeapi.http';
-import { IShopAvailablity } from '../../../../interfaces/common/index.common.interfaces';
 import { useAppDispatch } from '../../../../redux/hooks.redux';
 import { updateError } from '../../../../redux/slices/common.slices.redux';
 import CheckoutOrderAndPayButton from './checkout.order.button';
@@ -13,7 +12,7 @@ import CheckoutOrderAndPayButton from './checkout.order.button';
 export interface IPropsCheckoutPageOrderButtonStripe {
   createOrder(): Promise<INodeApiHttpPostOrderResponse>;
   orderCanBePlaced: boolean;
-  shop: IShopAvailablity;
+
   setOrderButtonLoading: React.Dispatch<React.SetStateAction<boolean>>;
   buttonLoading: boolean;
 }
@@ -32,7 +31,7 @@ if (stripeKey) {
 const CheckoutPageOrderButtonStripe: FunctionComponent<IPropsCheckoutPageOrderButtonStripe> = ({
   createOrder,
   orderCanBePlaced,
-  shop,
+
   setOrderButtonLoading,
   buttonLoading,
 }) => {
@@ -59,12 +58,7 @@ const CheckoutPageOrderButtonStripe: FunctionComponent<IPropsCheckoutPageOrderBu
 
   return (
     <Elements stripe={stripePromise}>
-      <CheckoutOrderAndPayButton
-        orderPlaceFunction={handleSubmit}
-        shop={shop}
-        orderButtonLoading={buttonLoading}
-        orderCanBePlaced={orderCanBePlaced}
-      />
+      <CheckoutOrderAndPayButton orderPlaceFunction={handleSubmit} orderButtonLoading={buttonLoading} orderCanBePlaced={orderCanBePlaced} />
     </Elements>
   );
 };

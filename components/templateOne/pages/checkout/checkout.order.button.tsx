@@ -2,7 +2,6 @@ import React, { FunctionComponent } from 'react';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { IShopAvailablity } from '../../../../interfaces/common/index.common.interfaces';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { selectCheckoutLogin, updateCheckoutLogin } from '../../../../redux/slices/checkout.slices.redux';
 import { selectCustomer, selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
@@ -25,14 +24,12 @@ const OrderButton = styled.div<{ active: boolean; isLoggedIn: boolean }>`
 interface ICheckoutOrderAndPayButtonProps {
   orderCanBePlaced: boolean;
   orderPlaceFunction: () => void | Promise<any>;
-  shop: IShopAvailablity;
   orderButtonLoading: boolean;
 }
 
 const CheckoutOrderAndPayButton: FunctionComponent<ICheckoutOrderAndPayButtonProps> = ({
   orderCanBePlaced,
   orderPlaceFunction,
-  shop,
   orderButtonLoading,
 }) => {
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
@@ -58,21 +55,13 @@ const CheckoutOrderAndPayButton: FunctionComponent<ICheckoutOrderAndPayButtonPro
     dispatch(updateCheckoutLogin(false)); // ? Fix inital render glitch on checkout button overlfow
   }, []);
 
+  // !shop.availability && !shop.isClosed
+
   return !!isCheckoutLogin ? (
     <CheckoutLoginDropdown />
   ) : (
     <OrderButton active={orderCanBePlaced} isLoggedIn={isLoggedIn} onClick={isLoggedIn ? orderPlaceFunction : handleProceedButtonClick}>
-      {orderButtonLoading ? (
-        <LoadingIndicator width={20} />
-      ) : isLoggedIn ? (
-        !shop.availability && !shop.isClosed ? (
-          t('@pre-order-and-pay')
-        ) : (
-          t('@order-and-pay')
-        )
-      ) : (
-        t('@proceed')
-      )}
+      {orderButtonLoading ? <LoadingIndicator width={20} /> : isLoggedIn ? t('@order-and-pay') : t('@proceed')}
     </OrderButton>
   );
 };
