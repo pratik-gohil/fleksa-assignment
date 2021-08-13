@@ -24,6 +24,10 @@ import LoadingIndicator from '../../common/loadingIndicator/loading-indicator.co
 
 const OTP_LENGTH = 5;
 
+interface IUpgradedCredential extends Credential {
+  code?: string;
+}
+
 const CheckoutLoginDropdown = () => {
   const { t } = useTranslation('page-checkout');
   const shopData = useAppSelector(selectShop);
@@ -159,7 +163,7 @@ const CheckoutLoginDropdown = () => {
       setOtpBig(window.matchMedia(`(min-width: ${BREAKPOINTS.lg}px)`).matches);
 
       if ('OTPCredential' in window) {
-        alert('WebOTP supported!.');
+        console.log('WebOTP supported!.');
 
         window.addEventListener('DOMContentLoaded', (_e) => {
           const ac = new AbortController();
@@ -169,15 +173,16 @@ const CheckoutLoginDropdown = () => {
               otp: { transport: ['sms'] },
               signal: ac.signal,
             } as CredentialRequestOptions)
-            .then((otp) => {
+            .then((otp: IUpgradedCredential | null) => {
               console.log('OTP => ', otp);
+              if (otp) setOtp(otp?.code || '');
             })
             .catch((err) => {
               console.log(err);
             });
         });
       } else {
-        alert('WebOTP not supported!.');
+        console.log('WebOTP not supported!.');
       }
     }
   }, []);
