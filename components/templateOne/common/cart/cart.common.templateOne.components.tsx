@@ -3,7 +3,7 @@ import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 
-import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
+import { useAppSelector } from '../../../../redux/hooks.redux';
 import { selectCart } from '../../../../redux/slices/cart.slices.redux';
 import { selectLanguage, selectLanguageCode, selectSelectedMenu, selectShowCart } from '../../../../redux/slices/configuration.slices.redux';
 import { selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
