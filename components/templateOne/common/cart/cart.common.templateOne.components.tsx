@@ -6,7 +6,6 @@ import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { useAppSelector } from '../../../../redux/hooks.redux';
 import { selectCart } from '../../../../redux/slices/cart.slices.redux';
 import { selectLanguage, selectLanguageCode, selectSelectedMenu, selectShowCart } from '../../../../redux/slices/configuration.slices.redux';
-import { selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
 import CartAddRemoveButton from './add-remove.cart.common.templateOne.components';
 import SvgCartEmpty from '../../../../public/assets/svg/cart-empty.svg';
 import { useEffect } from 'react';
