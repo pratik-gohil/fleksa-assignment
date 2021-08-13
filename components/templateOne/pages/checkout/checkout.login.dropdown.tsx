@@ -153,9 +153,32 @@ const CheckoutLoginDropdown = () => {
     }
   }, [otp]);
 
+  // TODO: Otp width size depends on desktop width
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setOtpBig(window.matchMedia(`(min-width: ${BREAKPOINTS.lg}px)`).matches);
+
+      if ('OTPCredential' in window) {
+        alert('WebOTP supported!.');
+
+        window.addEventListener('DOMContentLoaded', (_e) => {
+          const ac = new AbortController();
+
+          navigator.credentials
+            .get({
+              otp: { transport: ['sms'] },
+              signal: ac.signal,
+            } as CredentialRequestOptions)
+            .then((otp) => {
+              console.log('OTP => ', otp);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        });
+      } else {
+        alert('WebOTP not supported!.');
+      }
     }
   }, []);
 
