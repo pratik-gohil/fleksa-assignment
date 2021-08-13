@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { useTranslation } from 'next-i18next';
 import React, { FunctionComponent, useState } from 'react';
 import { useEffect } from 'react';
@@ -5,6 +6,7 @@ import { Row, Col } from 'react-grid-system';
 import styled from 'styled-components';
 import { LS_GUEST_USER_ADDRESS } from '../../../../constants/keys-local-storage.constants';
 import { IAddress } from '../../../../interfaces/common/address.common.interfaces';
+import { IShopAvailablity } from '../../../../interfaces/common/index.common.interfaces';
 
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { selectCart } from '../../../../redux/slices/cart.slices.redux';
@@ -21,9 +23,10 @@ import { selectLanguage, selectSelectedMenu } from '../../../../redux/slices/con
 import { selectAddress, selectShop, selectSiblings, selectTimings } from '../../../../redux/slices/index.slices.redux';
 import { selectShowAddress, selectShowOrderTypeSelect, updateShowOrderTypeSelect } from '../../../../redux/slices/menu.slices.redux';
 import { selectAddressById } from '../../../../redux/slices/user.slices.redux';
-import RestaurantTimingUtils from '../../../../utils/restaurant-timings.utils';
+import RestaurantTimingUtils, { isShopOpened } from '../../../../utils/restaurant-timings.utils';
 import AddressAdd from '../../common/addresses/address-add.common.templateOne.components';
 import OrderTypeManager from '../../common/orderType/order-type-manager.menu.pages.templateOne.components';
+import { INITIAL_TIMING_STATE } from '../index/hero.index.pages.templateOne.components';
 import { StyledCheckoutCard, StyledCheckoutText } from './customer-info.checkout.pages.templateOne.components';
 import CheckoutDateTime from './date-time-selector.checkout.pages.templateOne.components';
 import EditButton from './edit-button.checkout.pages.templateOne.components';
@@ -76,6 +79,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
   const cartData = useAppSelector(selectCart);
 
   const [minAmountCheck, setMinAmountCheck] = useState(false);
+  const [shop, setShop] = useState<IShopAvailablity>(INITIAL_TIMING_STATE);
 
   const dispatch = useAppDispatch();
   const { t } = useTranslation('page-checkout');
@@ -123,19 +127,33 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
     if (orderType === 'DELIVERY') setMinAmountCheck(isOrderPossible());
   }, [orderType, addressData?.prepare_time, addressData?.delivery_time]);
 
+  // TODO: Pre order checking
+  useEffect(() => {
+    if (!address?.has_delivery && !address?.has_pickup && !address?.has_dinein && !address?.has_reservations)
+      return setShop({
+        availability: false,
+        isClosed: true,
+      });
+
+    setShop(isShopOpened(timingsData, moment(), { has_pickup: address.has_pickup, has_delivery: address.has_delivery }));
+  }, []);
+
   return (
     <StyledCheckoutCard>
       <Row>
         <Col xs={12}>
           <EditContainer>
             <TextContainer>
-              <StyledCheckoutText>{orderType === 'DINE_IN' ? t('@dine-in') : t(`@${orderType?.toLowerCase()}`)}</StyledCheckoutText>
+              <StyledCheckoutText>
+                {orderType === 'DINE_IN' ? t('@dine-in') : t(`@${orderType?.toLowerCase()}`)}{' '}
+                {!shop.availability && !shop.isClosed && `(${t('@pre-order')})`}
+              </StyledCheckoutText>
 
               {orderType === 'DELIVERY' && !minAmountCheck && (
                 <MinAmount>
                   <NotVerifyIcon src="assets/png/information.png" alt="info" />
                   <NotVerifyText>
-                    {t('@min-required')} €{deliveryFinances?.amount}  
+                    {t('@min-required')} €{deliveryFinances?.amount}
                   </NotVerifyText>
                 </MinAmount>
               )}

@@ -55,8 +55,6 @@ const CheckoutOrderAndPayButton: FunctionComponent<ICheckoutOrderAndPayButtonPro
     dispatch(updateCheckoutLogin(false)); // ? Fix inital render glitch on checkout button overlfow
   }, []);
 
-  // !shop.availability && !shop.isClosed
-
   return !!isCheckoutLogin ? (
     <CheckoutLoginDropdown />
   ) : (

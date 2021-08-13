@@ -23,7 +23,7 @@ import {
   selectDeliveryFinances,
 } from '../../../../redux/slices/checkout.slices.redux';
 import { selectConfiguration, selectLanguageCode, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
-import { selectAddress, selectShop, selectTimings } from '../../../../redux/slices/index.slices.redux';
+import { selectShop } from '../../../../redux/slices/index.slices.redux';
 import { selectBearerToken, selectCustomer, selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
 import { getPrductsFromCartData } from '../../../../utils/products.utils';
 import { StyledCheckoutCard, StyledCheckoutTitle } from './customer-info.checkout.pages.templateOne.components';
@@ -32,9 +32,6 @@ import CheckoutPageOrderButtonStripe from './order-button-stripe.checkout.pages.
 
 import { useTranslation } from 'next-i18next';
 import { updateError } from '../../../../redux/slices/common.slices.redux';
-import { INITIAL_TIMING_STATE } from '../index/hero.index.pages.templateOne.components';
-import { isShopOpened } from '../../../../utils/restaurant-timings.utils';
-import { IShopAvailablity } from '../../../../interfaces/common/index.common.interfaces';
 import CheckoutOrderAndPayButton from './checkout.order.button';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { isEmailValid } from '../../../../utils/checkout.utils';
@@ -119,13 +116,10 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   const tipData = useAppSelector(selectTip);
   const dispatch = useAppDispatch();
   const languageCode = useAppSelector(selectLanguageCode);
-  const address = useAppSelector(selectAddress);
-  const timingsData = useAppSelector(selectTimings);
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
 
   const { t } = useTranslation('page-checkout');
   const [currentPaymentMethod, setCurrentPaymentMethod] = useState('CASH');
-  const [shop, setShop] = useState<IShopAvailablity>(INITIAL_TIMING_STATE);
 
   async function createOrder() {
     try {
@@ -175,17 +169,6 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
       return true;
     }
   }
-
-  // TODO: Pre order checking
-  useEffect(() => {
-    if (!address?.has_delivery && !address?.has_pickup && !address?.has_dinein && !address?.has_reservations)
-      return setShop({
-        availability: false,
-        isClosed: true,
-      });
-
-    setShop(isShopOpened(timingsData, moment(), { has_pickup: address.has_pickup, has_delivery: address.has_delivery }));
-  }, []);
 
   // TODO: Set initial payment method
   useEffect(() => {
@@ -307,10 +290,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
         {!!isLoggedIn && (
           <Col xs={12}>
             <Disclaimer>
-              {t('@agreement-part-1')}{' '}
-              <span style={{ textTransform: 'uppercase', fontWeight: 'bolder', color: '#333' }}>
-                {!shop.availability && !shop.isClosed ? t('@pre-order-and-pay') : t('@order-and-pay')}
-              </span>{' '}
+              {t('@agreement-part-1')} <span style={{ textTransform: 'uppercase', fontWeight: 'bolder', color: '#333' }}>{t('@order-and-pay')}</span>{' '}
               {t('@agreement-part-2')}{' '}
               <a href="/privacy-policy" style={{ textDecoration: 'underline', color: '#333' }}>
                 {' '}
