@@ -205,7 +205,7 @@ export const MyAccountRightSection = () => {
   const [name, setName] = useState(customerData.name);
   const [isNameReadOnly, setIsNameReadOnly] = useState(true);
   const [phone, setPhone] = useState(`${customerData.country_code + '' + customerData.phone}`);
-  const [countryCode, setCountryCode] = useState<number>(customerData.country_code || 49);
+  const [countryCode, setCountryCode] = useState<number>(customerData.country_code ? +customerData.country_code : 49);
   const [otp, setOtp] = useState('');
   const [otpBig] = useState(false);
   const [isVerify, setIsVerify] = useState(false);
