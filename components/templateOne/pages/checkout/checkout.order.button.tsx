@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { IShopAvailablity } from '../../../../interfaces/common/index.common.interfaces';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { selectCheckoutLogin, updateCheckoutLogin } from '../../../../redux/slices/checkout.slices.redux';
-import { selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
+import { selectCustomer, selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
 import LoadingIndicator from '../../common/loadingIndicator/loading-indicator.common.templateOne.components';
 import CheckoutLoginDropdown from './checkout.login.dropdown';
 
@@ -37,16 +37,24 @@ const CheckoutOrderAndPayButton: FunctionComponent<ICheckoutOrderAndPayButtonPro
 }) => {
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
   const isCheckoutLogin = useAppSelector(selectCheckoutLogin);
+  const customerData = useAppSelector(selectCustomer);
 
   const { t } = useTranslation('page-checkout');
   const dispatch = useAppDispatch();
 
   const handleProceedButtonClick = async () => {
+    if ((!customerData.name || !customerData.email || !customerData.phone || !customerData.country_code) && typeof window !== 'undefined') {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+      return;
+    }
+
     dispatch(updateCheckoutLogin(true));
   };
 
   useEffect(() => {
-    console.log('isCheckoutLogin ', isCheckoutLogin);
     dispatch(updateCheckoutLogin(false)); // ? Fix inital render glitch on checkout button overlfow
   }, []);
 
