@@ -13,7 +13,13 @@ import { updateCheckoutLogin } from '../../../../redux/slices/checkout.slices.re
 import { updateError } from '../../../../redux/slices/common.slices.redux';
 import { selectConfiguration, selectLanguageCode } from '../../../../redux/slices/configuration.slices.redux';
 import { selectShop } from '../../../../redux/slices/index.slices.redux';
-import { selectCustomer, updateBearerToken } from '../../../../redux/slices/user.slices.redux';
+import {
+  selectCustomer,
+  updateBearerToken,
+  updateCustomerEmail,
+  updateCustomerName,
+  updateCustomerPhone,
+} from '../../../../redux/slices/user.slices.redux';
 import LoadingIndicator from '../../common/loadingIndicator/loading-indicator.common.templateOne.components';
 
 const OTP_LENGTH = 5;
@@ -119,6 +125,11 @@ const CheckoutLoginDropdown = () => {
           return;
         }
 
+        // TODO: Pre fill if data was not entered
+        if (!customerData.email) dispatch(updateCustomerEmail(response?.email));
+        if (!customerData.name) dispatch(updateCustomerName(response?.name));
+        if (!customerData.phone) dispatch(updateCustomerPhone(phone));
+
         await finishLogin(response.token);
       }
     } catch (error) {
@@ -200,7 +211,7 @@ const CheckoutLoginDropdown = () => {
                 fontFamily: 'Poppins',
                 display: 'inline-block',
                 fontSize: otpBig ? 60 : 40,
-                margin: otpBig ? '0.3rem' : 0,
+                margin: !otpBig ? '0.3rem' : 0,
                 padding: 0,
                 border: '1px solid rgba(0, 0, 0, 0.1)',
                 borderRadius: 4,
