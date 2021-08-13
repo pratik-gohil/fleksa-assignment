@@ -2,6 +2,7 @@ import { useTranslation } from 'next-i18next';
 import React, { FunctionComponent } from 'react';
 
 import { useState } from 'react';
+import PhoneInput from 'react-phone-input-2';
 
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
@@ -38,7 +39,7 @@ export const StyledCheckoutInput = styled.input`
   max-width: 100%;
   border: ${(props) => props.theme.border};
   border-radius: ${(props) => props.theme.borderRadius}px;
-  padding: ${(props) => props.theme.dimen.X4}px;
+  padding: 1rem;
   font-size: 1rem;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
@@ -79,38 +80,14 @@ const PhoneInputContainer = styled.div`
   }
 `;
 
-const StyledCheckoutInputCountryCode = styled.input`
-  width: 20%;
-  border: ${(props) => props.theme.border};
-  border-radius: ${(props) => props.theme.borderRadius}px;
-  padding: ${(props) => props.theme.dimen.X4}px;
-  font-size: 1rem;
-
-  &[type='number']::-webkit-inner-spin-button,
-  &[type='number']::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-
-  @media (max-width: ${BREAKPOINTS.sm}px) {
-    width: 25%;
-  }
-`;
-
-const StyledCheckoutInputPhone = styled(StyledCheckoutInputCountryCode)`
-  width: 80%;
-
-  @media (max-width: ${BREAKPOINTS.sm}px) {
-    width: 75%;
-  }
-`;
-
 const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
   const userData = useAppSelector(selectCustomer);
   const { t } = useTranslation('page-checkout');
   const [editableName, setEditableName] = useState(!userData.name);
   const [editableEmail, setEditableEmail] = useState(!userData.email);
   const [editablePhone, setEditablePhone] = useState(!userData.phone);
+  const [phone, setPhone] = useState(`${userData.country_code}${userData.phone}` || '');
+  const [countryCode, setCountryCode] = useState<number>(49);
 
   const dispatch = useAppDispatch();
 
@@ -160,25 +137,20 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
 
         {editablePhone || !userData.country_code || !userData.phone ? (
           <PhoneInputContainer>
-            <StyledCheckoutInputCountryCode
-              type="number"
-              placeholder="+49"
-              value={userData.country_code || ''}
-              onChange={(e) => {
-                const trimedCountryCode = e.target.value.replace(/\s/g, '');
-                dispatch(updateCustomerCountryCode(trimedCountryCode));
+            <PhoneInput
+              country={'de'}
+              value={phone}
+              enableSearch
+              specialLabel=""
+              onChange={(ph, data) => {
+                if ((data as any).dialCode !== countryCode) {
+                  setCountryCode((data as any).dialCode);
+                  dispatch(updateCustomerCountryCode((data as any).dialCode));
+                }
+                setPhone(ph);
+                dispatch(updateCustomerPhone(ph));
               }}
-            />
-
-            <StyledCheckoutInputPhone
-              type="number"
-              placeholder="Phone"
-              value={userData.phone || ''}
-              onBlur={() => setEditablePhone(!userData.phone)}
-              onChange={(e) => {
-                const trimedPhone = e.target.value.replace(/\s/g, '');
-                dispatch(updateCustomerPhone(trimedPhone));
-              }}
+              inputStyle={{ width: '100%', position: 'relative' }}
             />
           </PhoneInputContainer>
         ) : (

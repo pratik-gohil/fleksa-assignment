@@ -210,7 +210,7 @@ const CheckoutLoginDropdown = () => {
           ) : (
             <>
               <EnterCode>{t('@enter-code')}</EnterCode>
-              {`${t('@verification-quate-2')} ${countryCode} ${phone}`}
+              {`${t('@verification-quate-2')} ${phone}`}
             </>
           )}
         </Description>
