@@ -180,7 +180,7 @@ const CheckoutLoginDropdown = () => {
         </InputContainer>
         <Description>
           {!customerId ? (
-            t('@verfication-quate-1')
+            t('@verification-quate-1')
           ) : (
             <>
               <EnterCode>{t('@enter-code')}</EnterCode>
