@@ -68,7 +68,7 @@ export async function getServerSidePropsCommon(
         redirect: {
           redirect: {
             permanent: false,
-            destination: '/',
+            destination: '/menu',
           },
         },
         configuration,
