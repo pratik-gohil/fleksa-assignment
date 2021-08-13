@@ -37,6 +37,7 @@ import { isShopOpened } from '../../../../utils/restaurant-timings.utils';
 import { IShopAvailablity } from '../../../../interfaces/common/index.common.interfaces';
 import CheckoutOrderAndPayButton from './checkout.order.button';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
+import { isEmailValid } from '../../../../utils/checkout.utils';
 
 const PaymentMethodList = styled.div`
   display: flex;
@@ -165,12 +166,6 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
     } catch (error) {
       throw error;
     }
-  }
-
-  function isEmailValid(mail: string) {
-    return /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i.test(
-      mail.replace(/\s/g, ''),
-    );
   }
 
   function isOrderPossible() {

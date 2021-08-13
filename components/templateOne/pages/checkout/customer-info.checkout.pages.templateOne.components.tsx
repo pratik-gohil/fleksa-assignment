@@ -14,6 +14,7 @@ import {
   updateCustomerName,
   updateCustomerPhone,
 } from '../../../../redux/slices/user.slices.redux';
+import { isEmailValid } from '../../../../utils/checkout.utils';
 import EditButton from './edit-button.checkout.pages.templateOne.components';
 import EditContainer from './edit-container.checkout.pages.templateOne.components';
 
@@ -34,11 +35,11 @@ export const StyledCheckoutTitle = styled.h3`
   padding-bottom: ${(props) => props.theme.dimen.X4}px;
 `;
 
-export const StyledCheckoutInput = styled.input`
+export const StyledCheckoutInput = styled.input<{ isError: boolean }>`
   flex: 2;
   max-width: 100%;
-  border: ${(props) => props.theme.border};
-  border-radius: ${(props) => props.theme.borderRadius}px;
+  border: 1px solid ${(p) => (p.isError ? 'red' : 'rgba(0,0,0,0.2)')};
+  border-radius: ${(p) => p.theme.borderRadius}px;
   padding: 1rem;
   font-size: 1rem;
 
@@ -88,8 +89,24 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
   const [editablePhone, setEditablePhone] = useState(!userData.phone);
   const [phone, setPhone] = useState(`${userData.country_code}${userData.phone}` || '');
   const [countryCode, setCountryCode] = useState<number>(49);
+  const [isErrorField, setIsErrorField] = useState({
+    email: false,
+    name: false,
+  });
 
   const dispatch = useAppDispatch();
+
+  const handleEmailOnBlurEvent = async () => {
+    const check = !isEmailValid(userData?.email || '');
+    setIsErrorField({
+      ...isErrorField,
+      email: check,
+    });
+
+    if (check) return; // ? if check false don't switch to edit mode
+
+    setEditableEmail(!editableEmail);
+  };
 
   return (
     <StyledCheckoutCard>
@@ -100,6 +117,7 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
           <StyledCheckoutInput
             type="text"
             placeholder="Name"
+            isError={isErrorField.name}
             value={userData.name}
             onBlur={() => setEditableName(!userData.name)}
             onChange={(e) => dispatch(updateCustomerName(e.target.value))}
@@ -118,10 +136,12 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
           <StyledCheckoutInput
             type="text"
             placeholder="Email"
+            isError={isErrorField.email}
             value={userData.email || ''}
-            onBlur={() => setEditableEmail(!userData.email)}
+            onBlur={handleEmailOnBlurEvent}
             onChange={(e) => {
               const trimedEmail = e.target.value.replace(/\s/g, '');
+
               dispatch(updateCustomerEmail(trimedEmail));
             }}
           />
@@ -129,7 +149,7 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
           <StyledCheckoutText>{userData.email}</StyledCheckoutText>
         )}
 
-        <EditButton onClick={() => setEditableEmail(!editableEmail)} />
+        <EditButton onClick={handleEmailOnBlurEvent} />
       </EditContainer>
 
       <EditContainer>
