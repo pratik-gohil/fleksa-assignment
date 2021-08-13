@@ -157,11 +157,12 @@ const CheckoutLoginDropdown = () => {
     }
   }, [otp]);
 
-  // TODO: Otp width size depends on desktop width
+  // TODO: Otp width size depends on desktop width and prefill auto OTP on mobile
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setOtpBig(window.matchMedia(`(min-width: ${BREAKPOINTS.lg}px)`).matches);
 
+      // TODO: Officially support from Chrome +84
       if ('OTPCredential' in window) {
         console.log('WebOTP supported!.');
 
@@ -173,7 +174,6 @@ const CheckoutLoginDropdown = () => {
             signal: ac.signal,
           } as CredentialRequestOptions)
           .then((otp: IUpgradedCredential | null) => {
-            console.log('OTP => ', otp);
             if (otp) setOtp(otp?.code || '');
           })
           .catch((err) => {
