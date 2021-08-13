@@ -166,6 +166,8 @@ const CheckoutLoginDropdown = () => {
         console.log('WebOTP supported!.');
 
         window.addEventListener('DOMContentLoaded', (_e) => {
+          console.log('DOMContentLoaded fired!.');
+
           const ac = new AbortController();
 
           navigator.credentials
