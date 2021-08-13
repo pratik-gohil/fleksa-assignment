@@ -152,7 +152,7 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
                 </AppliedPromoContainer>
               ) : (
                 <>
-                  <StyledCheckoutInput value={coupon} autoFocus onChange={(e) => setCoupon(e.target.value)} />
+                  <StyledCheckoutInput isError={false} value={coupon} autoFocus onChange={(e) => setCoupon(e.target.value)} />
                   <ApplyButton onClick={onClickApply}>{t('@apply')}</ApplyButton>
                 </>
               )}
