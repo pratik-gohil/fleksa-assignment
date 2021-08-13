@@ -165,24 +165,20 @@ const CheckoutLoginDropdown = () => {
       if ('OTPCredential' in window) {
         console.log('WebOTP supported!.');
 
-        window.addEventListener('DOMContentLoaded', (_e) => {
-          console.log('DOMContentLoaded fired!.');
+        const ac = new AbortController();
 
-          const ac = new AbortController();
-
-          navigator.credentials
-            .get({
-              otp: { transport: ['sms'] },
-              signal: ac.signal,
-            } as CredentialRequestOptions)
-            .then((otp: IUpgradedCredential | null) => {
-              console.log('OTP => ', otp);
-              if (otp) setOtp(otp?.code || '');
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        });
+        navigator.credentials
+          .get({
+            otp: { transport: ['sms'] },
+            signal: ac.signal,
+          } as CredentialRequestOptions)
+          .then((otp: IUpgradedCredential | null) => {
+            console.log('OTP => ', otp);
+            if (otp) setOtp(otp?.code || '');
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       } else {
         console.log('WebOTP not supported!.');
       }
