@@ -311,23 +311,25 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
           <OrderButtonTopLevelContainer>{orderButton}</OrderButtonTopLevelContainer>
         </Col>
 
-        <Col xs={12}>
-          <Disclaimer>
-            {t('@agreement-part-1')}{' '}
-            <span style={{ textTransform: 'uppercase', fontWeight: 'bolder', color: '#333' }}>
-              {!shop.availability && !shop.isClosed ? t('@pre-order-and-pay') : t('@order-and-pay')}
-            </span>{' '}
-            {t('@agreement-part-2')}{' '}
-            <a href="/privacy-policy" style={{ textDecoration: 'underline', color: '#333' }}>
-              {' '}
-              {t('@policy')}
-            </a>{' '}
-            {t('@and')}{' '}
-            <a href="/terms" style={{ textDecoration: 'underline', color: '#333' }}>
-              {t('@terms')}
-            </a>
-          </Disclaimer>
-        </Col>
+        {!!isLoggedIn && (
+          <Col xs={12}>
+            <Disclaimer>
+              {t('@agreement-part-1')}{' '}
+              <span style={{ textTransform: 'uppercase', fontWeight: 'bolder', color: '#333' }}>
+                {!shop.availability && !shop.isClosed ? t('@pre-order-and-pay') : t('@order-and-pay')}
+              </span>{' '}
+              {t('@agreement-part-2')}{' '}
+              <a href="/privacy-policy" style={{ textDecoration: 'underline', color: '#333' }}>
+                {' '}
+                {t('@policy')}
+              </a>{' '}
+              {t('@and')}{' '}
+              <a href="/terms" style={{ textDecoration: 'underline', color: '#333' }}>
+                {t('@terms')}
+              </a>
+            </Disclaimer>
+          </Col>
+        )}
       </Row>
     </StyledCheckoutCard>
   );

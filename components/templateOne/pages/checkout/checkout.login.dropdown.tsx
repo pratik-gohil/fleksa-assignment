@@ -151,7 +151,7 @@ const CheckoutLoginDropdown = () => {
   return (
     <LoginContainer>
       <Container>
-        <Title>Please Enter your phone Number</Title>
+        <Title>{t('@enter-request')}</Title>
         <InputContainer style={{ height: 58 }}>
           <PhoneInput
             country={'de'}
@@ -168,9 +168,14 @@ const CheckoutLoginDropdown = () => {
           />
         </InputContainer>
         <Description>
-          {!customerId
-            ? 'We verify your phone number with a one-time password (OTP) to ensure genuine order.'
-            : `We have sent a one-time password (OTP) code to ${countryCode} ${phone}`}
+          {!customerId ? (
+            t('@verfication-quate-1')
+          ) : (
+            <>
+              <EnterCode>{t('@enter-code')}</EnterCode>
+              {`${t('@verification-quate-2')} ${countryCode} ${phone}`}
+            </>
+          )}
         </Description>
 
         {!!customerId && (
@@ -234,4 +239,9 @@ const Button = styled.div`
   border: ${(p) => p.theme.border};
   cursor: pointer;
   min-height: 55px;
+`;
+
+const EnterCode = styled.span`
+  display: block;
+  font-weight: 600;
 `;

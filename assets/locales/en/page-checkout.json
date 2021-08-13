@@ -31,5 +31,10 @@
   "@min-required": "Mindestbestellwert: ",
   "@proceed": "Proceed",
   "@send": "Send",
-  "@re-send": "Send again"
+  "@re-send": "Send again",
+  "@enter-request": "Please Enter your phone Number:",
+  "@enter-code": "Enter the code.",
+  "@verification-quate-1": "We verify your phone number with a one-time password (OTP) to ensure genuine order.",
+  "@verification-quate-2": "We have sent a one-time password (OTP) code to",
+  "@verification-quate-2-i": ""
 }
