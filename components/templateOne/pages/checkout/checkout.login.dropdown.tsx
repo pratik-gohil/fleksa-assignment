@@ -39,7 +39,7 @@ const CheckoutLoginDropdown = () => {
 
   const [otp, setOtp] = useState('');
   const [phone, setPhone] = useState(`${customerData.country_code}${customerData.phone}` || '');
-  const [countryCode, setCountryCode] = useState<number>(49);
+  const [countryCode, setCountryCode] = useState<number>(customerData.country_code ? +customerData.country_code : 49);
   const [otpBig, setOtpBig] = useState(false);
   const [loading, setLoading] = useState(false);
   const [customerId, setCustomerId] = useState<number | undefined>();

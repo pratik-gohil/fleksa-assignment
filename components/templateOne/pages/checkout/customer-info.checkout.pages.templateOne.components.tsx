@@ -168,7 +168,7 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
                   dispatch(updateCustomerCountryCode((data as any).dialCode));
                 }
                 setPhone(ph);
-                dispatch(updateCustomerPhone(ph));
+                dispatch(updateCustomerPhone(ph.replace((data as any).dialCode, ''))); // ? Update the code without country code
               }}
               inputStyle={{ width: '100%', position: 'relative' }}
             />
