@@ -153,7 +153,7 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
           <StyledCheckoutText>{userData.email}</StyledCheckoutText>
         )}
 
-        <EditButton onClick={handleEmailOnBlurEvent} />
+        <EditButton onClick={() => setEditableEmail(!editableEmail)} />
       </EditContainer>
 
       <EditContainer>
@@ -166,6 +166,7 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
               value={phone}
               enableSearch
               specialLabel=""
+              onBlur={() => setEditablePhone(!editablePhone)}
               onChange={(ph, data) => {
                 if ((data as any).dialCode !== countryCode) {
                   setCountryCode((data as any).dialCode);

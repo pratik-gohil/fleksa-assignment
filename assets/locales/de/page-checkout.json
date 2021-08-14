@@ -36,6 +36,6 @@
   "@enter-request": "Bitte geben sie ihre Telefonnummber ein:",
   "@enter-code": "Geben Sie den Code ein.",
   "@verification-quate-1": "Wir verifizieren lhre Telefonnummber mit einem Einmalpasswort (OTP), um eine echte Bestellung zu gewahrleisten.",
-  "@verification-quate-2": "We have sent a one-time password (OTP) code to",
-  "@verification-quate-2-i": "We have sent a one-time password (OTP) code to"
+  "@verification-quate-2": "Wir haben einen Einmalpasswort (OTP) an ",
+  "@verification-quate-2-i": "gesendet."
 }
