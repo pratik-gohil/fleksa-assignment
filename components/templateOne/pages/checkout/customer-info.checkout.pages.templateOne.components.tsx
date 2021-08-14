@@ -33,6 +33,10 @@ export const StyledCheckoutCard = styled.div`
 export const StyledCheckoutTitle = styled.h3`
   margin: 0;
   padding-bottom: ${(props) => props.theme.dimen.X4}px;
+
+  span {
+    font-size: clamp(0.8rem, 1.2rem, 1vw);
+  }
 `;
 
 export const StyledCheckoutInput = styled.input<{ isError: boolean }>`

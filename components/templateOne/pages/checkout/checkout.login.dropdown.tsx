@@ -257,6 +257,10 @@ export default CheckoutLoginDropdown;
 
 const LoginContainer = styled.div`
   padding: 0 1rem 1rem 1rem;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    padding: 0;
+  }
 `;
 
 const Container = styled.div``;

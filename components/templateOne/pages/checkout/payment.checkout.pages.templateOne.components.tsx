@@ -38,7 +38,8 @@ import { isEmailValid } from '../../../../utils/checkout.utils';
 
 const PaymentMethodList = styled.div`
   display: flex;
-  margin: 0 -${(props) => props.theme.dimen.X4}px;
+  /* margin: 0 -${(props) => props.theme.dimen.X4}px; */
+  align-items: center;
 `;
 
 const PaymentMethodItems = styled.button<{ isActive: boolean }>`
@@ -51,7 +52,7 @@ const PaymentMethodItems = styled.button<{ isActive: boolean }>`
   align-items: center;
   border-radius: ${(props) => props.theme.borderRadius}px;
   background: transparent;
-  height: 100px;
+  height: 120px;
 
   border-color: ${(p) => (p.isActive ? p.theme.primaryColor : 'none')};
   box-shadow: ${(p) => (p.isActive ? '0 0 4px 0 rgba(0, 0, 0, 0.2)' : '0 0 4px 0 transparent')};
@@ -59,25 +60,19 @@ const PaymentMethodItems = styled.button<{ isActive: boolean }>`
   cursor: pointer;
 
   img {
-    display: block;
     width: 100%;
     height: 100%;
   }
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    /* margin: 0 0.5rem; */
-    padding: 0;
+    margin: 0 0.3rem;
     border: none;
-    box-shadow: none;
-    border-color: none;
+    height: 80px;
+    padding: 0.2rem;
     height: max-content;
-    align-items: center;
 
-    img {
-      border: ${(props) => props.theme.border};
-      box-shadow: ${(p) => (p.isActive ? '0 0 4px 0 rgba(0, 0, 0, 0.2)' : '0 0 4px 0 transparent')};
-      border-color: ${(p) => (p.isActive ? p.theme.primaryColor : 'none')};
-      /* padding: 0.5rem; */
+    &:first-child {
+      padding: 0;
     }
   }
 `;
@@ -245,7 +240,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   return (
     <StyledCheckoutCard style={{ marginBottom: 48 }}>
       <StyledCheckoutTitle>
-        {t('@payment')} {paymentTitle ? `(${paymentTitle})` : ''}
+        {t('@payment')} <span>{paymentTitle ? `(${paymentTitle})` : ''}</span>
       </StyledCheckoutTitle>
 
       <Row>
@@ -254,17 +249,17 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
             {[
               {
                 method: 'STRIPE' as ICheckoutPaymentMethods,
-                img: <PaymentIconImage src="/assets/svg/checkout/stripe.svg" alt="stripe" />,
+                img: <PaymentIconImage src="/assets/png/cards.png" alt="stripe" />,
                 show: shopData?.stripe_available,
               },
               {
                 method: 'PAYPAL' as ICheckoutPaymentMethods,
-                img: <PaymentIconImage src="/assets/svg/checkout/paypal.svg" alt="paypal" />,
+                img: <PaymentIconImage src="/assets/png/paypal.png" alt="paypal" />,
                 show: shopData?.paypal_available,
               },
               {
                 method: 'CASH' as ICheckoutPaymentMethods,
-                img: <PaymentIconImage src="/assets/svg/checkout/cash.svg" alt="cash" />,
+                img: <PaymentIconImage src="/assets/png/cash.png" alt="cash" />,
                 show: true,
               },
             ].map((item) => {

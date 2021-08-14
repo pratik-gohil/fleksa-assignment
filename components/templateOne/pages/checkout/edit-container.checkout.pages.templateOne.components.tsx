@@ -11,7 +11,7 @@ const Wrapper = styled.div`
   margin: 0.3rem;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    margin: 0.5rem;
+    margin: 0.2rem;
   }
 `;
 
