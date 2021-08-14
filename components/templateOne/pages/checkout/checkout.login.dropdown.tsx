@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { useTranslation } from 'react-i18next';
 import OtpInput from 'react-otp-input';
@@ -36,6 +36,7 @@ const CheckoutLoginDropdown = () => {
   const languageCode = useAppSelector(selectLanguageCode);
   const customerData = useAppSelector(selectCustomer);
   const [, setCookie] = useCookies([COOKIE_BEARER_TOKEN]);
+  const el = useRef(null);
 
   const [otp, setOtp] = useState('');
   const [phone, setPhone] = useState(`${customerData.country_code}${customerData.phone}` || '');
@@ -185,71 +186,79 @@ const CheckoutLoginDropdown = () => {
     }
   }, []);
 
-  return (
-    <LoginContainer>
-      <Container>
-        <Title>{t('@enter-request')}</Title>
-        <InputContainer style={{ height: 58 }}>
-          <PhoneInput
-            country={'de'}
-            value={phone}
-            enableSearch
-            specialLabel={t('@phone')}
-            onChange={(ph, data) => {
-              if ((data as any).dialCode !== countryCode) {
-                setCountryCode((data as any).dialCode);
-              }
-              setPhone(ph);
-            }}
-            inputStyle={{ width: '100%', position: 'relative' }}
-          />
-        </InputContainer>
-        <Description>
-          {!customerId ? (
-            t('@verification-quate-1')
-          ) : (
-            <>
-              <EnterCode>{t('@enter-code')}</EnterCode>
-              {`${t('@verification-quate-2')} ${phone}`}
-            </>
-          )}
-        </Description>
+  // TODO: Auto scroll down div
+  useEffect(() => {
+    (el.current as unknown as HTMLDivElement).scrollIntoView({ behavior: 'smooth' });
+  });
 
-        {!!customerId && (
-          <InputContainer style={{ margin: 24, display: 'flex', justifyContent: 'center' }}>
-            <OtpInput
-              isInputNum={true}
-              shouldAutoFocus={true}
-              value={otp}
-              onChange={(otp: React.SetStateAction<string>) => {
-                setOtp(otp);
+  return (
+    <>
+      <LoginContainer>
+        <Container>
+          <Title>{t('@enter-request')}</Title>
+          <InputContainer style={{ height: 58 }}>
+            <PhoneInput
+              country={'de'}
+              value={phone}
+              enableSearch
+              specialLabel={t('@phone')}
+              onChange={(ph, data) => {
+                if ((data as any).dialCode !== countryCode) {
+                  setCountryCode((data as any).dialCode);
+                }
+                setPhone(ph);
               }}
-              numInputs={OTP_LENGTH}
-              containerStyle={{
-                display: 'flex',
-                flex: 1,
-                justifyContent: 'space-between',
-                maxWidth: otpBig ? 500 : 300,
-                justifySelf: 'center',
-                alignSelf: 'center',
-              }}
-              inputStyle={{
-                fontFamily: 'Poppins',
-                display: 'inline-block',
-                fontSize: otpBig ? 60 : 40,
-                margin: !otpBig ? '0.3rem' : 0,
-                padding: 0,
-                border: '1px solid rgba(0, 0, 0, 0.1)',
-                borderRadius: 4,
-                color: '#222',
-              }}
+              inputStyle={{ width: '100%', position: 'relative' }}
             />
           </InputContainer>
-        )}
-      </Container>
+          <Description>
+            {!customerId ? (
+              t('@verification-quate-1')
+            ) : (
+              <>
+                <EnterCode>{t('@enter-code')}</EnterCode>
+                {`${t('@verification-quate-2')} ${phone}`}
+              </>
+            )}
+          </Description>
 
-      <Button onClick={onTapSendOtp}>{loading ? <LoadingIndicator width={20} /> : !customerId ? t('@send') : t('@re-send')}</Button>
-    </LoginContainer>
+          {!!customerId && (
+            <InputContainer style={{ margin: 24, display: 'flex', justifyContent: 'center' }}>
+              <OtpInput
+                isInputNum={true}
+                shouldAutoFocus={true}
+                value={otp}
+                onChange={(otp: React.SetStateAction<string>) => {
+                  setOtp(otp);
+                }}
+                numInputs={OTP_LENGTH}
+                containerStyle={{
+                  display: 'flex',
+                  flex: 1,
+                  justifyContent: 'space-between',
+                  maxWidth: otpBig ? 500 : 300,
+                  justifySelf: 'center',
+                  alignSelf: 'center',
+                }}
+                inputStyle={{
+                  fontFamily: 'Poppins',
+                  display: 'inline-block',
+                  fontSize: otpBig ? 60 : 40,
+                  margin: !otpBig ? '0.3rem' : 0,
+                  padding: 0,
+                  border: '1px solid rgba(0, 0, 0, 0.1)',
+                  borderRadius: 4,
+                  color: '#222',
+                }}
+              />
+            </InputContainer>
+          )}
+        </Container>
+
+        <Button onClick={onTapSendOtp}>{loading ? <LoadingIndicator width={20} /> : !customerId ? t('@send') : t('@re-send')}</Button>
+      </LoginContainer>
+      <div id="el" ref={el} />
+    </>
   );
 };
 

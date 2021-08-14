@@ -38,12 +38,19 @@ const CheckoutOrderAndPayButton: FunctionComponent<ICheckoutOrderAndPayButtonPro
   const dispatch = useAppDispatch();
 
   const handleProceedButtonClick = async () => {
-    if ((!customerData.name || !customerData.email || !customerData.phone || !customerData.country_code) && typeof window !== 'undefined') {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth',
-      });
-      return;
+    if (typeof window !== 'undefined') {
+      if (!customerData.name || !customerData.email || !customerData.phone || !customerData.country_code) {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth',
+        });
+        return;
+      } else
+        window.scrollTo({
+          top: document.body.scrollHeight + 1000,
+          left: 0,
+          behavior: 'smooth',
+        });
     }
 
     dispatch(updateCheckoutLogin(true));
