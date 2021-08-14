@@ -188,8 +188,8 @@ const CheckoutLoginDropdown = () => {
 
   // TODO: Auto scroll down div
   useEffect(() => {
-    (el.current as unknown as HTMLDivElement).scrollIntoView({ behavior: 'smooth' });
-  });
+    // (el.current as unknown as HTMLDivElement).scrollIntoView({ behavior: 'smooth' });
+  }, []);
 
   return (
     <>
