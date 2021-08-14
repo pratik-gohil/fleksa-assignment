@@ -5,7 +5,9 @@ import { useEffect } from 'react';
 import { Row, Col } from 'react-grid-system';
 import styled from 'styled-components';
 import { LS_GUEST_USER_ADDRESS } from '../../../../constants/keys-local-storage.constants';
+import PyApiHttpPostAddress from '../../../../http/pyapi/address/post.address.pyapi.http';
 import { IAddress } from '../../../../interfaces/common/address.common.interfaces';
+import { IParticularAddress } from '../../../../interfaces/common/customer.common.interfaces';
 import { IShopAvailablity } from '../../../../interfaces/common/index.common.interfaces';
 
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
@@ -16,15 +18,23 @@ import {
   selectSelectedAddressId,
   selectShowDateTimeSelect,
   selectWantAt,
+  updateSelectedAddressId,
   updateShowDateTimeSelect,
   updateWantAt,
 } from '../../../../redux/slices/checkout.slices.redux';
-import { selectLanguage, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
+import { updateError } from '../../../../redux/slices/common.slices.redux';
+import { selectConfiguration, selectLanguage, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
 import { selectAddress, selectShop, selectSiblings, selectTimings } from '../../../../redux/slices/index.slices.redux';
 import { selectShowAddress, selectShowOrderTypeSelect, updateShowOrderTypeSelect } from '../../../../redux/slices/menu.slices.redux';
-import { selectAddressById } from '../../../../redux/slices/user.slices.redux';
+import {
+  selectAddressById,
+  selectAddressByType,
+  selectBearerToken,
+  selectIsUserLoggedIn,
+  updateNewCustomerAddress,
+} from '../../../../redux/slices/user.slices.redux';
 import RestaurantTimingUtils, { isShopOpened } from '../../../../utils/restaurant-timings.utils';
-import AddressAdd from '../../common/addresses/address-add.common.templateOne.components';
+import AddressAdd, { IGuestAddress } from '../../common/addresses/address-add.common.templateOne.components';
 import OrderTypeManager from '../../common/orderType/order-type-manager.menu.pages.templateOne.components';
 import { INITIAL_TIMING_STATE } from '../index/hero.index.pages.templateOne.components';
 import { StyledCheckoutCard, StyledCheckoutText } from './customer-info.checkout.pages.templateOne.components';
@@ -60,6 +70,14 @@ const NotVerifyIcon = styled.img`
 
 const timings = new RestaurantTimingUtils();
 
+const INITIAL_ADDRESS: IGuestAddress = {
+  address: '',
+  address_type: 'OTHER',
+  city: '',
+  floor: '',
+  postal_code: '',
+};
+
 const CheckoutPageSummary: FunctionComponent = ({}) => {
   const currentLanguage = useAppSelector(selectLanguage);
 
@@ -77,6 +95,13 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
   const selectedAddress = useAppSelector((state) => selectAddressById(state, checkoutAddressId));
   const deliveryFinances = useAppSelector(selectDeliveryFinances);
   const cartData = useAppSelector(selectCart);
+  const isUserLoggedIn = useAppSelector(selectIsUserLoggedIn);
+  const configuration = useAppSelector(selectConfiguration);
+  const bearerToken = useAppSelector(selectBearerToken);
+  const addressByType = useAppSelector((state) => selectAddressByType(state, 'HOME'));
+  const shopId = useAppSelector(selectSelectedMenu);
+
+  const [userAddress, setUserAddress] = useState<IGuestAddress>(INITIAL_ADDRESS);
 
   const [minAmountCheck, setMinAmountCheck] = useState(false);
   const [shop, setShop] = useState<IShopAvailablity>(INITIAL_TIMING_STATE);
@@ -91,6 +116,54 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
       return deliveryFinances && deliveryFinances.amount ? cartData.cartCost >= deliveryFinances.amount : false;
     } else {
       return true;
+    }
+  }
+
+  async function addGuestAddressOnServerIfExists() {
+    // check if guest address exists. If it does add it to server
+    const guestAddressString = window.localStorage.getItem(LS_GUEST_USER_ADDRESS);
+    if (guestAddressString && bearerToken && shopId) {
+      const guestAddress = JSON.parse(guestAddressString) as IGuestAddress;
+      const response = await new PyApiHttpPostAddress(configuration).postAll({
+        floor: '',
+        shopId: shopId,
+        address: guestAddress.address,
+        addressType: guestAddress.address_type,
+        city: guestAddress.city,
+        postalCode: guestAddress.postal_code,
+        area: '',
+        token: bearerToken,
+      });
+      console.log(response);
+      if (response) {
+        if (!response.result) {
+          dispatch(
+            updateError({
+              show: true,
+              message: response.description,
+              severity: 'error',
+            }),
+          );
+          return;
+        }
+        if (response.customer.is_customer && response.customer.details?.customer_address_id) {
+          window.localStorage.removeItem(LS_GUEST_USER_ADDRESS);
+          const addressAdded: IParticularAddress = {
+            id: response.customer.details.customer_address_id,
+            address_type: guestAddress.address_type,
+            floor: guestAddress.floor,
+            address: guestAddress.address,
+            country: '',
+            postal_code: guestAddress.postal_code,
+            city: guestAddress.city,
+            state: '',
+          };
+          dispatch(updateNewCustomerAddress(addressAdded));
+          dispatch(updateSelectedAddressId(response.customer.details.customer_address_id));
+        } else {
+          dispatch(updateSelectedAddressId(addressByType?.id));
+        }
+      }
     }
   }
 
@@ -138,6 +211,22 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
     setShop(isShopOpened(timingsData, moment(), { has_pickup: address.has_pickup, has_delivery: address.has_delivery }));
   }, []);
 
+  // TODO: User address update depends on login status
+  useEffect(() => {
+    if (isUserLoggedIn && selectedAddress && orderType === 'DELIVERY') {
+      setUserAddress(selectedAddress as IGuestAddress);
+    } else if (orderType === 'DELIVERY') {
+      const guestAddressString = window.localStorage.getItem(LS_GUEST_USER_ADDRESS);
+
+      if (isUserLoggedIn && guestAddressString) {
+        addGuestAddressOnServerIfExists();
+      } else if (guestAddressString) {
+        const guestAddress = JSON.parse(guestAddressString) as IGuestAddress;
+        setUserAddress(guestAddress);
+      }
+    }
+  }, [isUserLoggedIn]);
+
   return (
     <StyledCheckoutCard>
       <Row>
@@ -161,16 +250,18 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
 
             <EditButton onClick={() => dispatch(updateShowOrderTypeSelect(true))} />
           </EditContainer>
+
           {orderType === 'DELIVERY' ? (
             <>
-              <AddressSelected>{selectedAddress?.address}</AddressSelected>
+              <AddressSelected>{userAddress?.address}</AddressSelected>
               <AddressSelected style={{ marginTop: -4 }}>
-                {selectedAddress?.postal_code} {selectedAddress?.city}
+                {userAddress?.postal_code} {userAddress?.city}
               </AddressSelected>
             </>
           ) : (
             <></>
           )}
+
           <EditContainer>
             <StyledCheckoutText>{wantAtData ? `${wantAtData?.date?.label} (${wantAtData?.time?.label})` : t('@select-time')}</StyledCheckoutText>
             <EditButton onClick={() => dispatch(updateShowDateTimeSelect(true))} />
