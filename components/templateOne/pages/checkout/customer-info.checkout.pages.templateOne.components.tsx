@@ -59,6 +59,12 @@ export const StyledCheckoutText = styled.p`
   padding: ${(props) => props.theme.dimen.X4}px 0;
   margin: 0;
   word-wrap: break-word;
+  display: flex;
+  align-items: center;
+
+  span {
+    font-size: clamp(0.8rem, 1rem, 1vw);
+  }
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     text-overflow: ellipsis;

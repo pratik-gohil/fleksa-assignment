@@ -34,7 +34,7 @@ export interface ICheckoutSliceState {
 
 export const checkoutInitialState: ICheckoutSliceState = {
   orderType: null,
-  paymentMethod: 'CASH',
+  paymentMethod: 'STRIPE',
   tip: null,
   comment: '',
   wantAt: null,
@@ -82,7 +82,7 @@ export const CheckoutSlice = createSlice({
 
     updateClearCheckout(state) {
       state.orderType = null;
-      state.paymentMethod = 'CASH';
+      state.paymentMethod = 'STRIPE';
       state.tip = null;
       state.comment = '';
       state.wantAt = null;

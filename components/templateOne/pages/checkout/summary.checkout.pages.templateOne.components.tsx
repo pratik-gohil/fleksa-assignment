@@ -146,7 +146,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
             <TextContainer>
               <StyledCheckoutText>
                 {orderType === 'DINE_IN' ? t('@dine-in') : t(`@${orderType?.toLowerCase()}`)}{' '}
-                {!shop.availability && !shop.isClosed && `(${t('@pre-order')})`}
+                <span>{!shop.availability && !shop.isClosed && `(${t('@pre-order')})`}</span>
               </StyledCheckoutText>
 
               {orderType === 'DELIVERY' && !minAmountCheck && (

@@ -39,10 +39,6 @@ import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { isEmailValid } from '../../../../utils/checkout.utils';
 import CheckoutLoginDropdown from './checkout.login.dropdown';
 
-// import SvgCash from '../../../../public/assets/svg/checkout/card.svg'
-// import SvgPaypal from '../../../../public/assets/svg/checkout/paypal.'
-// import SvgStripe from '../../../../public/assets/svg/checkout/card.svg'
-
 const PaymentMethodList = styled.div`
   display: flex;
   align-items: center;
