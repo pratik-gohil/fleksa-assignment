@@ -39,6 +39,10 @@ import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { isEmailValid } from '../../../../utils/checkout.utils';
 import CheckoutLoginDropdown from './checkout.login.dropdown';
 
+// import SvgCash from '../../../../public/assets/svg/checkout/card.svg'
+// import SvgPaypal from '../../../../public/assets/svg/checkout/paypal.'
+// import SvgStripe from '../../../../public/assets/svg/checkout/card.svg'
+
 const PaymentMethodList = styled.div`
   display: flex;
   align-items: center;
@@ -49,29 +53,30 @@ const PaymentMethodItems = styled.button<{ isActive: boolean }>`
   flex: 1;
   margin: 0 ${(props) => props.theme.dimen.X4}px;
   padding: ${(props) => props.theme.dimen.X4}px;
-  border: none;
+
   justify-content: center;
   align-items: center;
-  border-radius: 0;
-  background: ${(p) => (p.isActive ? p.theme.primaryColor : ' transparent')};
-  height: 120px;
+  border-radius: 3rem;
+  background: transparent;
 
-  /* border-color: ${(p) => (p.isActive ? p.theme.primaryColor : 'none')}; */
-  /* box-shadow: ${(p) => (p.isActive ? '0 0 4px 0 rgba(0, 0, 0, 0.2)' : '0 0 4px 0 transparent')}; */
+  height: max-content;
+  padding: 0;
+  border: none;
+  outline: none;
 
   cursor: pointer;
+  border-color: ${(p) => (p.isActive ? '#FFD100' : 'none')};
+  box-shadow: ${(p) => (p.isActive ? `0 0 4px 4px #FFD100` : '0 0 4px 0 transparent')};
+  border: ${(p) => (p.isActive ? '2px solid rgba(0,0,0,0.2)' : 'none')};
 
-  svg {
+  img {
     width: 100%;
     height: 100%;
   }
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    margin: 0 0.3rem;
-    border: none;
-    height: 80px;
-    padding: 0.2rem;
-    height: max-content;
+    margin: 0 0.1rem;
+    /* padding: 0.2rem; */
 
     &:first-child {
       padding: 0;
