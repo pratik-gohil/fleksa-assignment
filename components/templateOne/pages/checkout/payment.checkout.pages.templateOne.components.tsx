@@ -117,7 +117,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   const isCheckoutLogin = useAppSelector(selectCheckoutLogin);
 
   const { t } = useTranslation('page-checkout');
-  const [currentPaymentMethod, setCurrentPaymentMethod] = useState('CASH');
+  const [currentPaymentMethod, setCurrentPaymentMethod] = useState('STRIPE');
 
   async function createOrder() {
     try {
