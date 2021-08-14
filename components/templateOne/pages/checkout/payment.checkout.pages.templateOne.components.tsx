@@ -21,6 +21,8 @@ import {
   selectSelectedAddressId,
   selectPromoCode,
   selectDeliveryFinances,
+  selectCheckoutLogin,
+  updateCheckoutLogin,
 } from '../../../../redux/slices/checkout.slices.redux';
 import { selectConfiguration, selectLanguageCode, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
 import { selectShop } from '../../../../redux/slices/index.slices.redux';
@@ -35,10 +37,10 @@ import { updateError } from '../../../../redux/slices/common.slices.redux';
 import CheckoutOrderAndPayButton from './checkout.order.button';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { isEmailValid } from '../../../../utils/checkout.utils';
+import CheckoutLoginDropdown from './checkout.login.dropdown';
 
 const PaymentMethodList = styled.div`
   display: flex;
-  /* margin: 0 -${(props) => props.theme.dimen.X4}px; */
   align-items: center;
 `;
 
@@ -112,6 +114,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   const dispatch = useAppDispatch();
   const languageCode = useAppSelector(selectLanguageCode);
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
+  const isCheckoutLogin = useAppSelector(selectCheckoutLogin);
 
   const { t } = useTranslation('page-checkout');
   const [currentPaymentMethod, setCurrentPaymentMethod] = useState('CASH');
@@ -188,6 +191,10 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
     setOrderCanBePlaced(canPlace);
   }, [bearerToken, shopData?.id, customerData.name, customerData.email, customerData.phone, customerData.country_code, wantAtData, deliveryFinances]);
 
+  useEffect(() => {
+    dispatch(updateCheckoutLogin(false)); // ? Fix inital render glitch on checkout button overlfow
+  }, []);
+
   async function onPaymentDone() {
     router.push(`/${languageCode}/order-placed`);
   }
@@ -238,68 +245,74 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   }
 
   return (
-    <StyledCheckoutCard style={{ marginBottom: 48 }}>
-      <StyledCheckoutTitle>
-        {t('@payment')} <span>{paymentTitle ? `(${paymentTitle})` : ''}</span>
-      </StyledCheckoutTitle>
+    <>
+      <StyledCheckoutCard>
+        <StyledCheckoutTitle>
+          {t('@payment')} <span>{paymentTitle ? `(${paymentTitle})` : ''}</span>
+        </StyledCheckoutTitle>
 
+        <Row>
+          <Col xs={12}>
+            <PaymentMethodList>
+              {[
+                {
+                  method: 'STRIPE' as ICheckoutPaymentMethods,
+                  img: <PaymentIconImage src="/assets/png/cards.png" alt="stripe" />,
+                  show: shopData?.stripe_available,
+                },
+                {
+                  method: 'PAYPAL' as ICheckoutPaymentMethods,
+                  img: <PaymentIconImage src="/assets/png/paypal.png" alt="paypal" />,
+                  show: shopData?.paypal_available,
+                },
+                {
+                  method: 'CASH' as ICheckoutPaymentMethods,
+                  img: <PaymentIconImage src="/assets/png/cash.png" alt="cash" />,
+                  show: true,
+                },
+              ].map((item) => {
+                return (
+                  item.show && (
+                    <PaymentMethodItems
+                      isActive={currentPaymentMethod === item.method}
+                      key={item.method}
+                      onClick={() => dispatch(updatePaymentMethod(item.method))}
+                    >
+                      {item.img}
+                    </PaymentMethodItems>
+                  )
+                );
+              })}
+            </PaymentMethodList>
+          </Col>
+        </Row>
+      </StyledCheckoutCard>
       <Row>
         <Col xs={12}>
-          <PaymentMethodList>
-            {[
-              {
-                method: 'STRIPE' as ICheckoutPaymentMethods,
-                img: <PaymentIconImage src="/assets/png/cards.png" alt="stripe" />,
-                show: shopData?.stripe_available,
-              },
-              {
-                method: 'PAYPAL' as ICheckoutPaymentMethods,
-                img: <PaymentIconImage src="/assets/png/paypal.png" alt="paypal" />,
-                show: shopData?.paypal_available,
-              },
-              {
-                method: 'CASH' as ICheckoutPaymentMethods,
-                img: <PaymentIconImage src="/assets/png/cash.png" alt="cash" />,
-                show: true,
-              },
-            ].map((item) => {
-              return (
-                item.show && (
-                  <PaymentMethodItems
-                    isActive={currentPaymentMethod === item.method}
-                    key={item.method}
-                    onClick={() => dispatch(updatePaymentMethod(item.method))}
-                  >
-                    {item.img}
-                  </PaymentMethodItems>
-                )
-              );
-            })}
-          </PaymentMethodList>
-        </Col>
+          <StyledCheckoutCard>
+            {!!isCheckoutLogin ? <CheckoutLoginDropdown /> : <OrderButtonTopLevelContainer>{orderButton}</OrderButtonTopLevelContainer>}
 
-        <Col xs={12}>
-          <OrderButtonTopLevelContainer>{orderButton}</OrderButtonTopLevelContainer>
+            {!!isLoggedIn && (
+              <Col xs={12}>
+                <Disclaimer>
+                  {t('@agreement-part-1')}{' '}
+                  <span style={{ textTransform: 'uppercase', fontWeight: 'bolder', color: '#333' }}>{t('@order-and-pay')}</span>{' '}
+                  {t('@agreement-part-2')}{' '}
+                  <a href="/privacy-policy" style={{ textDecoration: 'underline', color: '#333' }}>
+                    {' '}
+                    {t('@policy')}
+                  </a>{' '}
+                  {t('@and')}{' '}
+                  <a href="/terms" style={{ textDecoration: 'underline', color: '#333' }}>
+                    {t('@terms')}
+                  </a>
+                </Disclaimer>
+              </Col>
+            )}
+          </StyledCheckoutCard>
         </Col>
-
-        {!!isLoggedIn && (
-          <Col xs={12}>
-            <Disclaimer>
-              {t('@agreement-part-1')} <span style={{ textTransform: 'uppercase', fontWeight: 'bolder', color: '#333' }}>{t('@order-and-pay')}</span>{' '}
-              {t('@agreement-part-2')}{' '}
-              <a href="/privacy-policy" style={{ textDecoration: 'underline', color: '#333' }}>
-                {' '}
-                {t('@policy')}
-              </a>{' '}
-              {t('@and')}{' '}
-              <a href="/terms" style={{ textDecoration: 'underline', color: '#333' }}>
-                {t('@terms')}
-              </a>
-            </Disclaimer>
-          </Col>
-        )}
       </Row>
-    </StyledCheckoutCard>
+    </>
   );
 };
 

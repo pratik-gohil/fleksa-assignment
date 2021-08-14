@@ -1,12 +1,10 @@
 import React, { FunctionComponent } from 'react';
-import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
-import { selectCheckoutLogin, updateCheckoutLogin } from '../../../../redux/slices/checkout.slices.redux';
+import { updateCheckoutLogin } from '../../../../redux/slices/checkout.slices.redux';
 import { selectCustomer, selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
 import LoadingIndicator from '../../common/loadingIndicator/loading-indicator.common.templateOne.components';
-import CheckoutLoginDropdown from './checkout.login.dropdown';
 
 const OrderButton = styled.div<{ active: boolean; isLoggedIn: boolean }>`
   font-size: clamp(16px, 24px, 3vw);
@@ -33,7 +31,7 @@ const CheckoutOrderAndPayButton: FunctionComponent<ICheckoutOrderAndPayButtonPro
   orderButtonLoading,
 }) => {
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
-  const isCheckoutLogin = useAppSelector(selectCheckoutLogin);
+
   const customerData = useAppSelector(selectCustomer);
 
   const { t } = useTranslation('page-checkout');
@@ -51,13 +49,7 @@ const CheckoutOrderAndPayButton: FunctionComponent<ICheckoutOrderAndPayButtonPro
     dispatch(updateCheckoutLogin(true));
   };
 
-  useEffect(() => {
-    dispatch(updateCheckoutLogin(false)); // ? Fix inital render glitch on checkout button overlfow
-  }, []);
-
-  return !!isCheckoutLogin ? (
-    <CheckoutLoginDropdown />
-  ) : (
+  return (
     <OrderButton active={orderCanBePlaced} isLoggedIn={isLoggedIn} onClick={isLoggedIn ? orderPlaceFunction : handleProceedButtonClick}>
       {orderButtonLoading ? <LoadingIndicator width={20} /> : isLoggedIn ? t('@order-and-pay') : t('@proceed')}
     </OrderButton>

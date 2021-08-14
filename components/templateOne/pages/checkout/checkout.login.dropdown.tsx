@@ -265,8 +265,14 @@ const LoginContainer = styled.div`
 
 const Container = styled.div``;
 
-const Title = styled.h4``;
-const Description = styled.p``;
+const Title = styled.h4`
+  padding: 0;
+  margin: 0 0 1rem 0;
+`;
+const Description = styled.p`
+  font-size: 1rem;
+  text-align: justify;
+`;
 
 const InputContainer = styled.div``;
 
