@@ -257,17 +257,17 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
               {[
                 {
                   method: 'STRIPE' as ICheckoutPaymentMethods,
-                  img: <PaymentIconImage src="/assets/png/cards.png" alt="stripe" />,
+                  img: <PaymentIconImage src="/assets/svg/checkout/card.svg" alt="stripe" />,
                   show: shopData?.stripe_available,
                 },
                 {
                   method: 'PAYPAL' as ICheckoutPaymentMethods,
-                  img: <PaymentIconImage src="/assets/png/paypal.png" alt="paypal" />,
+                  img: <PaymentIconImage src="/assets/svg/checkout/paypal.svg" alt="paypal" />,
                   show: shopData?.paypal_available,
                 },
                 {
                   method: 'CASH' as ICheckoutPaymentMethods,
-                  img: <PaymentIconImage src="/assets/png/cash.png" alt="cash" />,
+                  img: <PaymentIconImage src="/assets/svg/checkout/cash.svg" alt="cash" />,
                   show: true,
                 },
               ].map((item) => {
