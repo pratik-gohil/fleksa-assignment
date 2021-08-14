@@ -49,19 +49,19 @@ const PaymentMethodItems = styled.button<{ isActive: boolean }>`
   flex: 1;
   margin: 0 ${(props) => props.theme.dimen.X4}px;
   padding: ${(props) => props.theme.dimen.X4}px;
-  border: ${(props) => props.theme.border};
+  border: none;
   justify-content: center;
   align-items: center;
-  border-radius: ${(props) => props.theme.borderRadius}px;
-  background: transparent;
+  border-radius: 0;
+  background: ${(p) => (p.isActive ? p.theme.primaryColor : ' transparent')};
   height: 120px;
 
-  border-color: ${(p) => (p.isActive ? p.theme.primaryColor : 'none')};
-  box-shadow: ${(p) => (p.isActive ? '0 0 4px 0 rgba(0, 0, 0, 0.2)' : '0 0 4px 0 transparent')};
+  /* border-color: ${(p) => (p.isActive ? p.theme.primaryColor : 'none')}; */
+  /* box-shadow: ${(p) => (p.isActive ? '0 0 4px 0 rgba(0, 0, 0, 0.2)' : '0 0 4px 0 transparent')}; */
 
   cursor: pointer;
 
-  img {
+  svg {
     width: 100%;
     height: 100%;
   }
