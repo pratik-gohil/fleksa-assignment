@@ -73,6 +73,8 @@ const NotVerifyIcon = styled.img`
 
 const AddressContainer = styled.div`
   padding: 0 0.3rem;
+  display: flex;
+  flex-direction: column;
 `;
 
 const timings = new RestaurantTimingUtils();
