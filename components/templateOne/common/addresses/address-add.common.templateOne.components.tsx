@@ -196,7 +196,7 @@ let autoComplete: google.maps.places.Autocomplete;
 const AddressAdd: FunctionComponent = () => {
   const { t } = useTranslation('add-address');
   const dispatch = useAppDispatch();
-  const shopId = useAppSelector(selectSelectedMenu)
+  const shopId = useAppSelector(selectSelectedMenu);
   const refAddressInput = useRef<HTMLInputElement>(null);
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
   const bearerToken = useAppSelector(selectBearerToken);
@@ -206,7 +206,7 @@ const AddressAdd: FunctionComponent = () => {
   const addressByType = useAppSelector((state) => selectAddressByType(state, addressType));
 
   const [errorMessage, setErrorMessage] = useState<string>();
-  
+
   const [addressMain, setAddressMain] = useState('');
   const [_, setAddressStreet] = useState('');
   const [addressArea, setAddressArea] = useState('');
@@ -214,9 +214,9 @@ const AddressAdd: FunctionComponent = () => {
   const [addressPostalCode, setAddressPostalCode] = useState('');
   const [addressFloor, setAddressFloor] = useState('');
 
-  useEffect(() => {
-    dispatch(updateShowAddAddress(true));
-  }, []);
+  // useEffect(() => {
+  //   dispatch(updateShowAddAddress(true));
+  // }, []);
 
   function onAddressChange(placeReceived?: google.maps.places.PlaceResult) {
     resetAddressData();
@@ -321,10 +321,10 @@ const AddressAdd: FunctionComponent = () => {
         addressType: addressType,
         shopId,
         postalCode: addressPostalCode,
-        token: bearerToken
+        token: bearerToken,
       });
 
-      console.log(response)
+      console.log(response);
 
       if (response?.result && response.possibilities[shopId].is_available) {
         dispatch(updateDeliveryFinances(response.possibilities[shopId].details));
@@ -339,7 +339,7 @@ const AddressAdd: FunctionComponent = () => {
             postal_code: addressPostalCode,
             city: addressCity,
             state: '',
-          }
+          };
           dispatch(updateExistCustomerAddressOrAddNew(addressData));
           dispatch(updateSelectedAddressId(response.customer.details?.customer_address_id));
           dispatch(updateShowAddAddress(false));

@@ -177,6 +177,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
     else setAddressData(siblings.find((item) => item.id == selectedMenuId)?.address);
   }, []);
 
+  // TODO: Update delivery or pickup timing of the order
   useEffect(() => {
     const timingList = timings.generateDates();
     let foundDateTime = false;
@@ -201,9 +202,12 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
       }
     }
     if (!foundDateTime) updateWantAt(null);
-
-    if (orderType === 'DELIVERY') setMinAmountCheck(isOrderPossible());
   }, [orderType, addressData?.prepare_time, addressData?.delivery_time]);
+
+  // TODO: Checking min amount value
+  useEffect(() => {
+    if (orderType === 'DELIVERY') setMinAmountCheck(isOrderPossible());
+  }, [orderType, deliveryFinances?.amount]);
 
   // TODO: Pre order checking
   useEffect(() => {
@@ -239,7 +243,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
         setUserAddress(guestAddress);
       }
     }
-  }, [isUserLoggedIn, deliveryFinances]);
+  }, [isUserLoggedIn, deliveryFinances, orderType, selectedAddress]);
 
   return (
     <StyledCheckoutCard>
