@@ -8,7 +8,7 @@ import LoginAllPages from '../../common/login/login.common.templateOne.component
 
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { updateError } from '../../../../redux/slices/common.slices.redux';
-import { selectConfiguration, updateShowLogin } from '../../../../redux/slices/configuration.slices.redux';
+import { selectConfiguration } from '../../../../redux/slices/configuration.slices.redux';
 import { selectAddress, selectShop } from '../../../../redux/slices/index.slices.redux';
 import { selectBearerToken, selectCustomer, selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
 import { ILabelValue } from '../../../../utils/restaurant-timings.utils';
@@ -160,10 +160,10 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
       if (!email) return customFieldError(t('@enter-email'));
       if (!countryCode || !phone) return customFieldError(t('@enter-phone'));
 
-      if (!bearerToken) {
-        dispatch(updateShowLogin(true));
-        return;
-      } else dispatch(updateShowLogin(false));
+      // if (!bearerToken) {
+      //   dispatch(updateShowLogin(true));
+      //   return;
+      // } else dispatch(updateShowLogin(false));
 
       setLoading(true);
 
