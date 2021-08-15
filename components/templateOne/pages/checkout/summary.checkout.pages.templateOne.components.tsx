@@ -30,8 +30,10 @@ import {
   selectAddressById,
   selectAddressByType,
   selectBearerToken,
+  selectCustomer,
   selectIsUserLoggedIn,
-  updateNewCustomerAddress,
+  updateExistCustomerAddressOrAddNew,
+  updateLoadAddressesList,
 } from '../../../../redux/slices/user.slices.redux';
 import RestaurantTimingUtils, { isShopOpened } from '../../../../utils/restaurant-timings.utils';
 import AddressAdd, { IGuestAddress } from '../../common/addresses/address-add.common.templateOne.components';
@@ -41,6 +43,7 @@ import { StyledCheckoutCard, StyledCheckoutText } from './customer-info.checkout
 import CheckoutDateTime from './date-time-selector.checkout.pages.templateOne.components';
 import EditButton from './edit-button.checkout.pages.templateOne.components';
 import EditContainer from './edit-container.checkout.pages.templateOne.components';
+import NodeApiHttpGetUserAllAddress from '../../../../http/nodeapi/account/get.account.all-address.nodeapi.http';
 
 const AddressSelected = styled.p`
   font-size: 14px;
@@ -100,10 +103,11 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
   const bearerToken = useAppSelector(selectBearerToken);
   const addressByType = useAppSelector((state) => selectAddressByType(state, 'HOME'));
   const shopId = useAppSelector(selectSelectedMenu);
+  const customerData = useAppSelector(selectCustomer);
 
   const [userAddress, setUserAddress] = useState<IGuestAddress>(INITIAL_ADDRESS);
 
-  const [minAmountCheck, setMinAmountCheck] = useState(false);
+  const [minAmountCheck, setMinAmountCheck] = useState(true);
   const [shop, setShop] = useState<IShopAvailablity>(INITIAL_TIMING_STATE);
 
   const dispatch = useAppDispatch();
@@ -113,7 +117,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
 
   function isOrderPossible() {
     if (orderType === 'DELIVERY') {
-      return deliveryFinances && deliveryFinances.amount ? cartData.cartCost >= deliveryFinances.amount : false;
+      return deliveryFinances && deliveryFinances.amount ? cartData.cartCost >= deliveryFinances.amount : true;
     } else {
       return true;
     }
@@ -146,6 +150,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
           );
           return;
         }
+
         if (response.customer.is_customer && response.customer.details?.customer_address_id) {
           window.localStorage.removeItem(LS_GUEST_USER_ADDRESS);
           const addressAdded: IParticularAddress = {
@@ -158,7 +163,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
             city: guestAddress.city,
             state: '',
           };
-          dispatch(updateNewCustomerAddress(addressAdded));
+          dispatch(updateExistCustomerAddressOrAddNew(addressAdded));
           dispatch(updateSelectedAddressId(response.customer.details.customer_address_id));
         } else {
           dispatch(updateSelectedAddressId(addressByType?.id));
@@ -213,19 +218,28 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
 
   // TODO: User address update depends on login status
   useEffect(() => {
-    if (isUserLoggedIn && selectedAddress && orderType === 'DELIVERY') {
-      setUserAddress(selectedAddress as IGuestAddress);
-    } else if (orderType === 'DELIVERY') {
+    async function handleUserAddressUpdate() {
+      const addressResponse = await new NodeApiHttpGetUserAllAddress(configuration, bearerToken ?? '').get({});
+      dispatch(updateLoadAddressesList(addressResponse?.data.customer_address));
+    }
+
+    if (orderType === 'DELIVERY') {
       const guestAddressString = window.localStorage.getItem(LS_GUEST_USER_ADDRESS);
 
-      if (isUserLoggedIn && guestAddressString) {
-        addGuestAddressOnServerIfExists();
+      // * If user logged in
+      if (isUserLoggedIn) {
+        if (!customerData.all_address?.length) handleUserAddressUpdate();
+
+        // * If selected address already there
+        if (selectedAddress) setUserAddress(selectedAddress as IGuestAddress);
+        // * Not selected but guestAddressString is there
+        else if (guestAddressString) addGuestAddressOnServerIfExists();
       } else if (guestAddressString) {
         const guestAddress = JSON.parse(guestAddressString) as IGuestAddress;
         setUserAddress(guestAddress);
       }
     }
-  }, [isUserLoggedIn]);
+  }, [isUserLoggedIn, deliveryFinances]);
 
   return (
     <StyledCheckoutCard>

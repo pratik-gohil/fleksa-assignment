@@ -66,11 +66,9 @@ export const StyledCheckoutText = styled.p`
     font-size: clamp(0.8rem, 1rem, 1vw);
   }
 
-  @media (max-width: ${BREAKPOINTS.sm}px) {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-  }
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 `;
 
 const Text = styled.p`
