@@ -44,6 +44,7 @@ import CheckoutDateTime from './date-time-selector.checkout.pages.templateOne.co
 import EditButton from './edit-button.checkout.pages.templateOne.components';
 import EditContainer from './edit-container.checkout.pages.templateOne.components';
 import NodeApiHttpGetUserAllAddress from '../../../../http/nodeapi/account/get.account.all-address.nodeapi.http';
+import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 
 const Address = styled.p`
   font-size: 14px;
@@ -71,6 +72,15 @@ const MinAmount = styled.div`
 
 const NotVerifyIcon = styled.img`
   height: 20px;
+`;
+
+const WantAtText = styled.p``;
+
+const SoonText = styled.span`
+  font-size: 14px;
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    display: block;
+  }
 `;
 
 const timings = new RestaurantTimingUtils();
@@ -283,7 +293,16 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
           )}
 
           <EditContainer>
-            <StyledCheckoutText>{wantAtData ? `${wantAtData?.date?.label} (${wantAtData?.time?.label})` : t('@select-time')}</StyledCheckoutText>
+            <WantAtText>
+              {wantAtData ? (
+                <>
+                  {wantAtData?.date?.label}
+                  <SoonText>{` (${wantAtData?.time?.label}) `}</SoonText>
+                </>
+              ) : (
+                <SoonText>{t('@select-time')}</SoonText>
+              )}
+            </WantAtText>
             <EditButton onClick={() => dispatch(updateShowDateTimeSelect(true))} />
           </EditContainer>
         </Col>
