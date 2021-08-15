@@ -1,11 +1,20 @@
 import { useTranslation } from 'next-i18next';
 import React, { FunctionComponent } from 'react';
+
 import { useState } from 'react';
+import PhoneInput from 'react-phone-input-2';
 
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
-import { selectCustomer, updateCustomerEmail, updateCustomerName } from '../../../../redux/slices/user.slices.redux';
+import {
+  selectCustomer,
+  updateCustomerCountryCode,
+  updateCustomerEmail,
+  updateCustomerName,
+  updateCustomerPhone,
+} from '../../../../redux/slices/user.slices.redux';
+import { isEmailValid } from '../../../../utils/checkout.utils';
 import EditButton from './edit-button.checkout.pages.templateOne.components';
 import EditContainer from './edit-container.checkout.pages.templateOne.components';
 
@@ -24,14 +33,19 @@ export const StyledCheckoutCard = styled.div`
 export const StyledCheckoutTitle = styled.h3`
   margin: 0;
   padding-bottom: ${(props) => props.theme.dimen.X4}px;
+
+  span {
+    font-size: clamp(0.8rem, 1.2rem, 1vw);
+  }
 `;
 
-export const StyledCheckoutInput = styled.input`
+export const StyledCheckoutInput = styled.input<{ isError: boolean }>`
   flex: 2;
   max-width: 100%;
-  border: ${(props) => props.theme.border};
-  border-radius: ${(props) => props.theme.borderRadius}px;
-  padding: ${(props) => props.theme.dimen.X4}px;
+  border: 1px solid ${(p) => (p.isError ? 'red' : 'rgba(0,0,0,0.2)')};
+  border-radius: ${(p) => p.theme.borderRadius}px;
+  padding: 1rem;
+  font-size: 1rem;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     width: 60%;
@@ -45,25 +59,63 @@ export const StyledCheckoutText = styled.p`
   padding: ${(props) => props.theme.dimen.X4}px 0;
   margin: 0;
   word-wrap: break-word;
+  display: flex;
+  align-items: center;
 
-  @media (max-width: ${BREAKPOINTS.sm}px) {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
+  span {
+    font-size: clamp(0.7rem, 0.8rem, 1vw);
+    padding: 0.3rem;
   }
+
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 `;
 
 const Text = styled.p`
-  flex: 1;
-  min-width: 60px;
+  min-width: 200px;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    display: none;
+  }
+`;
+
+const PhoneInputContainer = styled.div`
+  display: flex;
+  flex: 2;
+  gap: 15px;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    gap: 10px;
+  }
 `;
 
 const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
   const userData = useAppSelector(selectCustomer);
   const { t } = useTranslation('page-checkout');
-  const [editableName, setEditableName] = useState(!(userData.name && userData.name.length > 0));
-  const [editableEmail, setEditableEmail] = useState(!(userData.email && userData.email.length > 0));
+  const [editableName, setEditableName] = useState(!userData.name);
+  const [editableEmail, setEditableEmail] = useState(!userData.email);
+  const [editablePhone, setEditablePhone] = useState(!userData.phone);
+  const [phone, setPhone] = useState(`${userData.country_code}${userData.phone}` || '');
+  const [countryCode, setCountryCode] = useState<number>(49);
+  const [isErrorField, setIsErrorField] = useState({
+    email: false,
+    name: false,
+  });
+
   const dispatch = useAppDispatch();
+
+  const handleEmailOnBlurEvent = async () => {
+    const check = !isEmailValid(userData?.email || '');
+    setIsErrorField({
+      ...isErrorField,
+      email: check,
+    });
+
+    if (check) return; // ? if check false don't switch to edit mode
+
+    setEditableEmail(!editableEmail);
+  };
 
   return (
     <StyledCheckoutCard>
@@ -74,8 +126,9 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
           <StyledCheckoutInput
             type="text"
             placeholder="Name"
+            isError={isErrorField.name}
             value={userData.name}
-            onBlur={() => setEditableName(!(userData.name && userData.name.length > 0))}
+            onBlur={() => setEditableName(!userData.name)}
             onChange={(e) => dispatch(updateCustomerName(e.target.value))}
           />
         ) : (
@@ -87,31 +140,56 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
 
       <EditContainer>
         <Text>{t('@email')}</Text>
+
         {editableEmail || !userData.email ? (
           <StyledCheckoutInput
             type="text"
             placeholder="Email"
+            isError={isErrorField.email}
             value={userData.email || ''}
-            onBlur={() => setEditableEmail(!(userData.email && userData.email.length > 0))}
+            onBlur={handleEmailOnBlurEvent}
             onChange={(e) => {
               const trimedEmail = e.target.value.replace(/\s/g, '');
+
               dispatch(updateCustomerEmail(trimedEmail));
             }}
           />
         ) : (
           <StyledCheckoutText>{userData.email}</StyledCheckoutText>
         )}
+
         <EditButton onClick={() => setEditableEmail(!editableEmail)} />
       </EditContainer>
 
       <EditContainer>
         <Text>{t('@phone')}</Text>
 
-        <StyledCheckoutText>
-          +{userData.country_code} {userData.phone}
-        </StyledCheckoutText>
+        {editablePhone || !userData.country_code || !userData.phone ? (
+          <PhoneInputContainer>
+            <PhoneInput
+              country={'de'}
+              value={phone}
+              enableSearch
+              specialLabel=""
+              onBlur={() => setEditablePhone(!editablePhone)}
+              onChange={(ph, data) => {
+                if ((data as any).dialCode !== countryCode) {
+                  setCountryCode((data as any).dialCode);
+                  dispatch(updateCustomerCountryCode((data as any).dialCode));
+                }
+                setPhone(ph);
+                dispatch(updateCustomerPhone(ph.replace((data as any).dialCode, ''))); // ? Update the code without country code
+              }}
+              inputStyle={{ width: '100%', position: 'relative' }}
+            />
+          </PhoneInputContainer>
+        ) : (
+          <StyledCheckoutText>
+            +{userData.country_code} {userData.phone}
+          </StyledCheckoutText>
+        )}
 
-        <EditButton disabled={true} />
+        <EditButton onClick={() => setEditablePhone(!editablePhone)} />
       </EditContainer>
     </StyledCheckoutCard>
   );

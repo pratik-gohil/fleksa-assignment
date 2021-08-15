@@ -21,50 +21,66 @@ import {
   selectSelectedAddressId,
   selectPromoCode,
   selectDeliveryFinances,
+  selectCheckoutLogin,
+  updateCheckoutLogin,
 } from '../../../../redux/slices/checkout.slices.redux';
 import { selectConfiguration, selectLanguageCode, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
-import { selectAddress, selectShop, selectTimings } from '../../../../redux/slices/index.slices.redux';
-import { selectBearerToken, selectCustomer } from '../../../../redux/slices/user.slices.redux';
+import { selectShop } from '../../../../redux/slices/index.slices.redux';
+import { selectBearerToken, selectCustomer, selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
 import { getPrductsFromCartData } from '../../../../utils/products.utils';
-import LoadingIndicator from '../../common/loadingIndicator/loading-indicator.common.templateOne.components';
 import { StyledCheckoutCard, StyledCheckoutTitle } from './customer-info.checkout.pages.templateOne.components';
 import CheckoutPageOrderButtonPaypal from './order-button-paypal.checkout.pages.templateOne.components';
 import CheckoutPageOrderButtonStripe from './order-button-stripe.checkout.pages.templateOne.components';
 
-// import SvgCash from '../../../../public/assets/svg/cash.svg';
-// import SvgCard from '../../../../public/assets/svg/card.svg';
-// import SvgPaypal from '../../../../public/assets/svg/paypal.svg';
-
 import { useTranslation } from 'next-i18next';
 import { updateError } from '../../../../redux/slices/common.slices.redux';
-import { INITIAL_TIMING_STATE } from '../index/hero.index.pages.templateOne.components';
-import { isShopOpened } from '../../../../utils/restaurant-timings.utils';
-import { IShopAvailablity } from '../../../../interfaces/common/index.common.interfaces';
+import CheckoutOrderAndPayButton from './checkout.order.button';
+import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
+import { isEmailValid } from '../../../../utils/checkout.utils';
+import CheckoutLoginDropdown from './checkout.login.dropdown';
+
+const Wrapper = styled.div`
+  margin-bottom: 48px;
+`;
 
 const PaymentMethodList = styled.div`
   display: flex;
-  flex-direction: row;
-  margin: 0 -${(props) => props.theme.dimen.X4}px;
+  align-items: center;
 `;
 
 const PaymentMethodItems = styled.button<{ isActive: boolean }>`
   display: flex;
   flex: 1;
-  margin: ${(props) => props.theme.dimen.X4}px;
+  margin: 0 ${(props) => props.theme.dimen.X4}px;
   padding: ${(props) => props.theme.dimen.X4}px;
-  border: ${(props) => props.theme.border};
+
   justify-content: center;
-  border-radius: ${(props) => props.theme.borderRadius}px;
+  align-items: center;
+  border-radius: 3rem;
   background: transparent;
 
-  border-color: ${(p) => (p.isActive ? p.theme.primaryColor : 'none')};
-  box-shadow: ${(p) => (p.isActive ? '0 0 4px 0 rgba(0, 0, 0, 0.2)' : '0 0 4px 0 transparent')};
+  height: max-content;
+  padding: 0;
+  border: none;
+  outline: none;
 
   cursor: pointer;
+  border-color: ${(p) => (p.isActive ? '#FFD100' : 'none')};
+  box-shadow: ${(p) => (p.isActive ? `0 0 4px 4px #FFD100` : '0 0 4px 0 transparent')};
+  border: ${(p) => (p.isActive ? '2px solid rgba(0,0,0,0.2)' : 'none')};
 
   img {
-    display: block;
-    height: 40px;
+    width: 100%;
+    height: 100%;
+  }
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    margin: 0 0.1rem;
+    /* padding: 0.2rem; */
+
+    &:first-child {
+      padding: 0;
+    }
   }
 `;
 
@@ -76,27 +92,11 @@ const Disclaimer = styled.p`
   font-size: 12px;
 `;
 
-const OrderButtonContainer = styled.div`
+const OrderButtonTopLevelContainer = styled.div`
   margin-top: ${(props) => props.theme.dimen.X4}px;
 `;
 
-const OrderButtonCashContainer = styled.div<{ active: boolean }>`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 55px;
-  background-color: ${(props) => (props.active ? props.theme.primaryColor : '#aaa')};
-  cursor: pointer;
-  border: ${(props) => props.theme.border};
-  border-radius: 1000px;
-`;
-
 const PaymentIconImage = styled.img``;
-
-const OrderButton = styled.div`
-  font-size: clamp(16px, 24px, 3vw);
-  font-weight: 700;
-`;
 
 const CheckoutPagePayment: FunctionComponent = ({}) => {
   const router = useRouter();
@@ -118,12 +118,11 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   const tipData = useAppSelector(selectTip);
   const dispatch = useAppDispatch();
   const languageCode = useAppSelector(selectLanguageCode);
-  const address = useAppSelector(selectAddress);
-  const timingsData = useAppSelector(selectTimings);
+  const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
+  const isCheckoutLogin = useAppSelector(selectCheckoutLogin);
 
   const { t } = useTranslation('page-checkout');
-  const [currentPaymentMethod, setCurrentPaymentMethod] = useState('CASH');
-  const [shop, setShop] = useState<IShopAvailablity>(INITIAL_TIMING_STATE);
+  const [currentPaymentMethod, setCurrentPaymentMethod] = useState('STRIPE');
 
   async function createOrder() {
     try {
@@ -166,12 +165,6 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
     }
   }
 
-  function isEmailValid(mail: string) {
-    return /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i.test(
-      mail.replace(/\s/g, ''),
-    );
-  }
-
   function isOrderPossible() {
     if (orderType === 'DELIVERY') {
       return deliveryFinances && deliveryFinances.amount ? cartData.cartCost >= deliveryFinances.amount : false;
@@ -179,17 +172,6 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
       return true;
     }
   }
-
-  // TODO: Pre order checking
-  useEffect(() => {
-    if (!address?.has_delivery && !address?.has_pickup && !address?.has_dinein && !address?.has_reservations)
-      return setShop({
-        availability: false,
-        isClosed: true,
-      });
-
-    setShop(isShopOpened(timingsData, moment(), { has_pickup: address.has_pickup, has_delivery: address.has_delivery }));
-  }, []);
 
   // TODO: Set initial payment method
   useEffect(() => {
@@ -199,9 +181,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
 
   // TODO: Control orderButton active state
   useEffect(() => {
-    console.log('paymentMethodData ; ', paymentMethodData);
     const canPlace = !!(
-      bearerToken &&
       shopData?.id &&
       customerData.name &&
       customerData.name.length &&
@@ -215,6 +195,10 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
 
     setOrderCanBePlaced(canPlace);
   }, [bearerToken, shopData?.id, customerData.name, customerData.email, customerData.phone, customerData.country_code, wantAtData, deliveryFinances]);
+
+  useEffect(() => {
+    dispatch(updateCheckoutLogin(false)); // ? Fix inital render glitch on checkout button overlfow
+  }, []);
 
   async function onPaymentDone() {
     router.push(`/${languageCode}/order-placed`);
@@ -233,95 +217,107 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
     }
   }
 
-  let paymentTitle: string | undefined = undefined;
-  let orderButton;
+  let paymentTitle = paymentMethodData; // /? Default title
+  let orderButton = (
+    <CheckoutOrderAndPayButton
+      orderButtonLoading={orderButtonLoading}
+      orderCanBePlaced={orderCanBePlaced}
+      orderPlaceFunction={onClickCashOrderButton}
+    />
+  ); // ? Default payent method CASH
+
   switch (paymentMethodData) {
-    case 'CASH':
-      orderButton = (
-        <OrderButtonCashContainer onClick={onClickCashOrderButton} active={orderCanBePlaced}>
-          {orderButtonLoading ? (
-            <LoadingIndicator />
-          ) : (
-            <OrderButton>{!shop.availability && !shop.isClosed ? t('@pre-order-and-pay') : t('@order-and-pay')}</OrderButton>
-          )}
-        </OrderButtonCashContainer>
-      );
-      paymentTitle = paymentMethodData;
-      break;
     case 'STRIPE':
-      orderButton = <CheckoutPageOrderButtonStripe createOrder={createOrder} orderCanBePlaced={orderCanBePlaced} shop={shop} />;
+      orderButton = (
+        <CheckoutPageOrderButtonStripe
+          createOrder={createOrder}
+          orderCanBePlaced={orderCanBePlaced}
+          setOrderButtonLoading={setOrderButtonLoading}
+          buttonLoading={orderButtonLoading}
+        />
+      );
       paymentTitle = t('@credit-card');
       break;
     case 'PAYPAL':
-      orderButton = <CheckoutPageOrderButtonPaypal onPaymentDone={onPaymentDone} createOrder={createOrder} orderCanBePlaced={orderCanBePlaced} />;
-      paymentTitle = paymentMethodData;
+      orderButton = isLoggedIn ? (
+        <CheckoutPageOrderButtonPaypal onPaymentDone={onPaymentDone} createOrder={createOrder} orderCanBePlaced={orderCanBePlaced} />
+      ) : (
+        orderButton
+      );
       break;
     default:
       break;
   }
 
   return (
-    <StyledCheckoutCard style={{ marginBottom: 48 }}>
-      <StyledCheckoutTitle>
-        {t('@payment')} {paymentTitle ? `(${paymentTitle})` : ''}
-      </StyledCheckoutTitle>
+    <Wrapper>
+      <StyledCheckoutCard>
+        <StyledCheckoutTitle>
+          {t('@payment')} <span>{paymentTitle ? `(${paymentTitle})` : ''}</span>
+        </StyledCheckoutTitle>
+
+        <Row>
+          <Col xs={12}>
+            <PaymentMethodList>
+              {[
+                {
+                  method: 'STRIPE' as ICheckoutPaymentMethods,
+                  img: <PaymentIconImage src="/assets/svg/checkout/card.svg" alt="stripe" />,
+                  show: shopData?.stripe_available,
+                },
+                {
+                  method: 'PAYPAL' as ICheckoutPaymentMethods,
+                  img: <PaymentIconImage src="/assets/svg/checkout/paypal.svg" alt="paypal" />,
+                  show: shopData?.paypal_available,
+                },
+                {
+                  method: 'CASH' as ICheckoutPaymentMethods,
+                  img: <PaymentIconImage src="/assets/svg/checkout/cash.svg" alt="cash" />,
+                  show: true,
+                },
+              ].map((item) => {
+                return (
+                  item.show && (
+                    <PaymentMethodItems
+                      isActive={currentPaymentMethod === item.method}
+                      key={item.method}
+                      onClick={() => dispatch(updatePaymentMethod(item.method))}
+                    >
+                      {item.img}
+                    </PaymentMethodItems>
+                  )
+                );
+              })}
+            </PaymentMethodList>
+          </Col>
+        </Row>
+      </StyledCheckoutCard>
       <Row>
         <Col xs={12}>
-          <PaymentMethodList>
-            {[
-              {
-                method: 'CASH' as ICheckoutPaymentMethods,
-                img: <PaymentIconImage src="/assets/svg/cash.svg" alt="cash" />,
-                show: true,
-              },
-              {
-                method: 'STRIPE' as ICheckoutPaymentMethods,
-                img: <PaymentIconImage src="/assets/png/stripe.png" alt="stripe" />,
-                show: shopData?.stripe_available,
-              },
-              {
-                method: 'PAYPAL' as ICheckoutPaymentMethods,
-                img: <PaymentIconImage src="/assets/svg/paypal.svg" alt="paypal" />,
-                show: shopData?.paypal_available,
-              },
-            ].map((item) => {
-              return (
-                item.show && (
-                  <PaymentMethodItems
-                    isActive={currentPaymentMethod === item.method}
-                    key={item.method}
-                    onClick={() => dispatch(updatePaymentMethod(item.method))}
-                  >
-                    {item.img}
-                  </PaymentMethodItems>
-                )
-              );
-            })}
-          </PaymentMethodList>
-        </Col>
+          <StyledCheckoutCard>
+            {!!isCheckoutLogin ? <CheckoutLoginDropdown /> : <OrderButtonTopLevelContainer>{orderButton}</OrderButtonTopLevelContainer>}
 
-        <Col xs={12}>
-          <OrderButtonContainer>{orderButton}</OrderButtonContainer>
-        </Col>
-        <Col xs={12}>
-          <Disclaimer>
-            {t('@agreement-part-1')}{' '}
-            <span style={{ textTransform: 'uppercase', fontWeight: 'bolder', color: '#333' }}>
-              {!shop.availability && !shop.isClosed ? t('@pre-order-and-pay') : t('@order-and-pay')}
-            </span>{' '}
-            {t('@agreement-part-2')}{' '}
-            <a href="/privacy-policy" style={{ textDecoration: 'underline', color: '#333' }}>
-              {' '}
-              {t('@policy')}
-            </a>{' '}
-            {t('@and')}{' '}
-            <a href="/terms" style={{ textDecoration: 'underline', color: '#333' }}>
-              {t('@terms')}
-            </a>
-          </Disclaimer>
+            {!!isLoggedIn && (
+              <Col xs={12}>
+                <Disclaimer>
+                  {t('@agreement-part-1')}{' '}
+                  <span style={{ textTransform: 'uppercase', fontWeight: 'bolder', color: '#333' }}>{t('@order-and-pay')}</span>{' '}
+                  {t('@agreement-part-2')}{' '}
+                  <a href="/privacy-policy" style={{ textDecoration: 'underline', color: '#333' }}>
+                    {' '}
+                    {t('@policy')}
+                  </a>{' '}
+                  {t('@and')}{' '}
+                  <a href="/terms" style={{ textDecoration: 'underline', color: '#333' }}>
+                    {t('@terms')}
+                  </a>
+                </Disclaimer>
+              </Col>
+            )}
+          </StyledCheckoutCard>
         </Col>
       </Row>
-    </StyledCheckoutCard>
+    </Wrapper>
   );
 };
 

@@ -1,14 +1,20 @@
 import React, { FunctionComponent } from 'react';
+
+import Router from 'next/router';
+
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe, Stripe } from '@stripe/stripe-js';
-import { INodeApiHttpPostOrderResponse } from '../../../../interfaces/http/nodeapi/order/post.order.nodeapi.http';
-import CheckoutPageOrderButtonStripeForm from './order-button-stripe-form.checkout.pages.templateOne.components';
-import { IShopAvailablity } from '../../../../interfaces/common/index.common.interfaces';
+import { INodeApiHttpPostOrderResponse, IOrderResponseStripe } from '../../../../interfaces/http/nodeapi/order/post.order.nodeapi.http';
+import { useAppDispatch } from '../../../../redux/hooks.redux';
+import { updateError } from '../../../../redux/slices/common.slices.redux';
+import CheckoutOrderAndPayButton from './checkout.order.button';
 
 export interface IPropsCheckoutPageOrderButtonStripe {
   createOrder(): Promise<INodeApiHttpPostOrderResponse>;
   orderCanBePlaced: boolean;
-  shop: IShopAvailablity;
+
+  setOrderButtonLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  buttonLoading: boolean;
 }
 
 const stripeKey = process.env.NEXT_PUBLIC_REACT_APP_STRIPE_KEY;
@@ -22,10 +28,37 @@ if (stripeKey) {
   throw new Error('Stripe key not found');
 }
 
-const CheckoutPageOrderButtonStripe: FunctionComponent<IPropsCheckoutPageOrderButtonStripe> = ({ createOrder, orderCanBePlaced, shop }) => {
+const CheckoutPageOrderButtonStripe: FunctionComponent<IPropsCheckoutPageOrderButtonStripe> = ({
+  createOrder,
+  orderCanBePlaced,
+
+  setOrderButtonLoading,
+  buttonLoading,
+}) => {
+  const dispatch = useAppDispatch();
+
+  const handleSubmit = async () => {
+    setOrderButtonLoading(true);
+
+    const response = (await createOrder()) as IOrderResponseStripe;
+
+    setOrderButtonLoading(false);
+
+    if (!response.result)
+      return dispatch(
+        updateError({
+          severity: 'error',
+          message: response.message,
+          show: true,
+        }),
+      );
+
+    Router.push(response.session.url);
+  };
+
   return (
     <Elements stripe={stripePromise}>
-      <CheckoutPageOrderButtonStripeForm createOrder={createOrder} orderCanBePlaced={orderCanBePlaced} shop={shop} />
+      <CheckoutOrderAndPayButton orderPlaceFunction={handleSubmit} orderButtonLoading={buttonLoading} orderCanBePlaced={orderCanBePlaced} />
     </Elements>
   );
 };

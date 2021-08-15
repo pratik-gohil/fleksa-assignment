@@ -7,7 +7,7 @@ import { ItemSelectionSlice } from './slices/item-selection.slices.redux';
 import { UserSlice } from './slices/user.slices.redux';
 import { CartSlice } from './slices/cart.slices.redux';
 import { LS_CART, LS_CHECKOUT } from '../constants/keys-local-storage.constants';
-import { CheckoutSlice } from './slices/checkout.slices.redux';
+import { checkoutInitialState, CheckoutSlice } from './slices/checkout.slices.redux';
 import { CommonSlice } from './slices/common.slices.redux';
 
 const makeStore = () =>
@@ -33,17 +33,7 @@ const makeStore = () =>
       checkout:
         typeof window !== 'undefined' && localStorage.getItem(LS_CHECKOUT)
           ? JSON.parse(localStorage.getItem(LS_CHECKOUT) as string)
-          : {
-              orderType: null,
-              paymentMethod: 'CASH',
-              tip: null,
-              comment: '',
-              wantAt: null,
-              showDateTimeSelect: false,
-              deliveryFinances: null,
-              selectedAddressId: null,
-              promoCode: null,
-            },
+          : checkoutInitialState,
     },
     middleware: (getDefaultMiddleware) => {
       return getDefaultMiddleware({

@@ -9,4 +9,6 @@ export interface INodeApiHttpPostVerifyResponse {
   result: boolean;
   message: string;
   token: string;
+  email?: string;
+  name?: string;
 }

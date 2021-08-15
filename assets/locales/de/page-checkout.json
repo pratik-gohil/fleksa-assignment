@@ -11,11 +11,11 @@
   "@apply": "ANWENDEN",
   "@tip": "TRINKGELD",
   "@other": "Andere",
-  "@credit-card": "STRIPE",
+  "@credit-card": "Karten und mehr",
   "@payment": "ZAHLUNG",
   "@agreement-part-1": "Durch Klicken auf",
   "@order-and-pay": "KOSTENPFLICHTIG BESTELLEN",
-  "@pre-order-and-pay": "VORBESTELLEN UND BEZAHLEN",
+  "@pre-order": "Vorbestellen",
   "@agreement-part-2": "stimmen Sie dem Inhalt des Warenkorbs, den von Ihnen ausgefüllten Daten, unseren",
   "@policy": "AGB",
   "@and": "und",
@@ -29,5 +29,13 @@
   "@delivery": "Lieferung",
   "@pickup": "Abholung",
   "@dine-in": "Dine-In",
-  "@min-required": "Minimum Order Value: "
+  "@min-required": "Mindestbestellwert:",
+  "@proceed": "Weiter",
+  "@send": "Senden",
+  "@re-send": "Erneut senden",
+  "@enter-request": "Bitte geben sie ihre Telefonnummber ein:",
+  "@enter-code": "Geben Sie den Code ein.",
+  "@verification-quate-1": "Wir verifizieren lhre Telefonnummber mit einem Einmalpasswort (OTP), um eine echte Bestellung zu gewahrleisten.",
+  "@verification-quate-2": "Wir haben einen Einmalpasswort (OTP) an ",
+  "@verification-quate-2-i": "gesendet."
 }

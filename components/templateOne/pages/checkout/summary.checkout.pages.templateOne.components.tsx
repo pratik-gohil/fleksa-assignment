@@ -1,10 +1,14 @@
+import moment from 'moment';
 import { useTranslation } from 'next-i18next';
 import React, { FunctionComponent, useState } from 'react';
 import { useEffect } from 'react';
 import { Row, Col } from 'react-grid-system';
 import styled from 'styled-components';
 import { LS_GUEST_USER_ADDRESS } from '../../../../constants/keys-local-storage.constants';
+import PyApiHttpPostAddress from '../../../../http/pyapi/address/post.address.pyapi.http';
 import { IAddress } from '../../../../interfaces/common/address.common.interfaces';
+import { IParticularAddress } from '../../../../interfaces/common/customer.common.interfaces';
+import { IShopAvailablity } from '../../../../interfaces/common/index.common.interfaces';
 
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { selectCart } from '../../../../redux/slices/cart.slices.redux';
@@ -14,24 +18,39 @@ import {
   selectSelectedAddressId,
   selectShowDateTimeSelect,
   selectWantAt,
+  updateSelectedAddressId,
   updateShowDateTimeSelect,
   updateWantAt,
 } from '../../../../redux/slices/checkout.slices.redux';
-import { selectLanguage, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
+import { updateError } from '../../../../redux/slices/common.slices.redux';
+import { selectConfiguration, selectLanguage, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
 import { selectAddress, selectShop, selectSiblings, selectTimings } from '../../../../redux/slices/index.slices.redux';
 import { selectShowAddress, selectShowOrderTypeSelect, updateShowOrderTypeSelect } from '../../../../redux/slices/menu.slices.redux';
-import { selectAddressById } from '../../../../redux/slices/user.slices.redux';
-import RestaurantTimingUtils from '../../../../utils/restaurant-timings.utils';
-import AddressAdd from '../../common/addresses/address-add.common.templateOne.components';
+import {
+  selectAddressById,
+  selectAddressByType,
+  selectBearerToken,
+  selectCustomer,
+  selectIsUserLoggedIn,
+  updateExistCustomerAddressOrAddNew,
+  updateLoadAddressesList,
+} from '../../../../redux/slices/user.slices.redux';
+import RestaurantTimingUtils, { isShopOpened } from '../../../../utils/restaurant-timings.utils';
+import AddressAdd, { IGuestAddress } from '../../common/addresses/address-add.common.templateOne.components';
 import OrderTypeManager from '../../common/orderType/order-type-manager.menu.pages.templateOne.components';
+import { INITIAL_TIMING_STATE } from '../index/hero.index.pages.templateOne.components';
 import { StyledCheckoutCard, StyledCheckoutText } from './customer-info.checkout.pages.templateOne.components';
 import CheckoutDateTime from './date-time-selector.checkout.pages.templateOne.components';
 import EditButton from './edit-button.checkout.pages.templateOne.components';
 import EditContainer from './edit-container.checkout.pages.templateOne.components';
+import NodeApiHttpGetUserAllAddress from '../../../../http/nodeapi/account/get.account.all-address.nodeapi.http';
+import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 
-const AddressSelected = styled.p`
+const Address = styled.p`
   font-size: 14px;
-  margin: -12px 0 0 0;
+  padding: 0 0.3rem;
+  margin: 0;
+  display: block;
 `;
 
 const NotVerifyText = styled.p`
@@ -55,7 +74,24 @@ const NotVerifyIcon = styled.img`
   height: 20px;
 `;
 
+const WantAtText = styled.p``;
+
+const SoonText = styled.span`
+  font-size: 14px;
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    display: block;
+  }
+`;
+
 const timings = new RestaurantTimingUtils();
+
+const INITIAL_ADDRESS: IGuestAddress = {
+  address: '',
+  address_type: 'OTHER',
+  city: '',
+  floor: '',
+  postal_code: '',
+};
 
 const CheckoutPageSummary: FunctionComponent = ({}) => {
   const currentLanguage = useAppSelector(selectLanguage);
@@ -74,8 +110,17 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
   const selectedAddress = useAppSelector((state) => selectAddressById(state, checkoutAddressId));
   const deliveryFinances = useAppSelector(selectDeliveryFinances);
   const cartData = useAppSelector(selectCart);
+  const isUserLoggedIn = useAppSelector(selectIsUserLoggedIn);
+  const configuration = useAppSelector(selectConfiguration);
+  const bearerToken = useAppSelector(selectBearerToken);
+  const addressByType = useAppSelector((state) => selectAddressByType(state, 'HOME'));
+  const shopId = useAppSelector(selectSelectedMenu);
+  const customerData = useAppSelector(selectCustomer);
 
-  const [minAmountCheck, setMinAmountCheck] = useState(false);
+  const [userAddress, setUserAddress] = useState<IGuestAddress>(INITIAL_ADDRESS);
+
+  const [minAmountCheck, setMinAmountCheck] = useState(true);
+  const [shop, setShop] = useState<IShopAvailablity>(INITIAL_TIMING_STATE);
 
   const dispatch = useAppDispatch();
   const { t } = useTranslation('page-checkout');
@@ -84,9 +129,58 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
 
   function isOrderPossible() {
     if (orderType === 'DELIVERY') {
-      return deliveryFinances && deliveryFinances.amount ? cartData.cartCost >= deliveryFinances.amount : false;
+      return deliveryFinances && deliveryFinances.amount ? cartData.cartCost >= deliveryFinances.amount : true;
     } else {
       return true;
+    }
+  }
+
+  async function addGuestAddressOnServerIfExists() {
+    // check if guest address exists. If it does add it to server
+    const guestAddressString = window.localStorage.getItem(LS_GUEST_USER_ADDRESS);
+    if (guestAddressString && bearerToken && shopId) {
+      const guestAddress = JSON.parse(guestAddressString) as IGuestAddress;
+      const response = await new PyApiHttpPostAddress(configuration).postAll({
+        floor: '',
+        shopId: shopId,
+        address: guestAddress.address,
+        addressType: guestAddress.address_type,
+        city: guestAddress.city,
+        postalCode: guestAddress.postal_code,
+        area: '',
+        token: bearerToken,
+      });
+      console.log(response);
+      if (response) {
+        if (!response.result) {
+          dispatch(
+            updateError({
+              show: true,
+              message: response.description,
+              severity: 'error',
+            }),
+          );
+          return;
+        }
+
+        if (response.customer.is_customer && response.customer.details?.customer_address_id) {
+          window.localStorage.removeItem(LS_GUEST_USER_ADDRESS);
+          const addressAdded: IParticularAddress = {
+            id: response.customer.details.customer_address_id,
+            address_type: guestAddress.address_type,
+            floor: guestAddress.floor,
+            address: guestAddress.address,
+            country: '',
+            postal_code: guestAddress.postal_code,
+            city: guestAddress.city,
+            state: '',
+          };
+          dispatch(updateExistCustomerAddressOrAddNew(addressAdded));
+          dispatch(updateSelectedAddressId(response.customer.details.customer_address_id));
+        } else {
+          dispatch(updateSelectedAddressId(addressByType?.id));
+        }
+      }
     }
   }
 
@@ -95,6 +189,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
     else setAddressData(siblings.find((item) => item.id == selectedMenuId)?.address);
   }, []);
 
+  // TODO: Update delivery or pickup timing of the order
   useEffect(() => {
     const timingList = timings.generateDates();
     let foundDateTime = false;
@@ -119,9 +214,48 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
       }
     }
     if (!foundDateTime) updateWantAt(null);
-
-    if (orderType === 'DELIVERY') setMinAmountCheck(isOrderPossible());
   }, [orderType, addressData?.prepare_time, addressData?.delivery_time]);
+
+  // TODO: Checking min amount value
+  useEffect(() => {
+    if (orderType === 'DELIVERY') setMinAmountCheck(isOrderPossible());
+  }, [orderType, deliveryFinances?.amount]);
+
+  // TODO: Pre order checking
+  useEffect(() => {
+    if (!address?.has_delivery && !address?.has_pickup && !address?.has_dinein && !address?.has_reservations)
+      return setShop({
+        availability: false,
+        isClosed: true,
+      });
+
+    setShop(isShopOpened(timingsData, moment(), { has_pickup: address.has_pickup, has_delivery: address.has_delivery }));
+  }, []);
+
+  // TODO: User address update depends on login status
+  useEffect(() => {
+    async function handleUserAddressUpdate() {
+      const addressResponse = await new NodeApiHttpGetUserAllAddress(configuration, bearerToken ?? '').get({});
+      dispatch(updateLoadAddressesList(addressResponse?.data.customer_address));
+    }
+
+    if (orderType === 'DELIVERY') {
+      const guestAddressString = window.localStorage.getItem(LS_GUEST_USER_ADDRESS);
+
+      // * If user logged in
+      if (isUserLoggedIn) {
+        if (!customerData.all_address?.length) handleUserAddressUpdate();
+
+        // * If selected address already there
+        if (selectedAddress) setUserAddress(selectedAddress as IGuestAddress);
+        // * Not selected but guestAddressString is there
+        else if (guestAddressString) addGuestAddressOnServerIfExists();
+      } else if (guestAddressString) {
+        const guestAddress = JSON.parse(guestAddressString) as IGuestAddress;
+        setUserAddress(guestAddress);
+      }
+    }
+  }, [isUserLoggedIn, deliveryFinances, orderType, selectedAddress]);
 
   return (
     <StyledCheckoutCard>
@@ -129,13 +263,16 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
         <Col xs={12}>
           <EditContainer>
             <TextContainer>
-              <StyledCheckoutText>{orderType === 'DINE_IN' ? t('@dine-in') : t(`@${orderType?.toLowerCase()}`)}</StyledCheckoutText>
+              <StyledCheckoutText>
+                {orderType === 'DINE_IN' ? t('@dine-in') : t(`@${orderType?.toLowerCase()}`)}{' '}
+                <span>{!shop.availability && !shop.isClosed && `(${t('@pre-order')})`}</span>
+              </StyledCheckoutText>
 
               {orderType === 'DELIVERY' && !minAmountCheck && (
                 <MinAmount>
                   <NotVerifyIcon src="assets/png/information.png" alt="info" />
                   <NotVerifyText>
-                    {t('@min-required')} €{deliveryFinances?.amount}  
+                    {t('@min-required')} €{deliveryFinances?.amount}
                   </NotVerifyText>
                 </MinAmount>
               )}
@@ -143,18 +280,29 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
 
             <EditButton onClick={() => dispatch(updateShowOrderTypeSelect(true))} />
           </EditContainer>
+
           {orderType === 'DELIVERY' ? (
             <>
-              <AddressSelected>{selectedAddress?.address}</AddressSelected>
-              <AddressSelected style={{ marginTop: -4 }}>
-                {selectedAddress?.postal_code} {selectedAddress?.city}
-              </AddressSelected>
+              <Address>{userAddress?.address}</Address>
+              <Address>
+                {userAddress?.postal_code} {userAddress?.city}
+              </Address>
             </>
           ) : (
             <></>
           )}
+
           <EditContainer>
-            <StyledCheckoutText>{wantAtData ? `${wantAtData?.date?.label} (${wantAtData?.time?.label})` : t('@select-time')}</StyledCheckoutText>
+            <WantAtText>
+              {wantAtData ? (
+                <>
+                  {wantAtData?.date?.label}
+                  <SoonText>{` (${wantAtData?.time?.label}) `}</SoonText>
+                </>
+              ) : (
+                <SoonText>{t('@select-time')}</SoonText>
+              )}
+            </WantAtText>
             <EditButton onClick={() => dispatch(updateShowDateTimeSelect(true))} />
           </EditContainer>
         </Col>

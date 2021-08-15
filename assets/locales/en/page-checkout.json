@@ -11,11 +11,11 @@
   "@apply": "APPLY",
   "@tip": "TIP",
   "@other": "Other",
-  "@credit-card": "STRIPE",
+  "@credit-card": "Cards and more",
   "@payment": "PAYMENT",
   "@agreement-part-1": "By clicking on ",
   "@order-and-pay": "ORDER AND PAY",
-  "@pre-order-and-pay": "PRE-ORDER AND PAY",
+  "@pre-order": "Pre-Order",
   "@agreement-part-2": "you agree with the contents of the shopping cart, the data you filled out, our ",
   "@policy": "Privacy Policy",
   "@and": "and",
@@ -28,5 +28,13 @@
   "@delivery": "Delivery",
   "@pickup": "Pickup",
   "@dine-in": "Dine-In",
-  "@min-required": "Mindestbestellwert: "
+  "@min-required": "Minimum Order Value: ",
+  "@proceed": "Proceed",
+  "@send": "Send",
+  "@re-send": "Send again",
+  "@enter-request": "Please Enter your phone Number:",
+  "@enter-code": "Enter the code.",
+  "@verification-quate-1": "We verify your phone number with a one-time password (OTP) to ensure genuine order.",
+  "@verification-quate-2": "We have sent a one-time password (OTP) code to",
+  "@verification-quate-2-i": " "
 }

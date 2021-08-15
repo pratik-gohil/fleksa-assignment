@@ -23,6 +23,7 @@ export interface ICheckoutSliceState {
   showDateTimeSelect: boolean;
   selectedAddressId: number | null;
   deliveryFinances: IDeliveryFinances | null;
+  checkoutLogin: boolean;
 
   promoCode: {
     code: string;
@@ -31,9 +32,9 @@ export interface ICheckoutSliceState {
   } | null;
 }
 
-const initialState: ICheckoutSliceState = {
+export const checkoutInitialState: ICheckoutSliceState = {
   orderType: null,
-  paymentMethod: 'CASH',
+  paymentMethod: 'STRIPE',
   tip: null,
   comment: '',
   wantAt: null,
@@ -41,11 +42,12 @@ const initialState: ICheckoutSliceState = {
   selectedAddressId: null,
   deliveryFinances: null,
   promoCode: null,
+  checkoutLogin: false,
 };
 
 export const CheckoutSlice = createSlice({
   name: SLICE_NAME,
-  initialState,
+  initialState: checkoutInitialState,
   reducers: {
     updatePaymentMethod(state, action) {
       state.paymentMethod = action.payload;
@@ -74,10 +76,13 @@ export const CheckoutSlice = createSlice({
     updatePromoCode(state, action) {
       state.promoCode = action.payload;
     },
+    updateCheckoutLogin(state, action) {
+      state.checkoutLogin = action.payload;
+    },
 
     updateClearCheckout(state) {
       state.orderType = null;
-      state.paymentMethod = 'CASH';
+      state.paymentMethod = 'STRIPE';
       state.tip = null;
       state.comment = '';
       state.wantAt = null;
@@ -85,6 +90,7 @@ export const CheckoutSlice = createSlice({
       state.selectedAddressId = null;
       state.deliveryFinances = null;
       state.promoCode = null;
+      state.checkoutLogin = false;
     },
     updateCheckout(state, action) {
       state.orderType = action.payload.orderType || state.orderType;
@@ -118,6 +124,7 @@ export const {
   updatePromoCode,
   updateDeliveryFinances,
   updateCheckout,
+  updateCheckoutLogin,
 } = CheckoutSlice.actions;
 
 export const selectDeliveryFinances = (state: RootState) => state.checkout.deliveryFinances;
@@ -129,3 +136,4 @@ export const selectWantAt = (state: RootState) => state.checkout.wantAt;
 export const selectShowDateTimeSelect = (state: RootState) => state.checkout.showDateTimeSelect;
 export const selectSelectedAddressId = (state: RootState) => state.checkout.selectedAddressId;
 export const selectPromoCode = (state: RootState) => state.checkout.promoCode;
+export const selectCheckoutLogin = (state: RootState) => state.checkout.checkoutLogin;

@@ -34,10 +34,10 @@ export async function getServerSidePropsCommon(
 ) {
   try {
     const cookies = new Cookies(ctx.req, ctx.res);
+
     const bearerToken = cookies.get(COOKIE_BEARER_TOKEN);
     const restaurantDomain = cookies.get(COOKIE_SELECTED_RESTAURANT_DOMAIN);
     const selectedMenu = cookies.get(COOKIE_SELECTED_MENU_ID);
-    ctx.store.dispatch(updateSelectedMenu(selectedMenu || null));
 
     /**
      * If hostname is localhost:3000 or newqa.felksa.de use the restaurant name given by the cookie otherwise use the actual host.
@@ -57,6 +57,23 @@ export async function getServerSidePropsCommon(
       baseUrlNodeApi,
     };
     ctx.store.dispatch(updateConfiguration(configuration));
+
+    /**
+     * In case customer try to go checkout without menu id redirect to index to generate the menu id
+     */
+    ctx.store.dispatch(updateSelectedMenu(selectedMenu || null));
+
+    if (!selectedMenu && !restaurantDomain && ctx.req.url === '/checkout') {
+      return {
+        redirect: {
+          redirect: {
+            permanent: false,
+            destination: '/menu',
+          },
+        },
+        configuration,
+      };
+    }
 
     const responseIndex = await new PyApiHttpGetIndex(configuration).get();
     if (!responseIndex?.shop.id) throw new Error('Shop id not found');

@@ -247,8 +247,8 @@ const IndexPageHero: FunctionComponent = ({}) => {
                       {t('@pre-online')}
                     </OrderButton>
                     <SubTitle2>
-                      {t('@next-hours')} {shop.next?.dayNumber ? ` ${shop.next?.dayNumber} ,` : ''} {t(`@${shop.next?.day.toUpperCase()}`)},{' '}
-                      {shop.next?.time}
+                      {t('@next-hours-1')} {t('@next-hours')} {shop.next?.dayNumber ? ` ${shop.next?.dayNumber} ,` : ''}{' '}
+                      {t(`@${shop.next?.day.toUpperCase()}`)}, {shop.next?.time}
                     </SubTitle2>
                   </>
                 ) : (

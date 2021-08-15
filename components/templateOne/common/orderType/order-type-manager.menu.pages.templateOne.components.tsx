@@ -7,7 +7,7 @@ import {
   selectOrderType,
   selectSelectedAddressId,
   updateOrderType,
-  updateSelectedAddressId,
+ 
 } from '../../../../redux/slices/checkout.slices.redux';
 import SvgDelivery from '../../../../public/assets/svg/delivery.svg';
 import SvgPickup from '../../../../public/assets/svg/pickup.svg';
@@ -127,7 +127,7 @@ const OrderTypeManager: FunctionComponent = () => {
     dispatch(updateOrderType(orderType));
     dispatch(updateShowOrderTypeSelect(false));
     dispatch(updateShowAddAddress(true));
-    dispatch(updateSelectedAddressId(null));
+    // dispatch(updateSelectedAddressId(null));
   }
 
   function onClickTakeaway(orderType: ICheckoutOrderTypes) {
