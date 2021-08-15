@@ -8,14 +8,14 @@ const templateList = [ReservationSuccessPageTemplateOne];
 
 export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ctx) => {
   try {
-    const { redirect, responseIndex } = await getServerSidePropsCommon(ctx, true);
+    const { redirect, responseIndex } = await getServerSidePropsCommon(ctx, false);
     if (redirect) return redirect;
 
     return {
       props: {
         ...(await serverSideTranslations((ctx as any).locale, ['header', 'footer'])),
         templateNumber: 0,
-        meta: responseIndex?.meta
+        meta: responseIndex?.meta,
       },
     };
   } catch (error) {
