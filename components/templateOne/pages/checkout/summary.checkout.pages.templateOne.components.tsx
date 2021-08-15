@@ -45,9 +45,11 @@ import EditButton from './edit-button.checkout.pages.templateOne.components';
 import EditContainer from './edit-container.checkout.pages.templateOne.components';
 import NodeApiHttpGetUserAllAddress from '../../../../http/nodeapi/account/get.account.all-address.nodeapi.http';
 
-const AddressSelected = styled.p`
+const Address = styled.p`
   font-size: 14px;
-  margin: -12px 0 0 0;
+  padding: 0 0.3rem;
+  margin: 0;
+  display: block;
 `;
 
 const NotVerifyText = styled.p`
@@ -69,12 +71,6 @@ const MinAmount = styled.div`
 
 const NotVerifyIcon = styled.img`
   height: 20px;
-`;
-
-const AddressContainer = styled.div`
-  padding: 0 0.3rem;
-  display: flex;
-  flex-direction: column;
 `;
 
 const timings = new RestaurantTimingUtils();
@@ -276,12 +272,12 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
           </EditContainer>
 
           {orderType === 'DELIVERY' ? (
-            <AddressContainer>
-              <AddressSelected>{userAddress?.address}</AddressSelected>
-              <AddressSelected style={{ marginTop: -4 }}>
+            <>
+              <Address>{userAddress?.address}</Address>
+              <Address>
                 {userAddress?.postal_code} {userAddress?.city}
-              </AddressSelected>
-            </AddressContainer>
+              </Address>
+            </>
           ) : (
             <></>
           )}
