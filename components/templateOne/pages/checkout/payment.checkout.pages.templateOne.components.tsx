@@ -39,6 +39,10 @@ import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { isEmailValid } from '../../../../utils/checkout.utils';
 import CheckoutLoginDropdown from './checkout.login.dropdown';
 
+const Wrapper = styled.div`
+  margin-bottom: 48px;
+`;
+
 const PaymentMethodList = styled.div`
   display: flex;
   align-items: center;
@@ -246,7 +250,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   }
 
   return (
-    <>
+    <Wrapper>
       <StyledCheckoutCard>
         <StyledCheckoutTitle>
           {t('@payment')} <span>{paymentTitle ? `(${paymentTitle})` : ''}</span>
@@ -313,7 +317,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
           </StyledCheckoutCard>
         </Col>
       </Row>
-    </>
+    </Wrapper>
   );
 };
 

@@ -221,9 +221,6 @@ const AddressAdd: FunctionComponent = () => {
   const [addressFloor, setAddressFloor] = useState('');
 
   useEffect(() => {
-    console.log('isShowAddressSelection ', isShowAddressSelection);
-    console.log('selectedAddress ', selectedAddress);
-
     if (checkoutAddressId && isShowAddressSelection) {
       setAddressType(selectedAddress?.address_type ?? 'HOME');
     }
@@ -271,7 +268,6 @@ const AddressAdd: FunctionComponent = () => {
   useEffect(() => {
     setErrorMessage(undefined);
     if (isLoggedIn) {
-      console.log('addressByType ', addressByType);
       if (addressByType) {
         setAddressMain(addressByType.address || '');
         setAddressCity(addressByType.city);

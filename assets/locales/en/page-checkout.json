@@ -28,7 +28,7 @@
   "@delivery": "Delivery",
   "@pickup": "Pickup",
   "@dine-in": "Dine-In",
-  "@min-required": "Mindestbestellwert: ",
+  "@min-required": "Minimum Order Value: ",
   "@proceed": "Proceed",
   "@send": "Send",
   "@re-send": "Send again",
