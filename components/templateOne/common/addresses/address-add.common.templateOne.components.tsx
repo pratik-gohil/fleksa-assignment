@@ -10,6 +10,7 @@ import PyApiHttpPostAddress from '../../../../http/pyapi/address/post.address.py
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { selectConfiguration, selectLanguageCode, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
 import {
+  selectAddressById,
   selectAddressByType,
   selectBearerToken,
   selectIsUserLoggedIn,
@@ -17,8 +18,8 @@ import {
 } from '../../../../redux/slices/user.slices.redux';
 import { AddressTypes } from './address-manager.common.templateOne.components';
 import { LS_GUEST_USER_ADDRESS } from '../../../../constants/keys-local-storage.constants';
-import { updateDeliveryFinances, updateSelectedAddressId } from '../../../../redux/slices/checkout.slices.redux';
-import { updateShowAddAddress, updateShowOrderTypeSelect } from '../../../../redux/slices/menu.slices.redux';
+import { selectSelectedAddressId, updateDeliveryFinances, updateSelectedAddressId } from '../../../../redux/slices/checkout.slices.redux';
+import { selectShowAddress, updateShowAddAddress, updateShowOrderTypeSelect } from '../../../../redux/slices/menu.slices.redux';
 
 import SvgHome from '../../../../public/assets/svg/address/home.svg';
 import SvgWork from '../../../../public/assets/svg/address/work.svg';
@@ -202,8 +203,13 @@ const AddressAdd: FunctionComponent = () => {
   const bearerToken = useAppSelector(selectBearerToken);
   const languageCode = useAppSelector(selectLanguageCode);
   const configuration = useAppSelector(selectConfiguration);
+  const checkoutAddressId = useAppSelector(selectSelectedAddressId);
+  const isShowAddressSelection = useAppSelector(selectShowAddress);
+
   const [addressType, setAddressType] = useState<AddressTypes>('HOME');
+
   const addressByType = useAppSelector((state) => selectAddressByType(state, addressType));
+  const selectedAddress = useAppSelector((state) => selectAddressById(state, checkoutAddressId));
 
   const [errorMessage, setErrorMessage] = useState<string>();
 
@@ -214,9 +220,14 @@ const AddressAdd: FunctionComponent = () => {
   const [addressPostalCode, setAddressPostalCode] = useState('');
   const [addressFloor, setAddressFloor] = useState('');
 
-  // useEffect(() => {
-  //   dispatch(updateShowAddAddress(true));
-  // }, []);
+  useEffect(() => {
+    console.log('isShowAddressSelection ', isShowAddressSelection);
+    console.log('selectedAddress ', selectedAddress);
+
+    if (checkoutAddressId && isShowAddressSelection) {
+      setAddressType(selectedAddress?.address_type ?? 'HOME');
+    }
+  }, [isShowAddressSelection]);
 
   function onAddressChange(placeReceived?: google.maps.places.PlaceResult) {
     resetAddressData();
@@ -256,9 +267,11 @@ const AddressAdd: FunctionComponent = () => {
     });
   }
 
+  // TODO: Prefill correspond address type
   useEffect(() => {
     setErrorMessage(undefined);
     if (isLoggedIn) {
+      console.log('addressByType ', addressByType);
       if (addressByType) {
         setAddressMain(addressByType.address || '');
         setAddressCity(addressByType.city);
@@ -266,7 +279,7 @@ const AddressAdd: FunctionComponent = () => {
         setAddressFloor(addressByType.floor || '');
         setAddressPostalCode(addressByType.postal_code);
       } else {
-        resetAddressData();
+        // resetAddressData();
       }
     }
   }, [addressByType]);
@@ -279,8 +292,10 @@ const AddressAdd: FunctionComponent = () => {
     setAddressPostalCode('');
   }
 
+  // TODO: Prefill guest user address
   useEffect(() => {
     setErrorMessage(undefined);
+
     if (!isLoggedIn) {
       const guestAddressString = window.localStorage.getItem(LS_GUEST_USER_ADDRESS);
       if (guestAddressString) {
@@ -291,15 +306,13 @@ const AddressAdd: FunctionComponent = () => {
           setAddressCity(guestAddress.city);
           setAddressPostalCode(guestAddress.postal_code);
         } else {
-          setAddressFloor('');
-          setAddressMain('');
-          setAddressCity('');
-          setAddressPostalCode('');
+          resetAddressData();
         }
       }
     }
   }, [addressType]);
 
+  // TODO: AutoComplete address input
   useEffect(() => {
     if (window !== 'undefined' && refAddressInput.current) {
       autoComplete = new google.maps.places.Autocomplete(refAddressInput.current, {
@@ -312,6 +325,7 @@ const AddressAdd: FunctionComponent = () => {
 
   async function onClickSubmit() {
     setErrorMessage(undefined);
+
     if (shopId) {
       const response = await new PyApiHttpPostAddress(configuration).postAll({
         area: addressArea,

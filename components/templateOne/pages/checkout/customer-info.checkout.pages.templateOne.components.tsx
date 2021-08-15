@@ -63,7 +63,8 @@ export const StyledCheckoutText = styled.p`
   align-items: center;
 
   span {
-    font-size: clamp(0.8rem, 1rem, 1vw);
+    font-size: clamp(0.7rem, 0.8rem, 1vw);
+    padding: 0.3rem;
   }
 
   text-overflow: ellipsis;

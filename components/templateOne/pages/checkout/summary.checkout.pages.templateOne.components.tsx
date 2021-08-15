@@ -71,6 +71,10 @@ const NotVerifyIcon = styled.img`
   height: 20px;
 `;
 
+const AddressContainer = styled.div`
+  padding: 0 0.3rem;
+`;
+
 const timings = new RestaurantTimingUtils();
 
 const INITIAL_ADDRESS: IGuestAddress = {
@@ -270,12 +274,12 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
           </EditContainer>
 
           {orderType === 'DELIVERY' ? (
-            <>
+            <AddressContainer>
               <AddressSelected>{userAddress?.address}</AddressSelected>
               <AddressSelected style={{ marginTop: -4 }}>
                 {userAddress?.postal_code} {userAddress?.city}
               </AddressSelected>
-            </>
+            </AddressContainer>
           ) : (
             <></>
           )}
