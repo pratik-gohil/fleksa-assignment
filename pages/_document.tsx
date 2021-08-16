@@ -87,7 +87,7 @@ export default class MyDocument extends Document {
               ;if(!Object.prototype.hasOwnProperty.call(n._iq,e)){n._iq[e]={_q:[]};v(n._iq[e])
               }return n._iq[e]};e.amplitude=n})(window,document);
               
-              amplitude.getInstance().init("API_KEY");`,
+              amplitude.getInstance().init("13e94566ae299c8fe7697c783f2fba7b");`,
             }}
           />
 
