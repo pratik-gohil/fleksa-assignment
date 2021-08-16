@@ -13,6 +13,7 @@
     "@reduxjs/toolkit": "^1.6.0",
     "@stripe/react-stripe-js": "^1.4.1",
     "@stripe/stripe-js": "^1.15.1",
+    "@types/amplitude-js": "^8.0.1",
     "amplitude-js": "^8.5.0",
     "cookies": "^0.8.0",
     "is-webview": "^1.0.1",
@@ -35,7 +36,6 @@
   },
   "devDependencies": {
     "@svgr/webpack": "^5.5.0",
-    "@types/amplitude-js": "^8.0.1",
     "@types/cookies": "^0.7.6",
     "@types/google.maps": "^3.45.4",
     "@types/lodash": "^4.14.170",

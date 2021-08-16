@@ -11,7 +11,7 @@ import { selectLanguage, selectLanguageCode, selectSelectedMenu } from '../../..
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 import { IShopAvailablity } from '../../../../interfaces/common/index.common.interfaces';
-import amplitude from 'amplitude-js';
+import { amplitudeEvent } from '../../../../utils/amplitude.util';
 
 const WrapperSection = styled.section`
   height: calc(100vh - ${(props) => props.theme.navMobile.height}px);
@@ -210,7 +210,7 @@ const IndexPageHero: FunctionComponent = ({}) => {
   }, []);
 
   const handleTestAmplitude = async () => {
-    amplitude.getInstance().logEvent('BUTTON_CLICKED');
+    amplitudeEvent('BUTTON_CLICKED_1');
   };
 
   return (

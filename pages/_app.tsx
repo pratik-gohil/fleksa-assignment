@@ -46,6 +46,7 @@ class WrappedApp extends App<AppInitialProps> {
       containerWidths: [BREAKPOINTS.sm, BREAKPOINTS.md, BREAKPOINTS.lg, BREAKPOINTS.xl, BREAKPOINTS.xxl],
     });
     const { Component, pageProps } = this.props;
+
     return (
       <ScreenClassProvider>
         <Head>

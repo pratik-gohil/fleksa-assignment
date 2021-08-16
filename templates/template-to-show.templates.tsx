@@ -10,7 +10,6 @@ import { IMeta } from '../interfaces/common/metea.common.interfaces';
 import { useAppSelector } from '../redux/hooks.redux';
 import { selectLanguageCode } from '../redux/slices/configuration.slices.redux';
 import { selectImages, selectShop } from '../redux/slices/index.slices.redux';
-import { initAmplitude } from '../utils/amplitude.util';
 
 declare const window: any;
 
@@ -32,12 +31,6 @@ const TemplateToShow: FunctionComponent<IPropsTemplateToShow> = ({ meta, templat
   if (meta?.image) {
     imagesForSeo.unshift({ url: meta.image });
   }
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') initAmplitude();
-
-    console.log('process ', process.browser);
-  }, []);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && 'serviceWorker' in navigator && window.workbox !== undefined) {
