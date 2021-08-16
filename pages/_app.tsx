@@ -4,7 +4,6 @@ import { ScreenClassProvider, setConfiguration } from 'react-grid-system';
 import App, { AppInitialProps, AppContext } from 'next/app';
 import { appWithTranslation } from 'next-i18next';
 import isWebView from 'is-webview';
-
 import wrapper from '../redux/store.redux';
 import { BREAKPOINTS } from '../constants/grid-system-configuration';
 
@@ -23,6 +22,9 @@ class WrappedApp extends App<AppInitialProps> {
     };
   };
 
+  /**
+   * Loading hubspot script on web view
+   */
   componentDidMount() {
     // TODO: Only load for browser view
     if (isWebView(navigator.userAgent)) return;

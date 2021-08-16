@@ -10,6 +10,7 @@ import { IMeta } from '../interfaces/common/metea.common.interfaces';
 import { useAppSelector } from '../redux/hooks.redux';
 import { selectLanguageCode } from '../redux/slices/configuration.slices.redux';
 import { selectImages, selectShop } from '../redux/slices/index.slices.redux';
+import { initAmplitude } from '../utils/amplitude.util';
 
 declare const window: any;
 
@@ -33,13 +34,16 @@ const TemplateToShow: FunctionComponent<IPropsTemplateToShow> = ({ meta, templat
   }
 
   useEffect(() => {
+    if (typeof window !== 'undefined') initAmplitude();
+
+    console.log('process ', process.browser);
+  }, []);
+
+  useEffect(() => {
     if (typeof window !== 'undefined' && 'serviceWorker' in navigator && window.workbox !== undefined) {
       const wb = window.workbox as any;
       const promptNewVersionAvailable = () => {
         wb.messageSkipWaiting();
-        // setTimeout(() => {
-        //   window.location.reload()
-        // }, 300);
       };
 
       wb.addEventListener('waiting', promptNewVersionAvailable);

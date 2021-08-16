@@ -11,6 +11,7 @@ import { selectLanguage, selectLanguageCode, selectSelectedMenu } from '../../..
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 import { IShopAvailablity } from '../../../../interfaces/common/index.common.interfaces';
+import amplitude from 'amplitude-js';
 
 const WrapperSection = styled.section`
   height: calc(100vh - ${(props) => props.theme.navMobile.height}px);
@@ -208,6 +209,10 @@ const IndexPageHero: FunctionComponent = ({}) => {
     setShop(isShopOpened(timingsData, moment(), { has_pickup: addressData.has_pickup, has_delivery: addressData.has_delivery }));
   }, []);
 
+  const handleTestAmplitude = async () => {
+    amplitude.getInstance().logEvent('BUTTON_CLICKED');
+  };
+
   return (
     <WrapperSection>
       <ImageContainer>
@@ -234,6 +239,7 @@ const IndexPageHero: FunctionComponent = ({}) => {
               <Col>
                 <LogoLink href={`/${languageCode}/`}>{!!shopData?.logo && <Logo src={shopData?.logo} loading="lazy" />}</LogoLink>
 
+                <button onClick={handleTestAmplitude}>Test amplitude</button>
                 <Title>{shopData?.name}</Title>
                 <SubTitle>{shopData?.category_json[language]}</SubTitle>
 
