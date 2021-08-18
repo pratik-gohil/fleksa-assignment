@@ -105,7 +105,7 @@ const IndexBanner = () => {
           amplitude={{
             type: 'button',
             text: 'banner cross icon',
-            eventProperties: { ...banner },
+            eventProperties: banner,
           }}
         >
           <Cross onClick={handleOfferClose} src={'/assets/svg/account/x-circle.svg'}></Cross>
