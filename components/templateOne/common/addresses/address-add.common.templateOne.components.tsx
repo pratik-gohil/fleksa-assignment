@@ -407,7 +407,9 @@ const AddressAdd: FunctionComponent = () => {
                 onChange={(e) => setAddressMain(e.target.value)}
                 ref={refAddressInput}
                 placeholder={t('@streetAddress')}
-                onBlur={() => amplitudeEvent(constructEventName(`address-model-${t('@streetAddress')}`, 'input'), { addressMain })}
+                onBlur={() =>
+                  amplitudeEvent(constructEventName(`address-model-${t('@streetAddress')}`, 'input'), { addressMain, length: addressMain.length })
+                }
               />
               <Autolocate onClick={updateCurrentPosition}>
                 <SvgAutolocate />
@@ -423,7 +425,12 @@ const AddressAdd: FunctionComponent = () => {
               placeholder={t('@additionalDeliveryInfo')}
               value={addressFloor}
               onChange={(e) => setAddressFloor(e.target.value)}
-              onBlur={() => amplitudeEvent(constructEventName(`address-model-${t('@additionalDeliveryInfo')}`, 'input'), { addressFloor })}
+              onBlur={() =>
+                amplitudeEvent(constructEventName(`address-model-${t('@additionalDeliveryInfo')}`, 'input'), {
+                  addressFloor,
+                  length: addressFloor.length,
+                })
+              }
             />
           </InputItem>
         </InputContainer>
@@ -435,7 +442,7 @@ const AddressAdd: FunctionComponent = () => {
               placeholder={t('@city')}
               value={addressCity}
               onChange={(e) => setAddressCity(e.target.value)}
-              onBlur={() => amplitudeEvent(constructEventName(`address-model-${t('@city')}`, 'input'), { addressCity })}
+              onBlur={() => amplitudeEvent(constructEventName(`address-model-${t('@city')}`, 'input'), { addressCity, length: addressCity.length })}
             />
           </InputItem>
           <InputItem>
@@ -444,7 +451,12 @@ const AddressAdd: FunctionComponent = () => {
               placeholder={t('@postalCode')}
               value={addressPostalCode}
               onChange={(e) => setAddressPostalCode(e.target.value)}
-              onBlur={() => amplitudeEvent(constructEventName(`address-model-${t('@postalCode')}`, 'input'), { addressPostalCode })}
+              onBlur={() =>
+                amplitudeEvent(constructEventName(`address-model-${t('@postalCode')}`, 'input'), {
+                  addressPostalCode,
+                  length: addressPostalCode.length,
+                })
+              }
             />
           </InputItem>
         </InputContainer>
