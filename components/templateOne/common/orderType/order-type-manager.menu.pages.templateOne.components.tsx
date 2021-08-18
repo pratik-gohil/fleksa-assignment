@@ -15,6 +15,7 @@ import { IAddress } from '../../../../interfaces/common/address.common.interface
 import { useTranslation } from 'next-i18next';
 import { selectAddressById, selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
 import { IParticularAddress } from '../../../../interfaces/common/customer.common.interfaces';
+import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 
 const Wrapper = styled.div`
   position: fixed;
@@ -121,17 +122,22 @@ const OrderTypeManager: FunctionComponent = () => {
     dispatch(updateOrderType(orderType));
     dispatch(updateShowOrderTypeSelect(false));
     dispatch(updateShowAddAddress(true));
-    // dispatch(updateSelectedAddressId(null));
+
+    amplitudeEvent(constructEventName(t('@delivery'), 'model'), {});
   }
 
   function onClickTakeaway(orderType: ICheckoutOrderTypes) {
     dispatch(updateOrderType(orderType));
     dispatch(updateShowOrderTypeSelect(false));
+
+    amplitudeEvent(constructEventName(t('@pickup'), 'model'), {});
   }
 
   function onClickDineIn(orderType: ICheckoutOrderTypes) {
     dispatch(updateOrderType(orderType));
     dispatch(updateShowOrderTypeSelect(false));
+
+    amplitudeEvent(constructEventName(t('@dine-in'), 'model'), {});
   }
 
   function getSelectedAddress() {

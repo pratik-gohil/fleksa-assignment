@@ -1,1 +1,1 @@
-export type AmplitudeEventNodes = 'button' | 'image' | 'link' | 'icon-button' | 'icon' | 'card';
+export type AmplitudeEventNodes = 'button' | 'image' | 'link' | 'icon-button' | 'icon' | 'card' | 'model';
