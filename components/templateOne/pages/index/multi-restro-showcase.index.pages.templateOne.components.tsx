@@ -10,7 +10,7 @@ import HorizontalListItem, { IResponsive } from '../../common/horizontal-list/ho
 import { useTranslation } from 'react-i18next';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { selectLanguage } from '../../../../redux/slices/configuration.slices.redux';
-import { useRouter } from 'next/router';
+import CustomLink from '../../common/amplitude/customLink';
 
 const WrapperSection = styled.section`
   padding: ${(props) => props.theme.dimen.X4 * 4}px 0;
@@ -150,7 +150,6 @@ const IndexMultiRestaurantShowCase: FunctionComponent = ({}) => {
   const { t } = useTranslation('page-index');
   const siblings = useAppSelector(selectSiblings);
   const language = useAppSelector(selectLanguage);
-  const router = useRouter();
 
   return !!siblings.length ? (
     <WrapperSection>
@@ -163,7 +162,15 @@ const IndexMultiRestaurantShowCase: FunctionComponent = ({}) => {
               {siblings.map((sibling) => {
                 return (
                   <HorizontalListItem key={sibling.id} responsive={responsive}>
-                    <Card onClick={() => router.push(`/menu/${sibling.id}`)}>
+                    <CustomLink
+                      href={`/menu/${sibling.id}`}
+                      amplitude={{
+                        type: 'card',
+                        text: 'other restaurant',
+                        eventProperties: sibling,
+                      }}
+                      Override={Card}
+                    >
                       <ImageContainer>
                         {sibling.logo && (
                           <Image src={sibling.cover_json.images?.[0]} layout="fill" loading="lazy" objectFit="cover" alt={t('@our-location')} />
@@ -188,7 +195,7 @@ const IndexMultiRestaurantShowCase: FunctionComponent = ({}) => {
                           <ItemToProduct>{t('@order-online')}</ItemToProduct>
                         </InfoContainerBottom>
                       </InfoContainer>
-                    </Card>
+                    </CustomLink>
                   </HorizontalListItem>
                 );
               })}

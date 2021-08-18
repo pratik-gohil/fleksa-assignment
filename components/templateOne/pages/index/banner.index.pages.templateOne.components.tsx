@@ -1,7 +1,9 @@
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useAppSelector } from '../../../../redux/hooks.redux';
 import { selectBanner } from '../../../../redux/slices/index.slices.redux';
+import CustomLink from '../../common/amplitude/customLink';
 
 const Wrapper = styled.div<{ visible: boolean }>`
   position: fixed;
@@ -77,6 +79,7 @@ const Temp = styled.div<{ visible: boolean }>`
 const IndexBanner = () => {
   const banner = useAppSelector(selectBanner);
   const [showOfferPopup, setOfferPopup] = useState(true);
+  const router = useRouter();
 
   const handleOfferClose = async () => {
     setOfferPopup(false);
@@ -96,7 +99,17 @@ const IndexBanner = () => {
         <Img src={banner.background} alt="garlic kulcha" />
         <Title>{banner.title}</Title>
         <Description>{banner.description}</Description>
-        <Cross onClick={handleOfferClose} src={'/assets/svg/account/x-circle.svg'}></Cross>
+
+        <CustomLink
+          href={router.pathname}
+          amplitude={{
+            type: 'button',
+            text: 'banner cross icon',
+            eventProperties: { ...banner },
+          }}
+        >
+          <Cross onClick={handleOfferClose} src={'/assets/svg/account/x-circle.svg'}></Cross>
+        </CustomLink>
       </Container>
       <Temp onClick={handleOfferClose} visible={showOfferPopup} />
     </Wrapper>

@@ -6,12 +6,14 @@ import { selectLanguageCode } from '../../../../redux/slices/configuration.slice
 import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 import styled, { DefaultTheme, StyledComponent } from 'styled-components';
 import { IProduct } from '../../../../interfaces/common/product.common.interfaces';
+import { IBanner } from '../../../../interfaces/common/index.common.interfaces';
+import { ISibling } from '../../../../interfaces/common/sibling.common.interfaces';
 
 interface ICustomLinkProps {
   amplitude: {
     type: AmplitudeEventNodes;
     text: string;
-    eventProperties?: Record<string, number | string> | IProduct;
+    eventProperties?: Record<string, number | string> | IProduct | IBanner | ISibling;
   };
   placeholder?: string;
   href: string;
@@ -26,6 +28,9 @@ const CustomLink: FunctionComponent<ICustomLinkProps> = ({ amplitude, children, 
 
   const handleLinkClick = async (e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | undefined) => {
     e?.preventDefault();
+
+    console.log('amplitude ', amplitude);
+
     amplitudeEvent(constructEventName(amplitude.text, amplitude.type), amplitude.eventProperties);
     router.push(`/${isLanguageChange ? (router.locale === 'en' ? 'de' : 'en') : languageCode}${externelHref ?? href}`);
   };
