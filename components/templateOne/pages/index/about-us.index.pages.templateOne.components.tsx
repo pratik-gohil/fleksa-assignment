@@ -4,9 +4,10 @@ import styled from 'styled-components';
 import Image from 'next/image';
 import { selectImages, selectShop } from '../../../../redux/slices/index.slices.redux';
 import { useAppSelector } from '../../../../redux/hooks.redux';
-import { selectLanguage, selectLanguageCode } from '../../../../redux/slices/configuration.slices.redux';
+import { selectLanguage } from '../../../../redux/slices/configuration.slices.redux';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import SvgRightArrow from '../../../../public/assets/svg/right-arrow.svg';
+import CustomLink from '../../common/amplitude/customLink';
 
 const WrapperSection = styled.section`
   border-bottom: ${(props) => props.theme.border};
@@ -92,12 +93,11 @@ const IndexPageAboutUs: FunctionComponent = ({}) => {
   const language = useAppSelector(selectLanguage);
   const shopData = useAppSelector(selectShop);
   const images = useAppSelector(selectImages);
-  const languageCode = useAppSelector(selectLanguageCode)
 
-  const imagesData = []
-  if (shopData?.cover_json?.images?.length) imagesData.push(shopData?.cover_json.images[0])
-  if (images[0]) imagesData.push(images[0])
-  if (images[1]) imagesData.push(images[1])
+  const imagesData = [];
+  if (shopData?.cover_json?.images?.length) imagesData.push(shopData?.cover_json.images[0]);
+  if (images[0]) imagesData.push(images[0]);
+  if (images[1]) imagesData.push(images[1]);
 
   return (
     <WrapperSection>
@@ -138,7 +138,13 @@ const IndexPageAboutUs: FunctionComponent = ({}) => {
                 )}
               </Row>
 
-              <a href={`/${languageCode}/gallery`}>
+              <CustomLink
+                href={`/gallery`}
+                amplitude={{
+                  text: 'gallery image',
+                  type: 'image',
+                }}
+              >
                 <ImagesContainerHover>
                   <ImagesContainerHoverTextMore>
                     More <SvgRightArrow />
@@ -146,7 +152,7 @@ const IndexPageAboutUs: FunctionComponent = ({}) => {
 
                   <p style={{ marginBottom: 14 }}>Gallery</p>
                 </ImagesContainerHover>
-              </a>
+              </CustomLink>
             </ImagesContainer>
           </Col>
         </Row>

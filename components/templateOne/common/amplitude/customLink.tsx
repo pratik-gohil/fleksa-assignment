@@ -15,18 +15,19 @@ interface ICustomLinkProps {
   };
   placeholder?: string;
   href: string;
+  externelHref?: string;
   isLanguageChange?: boolean;
   Override?: StyledComponent<'a', DefaultTheme>;
 }
 
-const CustomLink: FunctionComponent<ICustomLinkProps> = ({ amplitude, children, placeholder, href, isLanguageChange, Override }) => {
+const CustomLink: FunctionComponent<ICustomLinkProps> = ({ amplitude, children, placeholder, href, isLanguageChange, Override, externelHref }) => {
   const languageCode = useAppSelector(selectLanguageCode);
   const router = useRouter();
 
   const handleLinkClick = async (e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | undefined) => {
     e?.preventDefault();
     amplitudeEvent(constructEventName(amplitude.text, amplitude.type), amplitude.eventProperties);
-    router.push(`/${isLanguageChange ? (router.locale === 'en' ? 'de' : 'en') : languageCode}${href}`);
+    router.push(`/${isLanguageChange ? (router.locale === 'en' ? 'de' : 'en') : languageCode}${externelHref ?? href}`);
   };
 
   return Override ? (
