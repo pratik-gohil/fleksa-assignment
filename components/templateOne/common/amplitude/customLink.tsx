@@ -25,7 +25,6 @@ const CustomLink: FunctionComponent<ICustomLinkProps> = ({ amplitude, children, 
 
   const handleLinkClick = async (e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | undefined) => {
     e?.preventDefault();
-    alert(href);
     amplitudeEvent(constructEventName(amplitude.text, amplitude.type), amplitude.eventProperties);
     router.push(`/${isLanguageChange ? (router.locale === 'en' ? 'de' : 'en') : languageCode}${href}`);
   };
