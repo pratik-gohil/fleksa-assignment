@@ -37,8 +37,8 @@ const makeStore = () =>
     },
     middleware: (getDefaultMiddleware) => {
       return getDefaultMiddleware({
-        serializableCheck: true,
-        immutableCheck: true,
+        serializableCheck: false,
+        immutableCheck: false,
       });
     },
   });
