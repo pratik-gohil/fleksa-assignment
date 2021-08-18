@@ -2,17 +2,16 @@ import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-grid-system';
 import styled from 'styled-components';
 import Image from 'next/image';
-// import router from 'next/router';
 
 import { isShopOpened } from '../../../../utils/restaurant-timings.utils';
 import { useAppSelector } from '../../../../redux/hooks.redux';
 import { selectAddress, selectShop, selectTimings } from '../../../../redux/slices/index.slices.redux';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
-import { selectLanguage, selectLanguageCode, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
+import { selectLanguage, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 import { IShopAvailablity } from '../../../../interfaces/common/index.common.interfaces';
-// import { amplitudeEvent } from '../../../../utils/amplitude.util';
+import CustomLink from '../../common/amplitude/customLink';
 
 const WrapperSection = styled.section`
   height: calc(100vh - ${(props) => props.theme.navMobile.height}px);
@@ -174,7 +173,6 @@ const IndexPageHero: FunctionComponent = ({}) => {
   const language = useAppSelector(selectLanguage);
   const shopData = useAppSelector(selectShop);
   const timingsData = useAppSelector(selectTimings);
-  const languageCode = useAppSelector(selectLanguageCode);
   const selectedMenuId = useAppSelector(selectSelectedMenu);
   const addressData = useAppSelector(selectAddress);
   const { t } = useTranslation('page-index');
@@ -210,11 +208,6 @@ const IndexPageHero: FunctionComponent = ({}) => {
     setShop(isShopOpened(timingsData, moment(), { has_pickup: addressData.has_pickup, has_delivery: addressData.has_delivery }));
   }, []);
 
-  // const handleLogoClick = async (url: string) => {
-  //   amplitudeEvent('BUTTON_CLICKED_1');
-  //   router(`/${languageCode}${url}`);
-  // };
-
   return (
     <WrapperSection>
       <ImageContainer>
@@ -247,14 +240,27 @@ const IndexPageHero: FunctionComponent = ({}) => {
                 <SubTitle>{shopData?.category_json[language]}</SubTitle>
 
                 {shop.availability ? (
-                  <OrderButton href={selectedMenuId ? `/${languageCode}/menu/${selectedMenuId}` : `/${languageCode}/menu`}>
-                    {t('@order-online')}
-                  </OrderButton>
+                  <CustomLink
+                    href={selectedMenuId ? `/menu/${selectedMenuId}` : `/menu`}
+                    amplitude={{
+                      text: t('@order-online'),
+                      type: 'button',
+                    }}
+                    placeholder={t('@order-online')}
+                    Override={OrderButton}
+                  />
                 ) : !shop.isClosed ? (
                   <>
-                    <OrderButton href={selectedMenuId ? `/${languageCode}/menu/${selectedMenuId}` : `/${languageCode}/menu`}>
-                      {t('@pre-online')}
-                    </OrderButton>
+                    <CustomLink
+                      href={selectedMenuId ? `/menu/${selectedMenuId}` : `/menu`}
+                      amplitude={{
+                        text: t('@pre-online'),
+                        type: 'button',
+                      }}
+                      placeholder={t('@pre-online')}
+                      Override={OrderButton}
+                    />
+
                     <SubTitle2>
                       {t('@next-hours-1')} {t('@next-hours')} {shop.next?.dayNumber ? ` ${shop.next?.dayNumber} ,` : ''}{' '}
                       {t(`@${shop.next?.day.toUpperCase()}`)}, {shop.next?.time}
@@ -262,7 +268,16 @@ const IndexPageHero: FunctionComponent = ({}) => {
                   </>
                 ) : (
                   <>
-                    <OrderButton href={selectedMenuId ? `/${languageCode}/menu/${selectedMenuId}` : '/menu'}>{t('@discover')}</OrderButton>
+                    <CustomLink
+                      href={selectedMenuId ? `/menu/${selectedMenuId}` : '/menu'}
+                      amplitude={{
+                        text: t('@discover'),
+                        type: 'button',
+                      }}
+                      placeholder={t('@discover')}
+                      Override={OrderButton}
+                    />
+
                     <SubTitle2>{t('@closed')}</SubTitle2>
                   </>
                 )}
