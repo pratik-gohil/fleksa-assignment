@@ -27,6 +27,7 @@ import SvgMap from '../../../../public/assets/svg/address/map.svg';
 import SvgCross from '../../../../public/assets/svg/cross.svg';
 import SvgAutolocate from '../../../../public/assets/svg/autolocate.svg';
 import { IParticularAddress } from '../../../../interfaces/common/customer.common.interfaces';
+import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 
 export interface IGuestAddress {
   floor: string;
@@ -302,12 +303,14 @@ const AddressAdd: FunctionComponent = () => {
   }
 
   function updateCurrentPosition() {
+    let pos;
     navigator.geolocation.getCurrentPosition((position: GeolocationPosition) => {
-      const pos = {
+      pos = {
         lat: position.coords.latitude,
         lng: position.coords.longitude,
       };
       geocodeLatLng(pos);
+      amplitudeEvent(constructEventName(`address model auto location`, 'button'), pos);
     });
   }
 
@@ -321,6 +324,7 @@ const AddressAdd: FunctionComponent = () => {
 
   async function onClickSubmit() {
     setErrorMessage(undefined);
+    amplitudeEvent(constructEventName(`address model save address`, 'button'), {});
 
     if (shopId) {
       const response = await new PyApiHttpPostAddress(configuration).postAll({
@@ -333,8 +337,6 @@ const AddressAdd: FunctionComponent = () => {
         postalCode: addressPostalCode,
         token: bearerToken,
       });
-
-      console.log(response);
 
       if (response?.result && response.possibilities[shopId].is_available) {
         dispatch(updateDeliveryFinances(response.possibilities[shopId].details));
@@ -353,6 +355,7 @@ const AddressAdd: FunctionComponent = () => {
           dispatch(updateExistCustomerAddressOrAddNew(addressData));
           dispatch(updateSelectedAddressId(response.customer.details?.customer_address_id));
           dispatch(updateShowAddAddress(false));
+          amplitudeEvent(constructEventName(`address model save address user response`, 'success'), { addressData, response });
         } else {
           const guestAddress: IGuestAddress = {
             floor: addressFloor,
@@ -364,9 +367,11 @@ const AddressAdd: FunctionComponent = () => {
           // save the address to local storage. Add on server when checkout opens
           window.localStorage.setItem(LS_GUEST_USER_ADDRESS, JSON.stringify(guestAddress));
           dispatch(updateShowAddAddress(false));
+          amplitudeEvent(constructEventName(`address model save address guest response`, 'success'), guestAddress);
         }
       } else {
         setErrorMessage(response?.description);
+        amplitudeEvent(constructEventName(`address model save address response`, 'error'), { description: response?.description });
       }
     }
   }
@@ -374,6 +379,13 @@ const AddressAdd: FunctionComponent = () => {
   function onClickClose() {
     dispatch(updateShowOrderTypeSelect(true));
     dispatch(updateShowAddAddress(false));
+    amplitudeEvent(constructEventName(`address-model-close-icon`, 'button'), {});
+  }
+
+  function handleAddressTypeSelectionClick(title: AddressTypes) {
+    setAddressType(title);
+
+    amplitudeEvent(constructEventName(`address-model-${title}`, 'button'), {});
   }
 
   return (
@@ -390,7 +402,13 @@ const AddressAdd: FunctionComponent = () => {
           <InputItem>
             <Label>{t('@streetAddress')}</Label>
             <InputWithAutoLocate>
-              <Input value={addressMain} onChange={(e) => setAddressMain(e.target.value)} ref={refAddressInput} placeholder={t('@streetAddress')} />
+              <Input
+                value={addressMain}
+                onChange={(e) => setAddressMain(e.target.value)}
+                ref={refAddressInput}
+                placeholder={t('@streetAddress')}
+                onBlur={() => amplitudeEvent(constructEventName(`address-model-${t('@streetAddress')}`, 'input'), { addressMain })}
+              />
               <Autolocate onClick={updateCurrentPosition}>
                 <SvgAutolocate />
               </Autolocate>
@@ -401,18 +419,33 @@ const AddressAdd: FunctionComponent = () => {
         <InputContainer>
           <InputItem>
             <Label>{t('@additionalDeliveryInfo')}</Label>
-            <Input placeholder={t('@additionalDeliveryInfo')} value={addressFloor} onChange={(e) => setAddressFloor(e.target.value)} />
+            <Input
+              placeholder={t('@additionalDeliveryInfo')}
+              value={addressFloor}
+              onChange={(e) => setAddressFloor(e.target.value)}
+              onBlur={() => amplitudeEvent(constructEventName(`address-model-${t('@additionalDeliveryInfo')}`, 'input'), { addressFloor })}
+            />
           </InputItem>
         </InputContainer>
 
         <InputContainer>
           <InputItem>
             <Label>{t('@city')}</Label>
-            <Input placeholder={t('@city')} value={addressCity} onChange={(e) => setAddressCity(e.target.value)} />
+            <Input
+              placeholder={t('@city')}
+              value={addressCity}
+              onChange={(e) => setAddressCity(e.target.value)}
+              onBlur={() => amplitudeEvent(constructEventName(`address-model-${t('@city')}`, 'input'), { addressCity })}
+            />
           </InputItem>
           <InputItem>
             <Label>{t('@postalCode')}</Label>
-            <Input placeholder={t('@postalCode')} value={addressPostalCode} onChange={(e) => setAddressPostalCode(e.target.value)} />
+            <Input
+              placeholder={t('@postalCode')}
+              value={addressPostalCode}
+              onChange={(e) => setAddressPostalCode(e.target.value)}
+              onBlur={() => amplitudeEvent(constructEventName(`address-model-${t('@postalCode')}`, 'input'), { addressPostalCode })}
+            />
           </InputItem>
         </InputContainer>
 
@@ -434,7 +467,7 @@ const AddressAdd: FunctionComponent = () => {
               },
             ].map((item) => {
               return (
-                <AddressTypeItem active={addressType === item.title} onClick={() => setAddressType(item.title)}>
+                <AddressTypeItem active={addressType === item.title} onClick={() => handleAddressTypeSelectionClick(item.title)}>
                   <item.icon />
                   <AddressTypeName>{item.title}</AddressTypeName>
                 </AddressTypeItem>
