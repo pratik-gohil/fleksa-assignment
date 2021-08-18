@@ -2,6 +2,7 @@ import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-grid-system';
 import styled from 'styled-components';
 import Image from 'next/image';
+// import router from 'next/router';
 
 import { isShopOpened } from '../../../../utils/restaurant-timings.utils';
 import { useAppSelector } from '../../../../redux/hooks.redux';
@@ -11,7 +12,7 @@ import { selectLanguage, selectLanguageCode, selectSelectedMenu } from '../../..
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 import { IShopAvailablity } from '../../../../interfaces/common/index.common.interfaces';
-import { amplitudeEvent } from '../../../../utils/amplitude.util';
+// import { amplitudeEvent } from '../../../../utils/amplitude.util';
 
 const WrapperSection = styled.section`
   height: calc(100vh - ${(props) => props.theme.navMobile.height}px);
@@ -209,9 +210,10 @@ const IndexPageHero: FunctionComponent = ({}) => {
     setShop(isShopOpened(timingsData, moment(), { has_pickup: addressData.has_pickup, has_delivery: addressData.has_delivery }));
   }, []);
 
-  const handleTestAmplitude = async () => {
-    amplitudeEvent('BUTTON_CLICKED_1');
-  };
+  // const handleLogoClick = async (url: string) => {
+  //   amplitudeEvent('BUTTON_CLICKED_1');
+  //   router(`/${languageCode}${url}`);
+  // };
 
   return (
     <WrapperSection>
@@ -237,9 +239,10 @@ const IndexPageHero: FunctionComponent = ({}) => {
           <Container>
             <Row>
               <Col>
-                <LogoLink href={`/${languageCode}/`}>{!!shopData?.logo && <Logo src={shopData?.logo} loading="lazy" />}</LogoLink>
+                <LogoLink onClick={() => alert('clicked')} href="#">
+                  {!!shopData?.logo && <Logo src={shopData?.logo} loading="lazy" />}
+                </LogoLink>
 
-                <button onClick={handleTestAmplitude}>Test amplitude</button>
                 <Title>{shopData?.name}</Title>
                 <SubTitle>{shopData?.category_json[language]}</SubTitle>
 

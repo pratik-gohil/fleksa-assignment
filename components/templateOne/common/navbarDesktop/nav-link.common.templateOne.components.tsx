@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
+import CustomLink from '../amplitude/customLink';
 
 export interface IPropsNavLink {
   title: string;
@@ -10,6 +11,8 @@ export interface IPropsNavLink {
 const Wrapper = styled.li<{
   isActive: boolean;
 }>`
+  margin: 0 0.5rem;
+  min-width: 100px;
   padding: 4px 4px;
   border: 1px solid transparent;
   transition: all 0.1s ease-in;
@@ -36,14 +39,9 @@ const Title = styled.h2`
   text-align: center;
 `;
 
-const CustomLink = styled.a`
-  margin: 0 0.5rem;
-  min-width: 100px;
-`;
-
 const NavLink: FunctionComponent<IPropsNavLink> = ({ title, path, isActive }) => {
   return (
-    <CustomLink href={path}>
+    <CustomLink amplitude={{ type: 'button', text: title }} href={path}>
       <Wrapper isActive={isActive}>
         <Title>{title}</Title>
       </Wrapper>
