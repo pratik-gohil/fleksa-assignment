@@ -12,16 +12,17 @@ interface ICustomLinkProps {
   };
   placeholder?: string;
   href: string;
+  isLanguageChange?: boolean;
 }
 
-const CustomLink: FunctionComponent<ICustomLinkProps> = ({ amplitude, children, placeholder, href }) => {
+const CustomLink: FunctionComponent<ICustomLinkProps> = ({ amplitude, children, placeholder, href, isLanguageChange }) => {
   const languageCode = useAppSelector(selectLanguageCode);
   const router = useRouter();
 
   const handleLinkClick = async (e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | undefined) => {
     e?.preventDefault();
     amplitudeEvent(constructEventName(amplitude.text, amplitude.type));
-    router.push(`/${languageCode}${href}`);
+    router.push(`/${isLanguageChange ? (router.locale === 'en' ? 'de' : 'en') : languageCode}${href}`);
   };
 
   return (
