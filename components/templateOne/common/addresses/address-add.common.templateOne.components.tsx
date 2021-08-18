@@ -226,6 +226,53 @@ const AddressAdd: FunctionComponent = () => {
     }
   }, [isShowAddressSelection]);
 
+  // TODO: Prefill correspond address type
+  useEffect(() => {
+    setErrorMessage(undefined);
+    if (isLoggedIn) {
+      if (addressByType) {
+        setAddressMain(addressByType.address || '');
+        setAddressCity(addressByType.city);
+        setAddressArea(addressByType.area || '');
+        setAddressFloor(addressByType.floor || '');
+        setAddressPostalCode(addressByType.postal_code);
+      } else {
+        // resetAddressData();
+      }
+    }
+  }, [addressByType]);
+
+  // TODO: Prefill guest user address
+  useEffect(() => {
+    setErrorMessage(undefined);
+
+    if (!isLoggedIn) {
+      const guestAddressString = window.localStorage.getItem(LS_GUEST_USER_ADDRESS);
+      if (guestAddressString) {
+        const guestAddress = JSON.parse(guestAddressString) as IGuestAddress;
+        if (guestAddress.address_type === addressType) {
+          setAddressFloor(guestAddress.floor);
+          setAddressMain(guestAddress.address);
+          setAddressCity(guestAddress.city);
+          setAddressPostalCode(guestAddress.postal_code);
+        } else {
+          resetAddressData();
+        }
+      }
+    }
+  }, [addressType]);
+
+  // TODO: AutoComplete address input
+  useEffect(() => {
+    if (window !== 'undefined' && refAddressInput.current) {
+      autoComplete = new google.maps.places.Autocomplete(refAddressInput.current, {
+        types: ['geocode'],
+      });
+      autoComplete.setFields(['address_component']);
+      autoComplete.addListener('place_changed', onAddressChange);
+    }
+  }, [refAddressInput]);
+
   function onAddressChange(placeReceived?: google.maps.places.PlaceResult) {
     resetAddressData();
     const place = placeReceived || autoComplete.getPlace();
@@ -264,22 +311,6 @@ const AddressAdd: FunctionComponent = () => {
     });
   }
 
-  // TODO: Prefill correspond address type
-  useEffect(() => {
-    setErrorMessage(undefined);
-    if (isLoggedIn) {
-      if (addressByType) {
-        setAddressMain(addressByType.address || '');
-        setAddressCity(addressByType.city);
-        setAddressArea(addressByType.area || '');
-        setAddressFloor(addressByType.floor || '');
-        setAddressPostalCode(addressByType.postal_code);
-      } else {
-        // resetAddressData();
-      }
-    }
-  }, [addressByType]);
-
   function resetAddressData() {
     setAddressMain('');
     setAddressCity('');
@@ -287,37 +318,6 @@ const AddressAdd: FunctionComponent = () => {
     setAddressFloor('');
     setAddressPostalCode('');
   }
-
-  // TODO: Prefill guest user address
-  useEffect(() => {
-    setErrorMessage(undefined);
-
-    if (!isLoggedIn) {
-      const guestAddressString = window.localStorage.getItem(LS_GUEST_USER_ADDRESS);
-      if (guestAddressString) {
-        const guestAddress = JSON.parse(guestAddressString) as IGuestAddress;
-        if (guestAddress.address_type === addressType) {
-          setAddressFloor(guestAddress.floor);
-          setAddressMain(guestAddress.address);
-          setAddressCity(guestAddress.city);
-          setAddressPostalCode(guestAddress.postal_code);
-        } else {
-          resetAddressData();
-        }
-      }
-    }
-  }, [addressType]);
-
-  // TODO: AutoComplete address input
-  useEffect(() => {
-    if (window !== 'undefined' && refAddressInput.current) {
-      autoComplete = new google.maps.places.Autocomplete(refAddressInput.current, {
-        types: ['geocode'],
-      });
-      autoComplete.setFields(['address_component']);
-      autoComplete.addListener('place_changed', onAddressChange);
-    }
-  }, [refAddressInput]);
 
   async function onClickSubmit() {
     setErrorMessage(undefined);

@@ -40,13 +40,16 @@ const CustomLink: FunctionComponent<ICustomLinkProps> = ({
     e?.preventDefault();
 
     // TODO: call back if it's present
-    if (callback) callback();
+    if (callback) {
+      callback();
+      console.log('callback called');
+    }
 
     console.log('amplitude ', amplitude);
 
     amplitudeEvent(constructEventName(amplitude.text, amplitude.type), amplitude.eventProperties);
 
-    // TODO: Don't change the route if href is not exit
+    // TODO: Don't change the route if href and externelHref is not exit
     if (href || externelHref) router.push(`/${isLanguageChange ? (router.locale === 'en' ? 'de' : 'en') : languageCode}${externelHref ?? href}`);
   };
 
