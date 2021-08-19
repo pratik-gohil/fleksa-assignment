@@ -12,4 +12,5 @@ export type AmplitudeEventNodes =
   | 'error'
   | 'success'
   | 'feature'
-  | 'method';
+  | 'method'
+  | 'action';

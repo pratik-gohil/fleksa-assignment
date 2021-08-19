@@ -5,6 +5,7 @@ import { INodeApiHttpPostOrderResponse, IOrderResponsePaypal } from '../../../..
 import { useAppSelector } from '../../../../redux/hooks.redux';
 import { selectConfiguration } from '../../../../redux/slices/configuration.slices.redux';
 import { selectBearerToken } from '../../../../redux/slices/user.slices.redux';
+import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 
 export interface IPropsCheckoutPageOrderButtonPaypal {
   createOrder(): Promise<INodeApiHttpPostOrderResponse>;
@@ -28,14 +29,34 @@ const CheckoutPageOrderButtonPaypal: FunctionComponent<IPropsCheckoutPageOrderBu
       }}
       disabled={!orderCanBePlaced}
       createOrder={async () => {
+        amplitudeEvent(constructEventName(`order now paypal`, 'button'), {});
+
         const response = (await createOrder()) as IOrderResponsePaypal;
+
+        if (!response.result) {
+          amplitudeEvent(constructEventName(`order now paypal createOrder error`, 'response'), response);
+          return '';
+        }
+
+        amplitudeEvent(constructEventName(`order now paypal createOrder success`, 'response'), response);
+
         return response.paypal_order_id;
       }}
       onApprove={async (data) => {
+        amplitudeEvent(constructEventName(`order now paypal onApprove`, 'action'), data);
+
         if (bearerToken) {
-          await new NodeApiHttpPostPaypal(configuration, bearerToken).postOrderSuccess({
+          const response = await new NodeApiHttpPostPaypal(configuration, bearerToken).postOrderSuccess({
             paypalOrderId: data.orderID,
           });
+
+          if (!response.result) {
+            amplitudeEvent(constructEventName(`order now paypal confirmation response error`, 'response'), response);
+            return;
+          }
+
+          amplitudeEvent(constructEventName(`order now paypal confirmation response success`, 'response'), response);
+
           await onPaymentDone();
         }
       }}

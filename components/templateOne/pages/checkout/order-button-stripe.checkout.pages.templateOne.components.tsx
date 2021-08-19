@@ -8,6 +8,7 @@ import { INodeApiHttpPostOrderResponse, IOrderResponseStripe } from '../../../..
 import { useAppDispatch } from '../../../../redux/hooks.redux';
 import { updateError } from '../../../../redux/slices/common.slices.redux';
 import CheckoutOrderAndPayButton from './checkout.order.button';
+import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 
 export interface IPropsCheckoutPageOrderButtonStripe {
   createOrder(): Promise<INodeApiHttpPostOrderResponse>;
@@ -38,13 +39,17 @@ const CheckoutPageOrderButtonStripe: FunctionComponent<IPropsCheckoutPageOrderBu
   const dispatch = useAppDispatch();
 
   const handleSubmit = async () => {
+    amplitudeEvent(constructEventName(`order now stripe`, 'button'), {});
+
     setOrderButtonLoading(true);
 
     const response = (await createOrder()) as IOrderResponseStripe;
 
     setOrderButtonLoading(false);
 
-    if (!response.result)
+    if (!response.result) {
+      amplitudeEvent(constructEventName(`order now stripe createOrder error`, 'response'), response);
+
       return dispatch(
         updateError({
           severity: 'error',
@@ -52,6 +57,9 @@ const CheckoutPageOrderButtonStripe: FunctionComponent<IPropsCheckoutPageOrderBu
           show: true,
         }),
       );
+    }
+
+    amplitudeEvent(constructEventName(`order now stripe createOrder success`, 'response'), response);
 
     Router.push(response.session.url);
   };
