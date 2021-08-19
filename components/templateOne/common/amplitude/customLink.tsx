@@ -8,12 +8,13 @@ import styled, { DefaultTheme, StyledComponent } from 'styled-components';
 import { IProduct } from '../../../../interfaces/common/product.common.interfaces';
 import { IBanner } from '../../../../interfaces/common/index.common.interfaces';
 import { ISibling } from '../../../../interfaces/common/sibling.common.interfaces';
+import { ILanguageData } from '../../../../interfaces/common/language-data.common.interfaces';
 
 interface ICustomLinkProps {
   amplitude: {
     type: AmplitudeEventNodes;
     text: string;
-    eventProperties?: Record<string, number | string> | IProduct | IBanner | ISibling;
+    eventProperties?: Record<string, number | string | Record<string, string | number>> | IProduct | IBanner | ISibling | ILanguageData;
   };
   placeholder?: string;
   href?: string;
