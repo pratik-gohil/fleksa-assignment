@@ -150,7 +150,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
         area: '',
         token: bearerToken,
       });
-      console.log(response);
+
       if (response) {
         if (!response.result) {
           dispatch(
@@ -193,8 +193,10 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
   useEffect(() => {
     const timingList = timings.generateDates();
     let foundDateTime = false;
+
     for (let i = 0; i < timingList.length; i++) {
       const selectedDate = timingList[i];
+
       if (selectedDate && timingsData && orderType && addressData?.prepare_time && addressData?.delivery_time) {
         const timeData = timings.generateTimeList({
           date: selectedDate,
@@ -206,6 +208,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
           },
           language: currentLanguage,
         });
+
         if (timeData.length > 0) {
           dispatch(updateWantAt({ date: selectedDate, time: timeData[0] }));
           foundDateTime = true;
@@ -213,6 +216,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
         }
       }
     }
+
     if (!foundDateTime) updateWantAt(null);
   }, [orderType, addressData?.prepare_time, addressData?.delivery_time]);
 

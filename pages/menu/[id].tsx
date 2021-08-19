@@ -7,7 +7,7 @@ import { updateCategories, updateParts, updateSides } from '../../redux/slices/m
 import PyApiHttpGetMenu from '../../http/pyapi/menu/get.menu.index.pyapi.http';
 import { getServerSidePropsCommon } from '../../utils/page.utils';
 import Cookies from 'cookies';
-import { COOKIE_SELECTED_MENU_URLPATH } from '../../constants/keys-cookies.constants';
+import { COOKIE_SELECTED_MENU_ID, COOKIE_SELECTED_MENU_URLPATH } from '../../constants/keys-cookies.constants';
 import { updateSelectedMenu, updateSelectedMenuUrlpath } from '../../redux/slices/configuration.slices.redux';
 import { updateSiblings } from '../../redux/slices/index.slices.redux';
 import NodeApiHttpGetUserAllAddress from '../../http/nodeapi/account/get.account.all-address.nodeapi.http';
@@ -60,6 +60,12 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ct
       };
     }
 
+    cookies.set(COOKIE_SELECTED_MENU_ID, `${menuId}`, {
+      path: '/',
+      httpOnly: false,
+      maxAge: 365 * 24 * 60 * 60 * 1000,
+      sameSite: 'lax',
+    });
     cookies.set(COOKIE_SELECTED_MENU_URLPATH, urlPath as string, {
       path: '/',
       httpOnly: false,
