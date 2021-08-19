@@ -147,7 +147,14 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
           <StyledCheckoutText>{userData.name}</StyledCheckoutText>
         )}
 
-        <EditButton onClick={() => setEditableName(!editableName)} />
+        <EditButton
+          onClick={() => {
+            setEditableName(!editableName);
+            amplitudeEvent(constructEventName(`customer info name edit`, 'icon-button'), {
+              currentEmail: userData.name,
+            });
+          }}
+        />
       </EditContainer>
 
       <EditContainer>
@@ -170,7 +177,14 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
           <StyledCheckoutText>{userData.email}</StyledCheckoutText>
         )}
 
-        <EditButton onClick={() => setEditableEmail(!editableEmail)} />
+        <EditButton
+          onClick={() => {
+            setEditableEmail(!editableEmail);
+            amplitudeEvent(constructEventName(`customer info email edit`, 'icon-button'), {
+              currentEmail: userData.email,
+            });
+          }}
+        />
       </EditContainer>
 
       <EditContainer>
@@ -185,7 +199,7 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
               specialLabel=""
               onBlur={() => {
                 setEditablePhone(!editablePhone);
-                amplitudeEvent(constructEventName(`customer-info-phone}`, 'input'), {
+                amplitudeEvent(constructEventName(`customer-info-phone`, 'input'), {
                   email: phone,
                   length: phone.length,
                 });
@@ -207,7 +221,14 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
           </StyledCheckoutText>
         )}
 
-        <EditButton onClick={() => setEditablePhone(!editablePhone)} />
+        <EditButton
+          onClick={() => {
+            setEditablePhone(!editablePhone);
+            amplitudeEvent(constructEventName(`customer info phone edit`, 'icon-button'), {
+              currentEmail: phone,
+            });
+          }}
+        />
       </EditContainer>
     </StyledCheckoutCard>
   );
