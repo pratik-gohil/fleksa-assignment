@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { selectCart } from '../../../../redux/slices/cart.slices.redux';
 import { selectTip, updateTip } from '../../../../redux/slices/checkout.slices.redux';
 import { selectLanguageCode } from '../../../../redux/slices/configuration.slices.redux';
+import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 import formatCurrency from '../../../../utils/formatCurrency';
 import { StyledCheckoutCard, StyledCheckoutTitle } from './customer-info.checkout.pages.templateOne.components';
 
@@ -76,9 +77,7 @@ const CheckoutPageTip: FunctionComponent = ({}) => {
   const tipOptions = tipPercentage[cartData.cartCost > 10 ? 0 : 1].map((percent) => Math.ceil((cartData.cartCost * percent) / 100));
 
   function onChangeTip(amount: number | null) {
-    if (amount === null || amount >= 0) {
-      dispatch(updateTip(amount));
-    }
+    if (amount === null || amount >= 0) dispatch(updateTip(amount));
   }
 
   return (
@@ -94,6 +93,9 @@ const CheckoutPageTip: FunctionComponent = ({}) => {
               onClick={() => {
                 setOtherTip(false);
                 onChangeTip(isSelected ? null : amount);
+                amplitudeEvent(constructEventName(`tip selection`, 'button'), {
+                  amount,
+                });
               }}
             >
               <p>{formatCurrency(amount, languageCode)}</p>
@@ -104,11 +106,31 @@ const CheckoutPageTip: FunctionComponent = ({}) => {
           {otherTip ? (
             <>
               <span>€</span>
-              <input autoFocus type="number" value={tipData || ''} onChange={(e) => onChangeTip(e.target.value ? Number(e.target.value) : null)} />
+              <input
+                onBlur={() => {
+                  amplitudeEvent(constructEventName(`tip selection`, 'input'), {
+                    tipData,
+                  });
+                }}
+                autoFocus
+                type="number"
+                value={tipData || ''}
+                onChange={(e) => onChangeTip(e.target.value ? Number(e.target.value) : null)}
+              />
             </>
           ) : (
             <>
-              <p onClick={() => !otherTip && setOtherTip(true)}>{t('@other')}</p>
+              <p
+                onClick={() => {
+                  if (!otherTip) setOtherTip(true);
+
+                  amplitudeEvent(constructEventName(`tip selection`, 'button'), {
+                    otherTip,
+                  });
+                }}
+              >
+                {t('@other')}
+              </p>
             </>
           )}
         </TipOptionsItem>
