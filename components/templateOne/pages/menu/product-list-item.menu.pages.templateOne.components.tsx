@@ -10,6 +10,7 @@ import AddButton from '../../common/addButton/add-button.common.templateOne.comp
 import { memo } from 'react';
 import MenuPageSides from './sides.menu.pages.templateOne.components';
 import formatCurrency from '../../../../utils/formatCurrency';
+import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 
 export interface IPropsMenuPageCategoryListItem {
   product: ICategoryProduct;
@@ -123,6 +124,8 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
   const getNextIndex = () => ++optionsIndex;
 
   function toggle() {
+    amplitudeEvent(constructEventName('product wrapper', 'card'), { product, isOpen });
+
     if (isOpen) setOpenItemId(undefined);
     else {
       setOpenItemId(product.id);

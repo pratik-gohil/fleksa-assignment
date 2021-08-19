@@ -83,6 +83,7 @@ const MenuPageMultipleChoiceList: FunctionComponent<IPropsMenuPageCategoryListIt
         getNextIndex={getNextIndex}
         setSelectedOption={setSelectedOption}
       />
+
       {parts[selectionMultipleId] &&
         parts[selectionMultipleId].choice?.map((cho, index) => {
           if (cho.options && cho.options.length > 0) {
@@ -98,6 +99,7 @@ const MenuPageMultipleChoiceList: FunctionComponent<IPropsMenuPageCategoryListIt
               />
             );
           }
+
           return <Fragment key={index} />;
         })}
 
