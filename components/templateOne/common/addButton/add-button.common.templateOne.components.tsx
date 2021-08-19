@@ -8,6 +8,7 @@ import { selectItemSelectionByTopProductId } from '../../../../redux/slices/item
 
 import SvgButtonPlus from '../../../../public/assets/svg/button-plus.svg';
 import SvgButtonMinus from '../../../../public/assets/svg/button-minus.svg';
+import CustomLink from '../amplitude/customLink';
 
 export interface IPropsAddButton {
   hasImage: boolean;
@@ -65,7 +66,7 @@ const Separator = styled.div`
   background: rgba(255, 255, 255, 0.4);
 `;
 
-const ButtonItem = styled.p`
+const ButtonItem = styled.a`
   display: flex;
   flex: 1;
   height: inherit;
@@ -145,18 +146,60 @@ const AddButton: FunctionComponent<IPropsAddButton> = ({ setOpenItemId, product,
       <ButtonContainer>
         {cartData?.quantity ? (
           <>
-            <ButtonItem onClick={reduceItemFromCart}>
+            <CustomLink
+              amplitude={{
+                type: 'button',
+                text: `product minus`,
+                eventProperties: {
+                  product,
+                  canOpen,
+                  hasImage,
+                  isOpen,
+                  cartData,
+                },
+              }}
+              callback={reduceItemFromCart}
+              Override={ButtonItem}
+            >
               <SvgButtonMinus />
-            </ButtonItem>
+            </CustomLink>
 
             <Separator />
 
-            <ButtonItem onClick={addItemToCart}>
+            <CustomLink
+              amplitude={{
+                type: 'button',
+                text: `product plus`,
+                eventProperties: {
+                  product,
+                  canOpen,
+                  hasImage,
+                  isOpen,
+                  cartData,
+                },
+              }}
+              callback={addItemToCart}
+              Override={ButtonItem}
+            >
               <SvgButtonPlus />
-            </ButtonItem>
+            </CustomLink>
           </>
         ) : (
-          <ButtonItem onClick={addItemToCart}>ADD{canOpen && ' +'}</ButtonItem>
+          <CustomLink
+            amplitude={{
+              type: 'button',
+              text: `ADD${canOpen && ' EXPANDABLE'}`,
+              eventProperties: {
+                product,
+                canOpen,
+                hasImage,
+                isOpen,
+                cartData,
+              },
+            }}
+            callback={addItemToCart}
+            placeholder={`ADD${canOpen && ' +'}`}
+          />
         )}
       </ButtonContainer>
     </WrapperButton>

@@ -5,16 +5,12 @@ import { useAppSelector } from '../../../../redux/hooks.redux';
 import { selectLanguageCode } from '../../../../redux/slices/configuration.slices.redux';
 import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 import styled, { DefaultTheme, StyledComponent } from 'styled-components';
-import { IProduct } from '../../../../interfaces/common/product.common.interfaces';
-import { IBanner } from '../../../../interfaces/common/index.common.interfaces';
-import { ISibling } from '../../../../interfaces/common/sibling.common.interfaces';
-import { ILanguageData } from '../../../../interfaces/common/language-data.common.interfaces';
 
 interface ICustomLinkProps {
   amplitude: {
     type: AmplitudeEventNodes;
     text: string;
-    eventProperties?: Record<string, number | string | Record<string, string | number>> | IProduct | IBanner | ISibling | ILanguageData;
+    eventProperties?: any;
   };
   placeholder?: string;
   href?: string;
