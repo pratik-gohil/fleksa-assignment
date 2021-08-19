@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { updateCheckoutLogin } from '../../../../redux/slices/checkout.slices.redux';
 import { selectCustomer, selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
+import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 import LoadingIndicator from '../../common/loadingIndicator/loading-indicator.common.templateOne.components';
 
 const OrderButton = styled.div<{ active: boolean; isLoggedIn: boolean }>`
@@ -38,12 +39,22 @@ const CheckoutOrderAndPayButton: FunctionComponent<ICheckoutOrderAndPayButtonPro
   const dispatch = useAppDispatch();
 
   const handleProceedButtonClick = async () => {
+    amplitudeEvent(constructEventName(`payment proceed`, 'button'), {
+      isLoggedIn,
+      orderCanBePlaced,
+    });
+
     if (typeof window !== 'undefined') {
       if (!customerData.name || !customerData.email || !customerData.phone || !customerData.country_code) {
         window.scrollTo({
           top: 0,
           behavior: 'smooth',
         });
+
+        amplitudeEvent(constructEventName(`redirect top`, 'scroll'), {
+          customerData,
+        });
+
         return;
       } else
         window.scrollTo({

@@ -7,6 +7,9 @@ export type AmplitudeEventNodes =
   | 'card'
   | 'model'
   | 'input'
+  | 'scroll'
   | 'response'
   | 'error'
-  | 'success';
+  | 'success'
+  | 'feature'
+  | 'method';
