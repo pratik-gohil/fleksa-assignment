@@ -198,7 +198,7 @@ const AddButton: FunctionComponent<IPropsAddButton> = ({ setOpenItemId, product,
               },
             }}
             callback={addItemToCart}
-            placeholder={`ADD${canOpen && ' +'}`}
+            placeholder={`ADD${!!canOpen ? ' +' : ''}`}
           />
         )}
       </ButtonContainer>
