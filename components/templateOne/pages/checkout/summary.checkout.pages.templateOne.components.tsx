@@ -45,6 +45,7 @@ import EditButton from './edit-button.checkout.pages.templateOne.components';
 import EditContainer from './edit-container.checkout.pages.templateOne.components';
 import NodeApiHttpGetUserAllAddress from '../../../../http/nodeapi/account/get.account.all-address.nodeapi.http';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
+import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 
 const Address = styled.p`
   font-size: 14px;
@@ -282,7 +283,12 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
               )}
             </TextContainer>
 
-            <EditButton onClick={() => dispatch(updateShowOrderTypeSelect(true))} />
+            <EditButton
+              onClick={() => {
+                dispatch(updateShowOrderTypeSelect(true));
+                amplitudeEvent(constructEventName(`summary order type edit`, 'icon-button'), { orderType });
+              }}
+            />
           </EditContainer>
 
           {orderType === 'DELIVERY' ? (
@@ -307,7 +313,16 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
                 <SoonText>{t('@select-time')}</SoonText>
               )}
             </WantAtText>
-            <EditButton onClick={() => dispatch(updateShowDateTimeSelect(true))} />
+            <EditButton
+              onClick={() => {
+                amplitudeEvent(constructEventName(`summary select time edit`, 'icon-button'), {
+                  currentDate: wantAtData?.date?.label,
+                  currentTime: wantAtData?.time?.label,
+                });
+
+                dispatch(updateShowDateTimeSelect(true));
+              }}
+            />
           </EditContainer>
         </Col>
       </Row>

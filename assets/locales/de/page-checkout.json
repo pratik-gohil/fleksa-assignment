@@ -37,5 +37,10 @@
   "@enter-code": "Geben Sie den Code ein.",
   "@verification-quate-1": "Wir verifizieren lhre Telefonnummber mit einem Einmalpasswort (OTP), um eine echte Bestellung zu gewahrleisten.",
   "@verification-quate-2": "Wir haben einen Einmalpasswort (OTP) an ",
-  "@verification-quate-2-i": "gesendet."
+  "@verification-quate-2-i": "gesendet.",
+
+  "@time-selection-model-title": "Wann möchten Sie Ihre Bestellung?",
+  "@choose-date": "Wählen Sie ein Datum",
+  "@choose-time": "Wählen Sie eine Zeit",
+  "@done-button": "GETAN"
 }

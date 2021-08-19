@@ -36,5 +36,9 @@
   "@enter-code": "Enter the code.",
   "@verification-quate-1": "We verify your phone number with a one-time password (OTP) to ensure genuine order.",
   "@verification-quate-2": "We have sent a one-time password (OTP) code to",
-  "@verification-quate-2-i": " "
+  "@verification-quate-2-i": " ",
+  "@time-selection-model-title": "When would you like your order?",
+  "@choose-date": "Choose a date",
+  "@choose-time": "Choose a time",
+  "@done-button": "DONE"
 }

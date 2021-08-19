@@ -1,3 +1,4 @@
+import { useTranslation } from 'next-i18next';
 import React, { FunctionComponent, useEffect } from 'react';
 import { useState } from 'react';
 import Select from 'react-select';
@@ -8,6 +9,7 @@ import { selectOrderType, selectWantAt, updateShowDateTimeSelect, updateWantAt }
 import { selectLanguage } from '../../../../redux/slices/configuration.slices.redux';
 import { selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
 import { selectAddress, selectShop, selectSiblings, selectTimings } from '../../../../redux/slices/index.slices.redux';
+import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 import RestaurantTimingUtils, { ILabelValue } from '../../../../utils/restaurant-timings.utils';
 
 const Wrapper = styled.div`
@@ -77,13 +79,11 @@ const CheckoutDateTime: FunctionComponent = ({}) => {
   const [datesList] = useState<Array<ILabelValue>>(timings.generateDates());
   const [timeList, setTimeList] = useState<Array<ILabelValue>>();
   const [addressData, setAddressData] = useState<IAddress | null | undefined>(undefined);
+  const { t } = useTranslation('page-checkout');
 
   useEffect(() => {
-    if (shopData?.id == selectedMenuId) {
-      setAddressData(address);
-    } else {
-      setAddressData(siblings.find((item) => item.id == selectedMenuId)?.address);
-    }
+    if (shopData?.id == selectedMenuId) setAddressData(address);
+    else setAddressData(siblings.find((item) => item.id == selectedMenuId)?.address);
   }, []);
 
   useEffect(() => {
@@ -106,21 +106,45 @@ const CheckoutDateTime: FunctionComponent = ({}) => {
   return (
     <Wrapper>
       <ContentContainerView>
-        <Title>When would you like your order</Title>
+        <Title>{t('@time-selection-model-title')}</Title>
         <Item>
-          <Text>Choose a date</Text>
-          <Select value={selectedDate} options={datesList} onChange={(value) => setSelectedDate(value)} />
-        </Item>
-        <Item>
-          <Text>Choose a time</Text>
+          <Text>{t('@choose-date')}</Text>
           <Select
-            value={wantAtData?.time || null}
-            options={timeList}
-            onChange={(value) => dispatch(updateWantAt({ date: selectedDate, time: value }))}
+            value={selectedDate}
+            options={datesList}
+            onChange={(value) => {
+              setSelectedDate(value);
+              amplitudeEvent(constructEventName(`summary date selection`, 'model'), {
+                prevSelected: selectedDate,
+                currentSelected: value,
+              });
+            }}
           />
         </Item>
         <Item>
-          <Done onClick={() => dispatch(updateShowDateTimeSelect(false))}>DONE</Done>
+          <Text>{t('@choose-time')}</Text>
+          <Select
+            value={wantAtData?.time || null}
+            options={timeList}
+            onChange={(value) => {
+              dispatch(updateWantAt({ date: selectedDate, time: value }));
+
+              amplitudeEvent(constructEventName(`summary time selection`, 'model'), {
+                prevSelected: wantAtData?.time,
+                currentSelected: value,
+              });
+            }}
+          />
+        </Item>
+        <Item>
+          <Done
+            onClick={() => {
+              dispatch(updateShowDateTimeSelect(false));
+              amplitudeEvent(constructEventName(`summary date time selection done button`, 'model'), {});
+            }}
+          >
+            {t('@done-button')}
+          </Done>
         </Item>
       </ContentContainerView>
     </Wrapper>
