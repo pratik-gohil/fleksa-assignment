@@ -38,6 +38,7 @@ import CheckoutOrderAndPayButton from './checkout.order.button';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { isEmailValid } from '../../../../utils/checkout.utils';
 import CheckoutLoginDropdown from './checkout.login.dropdown';
+import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 
 const Wrapper = styled.div`
   margin-bottom: 48px;
@@ -281,7 +282,13 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
                     <PaymentMethodItems
                       isActive={currentPaymentMethod === item.method}
                       key={item.method}
-                      onClick={() => dispatch(updatePaymentMethod(item.method))}
+                      onClick={() => {
+                        dispatch(updatePaymentMethod(item.method));
+                        amplitudeEvent(constructEventName(`payment selection`, 'button'), {
+                          prevSelected: currentPaymentMethod,
+                          currentSelected: item.method,
+                        });
+                      }}
                     >
                       {item.img}
                     </PaymentMethodItems>
