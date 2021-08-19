@@ -14,6 +14,7 @@ import {
   updateCustomerName,
   updateCustomerPhone,
 } from '../../../../redux/slices/user.slices.redux';
+import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 import { isEmailValid } from '../../../../utils/checkout.utils';
 import EditButton from './edit-button.checkout.pages.templateOne.components';
 import EditContainer from './edit-container.checkout.pages.templateOne.components';
@@ -106,6 +107,11 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
   const dispatch = useAppDispatch();
 
   const handleEmailOnBlurEvent = async () => {
+    amplitudeEvent(constructEventName(`customer-info-email}`, 'input'), {
+      email: userData.email,
+      length: userData.email ? userData?.email.length || 0 : 0,
+    });
+
     const check = !isEmailValid(userData?.email || '');
     setIsErrorField({
       ...isErrorField,
@@ -128,7 +134,13 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
             placeholder="Name"
             isError={isErrorField.name}
             value={userData.name}
-            onBlur={() => setEditableName(!userData.name)}
+            onBlur={() => {
+              setEditableName(!userData.name);
+              amplitudeEvent(constructEventName(`customer-info-Name}`, 'input'), {
+                username: userData.name,
+                length: userData.name.length,
+              });
+            }}
             onChange={(e) => dispatch(updateCustomerName(e.target.value))}
           />
         ) : (
@@ -171,7 +183,13 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
               value={phone}
               enableSearch
               specialLabel=""
-              onBlur={() => setEditablePhone(!editablePhone)}
+              onBlur={() => {
+                setEditablePhone(!editablePhone);
+                amplitudeEvent(constructEventName(`customer-info-phone}`, 'input'), {
+                  email: phone,
+                  length: phone.length,
+                });
+              }}
               onChange={(ph, data) => {
                 if ((data as any).dialCode !== countryCode) {
                   setCountryCode((data as any).dialCode);
