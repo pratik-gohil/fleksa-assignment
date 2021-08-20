@@ -14,6 +14,7 @@ import { selectBearerToken, selectCustomer, selectIsUserLoggedIn } from '../../.
 import { ILabelValue } from '../../../../utils/restaurant-timings.utils';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
+import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 
 const Wrapper = styled.div``;
 const FormContainer = styled.div``;
@@ -156,6 +157,13 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
 
   const handleReserveButtonClick = async () => {
     try {
+      amplitudeEvent(constructEventName(`reserve now`, 'button'), {
+        name,
+        email,
+        countryCode,
+        phone,
+      });
+
       if (!name) return customFieldError(t('@enter-name'));
       if (!email) return customFieldError(t('@enter-email'));
       if (!countryCode || !phone) return customFieldError(t('@enter-phone'));
@@ -180,6 +188,8 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
 
       setLoading(false);
       if (!response.result) {
+        amplitudeEvent(constructEventName(`reserve now error`, 'response'), response);
+
         dispatch(
           updateError({
             show: true,
@@ -189,6 +199,8 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
         );
         return;
       }
+
+      amplitudeEvent(constructEventName(`reserve now success`, 'response'), response);
 
       // TODO: Resert inputs
       setPhone('');
@@ -200,6 +212,8 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
       // TODO: Redirect to success page
       router.push('/reservation-success');
     } catch (e) {
+      amplitudeEvent(constructEventName(`reserve now error catch`, 'error'), { error: e });
+
       console.error('error : ', e);
       setLoading(false);
       dispatch(
@@ -226,12 +240,36 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
       <FormContainer>
         <InputBox>
           <Label>{t('@name')}</Label>
-          <Input type="text" placeholder="John Doe" value={name} onChange={(e) => setName(e.target.value)} required={true} />
+          <Input
+            type="text"
+            placeholder="John Doe"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required={true}
+            onBlur={() => {
+              amplitudeEvent(constructEventName(`name`, 'input'), {
+                email: name,
+                length: name.length,
+              });
+            }}
+          />
         </InputBox>
 
         <InputBox>
           <Label>{t('@email')}</Label>
-          <Input type="email" placeholder="john@gmail.com" value={email} onChange={(e) => setEmail(e.target.value)} required={true} />
+          <Input
+            type="email"
+            placeholder="john@gmail.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required={true}
+            onBlur={() => {
+              amplitudeEvent(constructEventName(`email`, 'input'), {
+                email: email,
+                length: email.length,
+              });
+            }}
+          />
         </InputBox>
 
         <InputBox>
@@ -249,12 +287,27 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
               setPhone(ph);
             }}
             inputStyle={{ width: '100%' }}
+            onBlur={() => {
+              amplitudeEvent(constructEventName(`phone`, 'input'), {
+                email: phone,
+                length: phone.length,
+              });
+            }}
           />
         </InputBox>
 
         <InputTextBox>
           <Label>{t('@comments')}</Label>
-          <Textarea value={comment} onChange={(e) => setComment(e.target.value)} />
+          <Textarea
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            onBlur={() => {
+              amplitudeEvent(constructEventName(`comments`, 'input'), {
+                email: comment,
+                length: comment.length,
+              });
+            }}
+          />
         </InputTextBox>
 
         <Acknowledgement>
