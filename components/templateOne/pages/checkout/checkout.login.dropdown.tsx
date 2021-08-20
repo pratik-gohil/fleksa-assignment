@@ -8,6 +8,7 @@ import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { COOKIE_BEARER_TOKEN } from '../../../../constants/keys-cookies.constants';
 import NodeApiHttpPostLogin from '../../../../http/nodeapi/login/post.login.nodeapi.http';
 import NodeApiHttpPostVerify from '../../../../http/nodeapi/verify/post.verify.nodeapi.http';
+import { IUpgradedCredential } from '../../../../interfaces/common/login.common.interfaces';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { updateCheckoutLogin } from '../../../../redux/slices/checkout.slices.redux';
 import { updateError } from '../../../../redux/slices/common.slices.redux';
@@ -24,10 +25,6 @@ import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.
 import LoadingIndicator from '../../common/loadingIndicator/loading-indicator.common.templateOne.components';
 
 const OTP_LENGTH = 5;
-
-interface IUpgradedCredential extends Credential {
-  code?: string;
-}
 
 const CheckoutLoginDropdown = () => {
   const { t } = useTranslation('page-checkout');
@@ -113,7 +110,7 @@ const CheckoutLoginDropdown = () => {
           severity: 'error',
         }),
       );
-      amplitudeEvent(constructEventName(`onTapSendOtp error catch`, 'response'), error);
+      amplitudeEvent(constructEventName(`onTapSendOtp error catch`, 'error'), error);
     } finally {
       setLoading(false);
     }
@@ -155,7 +152,7 @@ const CheckoutLoginDropdown = () => {
       }
     } catch (error) {
       console.error(error);
-      amplitudeEvent(constructEventName(`onAutoTapLogin error catch`, 'response'), { error });
+      amplitudeEvent(constructEventName(`onAutoTapLogin error catch`, 'error'), { error });
 
       dispatch(
         updateError({
@@ -224,7 +221,7 @@ const CheckoutLoginDropdown = () => {
               specialLabel={t('@phone')}
               onBlur={() => {
                 amplitudeEvent(constructEventName(`login-card`, 'input'), {
-                  email: phone,
+                  phone: phone,
                   length: phone.length,
                 });
               }}

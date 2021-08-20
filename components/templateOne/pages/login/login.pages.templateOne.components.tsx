@@ -19,6 +19,8 @@ import { useEffect } from 'react';
 
 import SvgBack from '../../../../public/assets/svg/back.svg';
 import { useTranslation } from 'next-i18next';
+import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
+import { IUpgradedCredential } from '../../../../interfaces/common/login.common.interfaces';
 
 export interface IPropsLoginComponent {
   onLogin(): void;
@@ -156,6 +158,9 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
   async function onTapSendOtp() {
     setLoading(true);
     let phoneNumber = phone.substring(String(countryCode).length);
+
+    amplitudeEvent(constructEventName(`onTapSendOtp`, 'button'), { phoneNumber });
+
     if (phoneNumber.startsWith('0')) {
       phoneNumber = phoneNumber.substring(1);
       setPhone(countryCode + phoneNumber);
@@ -187,12 +192,19 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
             severity: 'error',
           }),
         );
+
+        amplitudeEvent(constructEventName(`onTapSendOtp error`, 'response'), response);
+
         return;
       }
+
+      amplitudeEvent(constructEventName(`onTapSendOtp success`, 'response'), response);
 
       setCustomerId(response?.customer_id);
     } catch (error) {
       console.error(error);
+      amplitudeEvent(constructEventName(`onTapSendOtp error catch`, 'response'), error);
+
       dispatch(
         updateError({
           show: true,
@@ -205,7 +217,7 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
     }
   }
 
-  async function onTapLogin() {
+  async function onAutoTapLogin() {
     setLoading(true);
     try {
       if (customerId) {
@@ -215,6 +227,8 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
           shopId: shopData?.id as unknown as number,
         });
 
+        amplitudeEvent(constructEventName(`onAutoTapLogin`, 'method'), { otp, customerId, shopId: shopData?.id as unknown as number });
+
         if (!response?.result) {
           dispatch(
             updateError({
@@ -223,8 +237,13 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
               severity: 'error',
             }),
           );
+
+          amplitudeEvent(constructEventName(`onAutoTapLogin error`, 'response'), response);
+
           return;
         }
+
+        amplitudeEvent(constructEventName(`onAutoTapLogin success`, 'response'), response);
 
         await finishLogin(response.token);
         // on login callback is present call it, otherwise send the user to account page
@@ -232,6 +251,8 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
       }
     } catch (error) {
       console.error(error);
+      amplitudeEvent(constructEventName(`onAutoTapLogin error catch`, 'error'), { error });
+
       dispatch(
         updateError({
           show: true,
@@ -246,13 +267,42 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
 
   useEffect(() => {
     if (otp.length === OTP_LENGTH) {
-      onTapLogin();
+      onAutoTapLogin();
     }
   }, [otp]);
 
+  // TODO: Otp width size depends on desktop width and prefill auto OTP on mobile
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setOtpBig(window.matchMedia(`(min-width: ${BREAKPOINTS.lg}px)`).matches);
+
+      // TODO: Officially support from Chrome +84
+      if ('OTPCredential' in window) {
+        console.log('WebOTP supported!.');
+        amplitudeEvent(constructEventName(`auto fill otp support`, 'feature'), {});
+
+        const ac = new AbortController();
+
+        navigator.credentials
+          .get({
+            otp: { transport: ['sms'] },
+            signal: ac.signal,
+          } as CredentialRequestOptions)
+          .then((otp: IUpgradedCredential | null) => {
+            if (otp) {
+              setOtp(otp?.code || '');
+              amplitudeEvent(constructEventName(`auto filled otp success`, 'feature'), {});
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            amplitudeEvent(constructEventName(`auto filled otp error`, 'feature'), { error: err });
+          });
+      } else {
+        amplitudeEvent(constructEventName(`auto fill otp not support`, 'feature'), {});
+
+        console.log('WebOTP not supported!.');
+      }
     }
   }, []);
 
@@ -264,7 +314,12 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
           <>
             <OTPTopContainer>
               <Title>{t('@enter-otp')}</Title>
-              <BackButton onClick={() => setCustomerId(undefined)}>
+              <BackButton
+                onClick={() => {
+                  setCustomerId(undefined);
+                  amplitudeEvent(constructEventName(`back button`, 'button'), {});
+                }}
+              >
                 <SvgBack />
               </BackButton>
             </OTPTopContainer>
@@ -300,7 +355,7 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
               />
             </InputContainer>
             <SendOtpButtonContainer>
-              <VerifyOtpButton onClick={onTapLogin}>
+              <VerifyOtpButton onClick={onAutoTapLogin}>
                 {loading ? <LoadingIndicator width={20} /> : <SendOtpButtonText>{t('@login')}</SendOtpButtonText>}
               </VerifyOtpButton>
             </SendOtpButtonContainer>
@@ -323,6 +378,12 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
                     setCountryCode((data as any).dialCode);
                   }
                   setPhone(ph);
+                }}
+                onBlur={() => {
+                  amplitudeEvent(constructEventName(`phone`, 'input'), {
+                    phone: phone,
+                    length: phone.length,
+                  });
                 }}
                 inputStyle={{ width: '100%', position: 'relative' }}
               />
