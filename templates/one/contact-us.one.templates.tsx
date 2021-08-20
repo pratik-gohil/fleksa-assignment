@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { Row, Col, Container } from 'react-grid-system';
 import { BREAKPOINTS } from '../../constants/grid-system-configuration';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks.redux';
-import { selectConfiguration, selectLanguageCode } from '../../redux/slices/configuration.slices.redux';
+import { selectConfiguration } from '../../redux/slices/configuration.slices.redux';
 import { selectShop } from '../../redux/slices/index.slices.redux';
 import { updateError } from '../../redux/slices/common.slices.redux';
 import { BasicContactUsInformation } from '../../components/templateOne/pages/contact-us/basic-information.contact-us.pages.templateOne.components';
@@ -14,6 +14,8 @@ import { BasicContactUsInformation } from '../../components/templateOne/pages/co
 import LoadingIndicator from '../../components/templateOne/common/loadingIndicator/loading-indicator.common.templateOne.components';
 import NodeApiHttpPostContactUs from '../../http/nodeapi/contact-us/post.contact-us.nodeapi.http';
 import { selectCustomer, selectIsUserLoggedIn } from '../../redux/slices/user.slices.redux';
+import { amplitudeEvent, constructEventName } from '../../utils/amplitude.util';
+import CustomLink from '../../components/templateOne/common/amplitude/customLink';
 
 const ContactUsContainer = styled.div`
   margin: auto;
@@ -205,7 +207,6 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
   const [loading, setLoading] = useState(false);
   const [checked, setChecked] = useState(false);
 
-  const languageCode = useAppSelector(selectLanguageCode);
   const configuration = useAppSelector(selectConfiguration);
   const shopData = useAppSelector(selectShop);
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
@@ -215,6 +216,14 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
   const handleContactUsSendButtonClick = async (e: FormEvent) => {
     try {
       e.preventDefault();
+
+      amplitudeEvent(constructEventName(`send`, 'button'), {
+        email,
+        subject,
+        message,
+        name,
+        shop_id: shopData?.id as unknown as number,
+      });
 
       if (!checked) {
         dispatch(
@@ -240,6 +249,8 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
       setLoading(false);
 
       if (!response.result) {
+        amplitudeEvent(constructEventName(`contact us error`, 'response'), response);
+
         dispatch(
           updateError({
             show: true,
@@ -250,6 +261,8 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
 
         return;
       }
+
+      amplitudeEvent(constructEventName(`contact us success`, 'response'), response);
 
       // TODO: Reset inputs
       setEmail('');
@@ -300,11 +313,33 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
               <InputContainerFlex>
                 <InputBox>
                   <Label>{t('@name')}</Label>
-                  <Input type="text" value={name} onChange={(e) => setName(e.target.value)} required={true} />
+                  <Input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required={true}
+                    onBlur={() => {
+                      amplitudeEvent(constructEventName(`name`, 'input'), {
+                        name,
+                        length: name.length,
+                      });
+                    }}
+                  />
                 </InputBox>
                 <InputBox>
                   <Label>{t('@email')}</Label>
-                  <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required={true} />
+                  <Input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required={true}
+                    onBlur={() => {
+                      amplitudeEvent(constructEventName(`email`, 'input'), {
+                        email,
+                        length: email.length,
+                      });
+                    }}
+                  />
                 </InputBox>
               </InputContainerFlex>
 
@@ -312,21 +347,70 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
                 <InputContainer>
                   <InputBox>
                     <Label>{t('@subject')}</Label>
-                    <Input type="text" value={subject} onChange={(e) => setSubject(e.target.value)} required={true} />
+                    <Input
+                      type="text"
+                      value={subject}
+                      onChange={(e) => setSubject(e.target.value)}
+                      required={true}
+                      onBlur={() => {
+                        amplitudeEvent(constructEventName(`subject`, 'input'), {
+                          subject,
+                          length: subject.length,
+                        });
+                      }}
+                    />
                   </InputBox>
                   <InputBox>
                     <Label>{t('@message')}</Label>
-                    <Textarea value={message} onChange={(e) => setMessage(e.target.value)} required={true} />
+                    <Textarea
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      required={true}
+                      onBlur={() => {
+                        amplitudeEvent(constructEventName(`message`, 'input'), {
+                          message,
+                          length: message.length,
+                        });
+                      }}
+                    />
                   </InputBox>
                 </InputContainer>
                 <ContactUsImage src="/assets/svg/contact_us_main_img.svg" />
               </BottomContainer>
 
               <AgreementBox>
-                <Checkbox type="checkbox" checked={checked} onChange={() => setChecked(!checked)} />
+                <Checkbox
+                  type="checkbox"
+                  checked={checked}
+                  onChange={() => {
+                    setChecked(!checked);
+                    amplitudeEvent(constructEventName(`checkbox`, 'input'), {
+                      prev: checked,
+                      current: !checked,
+                    });
+                  }}
+                />
                 <Acknowledgement>
-                  {t('@accept')} <a href={`/${languageCode}/terms`}>{t('@terms')}</a> {t('@and')}{' '}
-                  <a href={`/${languageCode}/privacy-policy`}>{t('@policy')}</a>
+                  {t('@accept')}{' '}
+                  <CustomLink
+                    amplitude={{
+                      type: 'link',
+                      text: t('@terms'),
+                    }}
+                    href={`/terms`}
+                  >
+                    {t('@terms')}
+                  </CustomLink>{' '}
+                  {t('@and')}{' '}
+                  <CustomLink
+                    amplitude={{
+                      type: 'link',
+                      text: t('@policy'),
+                    }}
+                    href={`/privacy-policy`}
+                  >
+                    {t('@policy')}
+                  </CustomLink>
                 </Acknowledgement>
               </AgreementBox>
 
