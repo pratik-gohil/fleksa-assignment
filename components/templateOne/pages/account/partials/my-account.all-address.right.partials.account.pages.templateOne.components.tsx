@@ -17,6 +17,8 @@ import HomeIconPath from '../../../../../public/assets/svg/address/home.svg';
 import WorkIconPath from '../../../../../public/assets/svg/address/work.svg';
 import MapIconPath from '../../../../../public/assets/svg/address/map.svg';
 import SvgCross from '../../../../../public/assets/svg/cross.svg';
+import { amplitudeEvent, constructEventName } from '../../../../../utils/amplitude.util';
+import { AddressTypes } from '../../../common/addresses/address-manager.common.templateOne.components';
 
 const Wrapper = styled.div`
   padding: 1rem;
@@ -295,8 +297,13 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
   const handleCreateNewAddressFormRequest = async (e: FormEvent) => {
     e.preventDefault();
 
-    if (isEditMode) await updateAddressRequest();
-    else await addNewAddressRequest();
+    if (isEditMode) {
+      amplitudeEvent(constructEventName(`update address`, 'button'), {});
+      await updateAddressRequest();
+    } else {
+      amplitudeEvent(constructEventName(`save address`, 'button'), {});
+      await addNewAddressRequest();
+    }
 
     // TODO: Close modal
     handleShowNewAddressModal(false);
@@ -321,6 +328,8 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
       setLoading(false);
 
       if (!response.result) {
+        amplitudeEvent(constructEventName(`new address error`, 'response'), response);
+
         dispatch(
           updateError({
             show: true,
@@ -330,6 +339,8 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
         );
         return;
       }
+
+      amplitudeEvent(constructEventName(`new address success`, 'response'), response);
 
       dispatch(
         updateError({
@@ -342,6 +353,8 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
       // TODO: Update the local state
       dispatch(updateNewCustomerAddress(response?.data?.address));
     } catch (e) {
+      amplitudeEvent(constructEventName(`new address error catch`, 'error'), { error: e });
+
       console.error('error : ', e);
       setLoading(false);
       dispatch(
@@ -376,6 +389,8 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
       setLoading(false);
 
       if (!response.result) {
+        amplitudeEvent(constructEventName(`update address error`, 'response'), response);
+
         dispatch(
           updateError({
             show: true,
@@ -394,6 +409,8 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
         }),
       );
 
+      amplitudeEvent(constructEventName(`update address success`, 'response'), response);
+
       dispatch(
         updateExistCustomerAddress({
           ...existAddress,
@@ -407,6 +424,8 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
       );
     } catch (e) {
       console.error('error : ', e);
+      amplitudeEvent(constructEventName(`update address error catch`, 'error'), { error: e });
+
       setLoading(false);
       dispatch(
         updateError({
@@ -444,11 +463,23 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
     setProximity('');
   }
 
+  function handleAddressTypeSelectionClick(_e: any, title: AddressTypes) {
+    setType(title);
+
+    amplitudeEvent(constructEventName(`address-model-${title}`, 'button'), {});
+  }
+
   return (
     <Wrapper>
       <Header>
         <Title>{isEditMode ? t('@update-your-address') : t('@add-your-address')}</Title>
-        <CloseButton onClick={() => handleShowNewAddressModal(false)}>
+        <CloseButton
+          onClick={() => {
+            amplitudeEvent(constructEventName(`address-model-close`, 'icon-button'), {});
+
+            handleShowNewAddressModal(false);
+          }}
+        >
           <SvgCross />
         </CloseButton>
       </Header>
@@ -464,23 +495,64 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
             onChange={(e) => setAddress(e.target.value)}
             placeholder={t('@street')}
             ref={refAddressInput}
+            onBlur={() =>
+              amplitudeEvent(constructEventName(`address-model-${t('@street')}`, 'input'), {
+                address,
+                length: address.length,
+              })
+            }
           />
         </InputBox>
 
         <InputBox>
           <Label>{t('@details')}</Label>
-          <Input type="text" value={proximity} onChange={(e) => setProximity(e.target.value)} placeholder={t('@details')} />
+          <Input
+            type="text"
+            value={proximity}
+            onChange={(e) => setProximity(e.target.value)}
+            placeholder={t('@details')}
+            onBlur={() =>
+              amplitudeEvent(constructEventName(`address-model-${t('@details')}`, 'input'), {
+                proximity,
+                length: proximity.length,
+              })
+            }
+          />
         </InputBox>
 
         <InputBoxFlex2>
           <InputBox>
             <Label>{t('@city')}</Label>
-            <Input type="text" required={true} value={city} onChange={(e) => setCity(e.target.value)} placeholder={t('@city')} />
+            <Input
+              type="text"
+              required={true}
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              placeholder={t('@city')}
+              onBlur={() =>
+                amplitudeEvent(constructEventName(`address-model-${t('@city')}`, 'input'), {
+                  city,
+                  length: city.length,
+                })
+              }
+            />
           </InputBox>
 
           <InputBox>
             <Label>{t('@postal-code')}</Label>
-            <Input type="text" required={true} value={postalCode} onChange={(e) => setPostalCode(e.target.value)} placeholder={t('@postal-code')} />
+            <Input
+              type="text"
+              required={true}
+              value={postalCode}
+              onChange={(e) => setPostalCode(e.target.value)}
+              placeholder={t('@postal-code')}
+              onBlur={() =>
+                amplitudeEvent(constructEventName(`address-model-${t('@postal-code')}`, 'input'), {
+                  postalCode,
+                  length: postalCode.length,
+                })
+              }
+            />
           </InputBox>
         </InputBoxFlex2>
 
@@ -488,15 +560,15 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
           <Label>{t('@address-type')}</Label>
 
           <IconContainer>
-            <AddressType type="button" active={type === 'HOME'} onClick={() => setType('HOME')}>
+            <AddressType type="button" active={type === 'HOME'} onClick={(e) => handleAddressTypeSelectionClick(e, 'HOME')}>
               <HomeIcon />
               <IconLabel>HOME</IconLabel>
             </AddressType>
-            <AddressType type="button" active={type === 'WORK'} onClick={() => setType('WORK')}>
+            <AddressType type="button" active={type === 'WORK'} onClick={(e) => handleAddressTypeSelectionClick(e, 'WORK')}>
               <WorkIcon />
               <IconLabel>WORK</IconLabel>
             </AddressType>
-            <AddressType type="button" active={type === 'OTHER'} onClick={() => setType('OTHER')}>
+            <AddressType type="button" active={type === 'OTHER'} onClick={(e) => handleAddressTypeSelectionClick(e, 'OTHER')}>
               <MapIcon />
               <IconLabel>OTHER</IconLabel>
             </AddressType>
