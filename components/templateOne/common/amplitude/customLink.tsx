@@ -49,7 +49,7 @@ const CustomLink: FunctionComponent<ICustomLinkProps> = ({
 
       amplitudeEvent(constructEventName(amplitude.text, amplitude.type), amplitude.eventProperties);
 
-      // TODO: Don't change the route if href and externelHref is not exit
+      // TODO:  change the route if href and externelHref is exit
       if (href) router.push(`/${isLanguageChange ? (router.locale === 'en' ? 'de' : 'en') : languageCode}${href}`);
       else if (externelHref && target)
         window.open(
