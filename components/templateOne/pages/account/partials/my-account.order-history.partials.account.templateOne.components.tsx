@@ -11,6 +11,8 @@ import LoadingIndicator from '../../../common/loadingIndicator/loading-indicator
 import { updateCheckout } from '../../../../../redux/slices/checkout.slices.redux';
 import { updateError } from '../../../../../redux/slices/common.slices.redux';
 import moment from 'moment';
+import CustomLink from '../../../common/amplitude/customLink';
+import { amplitudeEvent, constructEventName } from '../../../../../utils/amplitude.util';
 
 const Container = styled.div`
   max-width: 500px;
@@ -132,11 +134,14 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
   const handleReorderButtonClick = async () => {
     try {
       setLoading(true);
+      amplitudeEvent(constructEventName(`reorder`, 'button'), {});
+
       const response = await new NodeApiHttpGetUserParticularOrder(configuration, bearerToken as any).get({
         order_id: order.id,
       });
 
-      if (!response || !response.result)
+      if (!response || !response.result) {
+        amplitudeEvent(constructEventName(`reorder error`, 'response'), response);
         return dispatch(
           updateError({
             show: true,
@@ -144,6 +149,7 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
             severity: 'error',
           }),
         );
+      }
 
       dispatch(
         updateCheckout({
@@ -157,9 +163,13 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
         }),
       );
 
+      amplitudeEvent(constructEventName(`reorder success`, 'response'), response);
+
       console.log('respon ', response);
       setLoading(false);
     } catch (e) {
+      amplitudeEvent(constructEventName(`reorder error catch`, 'error'), {error: e});
+
       console.error('error => ', e);
     }
   };
@@ -175,8 +185,8 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
           <Quantity>
             {order.no_of_products} {t('@items')}
           </Quantity>
-          {/* <Status>{order.payment_status ? order.payment_status :  'UNPAID' }</Status> */}
         </Left>
+
         <Right>
           <Price>&euro; {order.amount.toFixed(2).replace('.', ',')}</Price>
           <TimeDate>
@@ -188,7 +198,17 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
       </TextContainer>
 
       <ButtonContainer>
-        <Button href={`/account/order/${order.id}`}>{t('@review-now')}</Button>
+        <CustomLink
+          amplitude={{
+            type: 'button',
+            text: t('@review-now'),
+          }}
+          Override={Button}
+          href={`/account/order/${order.id}`}
+        >
+          {t('@review-now')}
+        </CustomLink>
+
         <ReOrderButton back="fill" onClick={handleReorderButtonClick}>
           {loading ? <LoadingIndicator width={20} /> : t('@re-order')}
         </ReOrderButton>

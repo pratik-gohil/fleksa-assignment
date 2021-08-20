@@ -6,6 +6,7 @@ import { selectCustomer } from '../../../../redux/slices/user.slices.redux';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import MobileBackButton from '../../common/backButton/backButton.common.templateOne.components';
 import { useTranslation } from 'next-i18next';
+import CustomLink from '../../common/amplitude/customLink';
 
 const Wrapper = styled.section`
   height: calc(100vh - ${(p) => p.theme.navDesktop.height}px);
@@ -165,15 +166,24 @@ const AccountPageParticularOrder: FunctionComponent = ({}) => {
       <MobileBackButton path="/account/order-history" title={`Order #${order?.id}`} />
 
       <MainSection>
-        <ReceiptButton href={order?.pdf_url} target="_blank" rel="noopener noreferrer">
-          {t('@view-receipt')}
-        </ReceiptButton>
+        <CustomLink
+          amplitude={{
+            type: 'button',
+            text: t('@view-receipt'),
+          }}
+          Override={ReceiptButton}
+          externelHref={order?.pdf_url}
+          placeholder={t('@view-receipt')}
+          target="_blank"
+        />
+
         <Container>
           <LeftContainer>
             <Content>
               <Label>{t('@placed-on')}</Label>
               <Value>
-                {moment(new Date(`${order?.created_at}`)).format('ll')} {t('@at')} {moment(new Date(`${order?.created_at}`)).format('HH:mm')}
+                {moment(new Date(`${order?.created_at}`)).format('ll')} {t('@at')}{' '}
+                {moment(new Date(`${order?.created_at}`)).format('HH:mm')}
               </Value>
             </Content>
 
@@ -259,7 +269,8 @@ const AccountPageParticularOrder: FunctionComponent = ({}) => {
                 <Content>
                   <Label>{t('@delivery-time')}</Label>
                   <Value>
-                    {moment(new Date(`${order?.delivered_at}`)).format('ll')} {t('@at')} {moment(new Date(`${order?.delivered_at}`)).format('HH:mm')}
+                    {moment(new Date(`${order?.delivered_at}`)).format('ll')} {t('@at')}{' '}
+                    {moment(new Date(`${order?.delivered_at}`)).format('HH:mm')}
                   </Value>
                 </Content>
                 <SetGap />

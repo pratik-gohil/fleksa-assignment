@@ -18,6 +18,7 @@ interface ICustomLinkProps {
   isLanguageChange?: boolean;
   Override?: StyledComponent<'a', DefaultTheme>;
   callback?: () => void | Promise<void>;
+  target?: '_blank';
 }
 
 const CustomLink: FunctionComponent<ICustomLinkProps> = ({
@@ -29,25 +30,34 @@ const CustomLink: FunctionComponent<ICustomLinkProps> = ({
   Override,
   externelHref,
   callback,
+  target,
 }) => {
   const languageCode = useAppSelector(selectLanguageCode);
   const router = useRouter();
 
   const handleLinkClick = async (e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | undefined) => {
-    e?.preventDefault();
+    if (typeof window !== 'undefined') {
+      e?.preventDefault();
 
-    // TODO: call back if it's present
-    if (callback) {
-      callback();
-      console.log('callback called');
+      // TODO: call back if it's present
+      if (callback) {
+        callback();
+        console.log('callback called');
+      }
+
+      console.log('amplitude ', amplitude);
+
+      amplitudeEvent(constructEventName(amplitude.text, amplitude.type), amplitude.eventProperties);
+
+      // TODO: Don't change the route if href and externelHref is not exit
+      if (href) router.push(`/${isLanguageChange ? (router.locale === 'en' ? 'de' : 'en') : languageCode}${href}`);
+      else if (externelHref && target)
+        window.open(
+          externelHref,
+          target, // <- This is what makes it open in a new window.
+        );
+      else if (externelHref) window.location.href = externelHref;
     }
-
-    console.log('amplitude ', amplitude);
-
-    amplitudeEvent(constructEventName(amplitude.text, amplitude.type), amplitude.eventProperties);
-
-    // TODO: Don't change the route if href and externelHref is not exit
-    if (href || externelHref) router.push(`/${isLanguageChange ? (router.locale === 'en' ? 'de' : 'en') : languageCode}${externelHref ?? href}`);
   };
 
   return Override ? (
