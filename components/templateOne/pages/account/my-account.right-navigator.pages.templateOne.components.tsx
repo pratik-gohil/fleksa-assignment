@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
-import { selectCustomer, updateCustomerName, updateCustomerEmail, updateCustomerEmailVerification } from '../../../../redux/slices/user.slices.redux';
+import {
+  selectCustomer,
+  updateCustomerName,
+  updateCustomerEmail,
+  updateCustomerEmailVerification,
+} from '../../../../redux/slices/user.slices.redux';
 import styled from 'styled-components';
 import PhoneInput from 'react-phone-input-2';
 import OtpInput from 'react-otp-input';
@@ -16,6 +21,7 @@ import MobileBackButton from '../../common/backButton/backButton.common.template
 import NodeApiHttpPostVerifyEmailPhoneRequest from '../../../../http/nodeapi/account/post.send-verify-code.nodeapi.http';
 import NodeApiHttpPostVerifyCodeRequest from '../../../../http/nodeapi/account/post.verify-code.nodeapi.http';
 import LoadingIndicator from '../../common/loadingIndicator/loading-indicator.common.templateOne.components';
+import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -96,7 +102,6 @@ const EmailInputValue = styled(InputValue)``;
 const VerifyButton = styled.button<{ readOnly: boolean }>`
   position: absolute;
   width: 120px;
-  /* height: calc(100% - 1rem); */
   right: 0;
   border-top-right-radius: 0.5rem;
   border-bottom-right-radius: 0.5rem;
@@ -264,6 +269,8 @@ export const MyAccountRightSection = () => {
   // TODO: Made request for sending the code to email
   const handleVerifyEmailButtonClick = async () => {
     try {
+      amplitudeEvent(constructEventName(`VerifyButton`, 'button'), {});
+
       setLoading(true);
 
       const response = await new NodeApiHttpPostVerifyEmailPhoneRequest(configuration, bearerToken as any).post({
@@ -272,6 +279,8 @@ export const MyAccountRightSection = () => {
       });
 
       if (!response.result) {
+        amplitudeEvent(constructEventName(`VerifyButton error`, 'response'), response);
+
         dispatch(
           updateError({
             show: true,
@@ -281,6 +290,8 @@ export const MyAccountRightSection = () => {
         );
         return;
       }
+
+      amplitudeEvent(constructEventName(`VerifyButton success`, 'response'), response);
 
       setIsEmailReadOnly(true);
       setIsVerify(!isVerify);
@@ -294,6 +305,8 @@ export const MyAccountRightSection = () => {
       );
     } catch (e) {
       console.error('e : ', e);
+      amplitudeEvent(constructEventName(`VerifyButton error catch`, 'error'), { error: e });
+
       dispatch(
         updateError({
           show: true,
@@ -310,12 +323,15 @@ export const MyAccountRightSection = () => {
   const handleVerifyCode = async () => {
     try {
       setLoading(true);
+      amplitudeEvent(constructEventName(`handleVerifyCode`, 'method'), {});
 
       const response = await new NodeApiHttpPostVerifyCodeRequest(configuration, bearerToken as any).post({
         otp,
       });
 
       if (!response.result) {
+        amplitudeEvent(constructEventName(`handleVerifyCode error`, 'response'), {});
+
         dispatch(
           updateError({
             show: true,
@@ -325,6 +341,8 @@ export const MyAccountRightSection = () => {
         );
         return;
       }
+
+      amplitudeEvent(constructEventName(`handleVerifyCode success`, 'response'), response);
 
       setIsEmailReadOnly(true);
       setIsVerify(false);
@@ -340,6 +358,8 @@ export const MyAccountRightSection = () => {
       );
     } catch (e) {
       console.error('e : ', e);
+      amplitudeEvent(constructEventName(`handleVerifyCode error catch`, 'error'), { error: e });
+
       dispatch(
         updateError({
           show: true,
@@ -367,6 +387,9 @@ export const MyAccountRightSection = () => {
             <Title>{t('@name')}</Title>
             <IconContainer
               onClick={async () => {
+                amplitudeEvent(constructEventName(`name edit`, 'icon-button'), {
+                  name: customerData.name,
+                });
                 setIsNameReadOnly(!isNameReadOnly);
                 if (!isNameReadOnly && customerData.name !== name) await hanldeUpdateButtonClick();
               }}
@@ -378,7 +401,18 @@ export const MyAccountRightSection = () => {
           </TitleContainer>
 
           <TextContainer readOnly={isNameReadOnly}>
-            <InputValue type="text" value={name} onChange={(e) => setName(e.target.value)} readOnly={isNameReadOnly} />
+            <InputValue
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              readOnly={isNameReadOnly}
+              onBlur={() => {
+                amplitudeEvent(constructEventName(`name`, 'input'), {
+                  name,
+                  length: name.length,
+                });
+              }}
+            />
           </TextContainer>
         </Content>
 
@@ -395,6 +429,9 @@ export const MyAccountRightSection = () => {
             {!customerData.email_verified && (
               <IconContainer
                 onClick={async () => {
+                  amplitudeEvent(constructEventName(`email edit`, 'icon-button'), {
+                    email: customerData.email,
+                  });
                   setIsEmailReadOnly(!isEmailReadOnly);
                   if (!isEmailReadOnly && customerData.email !== email) await hanldeUpdateButtonClick();
                 }}
@@ -409,7 +446,18 @@ export const MyAccountRightSection = () => {
           <TextEmailContainer readOnly={isEmailReadOnly}>
             {!isVerify && (
               <>
-                <EmailInputValue type="email" value={email} onChange={(e) => setEmail(e.target.value)} readOnly={isEmailReadOnly} />
+                <EmailInputValue
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  readOnly={isEmailReadOnly}
+                  onBlur={() => {
+                    amplitudeEvent(constructEventName(`email`, 'input'), {
+                      email,
+                      length: email?.length || 0,
+                    });
+                  }}
+                />
 
                 {!customerData.email_verified && (
                   <VerifyButton readOnly={isEmailReadOnly} onClick={handleVerifyEmailButtonClick}>
@@ -451,6 +499,7 @@ export const MyAccountRightSection = () => {
                   onClick={() => {
                     setOtp('');
                     setIsVerify(!isVerify);
+                    amplitudeEvent(constructEventName(`verify cancel`, 'button'), {});
                   }}
                 >
                   {loading ? <LoadingIndicator width={20} /> : <span>{t('@cancel')}</span>}
