@@ -8,6 +8,7 @@ import moment from 'moment';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { useTranslation } from 'next-i18next';
 import { selectLanguage } from '../../../../redux/slices/configuration.slices.redux';
+import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 
 const Wrapper = styled.div`
   margin: 0;
@@ -168,7 +169,13 @@ const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGue
   const [timingList, setTimingList] = useState<ILabelValue[]>([]);
   const { t } = useTranslation('reservation');
 
-  const handleDateChange = async (e: React.ChangeEvent<HTMLInputElement>) => setDate(e.target.value);
+  const handleDateChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDate(e.target.value);
+    amplitudeEvent(constructEventName(`date out change`, 'input'), {
+      prev: date,
+      current: e.target.value,
+    });
+  };
 
   // TODO: this is called when user selects or changes  date
   useEffect(() => {
@@ -217,21 +224,44 @@ const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGue
         <Label>{t('@guest')}​</Label>
         <Row nogutter>
           <Col xl={3} lg={3}>
-            <SelectBox value={totalGuest} onChange={(e) => setTotalGuest(e.target.value)}>
-              {['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '20+'].map((r) => (
-                <Option key={r} value={r}>
-                  {r}
-                </Option>
-              ))}
+            <SelectBox
+              value={totalGuest}
+              onChange={(e) => {
+                setTotalGuest(e.target.value);
+
+                amplitudeEvent(constructEventName(`guests`, 'input'), {
+                  prev: totalGuest,
+                  current: e.target.value,
+                });
+              }}
+            >
+              {['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '20+'].map(
+                (r) => (
+                  <Option key={r} value={r}>
+                    {r}
+                  </Option>
+                ),
+              )}
             </SelectBox>
           </Col>
           <Col xl={6} lg={6}>
             <InputBoxDateTime>
-              <DateInput type="date" value={date} onChange={handleDateChange} />
+              <DateInput
+                type="date"
+                value={date}
+                onChange={handleDateChange}
+                onBlur={() =>
+                  amplitudeEvent(constructEventName(`date out focus`, 'input'), {
+                    date,
+                  })
+                }
+              />
             </InputBoxDateTime>
           </Col>
           <Col xl={3} lg={3}>
-            <InputBox visible={!!timingList.length}>{timingList.length ? <ChoosenTime>{time.value}</ChoosenTime> : <Dashed>-</Dashed>}</InputBox>
+            <InputBox visible={!!timingList.length}>
+              {timingList.length ? <ChoosenTime>{time.value}</ChoosenTime> : <Dashed>-</Dashed>}
+            </InputBox>
           </Col>
         </Row>
         <Row nogutter>
@@ -239,7 +269,17 @@ const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGue
             <SlotContainer>
               <TimeSlots>
                 {timingList.map((t, i) => (
-                  <Slot key={i} onClick={() => setTime(t)} active={time.value === t.value} break={t.break}>
+                  <Slot
+                    key={i}
+                    onClick={() => {
+                      setTime(t);
+                      amplitudeEvent(constructEventName(`time slot`, 'button'), {
+                        time: t,
+                      });
+                    }}
+                    active={time.value === t.value}
+                    break={t.break}
+                  >
                     {t.value}
                   </Slot>
                 ))}
