@@ -9,7 +9,7 @@ import { ITimingsDay } from '../../interfaces/common/shop.common.interfaces';
 import { ICheckoutOrderTypes, updateClearCheckout, updateOrderType, updateSelectedAddressId } from '../../redux/slices/checkout.slices.redux';
 import { updateClearCart } from '../../redux/slices/cart.slices.redux';
 import PyApiHttpPostAddress from '../../http/pyapi/address/post.address.pyapi.http';
-import { selectConfiguration, selectLanguageCode } from '../../redux/slices/configuration.slices.redux';
+import { selectConfiguration } from '../../redux/slices/configuration.slices.redux';
 import { ISibling } from '../../interfaces/common/sibling.common.interfaces';
 import { IGuestAddress } from '../../components/templateOne/common/addresses/address-add.common.templateOne.components';
 import { LS_GUEST_USER_ADDRESS } from '../../constants/keys-local-storage.constants';
@@ -19,6 +19,7 @@ import { updateError } from '../../redux/slices/common.slices.redux';
 import NodeApiHttpPostUpdateAddressRequest from '../../http/nodeapi/account/post.update-address.nodeapi.http';
 import { useTranslation } from 'next-i18next';
 import SvgAutolocate from '../../public/assets/svg/autolocate.svg';
+import CustomLink from '../../components/templateOne/common/amplitude/customLink';
 
 type Filters = 'has_pickup' | 'has_delivery' | 'has_dinein';
 
@@ -246,7 +247,6 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
   const addressData = useAppSelector((state) => selectAddressByType(state, 'HOME'));
   const configuration = useAppSelector(selectConfiguration);
   const { t } = useTranslation('page-menu');
-  const languageCode = useAppSelector(selectLanguageCode);
   const [locationPermission, setLocationPermission] = useState('not-prompt');
 
   const [restaurantsToShow, setRestaurantsToShow] = useState<Array<ISibling> | undefined>(undefined);
@@ -278,7 +278,6 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
     if (typeof window !== 'undefined') {
       dispatch(updateClearCart());
       dispatch(updateClearCheckout());
-      setFilterAndOrderType('has_delivery');
     }
   }, []);
 
@@ -443,8 +442,11 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
 
   function setFilterAndOrderType(filter: Filters) {
     setFilterName(filter);
+  }
+
+  function getOrderTypeConstant(s: string) {
     let orderType: ICheckoutOrderTypes | null = null;
-    switch (filter) {
+    switch (s) {
       case 'has_delivery':
         orderType = 'DELIVERY';
         break;
@@ -454,8 +456,10 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
       case 'has_pickup':
         orderType = 'PICKUP';
         break;
+      default:
+        orderType = 'PICKUP';
     }
-    dispatch(updateOrderType(orderType));
+    return orderType;
   }
 
   async function getAvaibleBasedOnAdress({ area = '', postalCode = '', main = '', city = '' }) {
@@ -580,6 +584,11 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
     }
   }
 
+  function handleMenuOrderTypeChange() {
+    // TODO: Fix Only update if options available
+    dispatch(updateOrderType(getOrderTypeConstant(filterName)));
+  }
+
   let restaurantListView: ReactNode;
 
   if (restaurantsToShow && restaurantsToShow.length > 0) {
@@ -614,7 +623,19 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
                     </p>
                   </Address>
                 </InfoContainer>
-                <OrderButton href={`/${languageCode}/menu/${sibling.id}`}>{t('@order')}</OrderButton>
+
+                <CustomLink
+                  href={`/menu/${sibling.id}`}
+                  placeholder={t('@order')}
+                  amplitude={{
+                    type: 'button',
+                    text: t('@order'),
+                    eventProperties: sibling,
+                  }}
+                  callback={handleMenuOrderTypeChange}
+                  Override={OrderButton}
+                />
+                {/* <OrderButton href={`/${languageCode}/menu/${sibling.id}`}>{t('@order')}</OrderButton> */}
               </InfoWithOrderButton>
               <TimingContainerHolder>
                 <TimingContainer>

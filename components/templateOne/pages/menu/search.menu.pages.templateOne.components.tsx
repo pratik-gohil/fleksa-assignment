@@ -6,6 +6,7 @@ import SvgSearch from '../../../../public/assets/svg/search.svg';
 import { useState } from 'react';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { useTranslation } from 'next-i18next';
+import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 
 const SearchContainer = styled.div<{ searchOpen: boolean }>`
   display: flex;
@@ -66,7 +67,17 @@ const MenuSearch: FunctionComponent = () => {
   return (
     <SearchContainer ref={node} searchOpen={searchOpen}>
       <SvgSearch />
-      <SearchInput placeholder={t('@search')} value={searchQuery} onChange={(ev) => dispatch(updateSearchQuery(ev.target.value.toLowerCase()))} />
+      <SearchInput
+        placeholder={t('@search')}
+        value={searchQuery}
+        onChange={(ev) => dispatch(updateSearchQuery(ev.target.value.toLowerCase()))}
+        onBlur={() =>
+          amplitudeEvent(constructEventName(`category-sidebar-${t('@search')}`, 'input'), {
+            searchQuery,
+            length: searchQuery.length,
+          })
+        }
+      />
     </SearchContainer>
   );
 };

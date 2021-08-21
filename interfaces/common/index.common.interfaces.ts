@@ -16,3 +16,10 @@ export interface IShopAvailablity {
     dayNumber?: string;
   };
 }
+
+export interface IBanner {
+  action: string;
+  background: string;
+  description: string;
+  title: string;
+}

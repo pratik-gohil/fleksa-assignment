@@ -23,6 +23,7 @@ import SvgCross from '../../../../public/assets/svg/cross.svg';
 import formatCurrency from '../../../../utils/formatCurrency';
 import { useTranslation } from 'next-i18next';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
+import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 
 const ApplyButton = styled.div`
   padding: ${(props) => props.theme.dimen.X2}px ${(props) => props.theme.dimen.X4 * 2}px;
@@ -92,6 +93,11 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
   const dispatch = useAppDispatch();
 
   async function onClickApply() {
+    amplitudeEvent(constructEventName(`coupon apply`, 'button'), {
+      coupon,
+      length: coupon.length,
+    });
+
     if (orderType && shopId && bearerToken) {
       const products: Array<IMakeOrderProducts> = getPrductsFromCartData(cartData);
       const checkoutFinalAmountWithoutPromo = checkoutFinalAmount(cartData.cartCost, tipData);
@@ -111,6 +117,8 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
             token: response.token,
           }),
         );
+
+        amplitudeEvent(constructEventName(`coupon apply success`, 'response'), response);
       } else {
         dispatch(updatePromoCode(null));
         dispatch(
@@ -120,22 +128,30 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
             severity: 'error',
           }),
         );
+
+        amplitudeEvent(constructEventName(`coupon apply error`, 'response'), response);
       }
     }
   }
 
   useEffect(() => {
-    if (promoCodeData) {
-      onClickApply();
-    }
+    if (promoCodeData) onClickApply();
   }, []);
 
   return (
     <StyledCheckoutCard>
       <EditContainer>
         <StyledCheckoutTitle>{t('@promo')}</StyledCheckoutTitle>
-        {!promoCodeData && <EditButton onClick={() => setEditing(!editing)} />}
+        {!promoCodeData && (
+          <EditButton
+            onClick={() => {
+              setEditing(!editing);
+              amplitudeEvent(constructEventName(`promo code edit`, 'icon-button'), {});
+            }}
+          />
+        )}
       </EditContainer>
+
       <Row>
         <Col xs={12}>
           {editing ? (
@@ -152,7 +168,18 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
                 </AppliedPromoContainer>
               ) : (
                 <>
-                  <StyledCheckoutInput isError={false} value={coupon} autoFocus onChange={(e) => setCoupon(e.target.value)} />
+                  <StyledCheckoutInput
+                    isError={false}
+                    value={coupon}
+                    autoFocus
+                    onChange={(e) => setCoupon(e.target.value)}
+                    onBlur={() => {
+                      amplitudeEvent(constructEventName(`coupon `, 'input'), {
+                        coupon,
+                        length: coupon.length,
+                      });
+                    }}
+                  />
                   <ApplyButton onClick={onClickApply}>{t('@apply')}</ApplyButton>
                 </>
               )}

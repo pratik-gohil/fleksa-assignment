@@ -16,6 +16,7 @@ import { selectDeliveryFinances, selectOrderType } from '../../../../redux/slice
 import { selectAddress, selectShop, selectSiblings } from '../../../../redux/slices/index.slices.redux';
 import { IAddress } from '../../../../interfaces/common/address.common.interfaces';
 import { useTranslation } from 'next-i18next';
+import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 
 const Wrapper = styled.div<{ showCart: boolean }>`
   position: fixed;
@@ -200,6 +201,8 @@ const Cart: FunctionComponent = ({}) => {
   }, [cartItemKeys, cartData.cartCost, deliveryFinances?.amount, deliveryFinances?.charges, orderType]);
 
   function onClickOrderButton() {
+    amplitudeEvent(constructEventName(`${t('@order')}`, 'button'), {});
+
     if (orderPossible) router.push('/checkout');
   }
 
@@ -218,6 +221,7 @@ const Cart: FunctionComponent = ({}) => {
                       <ItemTitle>
                         {cartItem.mainName[language]} <span>{cartItem.partName && '(' + cartItem.partName[language] + ')'}</span>
                       </ItemTitle>
+
                       {((cartItem.sideProducts && cartItem.sideProducts.length > 0) || (cartItem.choice && cartItem.choice.length > 0)) && (
                         <ItemTitleAdditional>
                           {cartItem.choice?.map((i) => i.name[language]).join(', ')}
@@ -226,9 +230,11 @@ const Cart: FunctionComponent = ({}) => {
                         </ItemTitleAdditional>
                       )}
                     </Column1>
+
                     <Column2>
                       <CartAddRemoveButton cartItem={cartItem} />
                     </Column2>
+
                     <Column3>
                       <Price>{formatCurrency(cartItem.totalCost, languageCode)}</Price>
                     </Column3>
@@ -268,7 +274,11 @@ const Cart: FunctionComponent = ({}) => {
         {t('@order')}
       </OrderButton>
 
-      <LoginAllPages callback={() => router.push('/checkout')} />
+      <LoginAllPages
+        callback={() => {
+          router.push('/checkout');
+        }}
+      />
     </Wrapper>
   );
 };

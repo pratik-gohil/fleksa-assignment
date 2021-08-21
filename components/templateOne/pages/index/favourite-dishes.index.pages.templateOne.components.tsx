@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { selectLanguage, selectLanguageCode } from '../../../../redux/slices/configuration.slices.redux';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import formatCurrency from '../../../../utils/formatCurrency';
+import CustomLink from '../../common/amplitude/customLink';
 
 const WrapperSection = styled.section`
   padding: ${(props) => props.theme.dimen.X4 * 4}px 0;
@@ -174,11 +175,21 @@ const IndexPageFavouriteDishes: FunctionComponent = ({}) => {
                         <InfoContainerBottom>
                           <ItemPrice>{formatCurrency(product.price, languageCode)}</ItemPrice>
 
-                          <ItemToProduct href={`/${languageCode}/menu`}>
+                          <CustomLink
+                            href="/menu"
+                            amplitude={{
+                              text: `${t('@to-product')}`,
+                              type: 'button',
+                              eventProperties: product,
+                            }}
+                            Override={ItemToProduct}
+                          >
                             <p>
-                              {t('@to-product')} <span>+</span>
+                              {t('@to-product')}
+
+                              <span>+</span>
                             </p>
-                          </ItemToProduct>
+                          </CustomLink>
                         </InfoContainerBottom>
                       </InfoContainer>
                     </Card>

@@ -2,13 +2,7 @@ import { Fragment, FunctionComponent, useEffect } from 'react';
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
-import {
-  ICheckoutOrderTypes,
-  selectOrderType,
-  selectSelectedAddressId,
-  updateOrderType,
- 
-} from '../../../../redux/slices/checkout.slices.redux';
+import { ICheckoutOrderTypes, selectOrderType, selectSelectedAddressId, updateOrderType } from '../../../../redux/slices/checkout.slices.redux';
 import SvgDelivery from '../../../../public/assets/svg/delivery.svg';
 import SvgPickup from '../../../../public/assets/svg/pickup.svg';
 import SvgDinein from '../../../../public/assets/svg/dinein.svg';
@@ -21,6 +15,7 @@ import { IAddress } from '../../../../interfaces/common/address.common.interface
 import { useTranslation } from 'next-i18next';
 import { selectAddressById, selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
 import { IParticularAddress } from '../../../../interfaces/common/customer.common.interfaces';
+import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 
 const Wrapper = styled.div`
   position: fixed;
@@ -127,17 +122,22 @@ const OrderTypeManager: FunctionComponent = () => {
     dispatch(updateOrderType(orderType));
     dispatch(updateShowOrderTypeSelect(false));
     dispatch(updateShowAddAddress(true));
-    // dispatch(updateSelectedAddressId(null));
+
+    amplitudeEvent(constructEventName(t('@delivery'), 'model'), {});
   }
 
   function onClickTakeaway(orderType: ICheckoutOrderTypes) {
     dispatch(updateOrderType(orderType));
     dispatch(updateShowOrderTypeSelect(false));
+
+    amplitudeEvent(constructEventName(t('@pickup'), 'model'), {});
   }
 
   function onClickDineIn(orderType: ICheckoutOrderTypes) {
     dispatch(updateOrderType(orderType));
     dispatch(updateShowOrderTypeSelect(false));
+
+    amplitudeEvent(constructEventName(t('@dine-in'), 'model'), {});
   }
 
   function getSelectedAddress() {
@@ -158,11 +158,8 @@ const OrderTypeManager: FunctionComponent = () => {
   }
 
   useEffect(() => {
-    if (shopData?.id == selectedMenuId) {
-      setAddressData(address);
-    } else {
-      setAddressData(siblings.find((item) => item.id == selectedMenuId)?.address);
-    }
+    if (shopData?.id == selectedMenuId) setAddressData(address);
+    else setAddressData(siblings.find((item) => item.id == selectedMenuId)?.address);
   }, []);
 
   return (

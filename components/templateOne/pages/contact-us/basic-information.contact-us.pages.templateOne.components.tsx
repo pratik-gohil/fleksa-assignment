@@ -10,6 +10,7 @@ import MailIconPath from '../../../../public/assets/svg/email.svg';
 import PhoneIconpath from '../../../../public/assets/svg/call.svg';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import moment from 'moment';
+import CustomLink from '../../common/amplitude/customLink';
 
 const Wrapper = styled.div`
   padding: 2rem 1.5rem 0 1.5rem;
@@ -146,10 +147,17 @@ export const BasicContactUsInformation = () => {
             </MainArea>
 
             <LinkArea>
-              <StyledLink href={`mailto:${addressData.email}`}>
+              <CustomLink
+                href={`mailto:${addressData.email}`}
+                amplitude={{
+                  type: 'link',
+                  text: t('@phone'),
+                }}
+                Override={StyledLink}
+              >
                 Email
                 <ArrowIcon />
-              </StyledLink>
+              </CustomLink>
             </LinkArea>
           </Item>
         )}
@@ -166,10 +174,17 @@ export const BasicContactUsInformation = () => {
             </MainArea>
 
             <LinkArea>
-              <StyledLink href={`tel:+${addressData.country_code}${addressData.phone}`}>
+              <CustomLink
+                href={`tel:+${addressData.country_code}${addressData.phone}`}
+                amplitude={{
+                  type: 'link',
+                  text: t('@phone'),
+                }}
+                Override={StyledLink}
+              >
                 {t('@phone')}
                 <ArrowIcon />
-              </StyledLink>
+              </CustomLink>
             </LinkArea>
           </Item>
         )}
@@ -177,10 +192,9 @@ export const BasicContactUsInformation = () => {
 
       <Map>
         <iframe
-          src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY}&q=${shopData?.name.replace(
-            ' ',
-            '+',
-          )},${addressData?.city.replace(' ', '+')}+${addressData?.country.replace(' ', '+')}`}
+          src={`https://www.google.com/maps/embed/v1/place?key=${
+            process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY
+          }&q=${shopData?.name.replace(' ', '+')},${addressData?.city.replace(' ', '+')}+${addressData?.country.replace(' ', '+')}`}
           title="Restaurant Map"
           height="400"
           width="400"

@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { HYDRATE } from 'next-redux-wrapper';
 import { IAddress } from '../../interfaces/common/address.common.interfaces';
-import { IContent } from '../../interfaces/common/index.common.interfaces';
+import { IBanner, IContent } from '../../interfaces/common/index.common.interfaces';
 import { IOffer } from '../../interfaces/common/offer.common.interfaces';
 import { IProduct } from '../../interfaces/common/product.common.interfaces';
 import { IReview } from '../../interfaces/common/review.common.interfaces';
@@ -21,12 +21,7 @@ export interface IIndexSliceState {
   siblings: Array<ISibling>;
   offers: Array<IOffer>;
   contents: Array<IContent>;
-  banner?: {
-    action: string;
-    background: string;
-    description: string;
-    title: string;
-  };
+  banner?: IBanner;
   owner: {
     name: string;
   };

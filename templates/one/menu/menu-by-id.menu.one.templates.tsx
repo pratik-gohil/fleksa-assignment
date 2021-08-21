@@ -18,9 +18,6 @@ import { selectCart } from '../../../redux/slices/cart.slices.redux';
 import PyApiHttpPostAddress from '../../../http/pyapi/address/post.address.pyapi.http';
 import { selectConfiguration, selectSelectedMenu } from '../../../redux/slices/configuration.slices.redux';
 import { selectAddressByType, selectIsUserLoggedIn } from '../../../redux/slices/user.slices.redux';
-import { selectAddress, selectShop, selectSiblings } from '../../../redux/slices/index.slices.redux';
-import { useState } from 'react';
-import { IAddress } from '../../../interfaces/common/address.common.interfaces';
 import { AddressTypes } from '../../../components/templateOne/common/addresses/address-manager.common.templateOne.components';
 
 const SideViewLeft = styled.div`
@@ -67,9 +64,6 @@ const Disclaimer = styled.p`
 const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
   const { t } = useTranslation('disclaimer');
   const cartData = useAppSelector(selectCart);
-  const shopData = useAppSelector(selectShop);
-  const address = useAppSelector(selectAddress);
-  const siblings = useAppSelector(selectSiblings);
   const orderType = useAppSelector(selectOrderType);
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
   const showAddAddress = useAppSelector(selectShowAddress);
@@ -79,15 +73,6 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
   const showSelectOrderType = useAppSelector(selectShowOrderTypeSelect);
   const addressByType = useAppSelector((state) => selectAddressByType(state, 'HOME'));
   const dispatch = useAppDispatch();
-  const [addressData, setAddressData] = useState<IAddress | null | undefined>();
-
-  useEffect(() => {
-    if (shopData?.id == selectedMenuId) {
-      setAddressData(address);
-    } else {
-      setAddressData(siblings.find((item) => item.id == selectedMenuId)?.address);
-    }
-  }, []);
 
   useEffect(() => {
     getAddressInfo();
@@ -158,13 +143,15 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
 
       <div>{cartData.cartCost > 0 && <MenuPageCartSummary />}</div>
 
-      {(showSelectOrderType || orderType === null) && !showAddAddress
-        ? (addressData?.has_delivery || addressData?.has_pickup || addressData?.has_dinein) && <OrderTypeManager key="key-ajkndalkwdmalkwmdlkw" />
-        : (showAddAddress ||
-            (orderType === 'DELIVERY' &&
-              checkoutAddressId === null &&
-              orderType === 'DELIVERY' &&
-              !window.localStorage.getItem(LS_GUEST_USER_ADDRESS))) && <AddressAdd />}
+      {(showSelectOrderType || orderType === null) && !showAddAddress ? (
+        <OrderTypeManager key="key-ajkndalkwdmalkwmdlkw" />
+      ) : (
+        (showAddAddress ||
+          (orderType === 'DELIVERY' &&
+            checkoutAddressId === null &&
+            orderType === 'DELIVERY' &&
+            !window.localStorage.getItem(LS_GUEST_USER_ADDRESS))) && <AddressAdd />
+      )}
     </>
   );
 };

@@ -58,11 +58,6 @@ export async function getServerSidePropsCommon(
     };
     ctx.store.dispatch(updateConfiguration(configuration));
 
-    /**
-     * In case customer try to go checkout without menu id redirect to index to generate the menu id
-     */
-    ctx.store.dispatch(updateSelectedMenu(selectedMenu || null));
-
     if (!selectedMenu && !restaurantDomain && ctx.req.url === '/checkout') {
       return {
         redirect: {
@@ -74,6 +69,11 @@ export async function getServerSidePropsCommon(
         configuration,
       };
     }
+
+    /**
+     * In case customer try to go checkout without menu id redirect to index to generate the menu id
+     */
+    ctx.store.dispatch(updateSelectedMenu(selectedMenu || null));
 
     const responseIndex = await new PyApiHttpGetIndex(configuration).get();
     if (!responseIndex?.shop.id) throw new Error('Shop id not found');

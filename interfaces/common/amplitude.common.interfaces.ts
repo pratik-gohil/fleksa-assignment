@@ -1,0 +1,16 @@
+export type AmplitudeEventNodes =
+  | 'button'
+  | 'image'
+  | 'link'
+  | 'icon-button'
+  | 'icon'
+  | 'card'
+  | 'model'
+  | 'input'
+  | 'scroll'
+  | 'response'
+  | 'error'
+  | 'success'
+  | 'feature'
+  | 'method'
+  | 'action';

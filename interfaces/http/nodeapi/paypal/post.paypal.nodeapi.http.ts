@@ -1,7 +1,8 @@
 export interface INodeApiHttpPostPaypalRequestData {
-  paypalOrderId: string
+  paypalOrderId: string;
 }
 
 export interface INodeApiHttpPostPaypalResponse {
-
+  result: boolean;
+  message?: string;
 }

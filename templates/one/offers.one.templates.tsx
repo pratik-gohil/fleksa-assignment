@@ -10,6 +10,7 @@ import { convertQuillToHtml } from '../../utils/offers.util';
 import SvgPrevious from '../../public/assets/svg/previous.svg';
 import SvgNext from '../../public/assets/svg/next.svg';
 import { BREAKPOINTS } from '../../constants/grid-system-configuration';
+import { amplitudeEvent, constructEventName } from '../../utils/amplitude.util';
 
 const Wrapper = styled.div`
   outline: none;
@@ -195,6 +196,10 @@ const OffersPageTemplateOne: FunctionComponent = ({}) => {
   let index = useRef(0);
 
   const handleLeftArrowClick = async () => {
+    amplitudeEvent(constructEventName(`image left arrow`, 'image'), {
+      content: contents[index.current],
+    });
+
     if (index.current <= 0) return;
 
     index.current -= 1;
@@ -219,6 +224,10 @@ const OffersPageTemplateOne: FunctionComponent = ({}) => {
   };
 
   const handleRightArrowClick = async () => {
+    amplitudeEvent(constructEventName(`image right arrow`, 'image'), {
+      content: contents[index.current],
+    });
+
     if (!(contents.length - 1 > index.current)) return;
 
     index.current += 1;

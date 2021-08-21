@@ -1,14 +1,15 @@
-import React, { FunctionComponent } from "react";
-import styled from "styled-components";
+import React, { FunctionComponent } from 'react';
+import styled from 'styled-components';
 
-import { useAppDispatch } from "../../../../redux/hooks.redux";
-import { ICartItem, updateAddProduct, updateReduceProduct } from "../../../../redux/slices/cart.slices.redux";
+import { useAppDispatch } from '../../../../redux/hooks.redux';
+import { ICartItem, updateAddProduct, updateReduceProduct } from '../../../../redux/slices/cart.slices.redux';
 
-import SvgButtonPlus from "../../../../public/assets/svg/button-plus.svg"
-import SvgButtonMinus from "../../../../public/assets/svg/button-minus.svg"
+import SvgButtonPlus from '../../../../public/assets/svg/button-plus.svg';
+import SvgButtonMinus from '../../../../public/assets/svg/button-minus.svg';
+import CustomLink from '../amplitude/customLink';
 
 export interface IPropsCartAddRemoveButton {
-  cartItem: ICartItem
+  cartItem: ICartItem;
 }
 
 const Wrapper = styled.div`
@@ -18,7 +19,7 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
   overflow: hidden;
-`
+`;
 
 const Add = styled.div`
   display: flex;
@@ -31,9 +32,9 @@ const Add = styled.div`
     height: 24px;
     fill: rgb(255, 209, 0);
   }
-`
+`;
 
-const Reduce = styled.div`
+const Reduce = styled.a`
   display: flex;
   flex: 1;
   justify-content: center;
@@ -44,18 +45,40 @@ const Reduce = styled.div`
     height: 24px;
     fill: rgb(255, 209, 0);
   }
-`
+`;
 
-const QuantityCount = styled.div``
+const QuantityCount = styled.div``;
 
 const CartAddRemoveButton: FunctionComponent<IPropsCartAddRemoveButton> = ({ cartItem }) => {
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
 
-  return <Wrapper>
-    <Reduce onClick={() => dispatch(updateReduceProduct({ cartId: cartItem.cartId }))}><SvgButtonMinus /></Reduce>
-    <QuantityCount>{cartItem.quantity}</QuantityCount>
-    <Add onClick={() => dispatch(updateAddProduct({ cartId: cartItem.cartId }))}><SvgButtonPlus /></Add>
-  </Wrapper>
-}
+  return (
+    <Wrapper>
+      <CustomLink
+        amplitude={{
+          type: 'button',
+          text: 'cart add',
+        }}
+        callback={() => dispatch(updateReduceProduct({ cartId: cartItem.cartId }))}
+        Override={Reduce}
+      >
+        <SvgButtonMinus />
+      </CustomLink>
 
-export default CartAddRemoveButton
+      <QuantityCount>{cartItem.quantity}</QuantityCount>
+
+      <CustomLink
+        amplitude={{
+          type: 'button',
+          text: 'cart minus',
+        }}
+        callback={() => dispatch(updateAddProduct({ cartId: cartItem.cartId }))}
+        Override={Add}
+      >
+        <SvgButtonPlus />
+      </CustomLink>
+    </Wrapper>
+  );
+};
+
+export default CartAddRemoveButton;

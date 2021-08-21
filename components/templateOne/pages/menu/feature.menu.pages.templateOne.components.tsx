@@ -7,9 +7,9 @@ import SvgDinein from '../../../../public/assets/svg/dinein.svg';
 import { ICheckoutOrderTypes, selectOrderType } from '../../../../redux/slices/checkout.slices.redux';
 import { updateShowOrderTypeSelect } from '../../../../redux/slices/menu.slices.redux';
 import { selectSiblings } from '../../../../redux/slices/index.slices.redux';
-import { selectLanguageCode } from '../../../../redux/slices/configuration.slices.redux';
 import { useTranslation } from 'next-i18next';
 import SvgEdit from '../../../../public/assets/svg/edit.svg';
+import CustomLink from '../../common/amplitude/customLink';
 
 const Wrapper = styled.div`
   display: flex;
@@ -103,7 +103,6 @@ const OrderType: Record<
 const MenuFeatures: FunctionComponent = () => {
   const selectedOrderType = useAppSelector(selectOrderType);
   const siblingsData = useAppSelector(selectSiblings);
-  const languageCode = useAppSelector(selectLanguageCode);
   const dispatch = useAppDispatch();
   const orderTypeData = selectedOrderType && OrderType[selectedOrderType];
   const { t } = useTranslation('page-menu-id');
@@ -116,19 +115,35 @@ const MenuFeatures: FunctionComponent = () => {
     <Wrapper>
       <OrderTypeView>
         {selectedOrderType && orderTypeData && (
-          <OrderTypeContainer onClick={onClickOrderType}>
+          <CustomLink
+            amplitude={{
+              type: 'button',
+              text: t(`@${orderTypeData.title.toLowerCase()}`).toUpperCase(),
+            }}
+            callback={onClickOrderType}
+            Override={OrderTypeContainer}
+          >
             <orderTypeData.logo />
             <p>{t(`@${orderTypeData.title.toLowerCase()}`).toUpperCase()}</p>
             <EditButton>
               <SvgEdit />
             </EditButton>
-          </OrderTypeContainer>
+          </CustomLink>
         )}
       </OrderTypeView>
 
       {siblingsData.length > 0 && (
         <ButtonContainer>
-          <ChangeRestaurantButton href={`/${languageCode}/menu`}>{t('@change-shop')}</ChangeRestaurantButton>
+          <CustomLink
+            href="/menu"
+            amplitude={{
+              type: 'button',
+              text: t('@change-shop'),
+            }}
+            Override={ChangeRestaurantButton}
+            placeholder={t('@change-shop')}
+          />
+
           <EditButton>
             <SvgEdit />
           </EditButton>

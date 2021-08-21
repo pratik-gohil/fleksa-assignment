@@ -37,9 +37,6 @@ const TemplateToShow: FunctionComponent<IPropsTemplateToShow> = ({ meta, templat
       const wb = window.workbox as any;
       const promptNewVersionAvailable = () => {
         wb.messageSkipWaiting();
-        // setTimeout(() => {
-        //   window.location.reload()
-        // }, 300);
       };
 
       wb.addEventListener('waiting', promptNewVersionAvailable);

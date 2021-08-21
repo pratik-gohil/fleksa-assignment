@@ -12,6 +12,7 @@ import { selectConfiguration } from '../../../../../redux/slices/configuration.s
 import { updateError } from '../../../../../redux/slices/common.slices.redux';
 import { deleteCustomerAddress } from '../../../../../redux/slices/user.slices.redux';
 import { useTranslation } from 'next-i18next';
+import { amplitudeEvent, constructEventName } from '../../../../../utils/amplitude.util';
 
 const HomeIconPath = '/assets/svg/address/home.svg';
 const WorkIconPath = '/assets/svg/address/work.svg';
@@ -270,10 +271,24 @@ const MyAccountAllAddressLeftSide: FunctionComponent<IMyAccountAllAddressLeftSid
               </Content>
 
               <OptionIconContainer>
-                <EditButton onClick={async (e) => await handleUpdateAddressButton(e, address)}>
+                <EditButton
+                  onClick={async (e) => {
+                    amplitudeEvent(constructEventName(`address edit`, 'button'), {
+                      address,
+                    });
+                    await handleUpdateAddressButton(e, address);
+                  }}
+                >
                   <EditIcon />
                 </EditButton>
-                <EditButton onClick={async (e) => await handleDeleteAddressButton(e, address.id)}>
+                <EditButton
+                  onClick={async (e) => {
+                    amplitudeEvent(constructEventName(`address delete`, 'button'), {
+                      address,
+                    });
+                    await handleDeleteAddressButton(e, address.id);
+                  }}
+                >
                   <DeleteIcon src={DeleteIconPath} />
                 </EditButton>
               </OptionIconContainer>
@@ -282,7 +297,12 @@ const MyAccountAllAddressLeftSide: FunctionComponent<IMyAccountAllAddressLeftSid
         </AddressContainer>
 
         {!show && (
-          <AddNewAddressButton onClick={() => handleShowNewAddressModal(false)}>
+          <AddNewAddressButton
+            onClick={() => {
+              amplitudeEvent(constructEventName(`address add`, 'button'), {});
+              handleShowNewAddressModal(false);
+            }}
+          >
             <PlusIcon />
 
             <Text>{t('@add-new-address')}</Text>

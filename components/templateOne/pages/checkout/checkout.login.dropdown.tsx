@@ -8,6 +8,7 @@ import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { COOKIE_BEARER_TOKEN } from '../../../../constants/keys-cookies.constants';
 import NodeApiHttpPostLogin from '../../../../http/nodeapi/login/post.login.nodeapi.http';
 import NodeApiHttpPostVerify from '../../../../http/nodeapi/verify/post.verify.nodeapi.http';
+import { IUpgradedCredential } from '../../../../interfaces/common/login.common.interfaces';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { updateCheckoutLogin } from '../../../../redux/slices/checkout.slices.redux';
 import { updateError } from '../../../../redux/slices/common.slices.redux';
@@ -20,13 +21,10 @@ import {
   updateCustomerName,
   updateCustomerPhone,
 } from '../../../../redux/slices/user.slices.redux';
+import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 import LoadingIndicator from '../../common/loadingIndicator/loading-indicator.common.templateOne.components';
 
 const OTP_LENGTH = 5;
-
-interface IUpgradedCredential extends Credential {
-  code?: string;
-}
 
 const CheckoutLoginDropdown = () => {
   const { t } = useTranslation('page-checkout');
@@ -60,6 +58,9 @@ const CheckoutLoginDropdown = () => {
   async function onTapSendOtp() {
     setLoading(true);
     let phoneNumber = phone.substring(String(countryCode).length);
+
+    amplitudeEvent(constructEventName(`onTapSendOtp`, 'button'), { phoneNumber });
+
     if (phoneNumber.startsWith('0')) {
       phoneNumber = phoneNumber.substring(1);
       setPhone(countryCode + phoneNumber);
@@ -91,8 +92,13 @@ const CheckoutLoginDropdown = () => {
             severity: 'error',
           }),
         );
+
+        amplitudeEvent(constructEventName(`onTapSendOtp error`, 'response'), response);
+
         return;
       }
+
+      amplitudeEvent(constructEventName(`onTapSendOtp success`, 'response'), response);
 
       setCustomerId(response?.customer_id);
     } catch (error) {
@@ -104,6 +110,7 @@ const CheckoutLoginDropdown = () => {
           severity: 'error',
         }),
       );
+      amplitudeEvent(constructEventName(`onTapSendOtp error catch`, 'error'), error);
     } finally {
       setLoading(false);
     }
@@ -119,6 +126,8 @@ const CheckoutLoginDropdown = () => {
           shopId: shopData?.id as unknown as number,
         });
 
+        amplitudeEvent(constructEventName(`onAutoTapLogin`, 'method'), { otp, customerId, shopId: shopData?.id as unknown as number });
+
         if (!response?.result) {
           dispatch(
             updateError({
@@ -127,6 +136,8 @@ const CheckoutLoginDropdown = () => {
               severity: 'error',
             }),
           );
+
+          amplitudeEvent(constructEventName(`onAutoTapLogin error`, 'response'), response);
           return;
         }
 
@@ -135,10 +146,14 @@ const CheckoutLoginDropdown = () => {
         if (!customerData.name) dispatch(updateCustomerName(response?.name));
         if (!customerData.phone) dispatch(updateCustomerPhone(phone));
 
+        amplitudeEvent(constructEventName(`onAutoTapLogin success`, 'response'), response);
+
         await finishLogin(response.token);
       }
     } catch (error) {
       console.error(error);
+      amplitudeEvent(constructEventName(`onAutoTapLogin error catch`, 'error'), { error });
+
       dispatch(
         updateError({
           show: true,
@@ -166,6 +181,7 @@ const CheckoutLoginDropdown = () => {
       // TODO: Officially support from Chrome +84
       if ('OTPCredential' in window) {
         console.log('WebOTP supported!.');
+        amplitudeEvent(constructEventName(`auto fill otp support`, 'feature'), {});
 
         const ac = new AbortController();
 
@@ -175,20 +191,21 @@ const CheckoutLoginDropdown = () => {
             signal: ac.signal,
           } as CredentialRequestOptions)
           .then((otp: IUpgradedCredential | null) => {
-            if (otp) setOtp(otp?.code || '');
+            if (otp) {
+              setOtp(otp?.code || '');
+              amplitudeEvent(constructEventName(`auto filled otp success`, 'feature'), {});
+            }
           })
           .catch((err) => {
             console.log(err);
+            amplitudeEvent(constructEventName(`auto filled otp error`, 'feature'), { error: err });
           });
       } else {
+        amplitudeEvent(constructEventName(`auto fill otp not support`, 'feature'), {});
+
         console.log('WebOTP not supported!.');
       }
     }
-  }, []);
-
-  // TODO: Auto scroll down div
-  useEffect(() => {
-    // (el.current as unknown as HTMLDivElement).scrollIntoView({ behavior: 'smooth' });
   }, []);
 
   return (
@@ -202,6 +219,12 @@ const CheckoutLoginDropdown = () => {
               value={phone}
               enableSearch
               specialLabel={t('@phone')}
+              onBlur={() => {
+                amplitudeEvent(constructEventName(`login-card`, 'input'), {
+                  phone: phone,
+                  length: phone.length,
+                });
+              }}
               onChange={(ph, data) => {
                 if ((data as any).dialCode !== countryCode) {
                   setCountryCode((data as any).dialCode);

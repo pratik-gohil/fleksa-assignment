@@ -10,6 +10,7 @@ import AddButton from '../../common/addButton/add-button.common.templateOne.comp
 import { memo } from 'react';
 import MenuPageSides from './sides.menu.pages.templateOne.components';
 import formatCurrency from '../../../../utils/formatCurrency';
+import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 
 export interface IPropsMenuPageCategoryListItem {
   product: ICategoryProduct;
@@ -123,9 +124,10 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
   const getNextIndex = () => ++optionsIndex;
 
   function toggle() {
-    if (isOpen) {
-      setOpenItemId(undefined);
-    } else {
+    amplitudeEvent(constructEventName('product wrapper', 'card'), { product, isOpen });
+
+    if (isOpen) setOpenItemId(undefined);
+    else {
       setOpenItemId(product.id);
       setSelectedOption(1);
     }
@@ -135,14 +137,19 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
     <ListItem isOpen={isOpen} id={`product-id-${product.id}`}>
       <ClosedViewContainer onClick={toggle}>
         {product.image && <BannerImage src={product.image} loading="lazy" isOpen={isOpen} />}
+
         <ClosedViewInfoContainer>
           <ClosedViewInfoContainerSection1>
             <RecipeName>{product.name_json[language]}</RecipeName>
+
             <RecipeDescription>{product.description_json[language]}</RecipeDescription>
+
             <RecipeCost>{formatCurrency(product.price, languageCode)}</RecipeCost>
           </ClosedViewInfoContainerSection1>
+
           <ClosedViewInfoContainerSection2>
             {product.image && <ClosedViewInfoImage src={product.image} loading="lazy" isOpen={isOpen} />}
+
             <AddButton
               setOpenItemId={setOpenItemId}
               product={product}
@@ -153,6 +160,7 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
           </ClosedViewInfoContainerSection2>
         </ClosedViewInfoContainer>
       </ClosedViewContainer>
+
       <OptionsContainer isOpen={isOpen}>
         {product.choice &&
           product.choice.map((cho, index) => (
@@ -167,6 +175,7 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
               setSelectedOption={(id) => setSelectedOption(id)}
             />
           ))}
+
         {product.type_ === 'SINGLE' &&
           Array.isArray(product.side_products_json) &&
           product.side_products_json?.map((sideProduct) => {

@@ -3,8 +3,8 @@ import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { useAppSelector } from '../../../../redux/hooks.redux';
-import { selectLanguageCode } from '../../../../redux/slices/configuration.slices.redux';
 import { selectShop } from '../../../../redux/slices/index.slices.redux';
+import CustomLink from '../amplitude/customLink';
 
 const Wrapper = styled.div`
   display: flex;
@@ -53,7 +53,6 @@ const Icon = styled.img`
 
 const LegalLinks: FunctionComponent = () => {
   const socialData = useAppSelector(selectShop)?.social;
-  const languageCode = useAppSelector(selectLanguageCode);
   const { t } = useTranslation('footer');
   const socialLinks = {
     facebook: socialData?.facebook ?? 'https://www.facebook.com/fleksaofficial',
@@ -64,21 +63,69 @@ const LegalLinks: FunctionComponent = () => {
   return (
     <Wrapper>
       <SocialMediaLinks>
-        <IconContainer href={socialLinks.instagram}>
+        <CustomLink
+          amplitude={{
+            type: 'icon',
+            text: 'instagram',
+          }}
+          href="/"
+          externelHref={socialLinks.instagram}
+          Override={IconContainer}
+        >
           <Icon src={'/assets/svg/social/instagram.svg'} />
-        </IconContainer>
+        </CustomLink>
 
-        <IconContainer href={socialLinks.twitter}>
+        <CustomLink
+          amplitude={{
+            type: 'icon',
+            text: 'twitter',
+          }}
+          href="/"
+          externelHref={socialLinks.twitter}
+          Override={IconContainer}
+        >
           <Icon src={'/assets/svg/social/twitter.svg'} />
-        </IconContainer>
+        </CustomLink>
 
-        <IconContainer href={socialLinks.facebook}>
+        <CustomLink
+          amplitude={{
+            type: 'icon',
+            text: 'facebook',
+          }}
+          href="/"
+          externelHref={socialLinks.facebook}
+          Override={IconContainer}
+        >
           <Icon src={'/assets/svg/social/facebook.svg'} />
-        </IconContainer>
+        </CustomLink>
       </SocialMediaLinks>
       <Text>
-        <a href={`/${languageCode}/terms`}>{t('@terms')}</a> | <a href={`/${languageCode}/privacy-policy`}>{t('@privacy')}</a> |{' '}
-        <a href={`/${languageCode}/imprint`}>{t('@imprint')}</a>
+        <CustomLink
+          href={`/terms`}
+          amplitude={{
+            text: t('@terms'),
+            type: 'link',
+          }}
+          placeholder={t('@terms')}
+        />{' '}
+        |{' '}
+        <CustomLink
+          href={`/privacy-policy`}
+          amplitude={{
+            text: t('@privacy'),
+            type: 'link',
+          }}
+          placeholder={t('@privacy')}
+        />{' '}
+        |{' '}
+        <CustomLink
+          href={`/imprint`}
+          amplitude={{
+            text: t('@imprint'),
+            type: 'link',
+          }}
+          placeholder={t('@imprint')}
+        />
       </Text>
     </Wrapper>
   );

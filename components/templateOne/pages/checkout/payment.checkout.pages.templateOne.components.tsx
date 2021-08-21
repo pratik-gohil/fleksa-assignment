@@ -38,6 +38,7 @@ import CheckoutOrderAndPayButton from './checkout.order.button';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { isEmailValid } from '../../../../utils/checkout.utils';
 import CheckoutLoginDropdown from './checkout.login.dropdown';
+import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 
 const Wrapper = styled.div`
   margin-bottom: 48px;
@@ -150,6 +151,8 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
         },
       });
       if (!response.result) {
+        amplitudeEvent(constructEventName(`order now createOrder error`, 'response'), response);
+
         dispatch(
           updateError({
             show: true,
@@ -161,16 +164,15 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
       }
       return response;
     } catch (error) {
+      amplitudeEvent(constructEventName(`order now createOrder error`, 'method'), { error });
+
       throw error;
     }
   }
 
   function isOrderPossible() {
-    if (orderType === 'DELIVERY') {
-      return deliveryFinances && deliveryFinances.amount ? cartData.cartCost >= deliveryFinances.amount : false;
-    } else {
-      return true;
-    }
+    if (orderType === 'DELIVERY') return deliveryFinances && deliveryFinances.amount ? cartData.cartCost >= deliveryFinances.amount : false;
+    else return true;
   }
 
   // TODO: Set initial payment method
@@ -206,12 +208,23 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
 
   async function onClickCashOrderButton() {
     try {
-      if (orderButtonLoading || !orderCanBePlaced) return;
+      amplitudeEvent(constructEventName(`order now cash`, 'button'), {});
+
+      if (orderButtonLoading || !orderCanBePlaced) {
+        amplitudeEvent(constructEventName(`order now cash not available`, 'button'), {});
+
+        return;
+      }
+
       setOrderButtonLoading(true);
-      await createOrder();
+      const response = await createOrder();
+
+      if (!response.result) amplitudeEvent(constructEventName(`order now cash createOrder error`, 'response'), response);
+
       await onPaymentDone();
     } catch (error) {
       console.error(error);
+      amplitudeEvent(constructEventName(`order now cash error`, 'response'), { error });
     } finally {
       setOrderButtonLoading(false);
     }
@@ -281,7 +294,13 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
                     <PaymentMethodItems
                       isActive={currentPaymentMethod === item.method}
                       key={item.method}
-                      onClick={() => dispatch(updatePaymentMethod(item.method))}
+                      onClick={() => {
+                        dispatch(updatePaymentMethod(item.method));
+                        amplitudeEvent(constructEventName(`payment selection`, 'button'), {
+                          prevSelected: currentPaymentMethod,
+                          currentSelected: item.method,
+                        });
+                      }}
                     >
                       {item.img}
                     </PaymentMethodItems>

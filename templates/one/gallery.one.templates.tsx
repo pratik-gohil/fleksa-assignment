@@ -8,6 +8,7 @@ import { selectImages, selectShop } from '../../redux/slices/index.slices.redux'
 import SvgPrevious from '../../public/assets/svg/previous.svg';
 import SvgNext from '../../public/assets/svg/next.svg';
 import { useRef } from 'react';
+import { amplitudeEvent, constructEventName } from '../../utils/amplitude.util';
 
 const getConfig = (index: number) => {
   const val = (index % 5) + 1;
@@ -225,6 +226,10 @@ const GalleryPageTemplateOne: FunctionComponent = ({}) => {
   };
 
   const handleImageClick = async (e: any) => {
+    amplitudeEvent(constructEventName(`image`, 'image'), {
+      image: imagesData[currentIndex.current],
+    });
+
     currentIndex.current = +e.target.alt.split('-')[1];
     setCurrentImg(imagesData[currentIndex.current]);
     setShowModal(true);
@@ -240,6 +245,10 @@ const GalleryPageTemplateOne: FunctionComponent = ({}) => {
   const handleLeftArrowClick = async () => {
     currentIndex.current -= 1;
 
+    amplitudeEvent(constructEventName(`image left arrow`, 'image'), {
+      image: imagesData[currentIndex.current],
+    });
+
     if (imagesData[currentIndex.current]) {
       setCurrentImg(imagesData[currentIndex.current]);
 
@@ -250,6 +259,10 @@ const GalleryPageTemplateOne: FunctionComponent = ({}) => {
 
   const handleRightArrowClick = async () => {
     currentIndex.current += 1;
+
+    amplitudeEvent(constructEventName(`image right arrow`, 'image'), {
+      image: imagesData[currentIndex.current],
+    });
 
     if (imagesData[currentIndex.current]) {
       setCurrentImg(imagesData[currentIndex.current]);

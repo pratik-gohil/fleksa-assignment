@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
-import { selectLanguageCode } from '../../../../redux/slices/configuration.slices.redux';
+import CustomLink from '../../common/amplitude/customLink';
 
 const Wrapper = styled.div`
   background: ${(p) => p.theme.textDarkColor};
@@ -57,11 +57,13 @@ const FlagImage = styled.p`
   font-size: 2.2rem;
 `;
 
-const Link = styled.a<{ active: boolean }>`
+const Link = styled.p<{ active: boolean }>`
   color: ${(p) => (p.active ? p.theme.primaryColor : p.theme.textLightActiveColor)};
   font-size: 1.8rem;
   font-weight: 600;
   letter-spacing: 1.5px;
+  padding: 0;
+  margin: 0;
 
   &:hover {
     color: ${(p) => p.theme.primaryColor};
@@ -98,13 +100,12 @@ const ActiveUnderline = styled.span<{ active: boolean }>`
 export const MyAccountLeftSection = () => {
   const customerData = useAppSelector(selectCustomer);
   const router = useRouter();
-  const languageCode = useAppSelector(selectLanguageCode);
   const { t } = useTranslation('account');
 
-  const [dynamicLink, setDynamicLink] = useState(`/${languageCode}/account`);
+  const [dynamicLink, setDynamicLink] = useState(`/account`);
 
   useEffect(() => {
-    if (window.matchMedia('(max-width: 576px)').matches) setDynamicLink(`/${languageCode}/account/edit`);
+    if (window.matchMedia('(max-width: 576px)').matches) setDynamicLink(`/account/edit`);
   }, []);
 
   return (
@@ -117,20 +118,54 @@ export const MyAccountLeftSection = () => {
             .join('')}
         </FlagImage>
 
-        <Link href={dynamicLink} active={router.pathname === '/account'}>
-          {t('@profile')}
-          <ActiveUnderline active={router.pathname === '/account'} />
-        </Link>
-        <Link href={`/${languageCode}/account/order-history`} active={router.pathname === '/account/order-history'}>
-          {t('@my-orders')}
-          <ActiveUnderline active={router.pathname === '/account/order-history'} />
-        </Link>
-        <Link href={`/${languageCode}/account/addresses`} active={router.pathname === '/account/addresses'}>
-          {t('@address')}
-          <ActiveUnderline active={router.pathname === '/account/addresses'} />
-        </Link>
+        <CustomLink
+          amplitude={{
+            type: 'link',
+            text: 'account',
+          }}
+          href={dynamicLink}
+        >
+          <Link active={router.pathname === '/account'}>
+            {t('@profile')}
+            <ActiveUnderline active={router.pathname === '/account'} />
+          </Link>
+        </CustomLink>
 
-        <LougoutButton href="/logout">{t('@logout')}</LougoutButton>
+        <CustomLink
+          amplitude={{
+            type: 'link',
+            text: t('@my-orders'),
+          }}
+          href={`/account/order-history`}
+        >
+          <Link active={router.pathname === '/account/order-history'}>
+            {t('@my-orders')}
+            <ActiveUnderline active={router.pathname === '/account/order-history'} />
+          </Link>
+        </CustomLink>
+
+        <CustomLink
+          amplitude={{
+            type: 'link',
+            text: t('@address'),
+          }}
+          href={'/account/addresses'}
+        >
+          <Link active={router.pathname === '/account/addresses'}>
+            {t('@address')}
+            <ActiveUnderline active={router.pathname === '/account/addresses'} />
+          </Link>
+        </CustomLink>
+
+        <CustomLink
+          amplitude={{
+            type: 'link',
+            text: t('@logout'),
+          }}
+          href="/logout"
+          placeholder={t('@logout')}
+          Override={LougoutButton}
+        />
       </LinkContainer>
     </Wrapper>
   );

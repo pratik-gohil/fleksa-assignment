@@ -19,37 +19,64 @@ const templateList = [MenuByIdPageTemplateOne];
 
 export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ctx) => {
   try {
+    const shopId = Number(ctx.query.id);
+
+    if (isNaN(shopId)) throw new Error('Shop id not found');
+
     const { redirect, configuration, responseIndex, bearerToken } = await getServerSidePropsCommon(ctx, false);
     if (redirect) return redirect;
 
     const cookies = new Cookies(ctx.req, ctx.res);
-    cookies.set(COOKIE_SELECTED_MENU_ID, ctx.query.id as string, {
+
+    let urlPath: string | undefined;
+    let menuId: number | undefined;
+
+    if (responseIndex?.siblings.length) {
+      const siblingData = responseIndex?.siblings.find((i) => i.id == Number(ctx.query.id));
+      urlPath = siblingData?.urlpath;
+      menuId = siblingData?.id;
+
+      // TODO: If that menu id is not exist redirect it root as default one
+      if (!menuId)
+        return {
+          redirect: {
+            permanent: false,
+            destination: `/menu/${responseIndex?.shop.id}`,
+          },
+        };
+    } else if (Number(ctx.query.id) === responseIndex?.shop.id) {
+      urlPath = responseIndex?.shop.urlpath;
+      menuId = responseIndex?.shop.id;
+    } else {
+      /**
+       * In case customer try to visit different restaurant menu redirect them to correspond restaurant
+       * location.
+       */
+      return {
+        redirect: {
+          permanent: false,
+          destination: `/menu/${responseIndex?.shop.id}`,
+        },
+      };
+    }
+
+    cookies.set(COOKIE_SELECTED_MENU_ID, `${menuId}`, {
       path: '/',
       httpOnly: false,
       maxAge: 365 * 24 * 60 * 60 * 1000,
       sameSite: 'lax',
     });
-    let urlPath: string | undefined;
-    if (responseIndex?.shop.id === Number(ctx.query.id)) {
-      urlPath = responseIndex?.shop.urlpath;
-    } else {
-      const siblingData = responseIndex?.siblings.find((i) => i.id == Number(ctx.query.id));
-      urlPath = siblingData?.urlpath;
-    }
     cookies.set(COOKIE_SELECTED_MENU_URLPATH, urlPath as string, {
       path: '/',
       httpOnly: false,
       maxAge: 365 * 24 * 60 * 60 * 1000,
       sameSite: 'lax',
     });
-    ctx.store.dispatch(updateSelectedMenu(ctx.query.id as string));
+    ctx.store.dispatch(updateSelectedMenu(menuId));
     ctx.store.dispatch(updateSelectedMenuUrlpath(urlPath));
     ctx.store.dispatch(updateSiblings(responseIndex?.siblings));
 
-    const shopId = Number(ctx.query.id);
-
-    if (isNaN(shopId)) throw new Error('Shop id not found');
-    const responseMenu = await new PyApiHttpGetMenu(configuration).get({ shopId });
+    const responseMenu = await new PyApiHttpGetMenu(configuration).get({ shopId: menuId || shopId });
     ctx.store.dispatch(updateCategories(responseMenu?.categories));
     ctx.store.dispatch(updateSides(responseMenu?.sides));
     ctx.store.dispatch(updateParts(responseMenu?.parts));
