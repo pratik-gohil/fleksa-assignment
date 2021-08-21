@@ -22,7 +22,15 @@ export const amplitudeEvent = (name: string, params?: {}) => {
 
 export const constructEventName = (text: string, component: AmplitudeEventNodes) => {
   if (typeof window !== 'undefined') {
-    return `${window.location.pathname !== '/' ? window.location.pathname : ''}/${text}-${component}`.replace(/\s+/g, '-').toUpperCase();
+    const eventName = `${window.location.origin.split('//')[1]}${
+      window.location.pathname !== '/' ? window.location.pathname : ''
+    }/${text}-${component}`
+      .replace(/\s+/g, '-')
+      .toUpperCase();
+
+    // console.log('event ::: ', eventName);
+
+    return eventName;
   }
 
   return 'INVALID-EVENT';
