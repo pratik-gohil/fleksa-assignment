@@ -45,21 +45,6 @@ const MenuPageChoiceList: FunctionComponent<IPropsMenuPageCategoryListItem> = ({
       />
     );
   } else {
-    useEffect(() => {
-      if (isOpen) {
-        dispatch(
-          updateItemSelectionNewItem({
-            topProductId: product.id,
-            productId: product.id,
-            type: 'SINGLE',
-            mainName: product.name_json,
-            cost: product.price,
-            // partName: Single product type do not have part name
-          }),
-        );
-      }
-    }, [isOpen]);
-
     const tempChoice = choice as ICategorySingleProductChoice;
     if (tempChoice.options && tempChoice.options.length > 0) {
       return (

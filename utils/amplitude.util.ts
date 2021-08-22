@@ -4,19 +4,19 @@ const AMPLITUDE_KEY = '13e94566ae299c8fe7697c783f2fba7b';
 
 export const initAmplitude = () => {
   if (typeof window !== 'undefined') {
-    window.amplitude.getInstance().init(AMPLITUDE_KEY);
+    window.amplitude?.getInstance().init(AMPLITUDE_KEY);
   }
 };
 
 export const setAmplitudeUserId = (userId: string) => {
   if (typeof window !== 'undefined') {
-    window.amplitude.getInstance().setUserId(userId);
+    window.amplitude?.getInstance().setUserId(userId);
   }
 };
 
 export const amplitudeEvent = (name: string, params?: {}) => {
   if (typeof window !== 'undefined') {
-    window.amplitude.getInstance().logEvent(name, params);
+    window.amplitude?.getInstance().logEvent(name, params);
   }
 };
 
