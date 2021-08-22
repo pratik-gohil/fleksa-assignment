@@ -170,7 +170,9 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
             <AddButton
               setOpenItemId={setOpenItemId}
               product={product}
-              canOpen={!!product.choice && product.choice.length > 0}
+              canOpen={
+                (!!product.choice && product.choice.length > 0) || (!!product.side_products_json && product.side_products_json.length > 0)
+              }
               hasImage={!!product.image}
               isOpen={isOpen}
             />

@@ -96,7 +96,11 @@ const AddButton: FunctionComponent<IPropsAddButton> = ({ setOpenItemId, product,
   }, [selectionData, product]);
 
   function addItemToCart() {
+    console.log('selection data ', selectionData);
+
     if (canOpen && isOpen && selectionData) {
+      console.log('isOpen data ', isOpen, canOpen);
+
       dispatch(
         updateAddProduct({
           topProductId: product.id,
@@ -115,6 +119,8 @@ const AddButton: FunctionComponent<IPropsAddButton> = ({ setOpenItemId, product,
     }
 
     if (!canOpen) {
+      console.log('not isOpen data ', canOpen);
+
       dispatch(
         updateAddProduct({
           topProductId: product.id,

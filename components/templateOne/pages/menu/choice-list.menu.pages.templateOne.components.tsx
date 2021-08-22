@@ -7,9 +7,6 @@ import {
 } from '../../../../interfaces/common/category.common.interfaces';
 import MenuPageOptionsList from './options-list.menu.pages.templateOne.components';
 import MenuPageMultipleChoiceList from './multiple-select.pages.templateOne.components';
-import { useEffect } from 'react';
-import { useAppDispatch } from '../../../../redux/hooks.redux';
-import { updateItemSelectionNewItem } from '../../../../redux/slices/item-selection.slices.redux';
 
 export interface IPropsMenuPageCategoryListItem {
   selectedOption: number | undefined;
@@ -30,8 +27,6 @@ const MenuPageChoiceList: FunctionComponent<IPropsMenuPageCategoryListItem> = ({
   setSelectedOption,
   getNextIndex,
 }) => {
-  const dispatch = useAppDispatch();
-
   if (product.type_ === 'MULTIPLE') {
     return (
       <MenuPageMultipleChoiceList
