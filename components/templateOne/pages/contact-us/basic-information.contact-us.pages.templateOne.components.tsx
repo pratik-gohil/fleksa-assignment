@@ -21,13 +21,18 @@ const Wrapper = styled.div`
   border-left: 2px solid rgba(0, 0, 0, 0.1);
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    padding: 1rem;
+    padding: 0;
+    width: 100%;
   }
 `;
 
 const DaysContainer = styled.div`
   margin: 1rem 0;
   min-width: 350px;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    min-width: max-content;
+  }
 `;
 const Day = styled.div`
   display: flex;
@@ -36,6 +41,7 @@ const Day = styled.div`
   padding: 0.3rem 1rem;
   font-size: 1rem;
 `;
+
 const DayName = styled.span<{
   selected: boolean;
 }>`
@@ -43,6 +49,7 @@ const DayName = styled.span<{
   font-weight: ${(p) => p.selected && 'bold'};
   width: 50%;
 `;
+
 const DayTime = styled.span`
   font-weight: 600;
   font-size: clamp(1rem, 1.1rem, 2vw);
@@ -52,7 +59,6 @@ const DayTime = styled.span`
 `;
 
 const Item = styled.div`
-  /* margin: 2em 0; */
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -105,7 +111,7 @@ const Map = styled.div`
   flex-direction: column;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    margin-top: 2rem;
+    /* margin-top: 2rem; */
     iframe {
       width: 100%;
     }
@@ -119,11 +125,7 @@ const DropDownIcon = styled(SvgDropDownIconPath)<{ isOpened: boolean }>`
   transform: ${(p) => (p.isOpened ? 'rotate(180deg)' : 'rotate(0deg)')};
 `;
 
-const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-
-const DropDownContainer = styled.div`
-  min-width: 350px;
-`;
+const DropDownContainer = styled.div``;
 
 const DropDownHeader = styled.div`
   display: flex;
@@ -166,6 +168,8 @@ const Divider = styled.p`
   padding: 0;
   margin: 0.2rem 0;
 `;
+
+const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 
 export const BasicContactUsInformation = () => {
   const [currentDay] = useState(capitalize(moment().format('dddd')));
