@@ -111,7 +111,6 @@ const Map = styled.div`
   flex-direction: column;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    /* margin-top: 2rem; */
     iframe {
       width: 100%;
     }
