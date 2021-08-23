@@ -21,5 +21,7 @@
   "@closed": "Closed",
   "@need-accept": "Kindly accept our terms and service.",
   "@successfully-sent": "Successfully sent 👏 Thanks for contacting us.",
-  "@oops-error": "Ooops! Something went wrong."
+  "@oops-error": "Ooops! Something went wrong.",
+  "@shop-time": "Shop Time",
+  "@delivery-time": "Delivery Time"
 }

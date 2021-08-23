@@ -213,12 +213,12 @@ export const BasicContactUsInformation = () => {
       <DaysContainer>
         {[
           {
-            title: 'Shop Timing',
+            title: t('@shop-time'),
             tag: 'shop_time',
             timingList: handleSelectTimings('shop'),
           },
           {
-            title: 'Delivery Timing',
+            title: t('@delivery-time'),
             tag: 'delivery_time',
             timingList: handleSelectTimings('delivery'),
           },
