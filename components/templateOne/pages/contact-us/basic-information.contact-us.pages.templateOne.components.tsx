@@ -177,102 +177,81 @@ export const BasicContactUsInformation = () => {
 
   const [isOpened, setIsOpened] = useState<string>('shop_time');
 
-  const shopDays = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'].map((day) => {
-    if (timings === null) return;
+  /**
+   * Function used to determining timing list for shop
+   * @param - type of time selection object
+   */
+  const handleSelectTimings = (type: 'shop' | 'delivery') => {
+    return ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'].map((day) => {
+      if (timings === null) return;
 
-    const time = (timings[day] as ITimingsDay).shop?.timings;
+      let time = (timings[day] as ITimingsDay).shop;
 
-    return {
-      dayName: t(`@${day}`),
-      time,
-      availability: (timings[day] as ITimingsDay).shop.availability,
-    };
-  });
+      if (type === 'delivery') time = (timings[day] as ITimingsDay).delivery;
 
-  const deliveryDays = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'].map((day) => {
-    if (timings === null) return;
-
-    const time = (timings[day] as ITimingsDay).delivery?.timings;
-
-    return {
-      dayName: t(`@${day}`),
-      time,
-      availability: (timings[day] as ITimingsDay).delivery.availability,
-    };
-  });
-
-  console.log('deliver ', deliveryDays);
-
-  const handleDropDownOpen = async (_e: any, tag: string) => {
-    setIsOpened(isOpened === tag ? '' : tag);
+      return {
+        dayName: t(`@${day}`),
+        time: time.timings,
+        availability: time.availability,
+      };
+    });
   };
+
+  /**
+   * Function used to handle dropdown function
+   * @param _e Unused event object
+   * @param tag String dropdown name
+   * @returns void
+   */
+  const handleDropDownOpen = async (_e: any, tag: string) => setIsOpened(isOpened === tag ? '' : tag);
 
   return (
     <Wrapper>
       <DaysContainer>
-        <DropDownContainer>
-          <DropDownHeader onClick={async (e) => await handleDropDownOpen(e, 'shop_time')}>
-            <DropDownIcon isOpened={isOpened === 'shop_time'} />
-            <Title>Shop Timing</Title>
-          </DropDownHeader>
+        {[
+          {
+            title: 'Shop Timing',
+            tag: 'shop_time',
+            timingList: handleSelectTimings('shop'),
+          },
+          {
+            title: 'Delivery Timing',
+            tag: 'delivery_time',
+            timingList: handleSelectTimings('delivery'),
+          },
+        ].map((dropdown) => (
+          <DropDownContainer>
+            <DropDownHeader onClick={async (e) => await handleDropDownOpen(e, dropdown.tag)}>
+              <DropDownIcon isOpened={isOpened === dropdown.tag} />
+              <Title>{dropdown.title}</Title>
+            </DropDownHeader>
 
-          <DropDownBody isOpened={isOpened === 'shop_time'}>
-            {shopDays.map((day) => (
-              <>
-                <Day key={day?.dayName}>
-                  <DayName selected={currentDay === day?.dayName}>{day?.dayName}</DayName>
-                  {day?.availability ? (
-                    <DayTime>
-                      {day?.time?.map((t) => (
-                        <>
-                          <span>
-                            {t.open} - {t.close}
-                          </span>
-                          <br />
-                        </>
-                      ))}
-                    </DayTime>
-                  ) : (
-                    <span style={{ color: 'red', fontWeight: 500 }}>{t('@closed')}</span>
-                  )}
-                </Day>
-                <Divider />
-              </>
-            ))}
-          </DropDownBody>
-        </DropDownContainer>
-
-        <DropDownContainer>
-          <DropDownHeader onClick={async (e) => await handleDropDownOpen(e, 'delivery_time')}>
-            <DropDownIcon isOpened={isOpened === 'delivery_time'} />
-            <Title>Delivery Timing</Title>
-          </DropDownHeader>
-
-          <DropDownBody isOpened={isOpened === 'delivery_time'}>
-            {deliveryDays.map((day) => (
-              <>
-                <Day key={day?.dayName}>
-                  <DayName selected={currentDay === day?.dayName}>{day?.dayName}</DayName>
-                  {day?.availability ? (
-                    <DayTime>
-                      {day?.time?.map((t) => (
-                        <>
-                          <span>
-                            {t.open} - {t.close}
-                          </span>
-                          <br />
-                        </>
-                      ))}
-                    </DayTime>
-                  ) : (
-                    <span style={{ color: 'red', fontWeight: 500 }}>{t('@closed')}</span>
-                  )}
-                </Day>
-                <Divider />
-              </>
-            ))}
-          </DropDownBody>
-        </DropDownContainer>
+            <DropDownBody isOpened={isOpened === dropdown.tag}>
+              {dropdown.timingList.map((day) => (
+                <>
+                  <Day key={day?.dayName}>
+                    <DayName selected={currentDay === day?.dayName}>{day?.dayName}</DayName>
+                    {day?.availability ? (
+                      <DayTime>
+                        {day?.time?.map((t) => (
+                          <>
+                            <span>
+                              {t.open} - {t.close}
+                            </span>
+                            <br />
+                          </>
+                        ))}
+                      </DayTime>
+                    ) : (
+                      <span style={{ color: 'red', fontWeight: 500 }}>{t('@closed')}</span>
+                    )}
+                  </Day>
+                  <Divider />
+                </>
+              ))}
+            </DropDownBody>
+          </DropDownContainer>
+        ))}
 
         {!!addressData?.email && (
           <Item>
