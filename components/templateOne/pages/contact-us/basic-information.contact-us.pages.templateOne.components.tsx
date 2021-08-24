@@ -11,28 +11,37 @@ import PhoneIconpath from '../../../../public/assets/svg/call.svg';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import moment from 'moment';
 import CustomLink from '../../common/amplitude/customLink';
+import SvgDropDownIconPath from '../../../../public/assets/svg/angle-dropdown.svg';
 
 const Wrapper = styled.div`
   padding: 2rem 1.5rem 0 1.5rem;
   height: 100%;
+  width: max-content;
 
   border-left: 2px solid rgba(0, 0, 0, 0.1);
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    padding: 1rem;
+    padding: 0;
+    width: 100%;
   }
 `;
 
 const DaysContainer = styled.div`
   margin: 1rem 0;
+  min-width: 350px;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    min-width: max-content;
+  }
 `;
 const Day = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.3rem 0;
-  font-size: 1.2rem;
+  padding: 0.3rem 1rem;
+  font-size: 1rem;
 `;
+
 const DayName = styled.span<{
   selected: boolean;
 }>`
@@ -40,15 +49,16 @@ const DayName = styled.span<{
   font-weight: ${(p) => p.selected && 'bold'};
   width: 50%;
 `;
+
 const DayTime = styled.span`
   font-weight: 600;
   font-size: clamp(1rem, 1.1rem, 2vw);
   width: 50%;
   text-align: right;
+  font-size: 1rem;
 `;
 
 const Item = styled.div`
-  margin: 2em 0;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -93,6 +103,7 @@ const ArrowIcon = styled(ArrowIconPath)`
 `;
 const Phoneicon = styled(PhoneIconpath)`
   margin: 0 1rem 0 0.5rem;
+  font-size: 1rem;
 `;
 
 const Map = styled.div`
@@ -100,11 +111,61 @@ const Map = styled.div`
   flex-direction: column;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    margin-top: 2rem;
     iframe {
       width: 100%;
     }
   }
+`;
+
+const DropDownIcon = styled(SvgDropDownIconPath)<{ isOpened: boolean }>`
+  margin: 0 1rem;
+
+  transition: transform 0.25s;
+  transform: ${(p) => (p.isOpened ? 'rotate(180deg)' : 'rotate(0deg)')};
+`;
+
+const DropDownContainer = styled.div``;
+
+const DropDownHeader = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0;
+  cursor: pointer;
+
+  &:hover {
+    background: #e4eef9;
+  }
+`;
+
+const DropDownBody = styled.div<{ isOpened: boolean }>`
+  transition: all 0.5s;
+
+  max-height: 0px;
+  opacity: 0;
+  padding: 0;
+  overflow: hidden;
+
+  ${({ isOpened }) =>
+    isOpened &&
+    `
+    opacity: 1;
+    max-height: 500px;
+    padding: 0 ;
+  `}
+`;
+
+const Title = styled.h5`
+  font-size: 18px;
+  padding: 0 1rem;
+  margin: 0;
+`;
+
+const Divider = styled.p`
+  width: 100%;
+  height: 1px;
+  background: #e4eef9;
+  padding: 0;
+  margin: 0.2rem 0;
 `;
 
 const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
@@ -117,25 +178,82 @@ export const BasicContactUsInformation = () => {
   const addressData = useAppSelector(selectAddress);
   const shopData = useAppSelector(selectShop);
 
-  const days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'].map((day) => {
-    if (timings === null) return;
-    return {
-      dayName: t(`@${day}`),
-      time: (timings[day] as ITimingsDay).shop?.timings?.map((t) => `${t.open} - ${t.close}`).join(', ') || (
-        <span style={{ color: 'red', fontWeight: 500 }}>Closed</span>
-      ),
-      available: (timings[day] as ITimingsDay).shop.availability,
-    };
-  });
+  const [isOpened, setIsOpened] = useState<string>('shop_time');
+
+  /**
+   * Function used to determining timing list for shop
+   * @param - type of time selection object
+   */
+  const handleSelectTimings = (type: 'shop' | 'delivery') => {
+    return ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'].map((day) => {
+      if (timings === null) return;
+
+      let time = (timings[day] as ITimingsDay).shop;
+
+      if (type === 'delivery') time = (timings[day] as ITimingsDay).delivery;
+
+      return {
+        dayName: t(`@${day}`),
+        time: time.timings,
+        availability: time.availability,
+      };
+    });
+  };
+
+  /**
+   * Function used to handle dropdown function
+   * @param _e Unused event object
+   * @param tag String dropdown name
+   * @returns void
+   */
+  const handleDropDownOpen = async (_e: any, tag: string) => setIsOpened(isOpened === tag ? '' : tag);
 
   return (
     <Wrapper>
       <DaysContainer>
-        {days.map((day) => (
-          <Day key={day?.dayName}>
-            <DayName selected={currentDay === day?.dayName}>{day?.dayName}</DayName>
-            {day?.available ? <DayTime>{day?.time}</DayTime> : <span style={{ color: 'red', fontWeight: 500 }}>{t('@closed')}</span>}
-          </Day>
+        {[
+          {
+            title: t('@shop-time'),
+            tag: 'shop_time',
+            timingList: handleSelectTimings('shop'),
+          },
+          {
+            title: t('@delivery-time'),
+            tag: 'delivery_time',
+            timingList: handleSelectTimings('delivery'),
+          },
+        ].map((dropdown) => (
+          <DropDownContainer>
+            <DropDownHeader onClick={async (e) => await handleDropDownOpen(e, dropdown.tag)}>
+              <DropDownIcon isOpened={isOpened === dropdown.tag} />
+              <Title>{dropdown.title}</Title>
+            </DropDownHeader>
+
+            <DropDownBody isOpened={isOpened === dropdown.tag}>
+              {dropdown.timingList.map((day) => (
+                <>
+                  <Day key={day?.dayName}>
+                    <DayName selected={currentDay === day?.dayName}>{day?.dayName}</DayName>
+                    {day?.availability ? (
+                      <DayTime>
+                        {day?.time?.map((t) => (
+                          <>
+                            <span>
+                              {t.open} - {t.close}
+                            </span>
+                            <br />
+                          </>
+                        ))}
+                      </DayTime>
+                    ) : (
+                      <span style={{ color: 'red', fontWeight: 500 }}>{t('@closed')}</span>
+                    )}
+                  </Day>
+                  <Divider />
+                </>
+              ))}
+            </DropDownBody>
+          </DropDownContainer>
         ))}
 
         {!!addressData?.email && (

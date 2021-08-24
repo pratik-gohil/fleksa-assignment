@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
-import { Row, Col, Container } from 'react-grid-system';
+import { Row, Col } from 'react-grid-system';
 import { BREAKPOINTS } from '../../constants/grid-system-configuration';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks.redux';
 import { selectConfiguration } from '../../redux/slices/configuration.slices.redux';
@@ -301,128 +301,126 @@ const ContactUsPageTemplateOne: FunctionComponent = ({}) => {
 
   return (
     <ContactUsContainer>
-      <Container>
-        <Row justify="center" nogutter>
-          <Col xl={6} sm={12}>
-            <Form onSubmit={handleContactUsSendButtonClick}>
-              <Header>
-                <Title>{t('@title')}</Title>
-                <SubTitle>{t('@sub_title')}</SubTitle>
-              </Header>
+      <Row justify="center" nogutter>
+        <Col xl={6} sm={12}>
+          <Form onSubmit={handleContactUsSendButtonClick}>
+            <Header>
+              <Title>{t('@title')}</Title>
+              <SubTitle>{t('@sub_title')}</SubTitle>
+            </Header>
 
-              <InputContainerFlex>
-                <InputBox>
-                  <Label>{t('@name')}</Label>
-                  <Input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required={true}
-                    onBlur={() => {
-                      amplitudeEvent(constructEventName(`name`, 'input'), {
-                        name,
-                        length: name.length,
-                      });
-                    }}
-                  />
-                </InputBox>
-                <InputBox>
-                  <Label>{t('@email')}</Label>
-                  <Input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required={true}
-                    onBlur={() => {
-                      amplitudeEvent(constructEventName(`email`, 'input'), {
-                        email,
-                        length: email.length,
-                      });
-                    }}
-                  />
-                </InputBox>
-              </InputContainerFlex>
-
-              <BottomContainer>
-                <InputContainer>
-                  <InputBox>
-                    <Label>{t('@subject')}</Label>
-                    <Input
-                      type="text"
-                      value={subject}
-                      onChange={(e) => setSubject(e.target.value)}
-                      required={true}
-                      onBlur={() => {
-                        amplitudeEvent(constructEventName(`subject`, 'input'), {
-                          subject,
-                          length: subject.length,
-                        });
-                      }}
-                    />
-                  </InputBox>
-                  <InputBox>
-                    <Label>{t('@message')}</Label>
-                    <Textarea
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      required={true}
-                      onBlur={() => {
-                        amplitudeEvent(constructEventName(`message`, 'input'), {
-                          message,
-                          length: message.length,
-                        });
-                      }}
-                    />
-                  </InputBox>
-                </InputContainer>
-                <ContactUsImage src="/assets/svg/contact_us_main_img.svg" />
-              </BottomContainer>
-
-              <AgreementBox>
-                <Checkbox
-                  type="checkbox"
-                  checked={checked}
-                  onChange={() => {
-                    setChecked(!checked);
-                    amplitudeEvent(constructEventName(`checkbox`, 'input'), {
-                      prev: checked,
-                      current: !checked,
+            <InputContainerFlex>
+              <InputBox>
+                <Label>{t('@name')}</Label>
+                <Input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required={true}
+                  onBlur={() => {
+                    amplitudeEvent(constructEventName(`name`, 'input'), {
+                      name,
+                      length: name.length,
                     });
                   }}
                 />
-                <Acknowledgement>
-                  {t('@accept')}{' '}
-                  <CustomLink
-                    amplitude={{
-                      type: 'link',
-                      text: t('@terms'),
-                    }}
-                    href={`/terms`}
-                  >
-                    {t('@terms')}
-                  </CustomLink>{' '}
-                  {t('@and')}{' '}
-                  <CustomLink
-                    amplitude={{
-                      type: 'link',
-                      text: t('@policy'),
-                    }}
-                    href={`/privacy-policy`}
-                  >
-                    {t('@policy')}
-                  </CustomLink>
-                </Acknowledgement>
-              </AgreementBox>
+              </InputBox>
+              <InputBox>
+                <Label>{t('@email')}</Label>
+                <Input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required={true}
+                  onBlur={() => {
+                    amplitudeEvent(constructEventName(`email`, 'input'), {
+                      email,
+                      length: email.length,
+                    });
+                  }}
+                />
+              </InputBox>
+            </InputContainerFlex>
 
-              <SendButton type="submit">{loading ? <LoadingIndicator width={20} /> : t('@send')}</SendButton>
-            </Form>
-          </Col>
+            <BottomContainer>
+              <InputContainer>
+                <InputBox>
+                  <Label>{t('@subject')}</Label>
+                  <Input
+                    type="text"
+                    value={subject}
+                    onChange={(e) => setSubject(e.target.value)}
+                    required={true}
+                    onBlur={() => {
+                      amplitudeEvent(constructEventName(`subject`, 'input'), {
+                        subject,
+                        length: subject.length,
+                      });
+                    }}
+                  />
+                </InputBox>
+                <InputBox>
+                  <Label>{t('@message')}</Label>
+                  <Textarea
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    required={true}
+                    onBlur={() => {
+                      amplitudeEvent(constructEventName(`message`, 'input'), {
+                        message,
+                        length: message.length,
+                      });
+                    }}
+                  />
+                </InputBox>
+              </InputContainer>
+              <ContactUsImage src="/assets/svg/contact_us_main_img.svg" />
+            </BottomContainer>
 
-          <Col xl={3} sm={12}>
-            <BasicContactUsInformation />
-          </Col>
-        </Row>
-      </Container>
+            <AgreementBox>
+              <Checkbox
+                type="checkbox"
+                checked={checked}
+                onChange={() => {
+                  setChecked(!checked);
+                  amplitudeEvent(constructEventName(`checkbox`, 'input'), {
+                    prev: checked,
+                    current: !checked,
+                  });
+                }}
+              />
+              <Acknowledgement>
+                {t('@accept')}{' '}
+                <CustomLink
+                  amplitude={{
+                    type: 'link',
+                    text: t('@terms'),
+                  }}
+                  href={`/terms`}
+                >
+                  {t('@terms')}
+                </CustomLink>{' '}
+                {t('@and')}{' '}
+                <CustomLink
+                  amplitude={{
+                    type: 'link',
+                    text: t('@policy'),
+                  }}
+                  href={`/privacy-policy`}
+                >
+                  {t('@policy')}
+                </CustomLink>
+              </Acknowledgement>
+            </AgreementBox>
+
+            <SendButton type="submit">{loading ? <LoadingIndicator width={20} /> : t('@send')}</SendButton>
+          </Form>
+        </Col>
+
+        <Col xl={3} sm={12}>
+          <BasicContactUsInformation />
+        </Col>
+      </Row>
     </ContactUsContainer>
   );
 };

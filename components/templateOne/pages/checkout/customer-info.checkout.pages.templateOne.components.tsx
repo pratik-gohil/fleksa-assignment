@@ -40,10 +40,10 @@ export const StyledCheckoutTitle = styled.h3`
   }
 `;
 
-export const StyledCheckoutInput = styled.input<{ isError: boolean }>`
+export const StyledCheckoutInput = styled.input`
   flex: 2;
   max-width: 100%;
-  border: 1px solid ${(p) => (p.isError ? 'red' : 'rgba(0,0,0,0.2)')};
+  border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: ${(p) => p.theme.borderRadius}px;
   padding: 1rem;
   font-size: 1rem;
@@ -132,7 +132,6 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
           <StyledCheckoutInput
             type="text"
             placeholder="Name"
-            isError={isErrorField.name}
             value={userData.name}
             onBlur={() => {
               setEditableName(!userData.name);
@@ -160,11 +159,10 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
       <EditContainer>
         <Text>{t('@email')}</Text>
 
-        {editableEmail || !userData.email ? (
+        {editableEmail ? (
           <StyledCheckoutInput
             type="text"
             placeholder="Email"
-            isError={isErrorField.email}
             value={userData.email || ''}
             onBlur={handleEmailOnBlurEvent}
             onChange={(e) => {
@@ -179,6 +177,8 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
 
         <EditButton
           onClick={() => {
+            if (!isEmailValid(userData?.email || '')) return;
+
             setEditableEmail(!editableEmail);
             amplitudeEvent(constructEventName(`customer info email edit`, 'icon-button'), {
               currentEmail: userData.email,
@@ -190,7 +190,7 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
       <EditContainer>
         <Text>{t('@phone')}</Text>
 
-        {editablePhone || !userData.country_code || !userData.phone ? (
+        {editablePhone ? (
           <PhoneInputContainer>
             <PhoneInput
               country={'de'}
@@ -198,6 +198,8 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
               enableSearch
               specialLabel=""
               onBlur={() => {
+                if (phone.length < 8) return;
+
                 setEditablePhone(!editablePhone);
                 amplitudeEvent(constructEventName(`customer-info-phone`, 'input'), {
                   email: phone,
@@ -209,6 +211,7 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
                   setCountryCode((data as any).dialCode);
                   dispatch(updateCustomerCountryCode((data as any).dialCode));
                 }
+
                 setPhone(ph);
                 dispatch(updateCustomerPhone(ph.replace((data as any).dialCode, ''))); // ? Update the code without country code
               }}
@@ -223,6 +226,8 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
 
         <EditButton
           onClick={() => {
+            if (phone.length < 8) return;
+
             setEditablePhone(!editablePhone);
             amplitudeEvent(constructEventName(`customer info phone edit`, 'icon-button'), {
               currentEmail: phone,

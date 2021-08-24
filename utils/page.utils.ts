@@ -74,6 +74,7 @@ export async function getServerSidePropsCommon(
      * In case customer try to go checkout without menu id redirect to index to generate the menu id
      */
     ctx.store.dispatch(updateSelectedMenu(selectedMenu || null));
+    ctx.store.dispatch(updateBearerToken(bearerToken || null));
 
     const responseIndex = await new PyApiHttpGetIndex(configuration).get();
     if (!responseIndex?.shop.id) throw new Error('Shop id not found');
@@ -96,7 +97,6 @@ export async function getServerSidePropsCommon(
         configuration,
       };
     } else if (bearerToken) {
-      ctx.store.dispatch(updateBearerToken(bearerToken || null));
       const userData = await new NodeApiHttpGetUser(configuration, bearerToken).get({});
       ctx.store.dispatch(updateCustomer(userData?.data.customer));
 

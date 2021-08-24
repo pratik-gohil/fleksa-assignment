@@ -10,7 +10,12 @@ import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { selectCart } from '../../../../redux/slices/cart.slices.redux';
 import { selectOrderType, selectPromoCode, selectTip, updatePromoCode } from '../../../../redux/slices/checkout.slices.redux';
 import { updateError } from '../../../../redux/slices/common.slices.redux';
-import { selectConfiguration, selectLanguage, selectLanguageCode, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
+import {
+  selectConfiguration,
+  selectLanguage,
+  selectLanguageCode,
+  selectSelectedMenu,
+} from '../../../../redux/slices/configuration.slices.redux';
 import { selectBearerToken } from '../../../../redux/slices/user.slices.redux';
 import { checkoutFinalAmount } from '../../../../utils/checkout.utils';
 import { getPrductsFromCartData } from '../../../../utils/products.utils';
@@ -169,7 +174,6 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
               ) : (
                 <>
                   <StyledCheckoutInput
-                    isError={false}
                     value={coupon}
                     autoFocus
                     onChange={(e) => setCoupon(e.target.value)}

@@ -1,7 +1,7 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 
-import { useAppSelector } from '../../../../redux/hooks.redux';
+import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { selectLanguage, selectLanguageCode } from '../../../../redux/slices/configuration.slices.redux';
 import { ICategoryProduct } from '../../../../interfaces/common/category.common.interfaces';
@@ -11,6 +11,7 @@ import { memo } from 'react';
 import MenuPageSides from './sides.menu.pages.templateOne.components';
 import formatCurrency from '../../../../utils/formatCurrency';
 import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
+import { updateItemSelectionNewItem } from '../../../../redux/slices/item-selection.slices.redux';
 
 export interface IPropsMenuPageCategoryListItem {
   product: ICategoryProduct;
@@ -119,6 +120,7 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
   const language = useAppSelector(selectLanguage);
   const languageCode = useAppSelector(selectLanguageCode);
   const [selectedOption, setSelectedOption] = useState<number | undefined>(1);
+  const dispatch = useAppDispatch();
 
   let optionsIndex = 0;
   const getNextIndex = () => ++optionsIndex;
@@ -132,6 +134,21 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
       setSelectedOption(1);
     }
   }
+
+  useEffect(() => {
+    if (isOpen && product.type_ === 'SINGLE') {
+      dispatch(
+        updateItemSelectionNewItem({
+          topProductId: product.id,
+          productId: product.id,
+          type: 'SINGLE',
+          mainName: product.name_json,
+          cost: product.price,
+          // partName: Single product type do not have part name
+        }),
+      );
+    }
+  }, [isOpen]);
 
   return (
     <ListItem isOpen={isOpen} id={`product-id-${product.id}`}>
@@ -153,7 +170,9 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
             <AddButton
               setOpenItemId={setOpenItemId}
               product={product}
-              canOpen={!!product.choice && product.choice.length > 0}
+              canOpen={
+                (!!product.choice && product.choice.length > 0) || (!!product.side_products_json && product.side_products_json.length > 0)
+              }
               hasImage={!!product.image}
               isOpen={isOpen}
             />
