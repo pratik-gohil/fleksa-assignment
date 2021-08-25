@@ -181,7 +181,15 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
       // TODO: Update cart by product info
       response.data?.order.products.forEach((product) => {
         const sideProducts: Record<number, { price: number; name: ILanguageData }> = {};
-        const choices: IIndexSliceStateChoice = {};
+        const choices: Record<
+          number,
+          {
+            product_index: number;
+            top_index: number;
+            price: number;
+            name: ILanguageData;
+          } | null
+        > = {};
 
         const cartItem = {
           topProductId: 0,
@@ -203,7 +211,7 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
               break;
             case 'CHOICE':
               choices[selection.top_index as number] = {
-                price: selection?.extra_price as number,
+                top_index: selection.top_index as number,
                 name: selection.name,
                 product_index: selection.product_index as number,
               };
@@ -247,7 +255,7 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
 
       // amplitudeEvent(constructEventName(`reorder success`, 'response'), response);
 
-      // console.log('respon ', response.data.order.products);
+      console.log('respon ', response.data.order.products);
       setLoading(false);
     } catch (e) {
       amplitudeEvent(constructEventName(`reorder error catch`, 'error'), { error: e });
