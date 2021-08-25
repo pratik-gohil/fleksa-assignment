@@ -13,9 +13,10 @@ import { updateError } from '../../../../../redux/slices/common.slices.redux';
 import moment from 'moment';
 import CustomLink from '../../../common/amplitude/customLink';
 import { amplitudeEvent, constructEventName } from '../../../../../utils/amplitude.util';
-// import { updateAddProduct } from '../../../../../redux/slices/cart.slices.redux';
+import { updateBulkProduct } from '../../../../../redux/slices/cart.slices.redux';
 import { ILanguageData } from '../../../../../interfaces/common/language-data.common.interfaces';
-import { IIndexSliceStateChoice, IIndexSliceStateSideProducts } from '../../../../../redux/slices/item-selection.slices.redux';
+import { IIndexSliceStateSideProducts } from '../../../../../redux/slices/item-selection.slices.redux';
+import { useRouter } from 'next/router';
 
 const Container = styled.div`
   max-width: 500px;
@@ -124,7 +125,17 @@ interface IMyAccountOrderProps {
   order: IParticularOrder;
 }
 
-function generateTempCartId(productId: number, sideProducts: IIndexSliceStateSideProducts, choice: IIndexSliceStateChoice): string {
+interface IModifyChoiceState
+  extends Record<
+    number,
+    {
+      product_index: number;
+      top_index: number;
+      name: ILanguageData;
+    }
+  > {}
+
+function generateTempCartId(productId: number, sideProducts: IIndexSliceStateSideProducts, choice: IModifyChoiceState): string {
   const sideProdStr = Object.keys(sideProducts).join('-');
   const choiceStr = Object.keys(choice)
     .map((key) => `${key},${choice[Number(key)]?.product_index}`)
@@ -137,6 +148,7 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
   const customDate = new Date(`${order.created_at}`);
   const bearerToken = useAppSelector(selectBearerToken);
   const configuration = useAppSelector(selectConfiguration);
+  const router = useRouter();
 
   const { t } = useTranslation('account');
   const dispatch = useAppDispatch();
@@ -178,27 +190,23 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
         }),
       );
 
+      const cartItems: Record<string, any> = {};
+
       // TODO: Update cart by product info
       response.data?.order.products.forEach((product) => {
-        const sideProducts: Record<number, { price: number; name: ILanguageData }> = {};
-        const choices: Record<
-          number,
-          {
-            product_index: number;
-            top_index: number;
-            price: number;
-            name: ILanguageData;
-          } | null
-        > = {};
+        const sideProducts: Record<number, { price: number; name: ILanguageData }> = {}; // ? Item selection state format
+        const choices: IModifyChoiceState = {}; // ? Item selection and cart state format
 
         const cartItem = {
           topProductId: 0,
           cartId: '',
-          productId: product.id,
+          id: product.id,
           mainName: {},
           partName: {},
-          type: product.type,
-          totalCost: 0,
+          type: product.type === 'PART' ? 'MULTIPLE' : product.type,
+          quantity: product.quantity,
+          costOneItem: product.price,
+          totalCost: product.price * product.quantity,
         };
 
         product.name.forEach((selection) => {
@@ -234,29 +242,26 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
         });
 
         // Generate CartId
-        cartItem.cartId = generateTempCartId(cartItem.productId, sideProducts, choices);
+        cartItem.cartId = generateTempCartId(cartItem.id, sideProducts, choices);
 
-        console.log({
+        cartItems[cartItem.cartId] = {
           ...cartItem,
-          sideProducts,
-          choice: choices,
-          totalCost: 0,
-        });
-
-        // dispatch(
-        //   updateAddProduct({
-        //     ...cartItem,
-        //     sideProducts,
-        //     choice: choices,
-        //     totalCost: 0,
-        //   }),
-        // );
+          sideProducts: product.name.filter((p) => p.type === 'SIDE').map((s) => ({ id: s.id as number, name: s.name })), // ? Converting ItemSelection -> Cart state format
+          choice: Object.values(choices),
+        };
       });
+
+      console.log('cart Items : ', cartItems);
+
+      // TODO: Update the cart for all the product at once
+      dispatch(updateBulkProduct(cartItems));
 
       // amplitudeEvent(constructEventName(`reorder success`, 'response'), response);
 
-      console.log('respon ', response.data.order.products);
+      console.log('respon ', response.data?.order.products);
       setLoading(false);
+
+      router.push(`/checkout`);
     } catch (e) {
       amplitudeEvent(constructEventName(`reorder error catch`, 'error'), { error: e });
 

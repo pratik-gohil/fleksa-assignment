@@ -14,7 +14,7 @@ export interface ICartItem {
   partName: ILanguageData;
   type: IType;
   sideProducts: Array<{ id: number; name: ILanguageData }> | null;
-  choice: Array<{ top_index: number; product_index: number; name: ILanguageData }> | null;
+  choice: Array<{ top_index: number; product_index: number; name: ILanguageData }> | [];
   costOneItem: number;
   totalCost: number;
 }
@@ -64,7 +64,7 @@ export const CartSlice = createSlice({
           cartId: action.payload.cartId,
           quantity: 1,
           sideProducts: sideProducts,
-          choice,
+          choice: choice ?? [],
           mainName: action.payload.mainName,
           partName: action.payload.partName,
           type: action.payload.type,
@@ -76,37 +76,11 @@ export const CartSlice = createSlice({
       }
     },
     updateBulkProduct(state, action) {
-      const sideProducts = action.payload.sideProducts
-        ? Object.keys(action.payload.sideProducts).map((key) => {
-            return { id: Number(key), name: action.payload.sideProducts[key].name };
-          })
-        : null;
+      state.items = action.payload;
 
-      const choice = action.payload.choice
-        ? Object.keys(action.payload.choice).map((key) => {
-            return {
-              top_index: Number(key),
-              product_index: action.payload.choice[key].product_index,
-              name: action.payload.choice[key].name,
-            };
-          })
-        : null;
-
-      state.items[action.payload.cartId] = {
-        topProductId: action.payload.topProductId,
-        id: action.payload.productId,
-        cartId: action.payload.cartId,
-        quantity: 1,
-        sideProducts: sideProducts,
-        choice,
-        mainName: action.payload.mainName,
-        partName: action.payload.partName,
-        type: action.payload.type,
-        costOneItem: action.payload.totalCost,
-        totalCost: action.payload.totalCost,
-      };
-
-      state.cartCost += action.payload.totalCost;
+      state.cartCost = Object.values(action.payload as Record<string, ICartItem>)
+        .map((item) => item.totalCost)
+        .reduce((a: number, b: number) => a + b, 0);
     },
     updateReduceProduct(state, action) {
       if (state.items[action.payload.cartId]?.quantity > 1) {
