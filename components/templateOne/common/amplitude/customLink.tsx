@@ -42,10 +42,10 @@ const CustomLink: FunctionComponent<ICustomLinkProps> = ({
       // TODO: call back if it's present
       if (callback) {
         callback();
-        console.log('callback called');
+        // console.log('callback called');
       }
 
-      console.log('amplitude ', amplitude);
+      // console.log('amplitude ', amplitude);
 
       amplitudeEvent(constructEventName(amplitude.text, amplitude.type), amplitude.eventProperties);
 
