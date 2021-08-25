@@ -6,6 +6,7 @@ export interface IMakeOrderProducts {
   quantity: number;
   has_choice: boolean;
   main_name: ILanguageData;
+  main_id: number;
   choice: Array<{
     top_index: number;
     product_index: number;

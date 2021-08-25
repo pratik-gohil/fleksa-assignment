@@ -40,6 +40,10 @@ export interface IParticularProduct {
       english: string;
       german: string;
     };
+    extra_price?: number;
+    id?: number;
+    product_index?: number;
+    top_index?: number;
     isRoot?: boolean;
     type: string;
   }>;
