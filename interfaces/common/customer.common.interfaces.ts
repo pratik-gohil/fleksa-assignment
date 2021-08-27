@@ -21,6 +21,7 @@ export interface IParticularOrder {
   payment_method: string;
   no_of_products: number;
   pdf_url?: string;
+  is_reorder: boolean;
 }
 
 export interface IDeliveryAddress {
@@ -71,6 +72,7 @@ export interface IParticularOrderBriefInfo {
   delivery_address?: IParticularAddress;
   payment_method: string;
   pdf_url?: string;
+  is_reorder: number;
   price: {
     tip: number;
     total_amount: number;

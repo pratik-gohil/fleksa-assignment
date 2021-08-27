@@ -304,9 +304,11 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
           {t('@review-now')}
         </CustomLink>
 
-        <ReOrderButton back="fill" onClick={handleReorderButtonClick}>
-          {loading ? <LoadingIndicator width={20} /> : t('@re-order')}
-        </ReOrderButton>
+        {!!order.is_reorder && (
+          <ReOrderButton back="fill" onClick={handleReorderButtonClick}>
+            {loading ? <LoadingIndicator width={20} /> : t('@re-order')}
+          </ReOrderButton>
+        )}
       </ButtonContainer>
     </Container>
   );
