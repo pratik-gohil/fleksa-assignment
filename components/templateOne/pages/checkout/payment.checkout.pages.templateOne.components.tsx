@@ -126,31 +126,10 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
 
   const { t } = useTranslation('page-checkout');
   const [currentPaymentMethod, setCurrentPaymentMethod] = useState('STRIPE');
-  const [currentOrderType, setCurrentOrderType] = useState<ICheckoutOrderTypes>('PICKUP');
 
   async function createOrder() {
     try {
       const products: Array<IMakeOrderProducts> = getPrductsFromCartData(cartData);
-
-      console.log('request payload ', {
-        shop_id: shopMenuId as number,
-        name: customerData.name,
-        email: customerData.email as any,
-        phone: customerData.phone as any,
-        country_code: customerData.country_code as any,
-        is_delivery: currentOrderType === 'DELIVERY',
-        customer_address_id: addressId || undefined,
-        want_at: moment(`${wantAtData?.date.value as string} ${wantAtData?.time.value as string}`).toString(),
-        products,
-        payment_method: paymentMethodData,
-        tip: tipData ? tipData : undefined,
-        offer: {
-          is_applicable: !!promoCode && promoCode.token.length > 0,
-          token: promoCode?.token || '',
-        },
-        description: comment,
-        order_type: currentOrderType,
-      });
 
       const response = await new NodeApiHttpPostOrder(configuration, bearerToken as any).post({
         order: {
@@ -159,7 +138,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
           email: customerData.email as any,
           phone: customerData.phone as any,
           country_code: customerData.country_code as any,
-          is_delivery: currentOrderType === 'DELIVERY',
+          is_delivery: orderType === 'DELIVERY',
           customer_address_id: addressId || undefined,
           want_at: moment(`${wantAtData?.date.value as string} ${wantAtData?.time.value as string}`).toString(),
           products,
@@ -170,7 +149,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
             token: promoCode?.token || '',
           },
           description: comment,
-          order_type: currentOrderType,
+          order_type: orderType as ICheckoutOrderTypes,
         },
       });
       if (!response.result) {
@@ -194,7 +173,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   }
 
   function isOrderPossible() {
-    if (currentOrderType === 'DELIVERY' && !isReOrder)
+    if (orderType === 'DELIVERY' && !isReOrder)
       return deliveryFinances && deliveryFinances.amount ? cartData.cartCost >= deliveryFinances.amount : false;
     else return true;
   }
@@ -202,10 +181,8 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   // TODO: Set initial payment method
   useEffect(() => {
     setCurrentPaymentMethod(paymentMethodData);
-    setCurrentOrderType(orderType ?? 'PICKUP');
-
     dispatch(updatePaymentMethod(paymentMethodData));
-  }, [paymentMethodData, orderType]);
+  }, [paymentMethodData]);
 
   // TODO: Control orderButton active state
   useEffect(() => {

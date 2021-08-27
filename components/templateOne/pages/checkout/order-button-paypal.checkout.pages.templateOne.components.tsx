@@ -1,8 +1,10 @@
 import { PayPalButtons } from '@paypal/react-paypal-js';
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
+import { useState } from 'react';
 import NodeApiHttpPostPaypal from '../../../../http/nodeapi/paypal/post.paypal.nodeapi.http';
 import { INodeApiHttpPostOrderResponse, IOrderResponsePaypal } from '../../../../interfaces/http/nodeapi/order/post.order.nodeapi.http';
 import { useAppSelector } from '../../../../redux/hooks.redux';
+import { selectOrderType } from '../../../../redux/slices/checkout.slices.redux';
 import { selectConfiguration } from '../../../../redux/slices/configuration.slices.redux';
 import { selectBearerToken } from '../../../../redux/slices/user.slices.redux';
 import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
@@ -20,12 +22,22 @@ const CheckoutPageOrderButtonPaypal: FunctionComponent<IPropsCheckoutPageOrderBu
 }) => {
   const bearerToken = useAppSelector(selectBearerToken);
   const configuration = useAppSelector(selectConfiguration);
+  const [reRender, setReRender] = useState(false);
+  const orderType = useAppSelector(selectOrderType);
 
-  // useEffect(() => {
+  useEffect(() => {
+    setReRender(true);
 
-  // }, []);
+    setTimeout(() => {
+      setReRender(false);
+    }, 100);
 
-  return (
+    return () => {
+      clearTimeout();
+    };
+  }, [orderType]);
+
+  return !reRender ? (
     <PayPalButtons
       fundingSource="paypal"
       style={{
@@ -71,6 +83,8 @@ const CheckoutPageOrderButtonPaypal: FunctionComponent<IPropsCheckoutPageOrderBu
         }
       }}
     />
+  ) : (
+    <>Loading ....</>
   );
 };
 
