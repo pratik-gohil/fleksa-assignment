@@ -107,6 +107,7 @@ export const CheckoutSlice = createSlice({
       state.selectedAddressId = action.payload.selectedAddressId || state.selectedAddressId;
       state.deliveryFinances = action.payload.deliveryFinances || state.deliveryFinances;
       state.promoCode = action.payload.promoCode || state.promoCode;
+      state.isReOrder = action.payload.isReOrder || state.isReOrder;
     },
   },
   extraReducers: {
@@ -143,4 +144,5 @@ export const selectWantAt = (state: RootState) => state.checkout.wantAt;
 export const selectShowDateTimeSelect = (state: RootState) => state.checkout.showDateTimeSelect;
 export const selectSelectedAddressId = (state: RootState) => state.checkout.selectedAddressId;
 export const selectPromoCode = (state: RootState) => state.checkout.promoCode;
+export const selectIsReOrder = (state: RootState) => state.checkout.isReOrder;
 export const selectCheckoutLogin = (state: RootState) => state.checkout.checkoutLogin;

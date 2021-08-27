@@ -9,6 +9,7 @@ import { selectItemSelectionByTopProductId } from '../../../../redux/slices/item
 import SvgButtonPlus from '../../../../public/assets/svg/button-plus.svg';
 import SvgButtonMinus from '../../../../public/assets/svg/button-minus.svg';
 import CustomLink from '../amplitude/customLink';
+import { selectIsReOrder, updateCheckoutIsReOrder } from '../../../../redux/slices/checkout.slices.redux';
 
 export interface IPropsAddButton {
   hasImage: boolean;
@@ -88,6 +89,7 @@ const AddButton: FunctionComponent<IPropsAddButton> = ({ setOpenItemId, product,
   const [lastCartId, setLastCartId] = useState<string | null>(null);
   const selectionData = useAppSelector((state) => selectItemSelectionByTopProductId(state, product.id));
   const cartData = useAppSelector((state) => selectCartItemByCartId(state, lastCartId));
+  const isReOrder = useAppSelector(selectIsReOrder);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -96,6 +98,9 @@ const AddButton: FunctionComponent<IPropsAddButton> = ({ setOpenItemId, product,
   }, [selectionData, product]);
 
   function addItemToCart() {
+    // ? Update reorder state if it's
+    if (isReOrder) dispatch(updateCheckoutIsReOrder(false));
+
     if (canOpen && isOpen && selectionData) {
       dispatch(
         updateAddProduct({

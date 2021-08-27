@@ -23,6 +23,7 @@ import {
   selectDeliveryFinances,
   selectCheckoutLogin,
   updateCheckoutLogin,
+  selectIsReOrder,
 } from '../../../../redux/slices/checkout.slices.redux';
 import { selectConfiguration, selectLanguageCode, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
 import { selectShop } from '../../../../redux/slices/index.slices.redux';
@@ -112,6 +113,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   const customerData = useAppSelector(selectCustomer);
   const promoCode = useAppSelector(selectPromoCode);
   const orderType = useAppSelector(selectOrderType);
+  const isReOrder = useAppSelector(selectIsReOrder);
   const wantAtData = useAppSelector(selectWantAt);
   const comment = useAppSelector(selectComment);
   const shopData = useAppSelector(selectShop);
@@ -171,7 +173,8 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   }
 
   function isOrderPossible() {
-    if (orderType === 'DELIVERY') return deliveryFinances && deliveryFinances.amount ? cartData.cartCost >= deliveryFinances.amount : false;
+    if (orderType === 'DELIVERY' && !isReOrder)
+      return deliveryFinances && deliveryFinances.amount ? cartData.cartCost >= deliveryFinances.amount : false;
     else return true;
   }
 

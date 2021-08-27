@@ -84,15 +84,16 @@ const ButtonContainer = styled.div`
   display: flex;
 `;
 
-const Button = styled.button<{ isOnlyReOrder: boolean }>`
+const Button = styled.p<{ isOnlyReOrder: boolean }>`
   background-color: white;
   border: 1px solid ${(p) => p.theme.textDarkColor};
   color: ${(p) => p.theme.textDarkColor};
+  padding: 0;
+  margin: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   flex: 1;
-  padding: 1em;
   font-weight: 600;
   outline: none;
   cursor: pointer;
@@ -111,6 +112,13 @@ const Button = styled.button<{ isOnlyReOrder: boolean }>`
     background: ${(p) => p.theme.textDarkColor};
     color: #fff;
   }
+
+  & > a {
+    width: 100%;
+    height: 100%;
+    padding: 1em;
+    text-align: center;
+  }
 `;
 const ReOrderButton = styled.button<{ back: string }>`
   background-color: ${(p) => (p.back ? p.theme.textDarkColor : 'white')};
@@ -127,6 +135,13 @@ const ReOrderButton = styled.button<{ back: string }>`
   cursor: pointer;
   text-decoration: none;
   border-bottom-right-radius: 10px;
+  transition: background 0.25s linear;
+
+  &:hover,
+  &:focus {
+    background: #fff;
+    color: ${(p) => p.theme.textDarkColor};
+  }
 `;
 
 interface IMyAccountOrderProps {
@@ -191,6 +206,7 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
           paymentMethod: response?.data?.order.payment_method,
           wantAt: null,
           selectedAddressId: response.data?.order.is_delivery ? response.data?.order.delivery_address?.id : null,
+          isReOrder: true,
           deliveryFinances: response.data?.order.is_delivery
             ? {
                 charges: response.data?.order.price.delivery_fee ?? null,
