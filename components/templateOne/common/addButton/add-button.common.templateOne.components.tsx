@@ -113,6 +113,7 @@ const AddButton: FunctionComponent<IPropsAddButton> = ({ setOpenItemId, product,
           partName: selectionData.partName,
           type: selectionData.type,
           totalCost: selectionData.totalCost,
+          isAvailable: true, // ? Default by menu item
         }),
       );
 
@@ -130,6 +131,7 @@ const AddButton: FunctionComponent<IPropsAddButton> = ({ setOpenItemId, product,
           type: product.type_,
           totalCost: product.price,
           mainName: product.name_json,
+          isAvailable: true, // ? Default by menu item
         }),
       );
       setOpenItemId(undefined);

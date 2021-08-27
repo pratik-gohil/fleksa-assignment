@@ -17,6 +17,9 @@ import { updateBulkProduct } from '../../../../../redux/slices/cart.slices.redux
 import { ILanguageData } from '../../../../../interfaces/common/language-data.common.interfaces';
 import { IIndexSliceStateSideProducts } from '../../../../../redux/slices/item-selection.slices.redux';
 import { useRouter } from 'next/router';
+import PyApiHttpGetMenu from '../../../../../http/pyapi/menu/get.menu.index.pyapi.http';
+import { selectShop } from '../../../../../redux/slices/index.slices.redux';
+import { ICategoryProduct } from '../../../../../interfaces/common/category.common.interfaces';
 
 const Container = styled.div`
   max-width: 500px;
@@ -171,6 +174,7 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
   const customDate = new Date(`${order.created_at}`);
   const bearerToken = useAppSelector(selectBearerToken);
   const configuration = useAppSelector(selectConfiguration);
+  const shopData = useAppSelector(selectShop);
   const router = useRouter();
 
   const { t } = useTranslation('account');
@@ -181,11 +185,21 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
   const handleReorderButtonClick = async () => {
     try {
       setLoading(true);
+      let allProducts: ICategoryProduct[] = [];
       // amplitudeEvent(constructEventName(`reorder`, 'button'), {});
 
       const response = await new NodeApiHttpGetUserParticularOrder(configuration, bearerToken as any).get({
         order_id: order.id,
       });
+
+      if (shopData) {
+        const responseMenu = await new PyApiHttpGetMenu(configuration).get({ shopId: shopData.id });
+        console.log('menu response ', responseMenu);
+
+        responseMenu?.categories.forEach((category) => {
+          allProducts.concat(category.products);
+        });
+      }
 
       if (!response || !response.result) {
         amplitudeEvent(constructEventName(`reorder error`, 'response'), response);
@@ -274,16 +288,21 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
           sideProducts: product.name.filter((p) => p.type === 'SIDE').map((s) => ({ id: s.id as number, name: s.name })), // ? Converting ItemSelection -> Cart state format
           choice: Object.values(choices),
         };
+
+        // TODO: Adding isAvaiable key
+        cartItems[cartItem.cartId] = {
+          ...cartItems[cartItem.cartId],
+          isAvailable: true,
+        };
       });
 
-      console.log('cart Items : ', cartItems);
+      console.log('products :: ', cartItems);
 
       // TODO: Update the cart for all the product at once
       dispatch(updateBulkProduct(cartItems));
 
       // amplitudeEvent(constructEventName(`reorder success`, 'response'), response);
 
-      console.log('respon ', response.data?.order.products);
       setLoading(false);
 
       router.push(`/checkout`);

@@ -17,6 +17,7 @@ export interface ICartItem {
   choice: Array<{ top_index: number; product_index: number; name: ILanguageData }> | [];
   costOneItem: number;
   totalCost: number;
+  isAvailable: boolean;
 }
 
 export interface ICartSliceState {
@@ -70,6 +71,7 @@ export const CartSlice = createSlice({
           type: action.payload.type,
           costOneItem: action.payload.totalCost,
           totalCost: action.payload.totalCost,
+          isAvailable: action.payload.isAvailable,
         };
 
         state.cartCost += action.payload.totalCost;
