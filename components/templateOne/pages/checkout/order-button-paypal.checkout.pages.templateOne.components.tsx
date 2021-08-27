@@ -13,7 +13,11 @@ export interface IPropsCheckoutPageOrderButtonPaypal {
   onPaymentDone(): Promise<void>;
 }
 
-const CheckoutPageOrderButtonPaypal: FunctionComponent<IPropsCheckoutPageOrderButtonPaypal> = ({ onPaymentDone, createOrder, orderCanBePlaced }) => {
+const CheckoutPageOrderButtonPaypal: FunctionComponent<IPropsCheckoutPageOrderButtonPaypal> = ({
+  onPaymentDone,
+  createOrder,
+  orderCanBePlaced,
+}) => {
   const bearerToken = useAppSelector(selectBearerToken);
   const configuration = useAppSelector(selectConfiguration);
 
@@ -32,6 +36,8 @@ const CheckoutPageOrderButtonPaypal: FunctionComponent<IPropsCheckoutPageOrderBu
         amplitudeEvent(constructEventName(`order now paypal`, 'button'), {});
 
         const response = (await createOrder()) as IOrderResponsePaypal;
+
+        console.log('create order response ', response);
 
         if (!response.result) {
           amplitudeEvent(constructEventName(`order now paypal createOrder error`, 'response'), response);

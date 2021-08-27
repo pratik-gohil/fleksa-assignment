@@ -131,6 +131,26 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
     try {
       const products: Array<IMakeOrderProducts> = getPrductsFromCartData(cartData);
 
+      console.log('request payload ', {
+        shop_id: shopMenuId as number,
+        name: customerData.name,
+        email: customerData.email as any,
+        phone: customerData.phone as any,
+        country_code: customerData.country_code as any,
+        is_delivery: orderType === 'DELIVERY',
+        customer_address_id: addressId || undefined,
+        want_at: moment(`${wantAtData?.date.value as string} ${wantAtData?.time.value as string}`).toString(),
+        products,
+        payment_method: paymentMethodData,
+        tip: tipData ? tipData : undefined,
+        offer: {
+          is_applicable: !!promoCode && promoCode.token.length > 0,
+          token: promoCode?.token || '',
+        },
+        description: comment,
+        order_type: orderType as ICheckoutOrderTypes,
+      });
+
       const response = await new NodeApiHttpPostOrder(configuration, bearerToken as any).post({
         order: {
           shop_id: shopMenuId as number,
