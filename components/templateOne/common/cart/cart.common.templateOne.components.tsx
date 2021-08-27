@@ -5,7 +5,12 @@ import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 
 import { useAppSelector } from '../../../../redux/hooks.redux';
 import { selectCart } from '../../../../redux/slices/cart.slices.redux';
-import { selectLanguage, selectLanguageCode, selectSelectedMenu, selectShowCart } from '../../../../redux/slices/configuration.slices.redux';
+import {
+  selectLanguage,
+  selectLanguageCode,
+  selectSelectedMenu,
+  selectShowCart,
+} from '../../../../redux/slices/configuration.slices.redux';
 import CartAddRemoveButton from './add-remove.cart.common.templateOne.components';
 import SvgCartEmpty from '../../../../public/assets/svg/cart-empty.svg';
 import { useEffect } from 'react';
@@ -177,12 +182,9 @@ const Cart: FunctionComponent = ({}) => {
   const [addressData, setAddressData] = useState<IAddress | null | undefined>();
 
   useEffect(() => {
-    if (shopData?.id == selectedMenuId) {
-      setAddressData(address);
-    } else {
-      setAddressData(siblings.find((item) => item.id == selectedMenuId)?.address);
-    }
-  }, []);
+    if (shopData?.id == selectedMenuId) setAddressData(address);
+    else setAddressData(siblings.find((item) => item.id == selectedMenuId)?.address);
+  }, [siblings]);
 
   useEffect(() => {
     setCartItemKeys(cartData.items ? Object.keys(cartData.items) : []);
@@ -194,11 +196,12 @@ const Cart: FunctionComponent = ({}) => {
     if (addressData?.has_delivery || addressData?.has_pickup || addressData?.has_dinein) setNoOrderTypeAvailable(false);
     else return;
 
-    if (orderType === 'DELIVERY') tempIsPossible = deliveryFinances && deliveryFinances.amount ? cartData.cartCost >= deliveryFinances.amount : false;
+    if (orderType === 'DELIVERY')
+      tempIsPossible = deliveryFinances && deliveryFinances.amount ? cartData.cartCost >= deliveryFinances.amount : false;
     else tempIsPossible = cartItemKeys.length > 0;
 
     setOrderPossible(tempIsPossible);
-  }, [cartItemKeys, cartData.cartCost, deliveryFinances?.amount, deliveryFinances?.charges, orderType]);
+  }, [cartItemKeys, cartData.cartCost, deliveryFinances?.amount, deliveryFinances?.charges, orderType, addressData]);
 
   function onClickOrderButton() {
     amplitudeEvent(constructEventName(`${t('@order')}`, 'button'), {});
