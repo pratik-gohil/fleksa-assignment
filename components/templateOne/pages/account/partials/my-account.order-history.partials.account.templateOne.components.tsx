@@ -84,7 +84,7 @@ const ButtonContainer = styled.div`
   display: flex;
 `;
 
-const Button = styled.a`
+const Button = styled.button<{ isOnlyReOrder: boolean }>`
   background-color: white;
   border: 1px solid ${(p) => p.theme.textDarkColor};
   color: ${(p) => p.theme.textDarkColor};
@@ -97,11 +97,19 @@ const Button = styled.a`
   outline: none;
   cursor: pointer;
   text-decoration: none;
+  transition: background 0.25s linear;
 
   border-bottom-left-radius: 10px;
+  border-bottom-right-radius: ${(p) => (p.isOnlyReOrder ? '0px' : '10px')};
 
   &:nth-child(2):hover {
     filter: brightness(1.3);
+  }
+
+  &:hover,
+  &:focus {
+    background: ${(p) => p.theme.textDarkColor};
+    color: #fff;
   }
 `;
 const ReOrderButton = styled.button<{ back: string }>`
@@ -293,16 +301,17 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
       </TextContainer>
 
       <ButtonContainer>
-        <CustomLink
-          amplitude={{
-            type: 'button',
-            text: t('@review-now'),
-          }}
-          Override={Button}
-          href={`/account/order/${order.id}`}
-        >
-          {t('@review-now')}
-        </CustomLink>
+        <Button isOnlyReOrder={!!order.is_reorder}>
+          <CustomLink
+            amplitude={{
+              type: 'button',
+              text: t('@review-now'),
+            }}
+            href={`/account/order/${order.id}`}
+          >
+            {t('@review-now')}
+          </CustomLink>
+        </Button>
 
         {!!order.is_reorder && (
           <ReOrderButton back="fill" onClick={handleReorderButtonClick}>
