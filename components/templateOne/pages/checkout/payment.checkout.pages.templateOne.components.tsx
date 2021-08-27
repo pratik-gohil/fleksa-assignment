@@ -228,6 +228,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
     customerData.country_code,
     wantAtData,
     deliveryFinances,
+    orderType,
   ]);
 
   useEffect(() => {
