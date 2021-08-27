@@ -187,6 +187,7 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
       dispatch(
         updateCheckout({
           orderType: response.data?.order.order_type,
+          tip: response.data?.order.price.tip,
           paymentMethod: response?.data?.order.payment_method,
           wantAt: null,
           selectedAddressId: response.data?.order.is_delivery ? response.data?.order.delivery_address?.id : null,
