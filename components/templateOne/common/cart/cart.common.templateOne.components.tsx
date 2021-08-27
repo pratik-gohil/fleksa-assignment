@@ -184,7 +184,7 @@ const Cart: FunctionComponent = ({}) => {
   useEffect(() => {
     if (shopData?.id == selectedMenuId) setAddressData(address);
     else setAddressData(siblings.find((item) => item.id == selectedMenuId)?.address);
-  }, []);
+  }, [siblings]);
 
   useEffect(() => {
     setCartItemKeys(cartData.items ? Object.keys(cartData.items) : []);
@@ -201,7 +201,7 @@ const Cart: FunctionComponent = ({}) => {
     else tempIsPossible = cartItemKeys.length > 0;
 
     setOrderPossible(tempIsPossible);
-  }, [cartItemKeys, cartData.cartCost, deliveryFinances?.amount, deliveryFinances?.charges, orderType]);
+  }, [cartItemKeys, cartData.cartCost, deliveryFinances?.amount, deliveryFinances?.charges, orderType, addressData]);
 
   function onClickOrderButton() {
     amplitudeEvent(constructEventName(`${t('@order')}`, 'button'), {});
