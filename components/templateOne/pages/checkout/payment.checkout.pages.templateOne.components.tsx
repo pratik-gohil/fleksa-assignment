@@ -126,6 +126,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
 
   const { t } = useTranslation('page-checkout');
   const [currentPaymentMethod, setCurrentPaymentMethod] = useState('STRIPE');
+  const [currentOrderType, setCurrentOrderType] = useState<ICheckoutOrderTypes>('PICKUP');
 
   async function createOrder() {
     try {
@@ -137,7 +138,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
         email: customerData.email as any,
         phone: customerData.phone as any,
         country_code: customerData.country_code as any,
-        is_delivery: orderType === 'DELIVERY',
+        is_delivery: currentOrderType === 'DELIVERY',
         customer_address_id: addressId || undefined,
         want_at: moment(`${wantAtData?.date.value as string} ${wantAtData?.time.value as string}`).toString(),
         products,
@@ -148,7 +149,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
           token: promoCode?.token || '',
         },
         description: comment,
-        order_type: orderType as ICheckoutOrderTypes,
+        order_type: currentOrderType,
       });
 
       const response = await new NodeApiHttpPostOrder(configuration, bearerToken as any).post({
@@ -158,7 +159,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
           email: customerData.email as any,
           phone: customerData.phone as any,
           country_code: customerData.country_code as any,
-          is_delivery: orderType === 'DELIVERY',
+          is_delivery: currentOrderType === 'DELIVERY',
           customer_address_id: addressId || undefined,
           want_at: moment(`${wantAtData?.date.value as string} ${wantAtData?.time.value as string}`).toString(),
           products,
@@ -169,7 +170,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
             token: promoCode?.token || '',
           },
           description: comment,
-          order_type: orderType as ICheckoutOrderTypes,
+          order_type: currentOrderType,
         },
       });
       if (!response.result) {
@@ -193,7 +194,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   }
 
   function isOrderPossible() {
-    if (orderType === 'DELIVERY' && !isReOrder)
+    if (currentOrderType === 'DELIVERY' && !isReOrder)
       return deliveryFinances && deliveryFinances.amount ? cartData.cartCost >= deliveryFinances.amount : false;
     else return true;
   }
@@ -201,8 +202,10 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   // TODO: Set initial payment method
   useEffect(() => {
     setCurrentPaymentMethod(paymentMethodData);
+    setCurrentOrderType(orderType ?? 'PICKUP');
+
     dispatch(updatePaymentMethod(paymentMethodData));
-  }, [paymentMethodData]);
+  }, [paymentMethodData, orderType]);
 
   // TODO: Control orderButton active state
   useEffect(() => {
@@ -228,7 +231,6 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
     customerData.country_code,
     wantAtData,
     deliveryFinances,
-    orderType,
   ]);
 
   useEffect(() => {

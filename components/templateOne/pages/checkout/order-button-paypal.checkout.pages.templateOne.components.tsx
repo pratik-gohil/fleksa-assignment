@@ -21,6 +21,10 @@ const CheckoutPageOrderButtonPaypal: FunctionComponent<IPropsCheckoutPageOrderBu
   const bearerToken = useAppSelector(selectBearerToken);
   const configuration = useAppSelector(selectConfiguration);
 
+  // useEffect(() => {
+
+  // }, []);
+
   return (
     <PayPalButtons
       fundingSource="paypal"
