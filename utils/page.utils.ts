@@ -62,13 +62,13 @@ export async function getServerSidePropsCommon(
     const baseUrlPyApi = testHost ? 'https://myqa.fleksa.com' : 'https://my.fleksa.com';
     const baseUrlNodeApi = testHost ? 'https://apiqa.fleksa.com' : 'https://api.fleksa.com';
 
-    ctx.store.dispatch(updateLanguage((ctx as any).locale));
     const configuration: IConfiguration = {
       host,
       baseUrlPyApi,
       baseUrlNodeApi,
     };
     ctx.store.dispatch(updateConfiguration(configuration));
+    ctx.store.dispatch(updateLanguage((ctx as any).locale));
 
     if (!selectedMenu && ctx.req.url === '/checkout') {
       return {
@@ -89,8 +89,12 @@ export async function getServerSidePropsCommon(
      * Update current restarurnat menu id and url if it's not present
      */
     if (!selectedMenu) ctx.store.dispatch(updateSelectedMenu(responseIndex.shop.id));
+    // ? Default one
+    else ctx.store.dispatch(updateSelectedMenu(+selectedMenu)); // ? already selected one
 
     if (!selectedUrlPath) ctx.store.dispatch(updateSelectedMenuUrlpath(responseIndex.shop.urlpath));
+    // ? Default one
+    else ctx.store.dispatch(updateSelectedMenuUrlpath(selectedUrlPath)); // ? already selected one
 
     ctx.store.dispatch(updateBearerToken(bearerToken || null));
 

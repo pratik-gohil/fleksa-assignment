@@ -193,9 +193,10 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
     const timingList = timings.generateDates();
     let foundDateTime = false;
 
- 
     for (let i = 0; i < timingList.length; i++) {
       const selectedDate = timingList[i];
+
+      console.log(selectedDate, timingsData, orderType, addressData?.prepare_time, addressData?.delivery_time);
 
       if (selectedDate && timingsData && orderType && addressData?.prepare_time && addressData?.delivery_time) {
         const timeData = timings.generateTimeList({
@@ -208,7 +209,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
           },
           language: currentLanguage,
         });
- 
+
         if (timeData.length > 0) {
           dispatch(updateWantAt({ date: selectedDate, time: timeData[0] }));
           foundDateTime = true;
