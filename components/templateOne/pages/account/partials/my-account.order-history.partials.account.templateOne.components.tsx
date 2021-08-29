@@ -21,6 +21,7 @@ import PyApiHttpGetMenu from '../../../../../http/pyapi/menu/get.menu.index.pyap
 import { selectShop } from '../../../../../redux/slices/index.slices.redux';
 import { ICategoryProduct } from '../../../../../interfaces/common/category.common.interfaces';
 import { isProductAvailable } from '../../../../../utils/account.order.util';
+import { IMenuSide } from '../../../../../interfaces/common/menu-side.common.interfaces';
 
 const Container = styled.div`
   max-width: 500px;
@@ -187,6 +188,8 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
     try {
       setLoading(true);
       let allProducts: ICategoryProduct[] = [];
+      let sides: Record<number, IMenuSide> | undefined;
+
       // amplitudeEvent(constructEventName(`reorder`, 'button'), {});
 
       const response = await new NodeApiHttpGetUserParticularOrder(configuration, bearerToken as any).get({
@@ -195,6 +198,8 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
 
       if (shopData) {
         const responseMenu = await new PyApiHttpGetMenu(configuration).get({ shopId: shopData.id });
+
+        sides = responseMenu?.sides;
 
         responseMenu?.categories.forEach((category) => {
           allProducts = allProducts.concat(category.products);
@@ -296,6 +301,7 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
           isAvailable: isProductAvailable(
             cartItems[cartItem.cartId], // ? current cart item
             allProducts.filter((menuProduct) => menuProduct.id === cartItems[cartItem.cartId]?.topProductId)[0], // ? current cart product id from menu
+            sides ?? {},
           ),
         };
       });
