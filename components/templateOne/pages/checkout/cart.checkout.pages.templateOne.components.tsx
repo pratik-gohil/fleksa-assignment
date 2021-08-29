@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Row, Col } from 'react-grid-system';
 
 import styled from 'styled-components';
@@ -9,8 +9,7 @@ import { selectDeliveryFinances, selectOrderType, selectPromoCode, selectTip } f
 import { selectLanguage, selectLanguageCode } from '../../../../redux/slices/configuration.slices.redux';
 import { checkoutFinalAmount } from '../../../../utils/checkout.utils';
 import formatCurrency from '../../../../utils/formatCurrency';
-import { StyledCheckoutCard, StyledCheckoutTitle } from './customer-info.checkout.pages.templateOne.components';
-import ReactTooltip from 'react-tooltip';
+import { StyledCheckoutCard, StyledCheckoutTitle } from './customer-info.checkout.pages.templateOne.components'; 
 
 export const StyledCheckoutTextarea = styled.textarea`
   width: 100%;
@@ -104,11 +103,16 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
   const languageCode = useAppSelector(selectLanguageCode);
   const deliveryFinances = useAppSelector(selectDeliveryFinances);
   const { t } = useTranslation('page-checkout');
+  const [isTooltipVisible, setTooltipVisibility] = useState(false);
 
   const cartItemKeys = cartData.items ? Object.keys(cartData.items) : [];
   const deliveryFeeApplicable =
     orderType === 'DELIVERY' ? (deliveryFinances?.free_from ? cartData.cartCost < deliveryFinances.free_from : true) : false;
   const deliveryFee = deliveryFeeApplicable && deliveryFinances?.charges ? deliveryFinances?.charges : 0;
+
+  useEffect(() => {
+    setTooltipVisibility(true);
+  }, []);
 
   return (
     <StyledCheckoutCard>
@@ -119,22 +123,20 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
             const item = cartData.items[key];
             return (
               <ContainerItem key={key}>
-                <ContainerCartItem data-for={`${key}-item`}>
-                  <ContainerCartItemBody>
-                    <CartItemTitle isStrikeThrough={!item.isAvailable}>
-                      <Quantity>{item.quantity}x - </Quantity> &nbsp; {item.mainName[language]}
-                    </CartItemTitle>
+                {isTooltipVisible && (
+                  <>
+                    <ContainerCartItem>
+                      <ContainerCartItemBody>
+                        <CartItemTitle isStrikeThrough={!item.isAvailable}>
+                          <Quantity>{item.quantity}x - </Quantity> &nbsp; {item.mainName[language]}
+                        </CartItemTitle>
 
-                    {!item.isAvailable && <InfoCartSvgImage src="https://img.icons8.com/ios/50/000000/info--v4.png" />}
-                  </ContainerCartItemBody>
+                        {!item.isAvailable && <InfoCartSvgImage src="https://img.icons8.com/ios/50/000000/info--v4.png" />}
+                      </ContainerCartItemBody>
 
-                  <CartItemPrice isStrikeThrough={!item.isAvailable}>{formatCurrency(item.totalCost, languageCode)}</CartItemPrice>
-                </ContainerCartItem>
-
-                {!item.isAvailable && (
-                  <ReactTooltip id={`${key}-item`} type="warning" place="left" effect="solid">
-                    <span>Not available !</span>
-                  </ReactTooltip>
+                      <CartItemPrice isStrikeThrough={!item.isAvailable}>{formatCurrency(item.totalCost, languageCode)}</CartItemPrice>
+                    </ContainerCartItem>
+                  </>
                 )}
               </ContainerItem>
             );

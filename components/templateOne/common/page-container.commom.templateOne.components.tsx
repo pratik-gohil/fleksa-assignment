@@ -5,7 +5,6 @@ import NavbarDesktop from './navbarDesktop/navbar-desktop.common.templateOne.com
 import Footer from './footer/footer.common.templateOne.components';
 import Cart from './cart/cart.common.templateOne.components';
 import styled from 'styled-components';
-// import ReactTooltip from 'react-tooltip';
 import { BREAKPOINTS } from '../../../constants/grid-system-configuration';
 
 export interface IPropsPageContainer {
@@ -41,8 +40,7 @@ const PageContainer: FunctionComponent<IPropsPageContainer> = ({ children, showF
       <AllPagesCartContainer>
         <Cart />
       </AllPagesCartContainer>
-
-      {/* <ReactTooltip /> */}
+ 
     </Wrapper>
   );
 };
