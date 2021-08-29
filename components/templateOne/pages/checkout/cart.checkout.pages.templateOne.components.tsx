@@ -24,7 +24,18 @@ export const StyledCheckoutTextarea = styled.textarea`
 const ContainerItem = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
 `;
+
+const ContainerCartItem = styled.p`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.3rem 0;
+  margin: 0;
+`;
+
+const ContainerCartItemBody = styled(ContainerItem)``;
 
 const Title = styled.p`
   display: flex;
@@ -36,13 +47,22 @@ const Title = styled.p`
   }
 `;
 
-const CartItemTitle = styled(Title)<{ isStrikeThrough: boolean }>`
-  text-decoration: ${(p) => (p.isStrikeThrough ? 'line-through' : 'none')};
+const CartItemTitle = styled.span<{ isStrikeThrough: boolean }>`
+  display: flex;
+  flex: 1;
+  margin: 0;
+  font-weight: 600;
+
+  ${({ isStrikeThrough }) =>
+    isStrikeThrough &&
+    `
+      text-decoration: line-through;
+      text-decoration-thickness: 2px;  
+  `}
 `;
 
 const Quantity = styled.span`
   white-space: nowrap;
-  margin: 0 6px;
   font-weight: 400 !important;
 `;
 
@@ -51,12 +71,27 @@ const Price = styled.p`
   font-weight: 600;
 `;
 
-const CartItemPrice = styled(Price)<{ isStrikeThrough: boolean }>`
-  text-decoration: ${(p) => (p.isStrikeThrough ? 'line-through' : 'none')};
+const CartItemPrice = styled.span<{ isStrikeThrough: boolean }>`
+  margin: 0;
+  font-weight: 600;
+
+  ${({ isStrikeThrough }) =>
+    isStrikeThrough &&
+    `
+      text-decoration: line-through;
+      text-decoration-thickness: 2px;  
+  `}
 `;
 
 const Divider = styled.hr`
   border-color: rgba(0, 0, 0, 0.1);
+`;
+
+const InfoCartSvgImage = styled.img`
+  margin: 0 0.5rem;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
 `;
 
 const CheckoutPageCart: FunctionComponent = ({}) => {
@@ -83,11 +118,17 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
             const item = cartData.items[key];
             return (
               <ContainerItem key={key}>
-                <CartItemTitle isStrikeThrough={!item.isAvailable}>
-                  <Quantity>{item.quantity}x - </Quantity> {item.mainName[language]}
-                </CartItemTitle>
+                <ContainerCartItem data-tip={!item.isAvailable ? t('@not-available-item') : ''} data-place="left" data-effect="solid">
+                  <ContainerCartItemBody>
+                    <CartItemTitle isStrikeThrough={!item.isAvailable}>
+                      <Quantity>{item.quantity}x - </Quantity> &nbsp; {item.mainName[language]}
+                    </CartItemTitle>
 
-                <CartItemPrice isStrikeThrough={!item.isAvailable}>{formatCurrency(item.totalCost, languageCode)}</CartItemPrice>
+                    {!item.isAvailable && <InfoCartSvgImage src="https://img.icons8.com/ios/50/000000/info--v4.png" />}
+                  </ContainerCartItemBody>
+
+                  <CartItemPrice isStrikeThrough={!item.isAvailable}>{formatCurrency(item.totalCost, languageCode)}</CartItemPrice>
+                </ContainerCartItem>
               </ContainerItem>
             );
           })}

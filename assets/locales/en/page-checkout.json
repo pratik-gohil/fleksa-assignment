@@ -40,5 +40,6 @@
   "@time-selection-model-title": "When would you like your order?",
   "@choose-date": "Choose a date",
   "@choose-time": "Choose a time",
-  "@done-button": "DONE"
+  "@done-button": "DONE",
+  "@not-available-item": "Not available now!"
 }

@@ -42,5 +42,6 @@
   "@time-selection-model-title": "Wann möchten Sie Ihre Bestellung?",
   "@choose-date": "Wählen Sie ein Datum",
   "@choose-time": "Wählen Sie eine Zeit",
-  "@done-button": "GETAN"
+  "@done-button": "GETAN",
+  "@not-available-item": "Zurzeit nicht verfügbar!"
 }
