@@ -58,7 +58,7 @@ export async function getServerSidePropsCommon(
     };
     ctx.store.dispatch(updateConfiguration(configuration));
 
-    if (!selectedMenu && !restaurantDomain && ctx.req.url === '/checkout') {
+    if (!selectedMenu && ctx.req.url === '/checkout') {
       return {
         redirect: {
           redirect: {

@@ -184,8 +184,8 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
   }
 
   useEffect(() => {
-    if (shopData?.id == selectedMenuId) setAddressData(address);
-    else setAddressData(siblings.find((item) => item.id == selectedMenuId)?.address);
+    if (shopData?.id === selectedMenuId) setAddressData(address);
+    else setAddressData(siblings.find((item) => item.id === selectedMenuId)?.address);
   }, []);
 
   // TODO: Update delivery or pickup timing of the order
@@ -193,6 +193,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
     const timingList = timings.generateDates();
     let foundDateTime = false;
 
+ 
     for (let i = 0; i < timingList.length; i++) {
       const selectedDate = timingList[i];
 
@@ -207,7 +208,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
           },
           language: currentLanguage,
         });
-
+ 
         if (timeData.length > 0) {
           dispatch(updateWantAt({ date: selectedDate, time: timeData[0] }));
           foundDateTime = true;

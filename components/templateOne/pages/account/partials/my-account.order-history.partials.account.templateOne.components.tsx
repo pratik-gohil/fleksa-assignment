@@ -6,7 +6,7 @@ import { useTranslation } from 'next-i18next';
 import NodeApiHttpGetUserParticularOrder from '../../../../../http/nodeapi/account/get.order-view-by-id.nodeapi.http';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks.redux';
 import { selectBearerToken } from '../../../../../redux/slices/user.slices.redux';
-import { selectConfiguration } from '../../../../../redux/slices/configuration.slices.redux';
+import { selectConfiguration, updateSelectedMenu, updateSelectedMenuUrlpath } from '../../../../../redux/slices/configuration.slices.redux';
 import LoadingIndicator from '../../../common/loadingIndicator/loading-indicator.common.templateOne.components';
 import { updateCheckout } from '../../../../../redux/slices/checkout.slices.redux';
 import { updateError } from '../../../../../redux/slices/common.slices.redux';
@@ -322,6 +322,9 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
 
       // TODO: Update the cart for all the product at once
       dispatch(updateBulkProduct(cartItems));
+
+      dispatch(updateSelectedMenuUrlpath(shopData?.urlpath || null));
+      dispatch(updateSelectedMenu(shopData?.id || null));
 
       // amplitudeEvent(constructEventName(`reorder success`, 'response'), response);
 
