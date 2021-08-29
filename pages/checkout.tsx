@@ -6,8 +6,6 @@ import TemplateToShow from '../templates/template-to-show.templates';
 import { getServerSidePropsCommon } from '../utils/page.utils';
 import NodeApiHttpGetUserAllAddress from '../http/nodeapi/account/get.account.all-address.nodeapi.http';
 import { updateLoadAddressesList } from '../redux/slices/user.slices.redux';
-import { COOKIE_SELECTED_MENU_URLPATH } from '../constants/keys-cookies.constants';
-import { updateSelectedMenuUrlpath } from '../redux/slices/configuration.slices.redux';
 
 const CheckoutPageTemplateOne = dynamic(import('../templates/one/checkout.one.templates'));
 
@@ -16,11 +14,9 @@ const templateList = [CheckoutPageTemplateOne];
 export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ctx) => {
   try {
     const requiresLogin = false;
-    const { redirect, configuration, bearerToken, responseIndex, cookies } = await getServerSidePropsCommon(ctx, requiresLogin);
+    const { redirect, configuration, bearerToken, responseIndex } = await getServerSidePropsCommon(ctx, requiresLogin);
 
     if (redirect) return redirect;
-
-    ctx.store.dispatch(updateSelectedMenuUrlpath(cookies?.get(COOKIE_SELECTED_MENU_URLPATH) || null));
 
     if (bearerToken && configuration) {
       const addressResponse = await new NodeApiHttpGetUserAllAddress(configuration, bearerToken).get({});
@@ -29,7 +25,14 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ct
 
     return {
       props: {
-        ...(await serverSideTranslations((ctx as any).locale, ['header', 'footer', 'add-address', 'login', 'page-checkout', 'common-ordertype'])),
+        ...(await serverSideTranslations((ctx as any).locale, [
+          'header',
+          'footer',
+          'add-address',
+          'login',
+          'page-checkout',
+          'common-ordertype',
+        ])),
         templateNumber: 0,
         meta: responseIndex?.meta,
       },
