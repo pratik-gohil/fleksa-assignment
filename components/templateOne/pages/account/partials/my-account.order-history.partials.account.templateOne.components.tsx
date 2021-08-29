@@ -20,6 +20,7 @@ import { useRouter } from 'next/router';
 import PyApiHttpGetMenu from '../../../../../http/pyapi/menu/get.menu.index.pyapi.http';
 import { selectShop } from '../../../../../redux/slices/index.slices.redux';
 import { ICategoryProduct } from '../../../../../interfaces/common/category.common.interfaces';
+import { isProductAvailable } from '../../../../../utils/account.order.util';
 
 const Container = styled.div`
   max-width: 500px;
@@ -194,10 +195,9 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
 
       if (shopData) {
         const responseMenu = await new PyApiHttpGetMenu(configuration).get({ shopId: shopData.id });
-        console.log('menu response ', responseMenu);
 
         responseMenu?.categories.forEach((category) => {
-          allProducts.concat(category.products);
+          allProducts = allProducts.concat(category.products);
         });
       }
 
@@ -285,27 +285,29 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
 
         cartItems[cartItem.cartId] = {
           ...cartItem,
-          sideProducts: product.name.filter((p) => p.type === 'SIDE').map((s) => ({ id: s.id as number, name: s.name })), // ? Converting ItemSelection -> Cart state format
+          // ? Converting ItemSelection -> Cart state format
+          sideProducts: product.name.filter((p) => p.type === 'SIDE').map((s) => ({ id: s.id as number, name: s.name })),
           choice: Object.values(choices),
         };
 
-        // TODO: Adding isAvaiable key
+        // TODO: Determining product exist
         cartItems[cartItem.cartId] = {
           ...cartItems[cartItem.cartId],
-          isAvailable: true,
+          isAvailable: isProductAvailable(
+            cartItems[cartItem.cartId], // ? current cart item
+            allProducts.filter((menuProduct) => menuProduct.id === cartItems[cartItem.cartId]?.topProductId)[0], // ? current cart product id from menu
+          ),
         };
       });
 
-      console.log('products :: ', cartItems);
-
       // TODO: Update the cart for all the product at once
-      dispatch(updateBulkProduct(cartItems));
+      // dispatch(updateBulkProduct(cartItems));
 
       // amplitudeEvent(constructEventName(`reorder success`, 'response'), response);
 
       setLoading(false);
 
-      router.push(`/checkout`);
+      // router.push(`/checkout`);
     } catch (e) {
       amplitudeEvent(constructEventName(`reorder error catch`, 'error'), { error: e });
 
