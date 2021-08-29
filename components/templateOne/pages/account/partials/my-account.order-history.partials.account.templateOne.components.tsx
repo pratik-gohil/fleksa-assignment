@@ -299,7 +299,7 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
           }
         });
 
-        // Generate CartId
+        // ? Generate CartId
         cartItem.cartId = generateTempCartId(cartItem.id, sideProducts, choices);
 
         cartItems[cartItem.cartId] = {

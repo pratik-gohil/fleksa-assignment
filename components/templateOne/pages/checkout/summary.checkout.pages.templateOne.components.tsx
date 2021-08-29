@@ -196,8 +196,6 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
     for (let i = 0; i < timingList.length; i++) {
       const selectedDate = timingList[i];
 
-      console.log(selectedDate, timingsData, orderType, addressData?.prepare_time, addressData?.delivery_time);
-
       if (selectedDate && timingsData && orderType && addressData?.prepare_time && addressData?.delivery_time) {
         const timeData = timings.generateTimeList({
           date: selectedDate,
