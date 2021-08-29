@@ -10,6 +10,7 @@ import { selectLanguage, selectLanguageCode } from '../../../../redux/slices/con
 import { checkoutFinalAmount } from '../../../../utils/checkout.utils';
 import formatCurrency from '../../../../utils/formatCurrency';
 import { StyledCheckoutCard, StyledCheckoutTitle } from './customer-info.checkout.pages.templateOne.components';
+import ReactTooltip from 'react-tooltip';
 
 export const StyledCheckoutTextarea = styled.textarea`
   width: 100%;
@@ -118,7 +119,7 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
             const item = cartData.items[key];
             return (
               <ContainerItem key={key}>
-                <ContainerCartItem data-tip={!item.isAvailable ? t('@not-available-item') : ''} data-place="left" data-effect="solid">
+                <ContainerCartItem data-for={`${key}-item`}>
                   <ContainerCartItemBody>
                     <CartItemTitle isStrikeThrough={!item.isAvailable}>
                       <Quantity>{item.quantity}x - </Quantity> &nbsp; {item.mainName[language]}
@@ -129,6 +130,12 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
 
                   <CartItemPrice isStrikeThrough={!item.isAvailable}>{formatCurrency(item.totalCost, languageCode)}</CartItemPrice>
                 </ContainerCartItem>
+
+                {!item.isAvailable && (
+                  <ReactTooltip id={`${key}-item`} type="warning" place="left" effect="solid">
+                    <span>Not available !</span>
+                  </ReactTooltip>
+                )}
               </ContainerItem>
             );
           })}
