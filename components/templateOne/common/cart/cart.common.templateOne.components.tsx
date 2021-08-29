@@ -221,9 +221,13 @@ const Cart: FunctionComponent = ({}) => {
                 cartItem && (
                   <ListItem key={key}>
                     <Column1>
-                      <ItemTitle>
-                        {cartItem.mainName[language]} <span>{cartItem.partName && '(' + cartItem.partName[language] + ')'}</span>
-                      </ItemTitle>
+                      {cartItem.type === 'MULTIPLE' && (
+                        <ItemTitle>
+                          {cartItem.mainName[language]} <span>{'(' + cartItem.partName[language] + ')'}</span>
+                        </ItemTitle>
+                      )}
+
+                      {cartItem.type === 'SINGLE' && <ItemTitle>{cartItem.mainName[language]}</ItemTitle>}
 
                       {((cartItem.sideProducts && cartItem.sideProducts.length > 0) || (cartItem.choice && cartItem.choice.length > 0)) && (
                         <ItemTitleAdditional>
