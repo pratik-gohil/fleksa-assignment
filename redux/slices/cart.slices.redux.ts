@@ -88,6 +88,13 @@ export const CartSlice = createSlice({
         })
         .reduce((a: number, b: number) => a + b, 0);
     },
+    updateReduceNotAvailableProduct(state, _action) {
+      Object.keys(state.items).forEach((cartItemId) => {
+        if (!state.items[cartItemId].isAvailable) {
+          delete state.items[cartItemId];
+        }
+      });
+    },
     updateReduceProduct(state, action) {
       if (state.items[action.payload.cartId]?.quantity > 1) {
         --state.items[action.payload.cartId].quantity;
@@ -105,7 +112,8 @@ export const CartSlice = createSlice({
   },
 });
 
-export const { updateAddProduct, updateReduceProduct, updateClearCart, updateBulkProduct } = CartSlice.actions;
+export const { updateAddProduct, updateReduceProduct, updateClearCart, updateBulkProduct, updateReduceNotAvailableProduct } =
+  CartSlice.actions;
 
 export const selectCart = (state: RootState) => state.cart;
 export const selectCartItemByCartId = (state: RootState, cartId: string | null) => (cartId ? state.cart.items[cartId] : null);

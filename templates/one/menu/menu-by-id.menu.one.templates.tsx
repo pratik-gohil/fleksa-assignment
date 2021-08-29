@@ -14,7 +14,7 @@ import AddressAdd, { IGuestAddress } from '../../../components/templateOne/commo
 import MenuPageCartSummary from '../../../components/templateOne/pages/menu/cart-summary.pages.templateOne.components';
 import { LS_GUEST_USER_ADDRESS } from '../../../constants/keys-local-storage.constants';
 import { useTranslation } from 'next-i18next';
-import { selectCart } from '../../../redux/slices/cart.slices.redux';
+import { selectCart, updateReduceNotAvailableProduct } from '../../../redux/slices/cart.slices.redux';
 import PyApiHttpPostAddress from '../../../http/pyapi/address/post.address.pyapi.http';
 import { selectConfiguration, selectSelectedMenu } from '../../../redux/slices/configuration.slices.redux';
 import { selectAddressByType, selectIsUserLoggedIn } from '../../../redux/slices/user.slices.redux';
@@ -78,6 +78,11 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
     getAddressInfo();
   }, [addressByType]);
 
+  useEffect(() => {
+    // TODO: cleaning of not available product in the cart => selected by reorder
+    dispatch(updateReduceNotAvailableProduct({}));
+  }, []);
+
   async function getAddressInfo() {
     if (orderType === 'DELIVERY' && selectedMenuId) {
       let addressType: AddressTypes | undefined;
@@ -123,7 +128,9 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
         <Row>
           <Col sm={12} md={12} lg={3} xxl={3}>
             <SideViewLeft>
-              {typeof window !== 'undefined' && window.matchMedia(`(min-width: ${BREAKPOINTS.lg}px)`).matches && <MenuPageCategorySidebar />}
+              {typeof window !== 'undefined' && window.matchMedia(`(min-width: ${BREAKPOINTS.lg}px)`).matches && (
+                <MenuPageCategorySidebar />
+              )}
             </SideViewLeft>
           </Col>
           <Col sm={12} md={12} lg={5} xxl={5}>
