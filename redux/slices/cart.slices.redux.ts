@@ -81,7 +81,11 @@ export const CartSlice = createSlice({
       state.items = action.payload;
 
       state.cartCost = Object.values(action.payload as Record<string, ICartItem>)
-        .map((item) => item.totalCost)
+        .map((item) => {
+          if (item.isAvailable) return item.totalCost;
+
+          return 0;
+        })
         .reduce((a: number, b: number) => a + b, 0);
     },
     updateReduceProduct(state, action) {

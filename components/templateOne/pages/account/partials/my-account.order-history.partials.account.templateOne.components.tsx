@@ -301,13 +301,13 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
       });
 
       // TODO: Update the cart for all the product at once
-      // dispatch(updateBulkProduct(cartItems));
+      dispatch(updateBulkProduct(cartItems));
 
       // amplitudeEvent(constructEventName(`reorder success`, 'response'), response);
 
       setLoading(false);
 
-      // router.push(`/checkout`);
+      router.push(`/checkout`);
     } catch (e) {
       amplitudeEvent(constructEventName(`reorder error catch`, 'error'), { error: e });
 

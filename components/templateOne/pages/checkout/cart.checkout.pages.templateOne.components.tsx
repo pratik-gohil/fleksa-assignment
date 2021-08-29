@@ -36,6 +36,10 @@ const Title = styled.p`
   }
 `;
 
+const CartItemTitle = styled(Title)<{ isStrikeThrough: boolean }>`
+  text-decoration: ${(p) => (p.isStrikeThrough ? 'line-through' : 'none')};
+`;
+
 const Quantity = styled.span`
   white-space: nowrap;
   margin: 0 6px;
@@ -45,6 +49,10 @@ const Quantity = styled.span`
 const Price = styled.p`
   margin: 0;
   font-weight: 600;
+`;
+
+const CartItemPrice = styled(Price)<{ isStrikeThrough: boolean }>`
+  text-decoration: ${(p) => (p.isStrikeThrough ? 'line-through' : 'none')};
 `;
 
 const Divider = styled.hr`
@@ -75,10 +83,11 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
             const item = cartData.items[key];
             return (
               <ContainerItem key={key}>
-                <Title>
+                <CartItemTitle isStrikeThrough={!item.isAvailable}>
                   <Quantity>{item.quantity}x - </Quantity> {item.mainName[language]}
-                </Title>
-                <Price>{formatCurrency(item.totalCost, languageCode)}</Price>
+                </CartItemTitle>
+
+                <CartItemPrice isStrikeThrough={!item.isAvailable}>{formatCurrency(item.totalCost, languageCode)}</CartItemPrice>
               </ContainerItem>
             );
           })}
