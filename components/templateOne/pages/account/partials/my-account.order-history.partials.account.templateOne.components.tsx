@@ -22,6 +22,7 @@ import { selectShop } from '../../../../../redux/slices/index.slices.redux';
 import { ICategoryProduct } from '../../../../../interfaces/common/category.common.interfaces';
 import { isProductAvailable } from '../../../../../utils/account.order.util';
 import { IMenuPart } from '../../../../../interfaces/common/menu-part.common.interfaces';
+import PyApiHttpPostAddress from '../../../../../http/pyapi/address/post.address.pyapi.http';
 
 const Container = styled.div`
   max-width: 500px;
@@ -189,12 +190,29 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
       setLoading(true);
       let allProducts: ICategoryProduct[] = [];
       let parts: Record<number, IMenuPart> | undefined;
+      let deliveryFinances;
 
       // amplitudeEvent(constructEventName(`reorder`, 'button'), {});
 
       const response = await new NodeApiHttpGetUserParticularOrder(configuration, bearerToken as any).get({
         order_id: order.id,
       });
+
+      if (response.data?.order.is_delivery && shopData) {
+        const pyApiResponse = await new PyApiHttpPostAddress(configuration).postAll({
+          floor: response.data?.order?.delivery_address?.floor ?? '',
+          shopId: shopData.id,
+          address: response.data?.order?.delivery_address?.address ?? '',
+          addressType: response.data?.order?.delivery_address?.address_type ?? 'HOME',
+          city: response.data?.order?.delivery_address?.city ?? '',
+          postalCode: response.data?.order?.delivery_address?.postal_code ?? '',
+          token: bearerToken,
+          area: '',
+        });
+
+        if (pyApiResponse?.result && pyApiResponse.possibilities[shopData.id].is_available)
+          deliveryFinances = pyApiResponse.possibilities[shopData.id].details;
+      }
 
       if (shopData) {
         const responseMenu = await new PyApiHttpGetMenu(configuration).get({ shopId: shopData.id });
@@ -226,11 +244,7 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
           wantAt: null,
           selectedAddressId: response.data?.order.is_delivery ? response.data?.order.delivery_address?.id : null,
           isReOrder: true,
-          deliveryFinances: response.data?.order.is_delivery
-            ? {
-                charges: response.data?.order.price.delivery_fee ?? null,
-              }
-            : null,
+          deliveryFinances: response.data?.order.is_delivery ? deliveryFinances : null,
         }),
       );
 
