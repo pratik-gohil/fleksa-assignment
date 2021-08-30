@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Row, Col } from 'react-grid-system';
 
 import styled from 'styled-components';
@@ -9,7 +9,7 @@ import { selectDeliveryFinances, selectOrderType, selectPromoCode, selectTip } f
 import { selectLanguage, selectLanguageCode } from '../../../../redux/slices/configuration.slices.redux';
 import { checkoutFinalAmount } from '../../../../utils/checkout.utils';
 import formatCurrency from '../../../../utils/formatCurrency';
-import { StyledCheckoutCard, StyledCheckoutTitle } from './customer-info.checkout.pages.templateOne.components';
+import { StyledCheckoutCard, StyledCheckoutTitle } from './customer-info.checkout.pages.templateOne.components'; 
 
 export const StyledCheckoutTextarea = styled.textarea`
   width: 100%;
@@ -24,7 +24,18 @@ export const StyledCheckoutTextarea = styled.textarea`
 const ContainerItem = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
 `;
+
+const ContainerCartItem = styled.p`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.3rem 0;
+  margin: 0;
+`;
+
+const ContainerCartItemBody = styled(ContainerItem)``;
 
 const Title = styled.p`
   display: flex;
@@ -36,9 +47,22 @@ const Title = styled.p`
   }
 `;
 
+const CartItemTitle = styled.span<{ isStrikeThrough: boolean }>`
+  display: flex;
+  flex: 1;
+  margin: 0;
+  font-weight: 600;
+
+  ${({ isStrikeThrough }) =>
+    isStrikeThrough &&
+    `
+      text-decoration: line-through;
+      text-decoration-thickness: 2px;  
+  `}
+`;
+
 const Quantity = styled.span`
   white-space: nowrap;
-  margin: 0 6px;
   font-weight: 400 !important;
 `;
 
@@ -47,8 +71,27 @@ const Price = styled.p`
   font-weight: 600;
 `;
 
+const CartItemPrice = styled.span<{ isStrikeThrough: boolean }>`
+  margin: 0;
+  font-weight: 600;
+
+  ${({ isStrikeThrough }) =>
+    isStrikeThrough &&
+    `
+      text-decoration: line-through;
+      text-decoration-thickness: 2px;  
+  `}
+`;
+
 const Divider = styled.hr`
   border-color: rgba(0, 0, 0, 0.1);
+`;
+
+const InfoCartSvgImage = styled.img`
+  margin: 0 0.5rem;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
 `;
 
 const CheckoutPageCart: FunctionComponent = ({}) => {
@@ -60,11 +103,16 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
   const languageCode = useAppSelector(selectLanguageCode);
   const deliveryFinances = useAppSelector(selectDeliveryFinances);
   const { t } = useTranslation('page-checkout');
+  const [isTooltipVisible, setTooltipVisibility] = useState(false);
 
   const cartItemKeys = cartData.items ? Object.keys(cartData.items) : [];
   const deliveryFeeApplicable =
     orderType === 'DELIVERY' ? (deliveryFinances?.free_from ? cartData.cartCost < deliveryFinances.free_from : true) : false;
   const deliveryFee = deliveryFeeApplicable && deliveryFinances?.charges ? deliveryFinances?.charges : 0;
+
+  useEffect(() => {
+    setTooltipVisibility(true);
+  }, []);
 
   return (
     <StyledCheckoutCard>
@@ -75,10 +123,21 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
             const item = cartData.items[key];
             return (
               <ContainerItem key={key}>
-                <Title>
-                  <Quantity>{item.quantity}x - </Quantity> {item.mainName[language]}
-                </Title>
-                <Price>{formatCurrency(item.totalCost, languageCode)}</Price>
+                {isTooltipVisible && (
+                  <>
+                    <ContainerCartItem>
+                      <ContainerCartItemBody>
+                        <CartItemTitle isStrikeThrough={!item.isAvailable}>
+                          <Quantity>{item.quantity}x - </Quantity> &nbsp; {item.mainName[language]}
+                        </CartItemTitle>
+
+                        {!item.isAvailable && <InfoCartSvgImage src="https://img.icons8.com/ios/50/000000/info--v4.png" />}
+                      </ContainerCartItemBody>
+
+                      <CartItemPrice isStrikeThrough={!item.isAvailable}>{formatCurrency(item.totalCost, languageCode)}</CartItemPrice>
+                    </ContainerCartItem>
+                  </>
+                )}
               </ContainerItem>
             );
           })}

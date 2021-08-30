@@ -1,8 +1,10 @@
 import { PayPalButtons } from '@paypal/react-paypal-js';
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
+import { useState } from 'react';
 import NodeApiHttpPostPaypal from '../../../../http/nodeapi/paypal/post.paypal.nodeapi.http';
 import { INodeApiHttpPostOrderResponse, IOrderResponsePaypal } from '../../../../interfaces/http/nodeapi/order/post.order.nodeapi.http';
 import { useAppSelector } from '../../../../redux/hooks.redux';
+import { selectOrderType } from '../../../../redux/slices/checkout.slices.redux';
 import { selectConfiguration } from '../../../../redux/slices/configuration.slices.redux';
 import { selectBearerToken } from '../../../../redux/slices/user.slices.redux';
 import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
@@ -13,11 +15,29 @@ export interface IPropsCheckoutPageOrderButtonPaypal {
   onPaymentDone(): Promise<void>;
 }
 
-const CheckoutPageOrderButtonPaypal: FunctionComponent<IPropsCheckoutPageOrderButtonPaypal> = ({ onPaymentDone, createOrder, orderCanBePlaced }) => {
+const CheckoutPageOrderButtonPaypal: FunctionComponent<IPropsCheckoutPageOrderButtonPaypal> = ({
+  onPaymentDone,
+  createOrder,
+  orderCanBePlaced,
+}) => {
   const bearerToken = useAppSelector(selectBearerToken);
   const configuration = useAppSelector(selectConfiguration);
+  const [reRender, setReRender] = useState(false);
+  const orderType = useAppSelector(selectOrderType);
 
-  return (
+  useEffect(() => {
+    setReRender(true);
+
+    setTimeout(() => {
+      setReRender(false);
+    }, 100);
+
+    return () => {
+      clearTimeout();
+    };
+  }, [orderType]);
+
+  return !reRender ? (
     <PayPalButtons
       fundingSource="paypal"
       style={{
@@ -32,6 +52,8 @@ const CheckoutPageOrderButtonPaypal: FunctionComponent<IPropsCheckoutPageOrderBu
         amplitudeEvent(constructEventName(`order now paypal`, 'button'), {});
 
         const response = (await createOrder()) as IOrderResponsePaypal;
+
+        console.log('create order response ', response);
 
         if (!response.result) {
           amplitudeEvent(constructEventName(`order now paypal createOrder error`, 'response'), response);
@@ -61,6 +83,8 @@ const CheckoutPageOrderButtonPaypal: FunctionComponent<IPropsCheckoutPageOrderBu
         }
       }}
     />
+  ) : (
+    <>Loading ....</>
   );
 };
 

@@ -1,6 +1,17 @@
 import Cookies from 'cookies';
-import { IConfiguration, updateConfiguration, updateLanguage, updateSelectedMenu } from '../redux/slices/configuration.slices.redux';
-import { COOKIE_BEARER_TOKEN, COOKIE_SELECTED_MENU_ID, COOKIE_SELECTED_RESTAURANT_DOMAIN } from '../constants/keys-cookies.constants';
+import {
+  IConfiguration,
+  updateConfiguration,
+  updateLanguage,
+  updateSelectedMenu,
+  updateSelectedMenuUrlpath,
+} from '../redux/slices/configuration.slices.redux';
+import {
+  COOKIE_BEARER_TOKEN,
+  COOKIE_SELECTED_MENU_ID,
+  COOKIE_SELECTED_MENU_URLPATH,
+  COOKIE_SELECTED_RESTAURANT_DOMAIN,
+} from '../constants/keys-cookies.constants';
 import { updateBearerToken, updateCustomer } from '../redux/slices/user.slices.redux';
 import PyApiHttpGetIndex from '../http/pyapi/index/get.index.pyapi.http';
 import { updateIndex } from '../redux/slices/index.slices.redux';
@@ -38,6 +49,7 @@ export async function getServerSidePropsCommon(
     const bearerToken = cookies.get(COOKIE_BEARER_TOKEN);
     const restaurantDomain = cookies.get(COOKIE_SELECTED_RESTAURANT_DOMAIN);
     const selectedMenu = cookies.get(COOKIE_SELECTED_MENU_ID);
+    const selectedUrlPath = cookies?.get(COOKIE_SELECTED_MENU_URLPATH);
 
     /**
      * If hostname is localhost:3000 or newqa.felksa.de use the restaurant name given by the cookie otherwise use the actual host.
@@ -50,15 +62,15 @@ export async function getServerSidePropsCommon(
     const baseUrlPyApi = testHost ? 'https://myqa.fleksa.com' : 'https://my.fleksa.com';
     const baseUrlNodeApi = testHost ? 'https://apiqa.fleksa.com' : 'https://api.fleksa.com';
 
-    ctx.store.dispatch(updateLanguage((ctx as any).locale));
     const configuration: IConfiguration = {
       host,
       baseUrlPyApi,
       baseUrlNodeApi,
     };
     ctx.store.dispatch(updateConfiguration(configuration));
+    ctx.store.dispatch(updateLanguage((ctx as any).locale));
 
-    if (!selectedMenu && !restaurantDomain && ctx.req.url === '/checkout') {
+    if (!selectedMenu && ctx.req.url === '/checkout') {
       return {
         redirect: {
           redirect: {
@@ -70,14 +82,21 @@ export async function getServerSidePropsCommon(
       };
     }
 
-    /**
-     * In case customer try to go checkout without menu id redirect to index to generate the menu id
-     */
-    ctx.store.dispatch(updateSelectedMenu(selectedMenu || null));
-    ctx.store.dispatch(updateBearerToken(bearerToken || null));
-
     const responseIndex = await new PyApiHttpGetIndex(configuration).get();
     if (!responseIndex?.shop.id) throw new Error('Shop id not found');
+
+    /**
+     * Update current restarurnat menu id and url if it's not present
+     */
+    if (!selectedMenu) ctx.store.dispatch(updateSelectedMenu(responseIndex.shop.id));
+    // ? Default one
+    else ctx.store.dispatch(updateSelectedMenu(+selectedMenu)); // ? already selected one
+
+    if (!selectedUrlPath) ctx.store.dispatch(updateSelectedMenuUrlpath(responseIndex.shop.urlpath));
+    // ? Default one
+    else ctx.store.dispatch(updateSelectedMenuUrlpath(selectedUrlPath)); // ? already selected one
+
+    ctx.store.dispatch(updateBearerToken(bearerToken || null));
 
     /**
      * If page requires login but bearer token is not present

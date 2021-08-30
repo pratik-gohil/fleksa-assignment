@@ -6,13 +6,23 @@ import { useTranslation } from 'next-i18next';
 import NodeApiHttpGetUserParticularOrder from '../../../../../http/nodeapi/account/get.order-view-by-id.nodeapi.http';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks.redux';
 import { selectBearerToken } from '../../../../../redux/slices/user.slices.redux';
-import { selectConfiguration } from '../../../../../redux/slices/configuration.slices.redux';
+import { selectConfiguration, updateSelectedMenu, updateSelectedMenuUrlpath } from '../../../../../redux/slices/configuration.slices.redux';
 import LoadingIndicator from '../../../common/loadingIndicator/loading-indicator.common.templateOne.components';
 import { updateCheckout } from '../../../../../redux/slices/checkout.slices.redux';
 import { updateError } from '../../../../../redux/slices/common.slices.redux';
 import moment from 'moment';
 import CustomLink from '../../../common/amplitude/customLink';
 import { amplitudeEvent, constructEventName } from '../../../../../utils/amplitude.util';
+import { updateBulkProduct } from '../../../../../redux/slices/cart.slices.redux';
+import { ILanguageData } from '../../../../../interfaces/common/language-data.common.interfaces';
+import { IIndexSliceStateSideProducts } from '../../../../../redux/slices/item-selection.slices.redux';
+import { useRouter } from 'next/router';
+import PyApiHttpGetMenu from '../../../../../http/pyapi/menu/get.menu.index.pyapi.http';
+import { selectShop } from '../../../../../redux/slices/index.slices.redux';
+import { ICategoryProduct } from '../../../../../interfaces/common/category.common.interfaces';
+import { isProductAvailable } from '../../../../../utils/account.order.util';
+import { IMenuPart } from '../../../../../interfaces/common/menu-part.common.interfaces';
+import PyApiHttpPostAddress from '../../../../../http/pyapi/address/post.address.pyapi.http';
 
 const Container = styled.div`
   max-width: 500px;
@@ -80,24 +90,40 @@ const ButtonContainer = styled.div`
   display: flex;
 `;
 
-const Button = styled.a`
+const Button = styled.p<{ isOnlyReOrder: boolean }>`
   background-color: white;
   border: 1px solid ${(p) => p.theme.textDarkColor};
   color: ${(p) => p.theme.textDarkColor};
+  padding: 0;
+  margin: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   flex: 1;
-  padding: 1em;
   font-weight: 600;
   outline: none;
   cursor: pointer;
   text-decoration: none;
+  transition: background 0.25s linear;
 
   border-bottom-left-radius: 10px;
+  border-bottom-right-radius: ${(p) => (p.isOnlyReOrder ? '0px' : '10px')};
 
   &:nth-child(2):hover {
     filter: brightness(1.3);
+  }
+
+  &:hover,
+  &:focus {
+    background: ${(p) => p.theme.textDarkColor};
+    color: #fff;
+  }
+
+  & > a {
+    width: 100%;
+    height: 100%;
+    padding: 1em;
+    text-align: center;
   }
 `;
 const ReOrderButton = styled.button<{ back: string }>`
@@ -115,16 +141,44 @@ const ReOrderButton = styled.button<{ back: string }>`
   cursor: pointer;
   text-decoration: none;
   border-bottom-right-radius: 10px;
+  transition: background 0.25s linear;
+
+  &:hover,
+  &:focus {
+    background: #fff;
+    color: ${(p) => p.theme.textDarkColor};
+  }
 `;
 
 interface IMyAccountOrderProps {
   order: IParticularOrder;
 }
 
+interface IModifyChoiceState
+  extends Record<
+    number,
+    {
+      product_index: number;
+      top_index: number;
+      name: ILanguageData;
+    }
+  > {}
+
+function generateTempCartId(productId: number, sideProducts: IIndexSliceStateSideProducts, choice: IModifyChoiceState): string {
+  const sideProdStr = Object.keys(sideProducts).join('-');
+  const choiceStr = Object.keys(choice)
+    .map((key) => `${key},${choice[Number(key)]?.product_index}`)
+    .join('-');
+
+  return `${productId}|${sideProdStr}|${choiceStr}`;
+}
+
 export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order }) => {
   const customDate = new Date(`${order.created_at}`);
   const bearerToken = useAppSelector(selectBearerToken);
   const configuration = useAppSelector(selectConfiguration);
+  const shopData = useAppSelector(selectShop);
+  const router = useRouter();
 
   const { t } = useTranslation('account');
   const dispatch = useAppDispatch();
@@ -134,11 +188,41 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
   const handleReorderButtonClick = async () => {
     try {
       setLoading(true);
-      amplitudeEvent(constructEventName(`reorder`, 'button'), {});
+      let allProducts: ICategoryProduct[] = [];
+      let parts: Record<number, IMenuPart> | undefined;
+      let deliveryFinances;
+
+      // amplitudeEvent(constructEventName(`reorder`, 'button'), {});
 
       const response = await new NodeApiHttpGetUserParticularOrder(configuration, bearerToken as any).get({
         order_id: order.id,
       });
+
+      if (response.data?.order.is_delivery && shopData) {
+        const pyApiResponse = await new PyApiHttpPostAddress(configuration).postAll({
+          floor: response.data?.order?.delivery_address?.floor ?? '',
+          shopId: shopData.id,
+          address: response.data?.order?.delivery_address?.address ?? '',
+          addressType: response.data?.order?.delivery_address?.address_type ?? 'HOME',
+          city: response.data?.order?.delivery_address?.city ?? '',
+          postalCode: response.data?.order?.delivery_address?.postal_code ?? '',
+          token: bearerToken,
+          area: '',
+        });
+
+        if (pyApiResponse?.result && pyApiResponse.possibilities[shopData.id].is_available)
+          deliveryFinances = pyApiResponse.possibilities[shopData.id].details;
+      }
+
+      if (shopData) {
+        const responseMenu = await new PyApiHttpGetMenu(configuration).get({ shopId: shopData.id });
+
+        parts = responseMenu?.parts;
+
+        responseMenu?.categories.forEach((category) => {
+          allProducts = allProducts.concat(category.products);
+        });
+      }
 
       if (!response || !response.result) {
         amplitudeEvent(constructEventName(`reorder error`, 'response'), response);
@@ -151,24 +235,104 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
         );
       }
 
+      // TODO: Update basic checkout info
       dispatch(
         updateCheckout({
           orderType: response.data?.order.order_type,
+          tip: response.data?.order.price.tip,
           paymentMethod: response?.data?.order.payment_method,
-          wantAt: response.data?.order.want_at,
+          wantAt: null,
           selectedAddressId: response.data?.order.is_delivery ? response.data?.order.delivery_address?.id : null,
-          deliveryFinances: {
-            charges: response.data?.order.is_delivery ? response.data?.order.price.delivery_fee : null,
-          },
+          isReOrder: true,
+          deliveryFinances: response.data?.order.is_delivery ? deliveryFinances : null,
         }),
       );
 
-      amplitudeEvent(constructEventName(`reorder success`, 'response'), response);
+      const cartItems: Record<string, any> = {};
 
-      console.log('respon ', response);
+      // TODO: Update cart by product info
+      response.data?.order.products.forEach((product) => {
+        const sideProducts: Record<number, { price: number; name: ILanguageData }> = {}; // ? Item selection state format
+        const choices: IModifyChoiceState = {}; // ? Item selection and cart state format
+
+        const cartItem = {
+          topProductId: 0,
+          cartId: '',
+          id: product.id,
+          mainName: {},
+          partName: {},
+          type: product.type === 'PART' ? 'MULTIPLE' : product.type,
+          quantity: product.quantity,
+          costOneItem: product.price,
+          totalCost: product.price * product.quantity,
+        };
+
+        product.name.forEach((selection) => {
+          switch (selection.type) {
+            case 'SIDE':
+              sideProducts[selection.id as number] = {
+                price: selection?.extra_price as number,
+                name: selection.name,
+              };
+              break;
+            case 'CHOICE':
+              choices[selection.top_index as number] = {
+                top_index: selection.top_index as number,
+                name: selection.name,
+                product_index: selection.product_index as number,
+              };
+              break;
+            case 'PART':
+              cartItem.partName = selection.name;
+              break;
+            case 'PART-PARENT': {
+              cartItem.topProductId = selection.id as number;
+              cartItem.mainName = selection.name;
+              break;
+            }
+            case 'SINGLE': {
+              cartItem.topProductId = selection.id as number;
+              cartItem.mainName = selection.name;
+              break;
+            }
+            default:
+          }
+        });
+
+        // ? Generate CartId
+        cartItem.cartId = generateTempCartId(cartItem.id, sideProducts, choices);
+
+        cartItems[cartItem.cartId] = {
+          ...cartItem,
+          // ? Converting ItemSelection -> Cart state format
+          sideProducts: product.name.filter((p) => p.type === 'SIDE').map((s) => ({ id: s.id as number, name: s.name })),
+          choice: Object.values(choices),
+        };
+
+        // TODO: Determining product exist
+        cartItems[cartItem.cartId] = {
+          ...cartItems[cartItem.cartId],
+          isAvailable: isProductAvailable(
+            cartItems[cartItem.cartId], // ? current cart item
+            allProducts.filter((menuProduct) => menuProduct.id === cartItems[cartItem.cartId]?.topProductId)[0], // ? current cart product id from menu
+            parts ?? {},
+          ),
+        };
+      });
+
+      // TODO: Update the cart for all the product at once
+      dispatch(updateBulkProduct(cartItems));
+
+      dispatch(updateSelectedMenuUrlpath(shopData?.urlpath || null));
+      dispatch(updateSelectedMenu(shopData?.id || null));
+
+      // amplitudeEvent(constructEventName(`reorder success`, 'response'), response);
+
       setLoading(false);
+
+      router.push(`/checkout`);
     } catch (e) {
-      amplitudeEvent(constructEventName(`reorder error catch`, 'error'), {error: e});
+      amplitudeEvent(constructEventName(`reorder error catch`, 'error'), { error: e });
 
       console.error('error => ', e);
     }
@@ -198,20 +362,23 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
       </TextContainer>
 
       <ButtonContainer>
-        <CustomLink
-          amplitude={{
-            type: 'button',
-            text: t('@review-now'),
-          }}
-          Override={Button}
-          href={`/account/order/${order.id}`}
-        >
-          {t('@review-now')}
-        </CustomLink>
+        <Button isOnlyReOrder={!!order.is_reorder}>
+          <CustomLink
+            amplitude={{
+              type: 'button',
+              text: t('@review-now'),
+            }}
+            href={`/account/order/${order.id}`}
+          >
+            {t('@review-now')}
+          </CustomLink>
+        </Button>
 
-        <ReOrderButton back="fill" onClick={handleReorderButtonClick}>
-          {loading ? <LoadingIndicator width={20} /> : t('@re-order')}
-        </ReOrderButton>
+        {!!order.is_reorder && (
+          <ReOrderButton back="fill" onClick={handleReorderButtonClick}>
+            {loading ? <LoadingIndicator width={20} /> : t('@re-order')}
+          </ReOrderButton>
+        )}
       </ButtonContainer>
     </Container>
   );

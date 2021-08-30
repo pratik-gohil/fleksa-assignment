@@ -299,7 +299,7 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
             amplitudeEvent(constructEventName(`auto filled otp error`, 'feature'), { error: err });
           });
       } else {
-        amplitudeEvent(constructEventName(`auto fill otp not support`, 'feature'), {});
+        // amplitudeEvent(constructEventName(`auto fill otp not support`, 'feature'), {});
 
         console.log('WebOTP not supported!.');
       }

@@ -196,7 +196,16 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
     );
 
     setOrderCanBePlaced(canPlace);
-  }, [bearerToken, shopData?.id, customerData.name, customerData.email, customerData.phone, customerData.country_code, wantAtData, deliveryFinances]);
+  }, [
+    bearerToken,
+    shopData?.id,
+    customerData.name,
+    customerData.email,
+    customerData.phone,
+    customerData.country_code,
+    wantAtData,
+    deliveryFinances,
+  ]);
 
   useEffect(() => {
     dispatch(updateCheckoutLogin(false)); // ? Fix inital render glitch on checkout button overlfow

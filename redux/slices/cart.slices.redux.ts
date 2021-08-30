@@ -14,9 +14,10 @@ export interface ICartItem {
   partName: ILanguageData;
   type: IType;
   sideProducts: Array<{ id: number; name: ILanguageData }> | null;
-  choice: Array<{ top_index: number; product_index: number; name: ILanguageData }> | null;
+  choice: Array<{ top_index: number; product_index: number; name: ILanguageData }> | [];
   costOneItem: number;
   totalCost: number;
+  isAvailable: boolean;
 }
 
 export interface ICartSliceState {
@@ -34,16 +35,20 @@ export const CartSlice = createSlice({
   initialState,
   reducers: {
     updateAddProduct(state, action) {
+      // TODO: Product increment if already exist
       if (state.items[action.payload.cartId]) {
         ++state.items[action.payload.cartId].quantity;
         state.items[action.payload.cartId].totalCost += state.items[action.payload.cartId].costOneItem;
         state.cartCost += state.items[action.payload.cartId].costOneItem;
-      } else {
+      }
+      // TODO: Add new product into the cart
+      else {
         const sideProducts = action.payload.sideProducts
           ? Object.keys(action.payload.sideProducts).map((key) => {
               return { id: Number(key), name: action.payload.sideProducts[key].name };
             })
           : null;
+
         const choice = action.payload.choice
           ? Object.keys(action.payload.choice).map((key) => {
               return {
@@ -53,21 +58,42 @@ export const CartSlice = createSlice({
               };
             })
           : null;
+
         state.items[action.payload.cartId] = {
           topProductId: action.payload.topProductId,
           id: action.payload.productId,
           cartId: action.payload.cartId,
           quantity: 1,
           sideProducts: sideProducts,
-          choice,
+          choice: choice ?? [],
           mainName: action.payload.mainName,
           partName: action.payload.partName,
           type: action.payload.type,
           costOneItem: action.payload.totalCost,
           totalCost: action.payload.totalCost,
+          isAvailable: action.payload.isAvailable,
         };
+
         state.cartCost += action.payload.totalCost;
       }
+    },
+    updateBulkProduct(state, action) {
+      state.items = action.payload;
+
+      state.cartCost = Object.values(action.payload as Record<string, ICartItem>)
+        .map((item) => {
+          if (item.isAvailable) return item.totalCost;
+
+          return 0;
+        })
+        .reduce((a: number, b: number) => a + b, 0);
+    },
+    updateReduceNotAvailableProduct(state, _action) {
+      Object.keys(state.items).forEach((cartItemId) => {
+        if (!state.items[cartItemId].isAvailable) {
+          delete state.items[cartItemId];
+        }
+      });
     },
     updateReduceProduct(state, action) {
       if (state.items[action.payload.cartId]?.quantity > 1) {
@@ -86,7 +112,8 @@ export const CartSlice = createSlice({
   },
 });
 
-export const { updateAddProduct, updateReduceProduct, updateClearCart } = CartSlice.actions;
+export const { updateAddProduct, updateReduceProduct, updateClearCart, updateBulkProduct, updateReduceNotAvailableProduct } =
+  CartSlice.actions;
 
 export const selectCart = (state: RootState) => state.cart;
 export const selectCartItemByCartId = (state: RootState, cartId: string | null) => (cartId ? state.cart.items[cartId] : null);

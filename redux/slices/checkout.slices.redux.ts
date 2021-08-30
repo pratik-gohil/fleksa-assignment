@@ -24,6 +24,7 @@ export interface ICheckoutSliceState {
   selectedAddressId: number | null;
   deliveryFinances: IDeliveryFinances | null;
   checkoutLogin: boolean;
+  isReOrder: boolean;
 
   promoCode: {
     code: string;
@@ -43,6 +44,7 @@ export const checkoutInitialState: ICheckoutSliceState = {
   deliveryFinances: null,
   promoCode: null,
   checkoutLogin: false,
+  isReOrder: false,
 };
 
 export const CheckoutSlice = createSlice({
@@ -79,6 +81,9 @@ export const CheckoutSlice = createSlice({
     updateCheckoutLogin(state, action) {
       state.checkoutLogin = action.payload;
     },
+    updateCheckoutIsReOrder(state, action) {
+      state.isReOrder = action.payload;
+    },
 
     updateClearCheckout(state) {
       state.orderType = null;
@@ -91,6 +96,7 @@ export const CheckoutSlice = createSlice({
       state.deliveryFinances = null;
       state.promoCode = null;
       state.checkoutLogin = false;
+      state.isReOrder = false;
     },
     updateCheckout(state, action) {
       state.orderType = action.payload.orderType || state.orderType;
@@ -101,6 +107,7 @@ export const CheckoutSlice = createSlice({
       state.selectedAddressId = action.payload.selectedAddressId || state.selectedAddressId;
       state.deliveryFinances = action.payload.deliveryFinances || state.deliveryFinances;
       state.promoCode = action.payload.promoCode || state.promoCode;
+      state.isReOrder = action.payload.isReOrder || state.isReOrder;
     },
   },
   extraReducers: {
@@ -125,6 +132,7 @@ export const {
   updateDeliveryFinances,
   updateCheckout,
   updateCheckoutLogin,
+  updateCheckoutIsReOrder,
 } = CheckoutSlice.actions;
 
 export const selectDeliveryFinances = (state: RootState) => state.checkout.deliveryFinances;
@@ -136,4 +144,5 @@ export const selectWantAt = (state: RootState) => state.checkout.wantAt;
 export const selectShowDateTimeSelect = (state: RootState) => state.checkout.showDateTimeSelect;
 export const selectSelectedAddressId = (state: RootState) => state.checkout.selectedAddressId;
 export const selectPromoCode = (state: RootState) => state.checkout.promoCode;
+export const selectIsReOrder = (state: RootState) => state.checkout.isReOrder;
 export const selectCheckoutLogin = (state: RootState) => state.checkout.checkoutLogin;

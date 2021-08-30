@@ -129,11 +129,9 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
   const [addressData, setAddressData] = useState<IAddress | null | undefined>(undefined);
 
   function isOrderPossible() {
-    if (orderType === 'DELIVERY') {
-      return deliveryFinances && deliveryFinances.amount ? cartData.cartCost >= deliveryFinances.amount : true;
-    } else {
-      return true;
-    }
+    if (orderType === 'DELIVERY') return deliveryFinances && deliveryFinances.amount ? cartData.cartCost >= deliveryFinances.amount : true;
+
+    return true;
   }
 
   async function addGuestAddressOnServerIfExists() {
@@ -186,8 +184,8 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
   }
 
   useEffect(() => {
-    if (shopData?.id == selectedMenuId) setAddressData(address);
-    else setAddressData(siblings.find((item) => item.id == selectedMenuId)?.address);
+    if (shopData?.id === selectedMenuId) setAddressData(address);
+    else setAddressData(siblings.find((item) => item.id === selectedMenuId)?.address);
   }, []);
 
   // TODO: Update delivery or pickup timing of the order

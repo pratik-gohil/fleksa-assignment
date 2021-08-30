@@ -40,6 +40,7 @@ const PageContainer: FunctionComponent<IPropsPageContainer> = ({ children, showF
       <AllPagesCartContainer>
         <Cart />
       </AllPagesCartContainer>
+ 
     </Wrapper>
   );
 };
