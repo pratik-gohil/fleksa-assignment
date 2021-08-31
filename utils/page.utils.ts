@@ -88,13 +88,15 @@ export async function getServerSidePropsCommon(
     /**
      * Update current restarurnat menu id and url if it's not present
      */
+    // ? Default one
     if (!selectedMenu) ctx.store.dispatch(updateSelectedMenu(responseIndex.shop.id));
-    // ? Default one
-    else ctx.store.dispatch(updateSelectedMenu(+selectedMenu)); // ? already selected one
+    // ? already selected one
+    else ctx.store.dispatch(updateSelectedMenu(+selectedMenu));
 
-    if (!selectedUrlPath) ctx.store.dispatch(updateSelectedMenuUrlpath(responseIndex.shop.urlpath));
     // ? Default one
-    else ctx.store.dispatch(updateSelectedMenuUrlpath(selectedUrlPath)); // ? already selected one
+    if (!selectedUrlPath) ctx.store.dispatch(updateSelectedMenuUrlpath(responseIndex.shop.urlpath));
+    // ? already selected one
+    else ctx.store.dispatch(updateSelectedMenuUrlpath(selectedUrlPath));
 
     ctx.store.dispatch(updateBearerToken(bearerToken || null));
 
