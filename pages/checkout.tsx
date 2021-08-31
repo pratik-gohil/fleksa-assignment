@@ -20,7 +20,7 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ct
 
     if (bearerToken && configuration) {
       const addressResponse = await new NodeApiHttpGetUserAllAddress(configuration, bearerToken).get({});
-      ctx.store.dispatch(updateLoadAddressesList(addressResponse?.data.customer_address));
+      await ctx.store.dispatch(updateLoadAddressesList(addressResponse?.data.customer_address));
     }
 
     return {
