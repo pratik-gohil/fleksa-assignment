@@ -46,10 +46,10 @@ export async function getServerSidePropsCommon(
   try {
     const cookies = new Cookies(ctx.req, ctx.res);
 
-    const bearerToken = cookies.get(COOKIE_BEARER_TOKEN);
-    const restaurantDomain = cookies.get(COOKIE_SELECTED_RESTAURANT_DOMAIN);
-    const selectedMenu = cookies.get(COOKIE_SELECTED_MENU_ID);
-    const selectedUrlPath = cookies?.get(COOKIE_SELECTED_MENU_URLPATH);
+    const bearerToken = await cookies.get(COOKIE_BEARER_TOKEN);
+    const restaurantDomain = await cookies.get(COOKIE_SELECTED_RESTAURANT_DOMAIN);
+    const selectedMenu = await cookies.get(COOKIE_SELECTED_MENU_ID);
+    const selectedUrlPath = await cookies?.get(COOKIE_SELECTED_MENU_URLPATH);
 
     /**
      * If hostname is localhost:3000 or newqa.felksa.de use the restaurant name given by the cookie otherwise use the actual host.
@@ -67,8 +67,9 @@ export async function getServerSidePropsCommon(
       baseUrlPyApi,
       baseUrlNodeApi,
     };
-    ctx.store.dispatch(updateConfiguration(configuration));
-    ctx.store.dispatch(updateLanguage((ctx as any).locale));
+    await ctx.store.dispatch(updateConfiguration(configuration));
+    await ctx.store.dispatch(updateLanguage((ctx as any).locale));
+    await ctx.store.dispatch(updateBearerToken(bearerToken || null));
 
     if (!selectedMenu && ctx.req.url === '/checkout') {
       return {
@@ -89,16 +90,14 @@ export async function getServerSidePropsCommon(
      * Update current restarurnat menu id and url if it's not present
      */
     // ? Default one
-    if (!selectedMenu) ctx.store.dispatch(updateSelectedMenu(responseIndex.shop.id));
+    if (!selectedMenu) await ctx.store.dispatch(updateSelectedMenu(responseIndex.shop.id));
     // ? already selected one
-    else ctx.store.dispatch(updateSelectedMenu(+selectedMenu));
+    else await ctx.store.dispatch(updateSelectedMenu(+selectedMenu));
 
     // ? Default one
-    if (!selectedUrlPath) ctx.store.dispatch(updateSelectedMenuUrlpath(responseIndex.shop.urlpath));
+    if (!selectedUrlPath) await ctx.store.dispatch(updateSelectedMenuUrlpath(responseIndex.shop.urlpath));
     // ? already selected one
-    else ctx.store.dispatch(updateSelectedMenuUrlpath(selectedUrlPath));
-
-    ctx.store.dispatch(updateBearerToken(bearerToken || null));
+    else await ctx.store.dispatch(updateSelectedMenuUrlpath(selectedUrlPath));
 
     /**
      * If page requires login but bearer token is not present
@@ -119,7 +118,7 @@ export async function getServerSidePropsCommon(
       };
     } else if (bearerToken) {
       const userData = await new NodeApiHttpGetUser(configuration, bearerToken).get({});
-      ctx.store.dispatch(updateCustomer(userData?.data.customer));
+      await ctx.store.dispatch(updateCustomer(userData?.data.customer));
 
       // * Make page addition request if it's needed
 
@@ -128,8 +127,10 @@ export async function getServerSidePropsCommon(
         const orderHistory = await new NodeApiHttpGetUserOrderHistory(configuration, bearerToken).get({ shop_id: responseIndex?.shop.id });
 
         if (orderHistory?.result) {
-          ctx.store.dispatch(updateCustomer({ ...userData?.data.customer, orders: orderHistory.data.orders?.sort((a, b) => b.id - a.id) }));
-        } else ctx.store.dispatch(updateCustomer({ ...userData?.data.customer, orders: [] }));
+          await ctx.store.dispatch(
+            updateCustomer({ ...userData?.data.customer, orders: orderHistory.data.orders?.sort((a, b) => b.id - a.id) }),
+          );
+        } else await ctx.store.dispatch(updateCustomer({ ...userData?.data.customer, orders: [] }));
       }
 
       // TODO: Request for particular order page
@@ -137,17 +138,17 @@ export async function getServerSidePropsCommon(
         const particularOrder = await new NodeApiHttpGetUserParticularOrder(configuration, bearerToken).get({
           order_id: ctx.query.id,
         });
-        ctx.store.dispatch(updateCustomer({ ...userData?.data.customer, current_order: particularOrder?.data?.order }));
+        await ctx.store.dispatch(updateCustomer({ ...userData?.data.customer, current_order: particularOrder?.data?.order }));
       }
 
       // TODO: Request for all address order page
       if (options?.getAllAddress && bearerToken) {
         const response = await new NodeApiHttpGetUserAllAddress(configuration, bearerToken).get({});
-        ctx.store.dispatch(updateCustomer({ ...userData?.data.customer, all_address: response?.data.customer_address }));
+        await ctx.store.dispatch(updateCustomer({ ...userData?.data.customer, all_address: response?.data.customer_address }));
       }
     }
 
-    ctx.store.dispatch(updateIndex(responseIndex));
+    await ctx.store.dispatch(updateIndex(responseIndex));
 
     return {
       cookies,
