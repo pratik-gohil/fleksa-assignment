@@ -22,6 +22,7 @@ const List = styled.ul`
 const ListItem = styled.li`
   display: flex;
   flex-shrink: 0;
+  align-items: center;
   @media (min-width: ${BREAKPOINTS.lg}px) {
     justify-content: flex-end;
   }
@@ -154,6 +155,7 @@ const MenuPageCategorySidebar: FunctionComponent = ({}) => {
       <ListItem key="search">
         <MenuSearch />
       </ListItem>
+
       {categories.map((category, index) => {
         const id = category.name_json.english
           .toLowerCase()
