@@ -43,7 +43,7 @@ const Wrapper = styled.div<{ showCart: boolean }>`
     margin: 0;
     position: relative;
     display: flex;
-    max-height: calc(100vh - ${(props) => props.theme.navDesktop.height}px);
+    max-height: 600px;
   }
 `;
 
