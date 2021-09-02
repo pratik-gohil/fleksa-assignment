@@ -1,4 +1,4 @@
-const path = require('path')
+const path = require('path');
 
 module.exports = {
   i18n: {
@@ -6,4 +6,7 @@ module.exports = {
     locales: ['en', 'de'],
   },
   localePath: path.resolve('./assets/locales'),
-}
+  react: {
+    useSuspense: false,
+  },
+};
