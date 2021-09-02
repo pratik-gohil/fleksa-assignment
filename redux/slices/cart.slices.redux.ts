@@ -35,6 +35,8 @@ export const CartSlice = createSlice({
   initialState,
   reducers: {
     updateAddProduct(state, action) {
+      console.log('cartCost ', state.cartCost);
+
       // TODO: Product increment if already exist
       if (state.items[action.payload.cartId]) {
         ++state.items[action.payload.cartId].quantity;

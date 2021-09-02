@@ -1,3 +1,4 @@
+import { useTranslation } from 'next-i18next';
 import React, { FunctionComponent, useState } from 'react';
 
 import { useAppSelector } from '../../../../redux/hooks.redux';
@@ -36,6 +37,7 @@ const MenuPageMultipleSelector: FunctionComponent<IPropsMenuPageCategoryListItem
   const language = useAppSelector(selectLanguage);
   const languageCode = useAppSelector(selectLanguageCode);
   const [optionKey] = useState(getNextIndex());
+  const { t } = useTranslation('page-menu-by-id');
 
   const isOptionOpen = selectedOption === optionKey;
   const toggle = () => setSelectedOption(isOptionOpen ? optionKey + 1 : optionKey);
@@ -52,7 +54,7 @@ const MenuPageMultipleSelector: FunctionComponent<IPropsMenuPageCategoryListItem
       >
         <p style={{ margin: 0, padding: 12 }}>{choice.name_json[language]}</p>
         <p style={{ margin: 0, padding: 12 }}>
-          {isOptionOpen ? 'Choose One' : choice.options.filter((i) => i.id === selectionMultipleId)[0].name_json[language]}
+          {isOptionOpen ? t('@choose-one') : choice.options.filter((i) => i.id === selectionMultipleId)[0].name_json[language]}
         </p>
       </CustomLink>
 
