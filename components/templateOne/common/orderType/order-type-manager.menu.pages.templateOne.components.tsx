@@ -11,8 +11,12 @@ import {
 import SvgDelivery from '../../../../public/assets/svg/delivery.svg';
 import SvgPickup from '../../../../public/assets/svg/pickup.svg';
 import SvgDinein from '../../../../public/assets/svg/dinein.svg';
-// import SvgTick from '../../../../public/assets/svg/tick.svg';
-import { updateShowAddAddress, updateShowOrderTypeSelect } from '../../../../redux/slices/menu.slices.redux';
+import {
+  selectShowAddress,
+  selectShowOrderTypeSelect,
+  updateShowAddAddress,
+  updateShowOrderTypeSelect,
+} from '../../../../redux/slices/menu.slices.redux';
 import { selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
 import { selectAddress, selectShop, selectSiblings } from '../../../../redux/slices/index.slices.redux';
 import { useState } from 'react';
@@ -21,6 +25,7 @@ import { useTranslation } from 'next-i18next';
 import { selectAddressById, selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
 import { IParticularAddress } from '../../../../interfaces/common/customer.common.interfaces';
 import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
+import AddAddressExtendModel from '../addresses/address-add.-extend.common.templateOne.components';
 
 const Wrapper = styled.div`
   position: fixed;
@@ -116,11 +121,7 @@ const ListItemContent = styled.div<{ centerContent: boolean }>`
   margin-left: ${(props) => props.theme.dimen.X4}px;
 `;
 
-// const SelectedTick = styled.div`
-//   svg {
-//     padding: 12px;
-//   }
-// `;
+const AddressContainer = styled.div``;
 
 const OrderTypeManager: FunctionComponent = () => {
   const shopData = useAppSelector(selectShop);
@@ -131,8 +132,10 @@ const OrderTypeManager: FunctionComponent = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation('common-ordertype');
   const [addressData, setAddressData] = useState<IAddress | null | undefined>(undefined);
-  const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
   const choosenAddressId = useAppSelector(selectSelectedAddressId);
+  const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
+  const isShowAddressSelection = useAppSelector(selectShowAddress);
+  const isShowOrderTypeSelection = useAppSelector(selectShowOrderTypeSelect);
 
   function onClickDelivery(orderType: ICheckoutOrderTypes) {
     dispatch(updateOrderType(orderType));
@@ -177,7 +180,7 @@ const OrderTypeManager: FunctionComponent = () => {
     else setAddressData(siblings.find((item) => item.id == selectedMenuId)?.address);
   }, []);
 
-  return (
+  return isShowOrderTypeSelection || orderType === null ? (
     <Wrapper>
       <ContentContainer>
         <Title>{t('@order-details')}</Title>
@@ -209,10 +212,12 @@ const OrderTypeManager: FunctionComponent = () => {
               visible: addressData?.has_dinein,
             },
           ].map((item) => {
-            if (item.visible) {
-              const selected = item.orderType === orderType;
-              const centerContent = item.subTitle !== null && item.subTitle.length === 0;
+            if (!item.visible) return null;
 
+            const selected = item.orderType === orderType;
+            const centerContent = item.subTitle !== null && item.subTitle.length === 0;
+
+            if (!isShowAddressSelection)
               return (
                 <ListItem key={item.title} selected={selected} onClick={() => item.onClick(item.orderType)}>
                   <item.logo />
@@ -222,22 +227,30 @@ const OrderTypeManager: FunctionComponent = () => {
 
                     {!centerContent && <SubTitle>{item.subTitle}</SubTitle>}
                   </ListItemContent>
-
-                  {/* 
-                  {selected && (
-                    <SelectedTick>
-                      <SvgTick />
-                    </SelectedTick>
-                  )} */}
                 </ListItem>
               );
-            } else {
-              return <Fragment key={item.title} />;
-            }
+            else if (isShowAddressSelection && item.orderType === 'DELIVERY')
+              return (
+                <AddressContainer>
+                  <ListItem key={item.title} selected={selected} onClick={() => item.onClick(item.orderType)}>
+                    <item.logo />
+
+                    <ListItemContent centerContent={centerContent}>
+                      <Title>{item.title}</Title>
+
+                      {!centerContent && <SubTitle>{item.subTitle}</SubTitle>}
+                    </ListItemContent>
+                  </ListItem>
+
+                  <AddAddressExtendModel />
+                </AddressContainer>
+              );
           })}
         </List>
       </ContentContainer>
     </Wrapper>
+  ) : (
+    <></>
   );
 };
 

@@ -150,15 +150,16 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
 
       <div>{cartData.cartCost > 0 && <MenuPageCartSummary />}</div>
 
-      {(showSelectOrderType || orderType === null) && !showAddAddress ? (
-        <OrderTypeManager key="key-ajkndalkwdmalkwmdlkw" />
+      <OrderTypeManager />
+
+      {/* {(showSelectOrderType || orderType === null) && !showAddAddress ? (
       ) : (
         (showAddAddress ||
           (orderType === 'DELIVERY' &&
             checkoutAddressId === null &&
             orderType === 'DELIVERY' &&
             !window.localStorage.getItem(LS_GUEST_USER_ADDRESS))) && <AddressAdd />
-      )}
+      )} */}
     </>
   );
 };
