@@ -11,10 +11,14 @@ import {
   updateExistCustomerAddressOrAddNew,
 } from '../../../../redux/slices/user.slices.redux';
 import { IParticularAddress } from '../../../../interfaces/common/customer.common.interfaces';
-import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
+// import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 import { selectConfiguration, selectLanguageCode, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
 import PyApiHttpPostAddress from '../../../../http/pyapi/address/post.address.pyapi.http';
 import { updateDeliveryFinances, updateSelectedAddressId } from '../../../../redux/slices/checkout.slices.redux';
+import { AddressTypes } from './address-manager.common.templateOne.components';
+import { updateShowAddAddress } from '../../../../redux/slices/menu.slices.redux';
+import { IGuestAddress } from './address-add.common.templateOne.components';
+import { LS_GUEST_USER_ADDRESS } from '../../../../constants/keys-local-storage.constants';
 
 const Wrapper = styled.div`
   padding: 0 2rem 1rem 5rem;
@@ -24,12 +28,15 @@ const InputContainer = styled.div`
   display: flex;
   justify-content: flex-end;
 `;
-const Input = styled.input`
+const Input = styled.input<{ isAddressSelected: boolean }>`
   width: 100%;
-  border: ${(props) => props.theme.border};
-  border-radius: ${(props) => props.theme.borderRadius}px;
-  padding: ${(props) => props.theme.dimen.X4}px;
+  border: ${(p) => (p.isAddressSelected ? 'none' : p.theme.border)};
+  border-radius: ${(p) => (p.isAddressSelected ? '0' : p.theme.borderRadius)}px;
+  padding: ${(p) => p.theme.dimen.X4}px;
   font-family: inherit;
+  outline: none;
+  border-bottom: ${(p) => (p.isAddressSelected ? '1px solid rgba(0, 0, 0, 1)' : p.theme.border)};
+  padding-right: ${(p) => (p.isAddressSelected ? '2rem' : `${p.theme.dimen.X4}px`)};
 `;
 
 const HistoryAddressContainer = styled.div`
@@ -79,6 +86,65 @@ const AddressText = styled.p`
   margin: 0;
 `;
 
+const AdvanceOptionContainer = styled.div``;
+
+const OptionText = styled.p``;
+
+const AdvanceOptionHeader = styled.div``;
+
+const PlaceSelection = styled.div`
+  display: flex;
+`;
+
+const StyledOptionsRadioButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+
+  span {
+    padding: 0.5rem;
+    font-size: 12px;
+  }
+`;
+
+const StyledOptionsRadioButton = styled.div<{ selected: boolean }>`
+  width: 16px;
+  height: 16px;
+  margin: 0 0.5rem;
+  display: block;
+  padding-right: 0.5rem;
+  border-radius: 100%;
+  border: ${(props) => props.theme.border};
+  background-color: ${(props) => props.selected && props.theme.primaryColor};
+`;
+
+const InputAdditionInstruction = styled.input`
+  margin-top: 0.5rem;
+  width: 100%;
+  outline: none;
+  border: ${(p) => p.theme.border};
+  padding: ${(p) => p.theme.dimen.X4}px;
+  border-radius: ${(p) => p.theme.borderRadius}px;
+`;
+
+const Button = styled.button`
+  font-weight: 700;
+  cursor: pointer;
+  background: #333;
+  color: #fff;
+  flex: 1;
+  border: none;
+  outline: none;
+  width: 100%;
+  padding: 0.8rem 1rem;
+  font-size: 18px;
+  margin-top: 0.5rem;
+  border-radius: 0.5rem;
+
+  &:hover {
+    background: #444444;
+  }
+`;
+
 let autoComplete: google.maps.places.Autocomplete;
 
 const AddAddressExtendModel = () => {
@@ -93,8 +159,11 @@ const AddAddressExtendModel = () => {
   const dispatch = useAppDispatch();
 
   const [addressMain, setAddressMain] = useState('');
+  const [placeSelection, setPlaceSelection] = useState('meet-door');
+  const [additionalInstruction, setAdditionalInstruction] = useState('');
   const [addressList, setAddressList] = useState<Array<IParticularAddress>>([]);
-  const [errorMessage, setErrorMessage] = useState<string>();
+  const [isAddressSelected, setIsAddressSelected] = useState(false);
+  const [, setErrorMessage] = useState<string>();
 
   // TODO: AutoComplete address input
   useEffect(() => {
@@ -109,9 +178,7 @@ const AddAddressExtendModel = () => {
 
   // TODO: Show address suggestions list
   useEffect(() => {
-    if (isLoggedIn) {
-      setAddressList(customerData.all_address);
-    }
+    if (isLoggedIn) setAddressList(customerData.all_address);
   }, []);
 
   /**
@@ -127,28 +194,26 @@ const AddAddressExtendModel = () => {
     let city: string;
 
     if (place.address_components) {
-      for (let component of place.address_components) {
-        if (component.types[0] === 'route') {
-          let temp = '';
-          for (let component2 of place.address_components) if (component2.types[0] === 'street_number') temp = component2.short_name;
-          setAddressMain(`${component.long_name} ${temp}`);
+      place.address_components.forEach((component, index) => {
+        if (component.types[0] === 'route' || component.types[0] === 'street_number') {
+          const street_number = place?.address_components?.filter((c) => c.types[0] === 'street_number')[0];
 
-          address = component.long_name;
-        } else if (component.types.indexOf('sublocality') !== -1 || component.types.indexOf('sublocality_level_1') !== -1) {
+          address = `${component.long_name} ${street_number?.long_name}`;
+        } else if (component.types.indexOf('sublocality') !== -1 || component.types.indexOf('sublocality_level_1') !== -1)
           area = component.long_name.includes('Innenstadt') ? 'Innenstadt' : component.long_name;
-        } else if (component.types[0] === 'locality') {
-          city = component.long_name;
-        } else if (component.types[0] === 'postal_code') {
-          postalCode = component.short_name;
-        }
-      }
+        else if (component.types[0] === 'locality') city = component.long_name;
+        else if (component.types[0] === 'postal_code') postalCode = component.short_name;
 
-      await makeRequestToPyapi({
-        addressType: 'OTHER',
-        address,
-        floor,
-        postalCode,
-        area,
+        // TODO: call pyapi at end of the iteration
+        if (place?.address_components && index === place.address_components?.length - 1)
+          makeRequestToPyapi({
+            addressType: 'OTHER',
+            address,
+            floor,
+            postalCode,
+            area,
+            city,
+          });
       });
     }
   }
@@ -163,12 +228,14 @@ const AddAddressExtendModel = () => {
     floor,
     addressType,
     postalCode,
+    address,
   }: {
     area?: string;
-    city: string;
     floor?: string;
-    addressType: string;
+    city: string;
+    addressType: AddressTypes;
     postalCode: string;
+    address: string;
   }) {
     setErrorMessage(undefined);
     // amplitudeEvent(constructEventName(`address model save address`, 'button'), {});
@@ -201,7 +268,7 @@ const AddAddressExtendModel = () => {
           };
           dispatch(updateExistCustomerAddressOrAddNew(addressData));
           dispatch(updateSelectedAddressId(response.customer.details?.customer_address_id));
-          dispatch(updateShowAddAddress(false));
+          setIsAddressSelected(true);
 
           // amplitudeEvent(constructEventName(`address model save address user response`, 'success'), { addressData, response });
         } else {
@@ -215,7 +282,8 @@ const AddAddressExtendModel = () => {
 
           // save the address to local storage. Add on server when checkout opens
           window.localStorage.setItem(LS_GUEST_USER_ADDRESS, JSON.stringify(guestAddress));
-          dispatch(updateShowAddAddress(false));
+          setIsAddressSelected(true);
+
           // amplitudeEvent(constructEventName(`address model save address guest response`, 'success'), guestAddress);
         }
       } else {
@@ -225,6 +293,8 @@ const AddAddressExtendModel = () => {
     }
   }
 
+  const handleDoneButtonClick = async () => dispatch(updateShowAddAddress(false));
+
   return (
     <Wrapper>
       <InputContainer>
@@ -233,10 +303,11 @@ const AddAddressExtendModel = () => {
           onChange={(e) => setAddressMain(e.target.value)}
           ref={refAddressInput}
           placeholder={'Add your address here'}
+          isAddressSelected={isAddressSelected}
         />
       </InputContainer>
 
-      {isLoggedIn && (
+      {isLoggedIn && !isAddressSelected && (
         <HistoryAddressContainer>
           {addressList.map((history, index) => {
             if (index > 2) return null; // ? for showing only 3 recent addresses
@@ -260,6 +331,48 @@ const AddAddressExtendModel = () => {
             );
           })}
         </HistoryAddressContainer>
+      )}
+
+      {isAddressSelected && (
+        <AdvanceOptionContainer>
+          <AdvanceOptionHeader>
+            <OptionText>Delivery Options</OptionText>
+
+            <PlaceSelection>
+              {[
+                {
+                  text: 'Meet at door',
+                  selected: placeSelection === 'meet-door',
+                  identifier: 'meet-door',
+                },
+                {
+                  text: 'Meet outside',
+                  selected: placeSelection === 'meet-outside',
+                  identifier: 'meet-outside',
+                },
+                {
+                  text: 'Leave at door',
+                  selected: placeSelection === 'leave-door',
+                  identifier: 'leave-door',
+                },
+              ].map((option) => (
+                <StyledOptionsRadioButtonContainer onClick={() => setPlaceSelection(option.identifier)}>
+                  <StyledOptionsRadioButton selected={option.selected} />
+
+                  <span>{option.text}</span>
+                </StyledOptionsRadioButtonContainer>
+              ))}
+            </PlaceSelection>
+          </AdvanceOptionHeader>
+
+          <InputAdditionInstruction
+            value={additionalInstruction}
+            onChange={(e) => setAdditionalInstruction(e.target.value)}
+            placeholder={'Add delivery instructions'}
+          />
+
+          <Button onClick={handleDoneButtonClick}>Done</Button>
+        </AdvanceOptionContainer>
       )}
     </Wrapper>
   );
