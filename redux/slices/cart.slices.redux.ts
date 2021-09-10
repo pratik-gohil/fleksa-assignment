@@ -35,7 +35,8 @@ export const CartSlice = createSlice({
   initialState,
   reducers: {
     updateAddProduct(state, action) {
-      console.log('cartCost ', state.cartCost);
+      // ?? Fixing amount not reset issue on cart state
+      if (Object.keys(state.items).length === 0) state.cartCost = 0; // ? Make sure cart should be zero if no products are there
 
       // TODO: Product increment if already exist
       if (state.items[action.payload.cartId]) {
