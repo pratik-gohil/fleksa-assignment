@@ -2,11 +2,16 @@ import { Fragment, FunctionComponent, useEffect } from 'react';
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
-import { ICheckoutOrderTypes, selectOrderType, selectSelectedAddressId, updateOrderType } from '../../../../redux/slices/checkout.slices.redux';
+import {
+  ICheckoutOrderTypes,
+  selectOrderType,
+  selectSelectedAddressId,
+  updateOrderType,
+} from '../../../../redux/slices/checkout.slices.redux';
 import SvgDelivery from '../../../../public/assets/svg/delivery.svg';
 import SvgPickup from '../../../../public/assets/svg/pickup.svg';
 import SvgDinein from '../../../../public/assets/svg/dinein.svg';
-import SvgTick from '../../../../public/assets/svg/tick.svg';
+// import SvgTick from '../../../../public/assets/svg/tick.svg';
 import { updateShowAddAddress, updateShowOrderTypeSelect } from '../../../../redux/slices/menu.slices.redux';
 import { selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
 import { selectAddress, selectShop, selectSiblings } from '../../../../redux/slices/index.slices.redux';
@@ -54,13 +59,12 @@ const Title = styled.h3`
   border-bottom: ${(props) => props.theme.border};
 `;
 
-const SubTitle = styled.h4<{ selected: boolean }>`
+const SubTitle = styled.h4`
   padding: 0.5rem 0;
   margin: 0;
   font-size: 16px;
   font-weight: 400;
   line-height: 1;
-  color: ${(props) => (props.selected ? 'rgb(25, 135, 84)' : '#222')};
 `;
 
 const List = styled.ul`
@@ -72,9 +76,21 @@ const ListItem = styled.li<{ selected: boolean }>`
   flex: 1 1 auto;
   flex-direction: row;
   cursor: pointer;
-  padding: ${(props) => props.theme.dimen.X4}px;
+  padding: ${(props) => props.theme.dimen.X4}px 1rem;
   margin: ${(props) => props.theme.dimen.X4}px;
   border-radius: ${(props) => props.theme.borderRadius}px;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 5px;
+    background: ${(p) => (p.selected ? p.theme.primaryColor : '#fff')};
+  }
+
   &:hover {
     background-color: #f9f9f9;
   }
@@ -100,11 +116,11 @@ const ListItemContent = styled.div<{ centerContent: boolean }>`
   margin-left: ${(props) => props.theme.dimen.X4}px;
 `;
 
-const SelectedTick = styled.div`
-  svg {
-    padding: 12px;
-  }
-`;
+// const SelectedTick = styled.div`
+//   svg {
+//     padding: 12px;
+//   }
+// `;
 
 const OrderTypeManager: FunctionComponent = () => {
   const shopData = useAppSelector(selectShop);
@@ -149,12 +165,11 @@ const OrderTypeManager: FunctionComponent = () => {
 
     if (isLoggedIn && choosenAddressId) {
       const correspondAddress = useAppSelector((state) => selectAddressById(state, choosenAddressId));
-      return `${correspondAddress?.area ?? ''} ${correspondAddress?.address ?? ''}, ${correspondAddress?.postal_code} ${correspondAddress?.city}`;
-    } else if (guestAddress && !isLoggedIn) {
-      return `${guestAddress?.area ?? ''} ${guestAddress?.address}, ${guestAddress?.postal_code} ${guestAddress?.city}`;
-    }
 
-    return '';
+      return `${correspondAddress?.address ?? ''} ${correspondAddress?.floor ?? ''}`;
+    } else if (guestAddress && !isLoggedIn) return `${guestAddress?.address} ${guestAddress?.floor}`;
+
+    return 'Enter your delivery details';
   }
 
   useEffect(() => {
@@ -201,15 +216,19 @@ const OrderTypeManager: FunctionComponent = () => {
               return (
                 <ListItem key={item.title} selected={selected} onClick={() => item.onClick(item.orderType)}>
                   <item.logo />
+
                   <ListItemContent centerContent={centerContent}>
                     <Title>{item.title}</Title>
-                    {!centerContent && <SubTitle selected={selected}>{item.subTitle}</SubTitle>}
+
+                    {!centerContent && <SubTitle>{item.subTitle}</SubTitle>}
                   </ListItemContent>
+
+                  {/* 
                   {selected && (
                     <SelectedTick>
                       <SvgTick />
                     </SelectedTick>
-                  )}
+                  )} */}
                 </ListItem>
               );
             } else {

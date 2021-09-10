@@ -265,7 +265,7 @@ const AddressAdd: FunctionComponent = () => {
 
   // TODO: AutoComplete address input
   useEffect(() => {
-    if (window !== 'undefined' && refAddressInput.current) {
+    if (typeof window !== 'undefined' && refAddressInput.current) {
       autoComplete = new google.maps.places.Autocomplete(refAddressInput.current, {
         types: ['geocode'],
       });
@@ -400,7 +400,8 @@ const AddressAdd: FunctionComponent = () => {
 
         <InputContainer>
           <InputItem>
-            <Label>{t('@streetAddress')}</Label>
+            {/* <Label>{t('@streetAddress')}</Label> */}
+
             <InputWithAutoLocate>
               <Input
                 value={addressMain}
@@ -408,9 +409,13 @@ const AddressAdd: FunctionComponent = () => {
                 ref={refAddressInput}
                 placeholder={t('@streetAddress')}
                 onBlur={() =>
-                  amplitudeEvent(constructEventName(`address-model-${t('@streetAddress')}`, 'input'), { addressMain, length: addressMain.length })
+                  amplitudeEvent(constructEventName(`address-model-${t('@streetAddress')}`, 'input'), {
+                    addressMain,
+                    length: addressMain.length,
+                  })
                 }
               />
+
               <Autolocate onClick={updateCurrentPosition}>
                 <SvgAutolocate />
               </Autolocate>
@@ -420,7 +425,7 @@ const AddressAdd: FunctionComponent = () => {
 
         <InputContainer>
           <InputItem>
-            <Label>{t('@additionalDeliveryInfo')}</Label>
+            {/* <Label>{t('@additionalDeliveryInfo')}</Label> */}
             <Input
               placeholder={t('@additionalDeliveryInfo')}
               value={addressFloor}
@@ -435,59 +440,6 @@ const AddressAdd: FunctionComponent = () => {
           </InputItem>
         </InputContainer>
 
-        <InputContainer>
-          <InputItem>
-            <Label>{t('@city')}</Label>
-            <Input
-              placeholder={t('@city')}
-              value={addressCity}
-              onChange={(e) => setAddressCity(e.target.value)}
-              onBlur={() => amplitudeEvent(constructEventName(`address-model-${t('@city')}`, 'input'), { addressCity, length: addressCity.length })}
-            />
-          </InputItem>
-          <InputItem>
-            <Label>{t('@postalCode')}</Label>
-            <Input
-              placeholder={t('@postalCode')}
-              value={addressPostalCode}
-              onChange={(e) => setAddressPostalCode(e.target.value)}
-              onBlur={() =>
-                amplitudeEvent(constructEventName(`address-model-${t('@postalCode')}`, 'input'), {
-                  addressPostalCode,
-                  length: addressPostalCode.length,
-                })
-              }
-            />
-          </InputItem>
-        </InputContainer>
-
-        <AddressTypeContainer>
-          <Label>{t('@addressType')}</Label>
-          <AddressTypeItemContainer>
-            {[
-              {
-                title: 'HOME' as AddressTypes,
-                icon: SvgHome,
-              },
-              {
-                title: 'WORK' as AddressTypes,
-                icon: SvgWork,
-              },
-              {
-                title: 'OTHER' as AddressTypes,
-                icon: SvgMap,
-              },
-            ].map((item) => {
-              return (
-                <AddressTypeItem active={addressType === item.title} onClick={() => handleAddressTypeSelectionClick(item.title)}>
-                  <item.icon />
-                  <AddressTypeName>{item.title}</AddressTypeName>
-                </AddressTypeItem>
-              );
-            })}
-          </AddressTypeItemContainer>
-        </AddressTypeContainer>
-
         {errorMessage && (
           <InputContainer>
             <Error>
@@ -499,7 +451,7 @@ const AddressAdd: FunctionComponent = () => {
         )}
 
         <InputContainer>
-          <InputSubmit type="submit" value="SAVE ADDRESS" onClick={onClickSubmit} />
+          <InputSubmit type="submit" value="Done" onClick={onClickSubmit} />
         </InputContainer>
       </ContentContainer>
     </Wrapper>
