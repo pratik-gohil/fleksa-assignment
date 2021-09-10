@@ -1,4 +1,4 @@
-import { Fragment, FunctionComponent, useEffect } from 'react';
+import { FunctionComponent, useEffect } from 'react';
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
@@ -26,6 +26,8 @@ import { selectAddressById, selectIsUserLoggedIn } from '../../../../redux/slice
 import { IParticularAddress } from '../../../../interfaces/common/customer.common.interfaces';
 import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 import AddAddressExtendModel from '../addresses/address-add.-extend.common.templateOne.components';
+import SvgBackIcon from '../../../../public/assets/svg/account/back-arrow.svg';
+import { LS_GUEST_USER_ADDRESS } from '../../../../constants/keys-local-storage.constants';
 
 const Wrapper = styled.div`
   position: fixed;
@@ -62,6 +64,7 @@ const Title = styled.h3`
   text-align: center;
   line-height: 1;
   border-bottom: ${(props) => props.theme.border};
+  flex: 1;
 `;
 
 const SubTitle = styled.h4`
@@ -123,6 +126,16 @@ const ListItemContent = styled.div<{ centerContent: boolean }>`
 
 const AddressContainer = styled.div``;
 
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+`;
+
+const IconContainer = styled.div`
+  cursor: pointer;
+`;
+
 const OrderTypeManager: FunctionComponent = () => {
   const shopData = useAppSelector(selectShop);
   const address = useAppSelector(selectAddress);
@@ -136,11 +149,19 @@ const OrderTypeManager: FunctionComponent = () => {
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
   const isShowAddressSelection = useAppSelector(selectShowAddress);
   const isShowOrderTypeSelection = useAppSelector(selectShowOrderTypeSelect);
+  const checkoutAddressId = useAppSelector(selectSelectedAddressId);
 
   function onClickDelivery(orderType: ICheckoutOrderTypes) {
+    if (typeof window === 'undefined') return;
+    const guestAddressString = window.localStorage.getItem(LS_GUEST_USER_ADDRESS);
+
     dispatch(updateOrderType(orderType));
-    dispatch(updateShowOrderTypeSelect(false));
-    dispatch(updateShowAddAddress(true));
+
+    if ((isLoggedIn && checkoutAddressId) || guestAddressString) {
+      dispatch(updateShowOrderTypeSelect(false));
+    } else {
+      dispatch(updateShowAddAddress(true));
+    }
 
     amplitudeEvent(constructEventName(t('@delivery'), 'model'), {});
   }
@@ -175,6 +196,10 @@ const OrderTypeManager: FunctionComponent = () => {
     return 'Enter your delivery details';
   }
 
+  const handleBackButtonClick = async () => {
+    dispatch(updateShowAddAddress(false));
+  };
+
   useEffect(() => {
     if (shopData?.id == selectedMenuId) setAddressData(address);
     else setAddressData(siblings.find((item) => item.id == selectedMenuId)?.address);
@@ -183,7 +208,14 @@ const OrderTypeManager: FunctionComponent = () => {
   return isShowOrderTypeSelection || orderType === null ? (
     <Wrapper>
       <ContentContainer>
-        <Title>{t('@order-details')}</Title>
+        <Header>
+          {isShowAddressSelection && (
+            <IconContainer onClick={handleBackButtonClick}>
+              <SvgBackIcon />
+            </IconContainer>
+          )}
+          <Title>{t('@order-details')}</Title>
+        </Header>
 
         <List>
           {[
@@ -238,7 +270,7 @@ const OrderTypeManager: FunctionComponent = () => {
                     <ListItemContent centerContent={centerContent}>
                       <Title>{item.title}</Title>
 
-                      {!centerContent && <SubTitle>{item.subTitle}</SubTitle>}
+                      {!centerContent && <SubTitle>Enter Your Address</SubTitle>}
                     </ListItemContent>
                   </ListItem>
 
