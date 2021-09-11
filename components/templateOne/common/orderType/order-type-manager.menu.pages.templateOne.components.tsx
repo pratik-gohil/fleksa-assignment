@@ -253,8 +253,19 @@ const OrderTypeManager: FunctionComponent = () => {
   };
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     if (shopData?.id == selectedMenuId) setAddressData(address);
     else setAddressData(siblings.find((item) => item.id == selectedMenuId)?.address);
+  }, []);
+
+  // TODO: Enable and disable scroll when modal opened
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
   }, []);
 
   return (
