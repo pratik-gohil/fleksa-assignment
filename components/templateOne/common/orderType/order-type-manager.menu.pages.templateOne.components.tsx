@@ -70,6 +70,10 @@ const SubTitle = styled.h4`
   font-size: 16px;
   font-weight: 400;
   line-height: 1;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    font-size: 14px;
+  }
 `;
 
 const List = styled.ul`
@@ -81,6 +85,7 @@ const ListItem = styled.li<{ selected: boolean }>`
   flex: 1 1 auto;
   flex-direction: row;
   cursor: pointer;
+  align-items: center;
   padding: ${(props) => props.theme.dimen.X4}px 1rem;
   margin: ${(props) => props.theme.dimen.X4}px;
   border-radius: ${(props) => props.theme.borderRadius}px;
@@ -105,9 +110,13 @@ const ListItem = styled.li<{ selected: boolean }>`
   }
   svg {
     width: 48px;
-    min-width: 48px;
     height: 48px;
     display: block;
+
+    @media (max-width: ${BREAKPOINTS.sm}px) {
+      width: 36px;
+      height: 36px;
+    }
   }
 `;
 
@@ -137,6 +146,9 @@ const EditIconContainer = styled.div`
   border: 0.1px solid rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
+  justify-content: center;
+  height: 50px;
+  width: 50px;
 
   &:hover {
     background: rgba(0, 0, 0, 0.05);
@@ -145,6 +157,16 @@ const EditIconContainer = styled.div`
   svg {
     width: 20px;
     height: 20px;
+  }
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    height: 35px;
+    width: 35px;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
   }
 `;
 
