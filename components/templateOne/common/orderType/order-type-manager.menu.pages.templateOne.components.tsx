@@ -2,12 +2,7 @@ import { FunctionComponent, useEffect } from 'react';
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
-import {
-  ICheckoutOrderTypes,
-  selectOrderType,
-  selectSelectedAddressId,
-  updateOrderType,
-} from '../../../../redux/slices/checkout.slices.redux';
+import { ICheckoutOrderTypes, selectOrderType, updateOrderType } from '../../../../redux/slices/checkout.slices.redux';
 import SvgDelivery from '../../../../public/assets/svg/delivery.svg';
 import SvgPickup from '../../../../public/assets/svg/pickup.svg';
 import SvgDinein from '../../../../public/assets/svg/dinein.svg';
@@ -17,7 +12,7 @@ import { selectAddress, selectShop, selectSiblings } from '../../../../redux/sli
 import { useState } from 'react';
 import { IAddress } from '../../../../interfaces/common/address.common.interfaces';
 import { useTranslation } from 'next-i18next';
-import { selectAddressById, selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
+import { selectAddressByType, selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
 import { IParticularAddress } from '../../../../interfaces/common/customer.common.interfaces';
 import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 import AddAddressExtendModel from '../addresses/address-add.-extend.common.templateOne.components';
@@ -179,10 +174,9 @@ const OrderTypeManager: FunctionComponent = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation('common-ordertype');
   const [addressData, setAddressData] = useState<IAddress | null | undefined>(undefined);
-  const choosenAddressId = useAppSelector(selectSelectedAddressId);
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
   const isShowAddressSelection = useAppSelector(selectShowAddress);
-  const checkoutAddressId = useAppSelector(selectSelectedAddressId);
+  const correspondAddress = useAppSelector((state) => selectAddressByType(state, 'OTHER'));
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -206,7 +200,7 @@ const OrderTypeManager: FunctionComponent = () => {
 
     dispatch(updateOrderType(orderType));
 
-    if ((isLoggedIn && checkoutAddressId) || guestAddressString) {
+    if ((isLoggedIn && correspondAddress) || guestAddressString) {
       dispatch(updateShowOrderTypeSelect(false));
     } else {
       dispatch(updateShowAddAddress(true));
@@ -237,9 +231,7 @@ const OrderTypeManager: FunctionComponent = () => {
       ? (JSON.parse(window.localStorage.getItem('@LS_GUEST_USER_ADDRESS') ?? '') as IParticularAddress)
       : undefined;
 
-    if (isLoggedIn && choosenAddressId) {
-      const correspondAddress = useAppSelector((state) => selectAddressById(state, choosenAddressId));
-
+    if (isLoggedIn && correspondAddress) {
       return `${correspondAddress?.address ?? ''} ${correspondAddress?.floor ?? ''}`;
     } else if (guestAddress && !isLoggedIn) return `${guestAddress?.address} ${guestAddress?.floor}`;
 
@@ -264,7 +256,7 @@ const OrderTypeManager: FunctionComponent = () => {
       ? (JSON.parse(window.localStorage.getItem('@LS_GUEST_USER_ADDRESS') ?? '') as IParticularAddress)
       : undefined;
 
-    if ((isLoggedIn && checkoutAddressId) || (!isLoggedIn && guestAddress)) return true;
+    if ((isLoggedIn && correspondAddress) || (!isLoggedIn && guestAddress)) return true;
 
     return false;
   };
