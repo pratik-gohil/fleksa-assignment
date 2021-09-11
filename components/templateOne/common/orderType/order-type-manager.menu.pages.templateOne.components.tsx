@@ -81,8 +81,8 @@ const ListItem = styled.li<{ selected: boolean }>`
   flex-direction: row;
   cursor: pointer;
   align-items: center;
-  padding: ${(props) => props.theme.dimen.X4}px 1rem;
-  margin: ${(props) => props.theme.dimen.X4}px;
+  padding: 1rem;
+  margin: 0 ${(props) => props.theme.dimen.X4}px;
   border-radius: ${(props) => props.theme.borderRadius}px;
   position: relative;
   background: ${(p) => (p.selected ? '#EAFFD0' : '#fff')};
@@ -334,7 +334,12 @@ const OrderTypeManager: FunctionComponent = () => {
             else if (isShowAddressSelection && item.orderType === 'DELIVERY')
               return (
                 <AddressContainer>
-                  <ListItem key={item.title} selected={selected && !isShowAddressSelection} onClick={() => item.onClick(item.orderType)}>
+                  <ListItem
+                    key={item.title}
+                    selected={selected && !isShowAddressSelection}
+                    onClick={() => item.onClick(item.orderType)}
+                    style={{ padding: 0 }}
+                  >
                     <item.logo />
 
                     <ListItemContent centerContent={centerContent}>

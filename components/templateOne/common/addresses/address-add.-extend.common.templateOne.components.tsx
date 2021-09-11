@@ -23,7 +23,7 @@ import { useTranslation } from 'react-i18next';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 
 const Wrapper = styled.div`
-  padding: 0 2rem 1rem 5rem;
+  padding: 1rem;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     padding: 0 1rem;
@@ -367,10 +367,6 @@ const AddAddressExtendModel = () => {
                     {history.address} {history.floor}
                   </AddressText>
                 </Address>
-
-                {/* <EditIconContainer>
-                  <SvgEdit />
-                </EditIconContainer> */}
               </HistoryAddress>
             );
           })}
