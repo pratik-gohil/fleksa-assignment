@@ -16,7 +16,7 @@ import { amplitudeEvent, constructEventName } from '../../../../../utils/amplitu
 
 const HomeIconPath = '/assets/svg/address/home.svg';
 const WorkIconPath = '/assets/svg/address/work.svg';
-const MapIconPath = '/assets/svg/address/map.svg';
+const MapIconPath = '/assets/svg/address/map-2.svg';
 const DeleteIconPath = '/assets/svg/account/delete.png';
 
 const Wrapper = styled.div`

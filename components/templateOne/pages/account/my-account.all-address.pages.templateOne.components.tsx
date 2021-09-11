@@ -40,7 +40,7 @@ const RightWrapper = styled.div<{ show: boolean }>`
   transform: translate(-50%, -50%);
   border-radius: 0.5rem;
 
-  height: 600px;
+  max-height: 600px;
 
   box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px, rgba(0, 0, 0, 0.1) 0px 2px 4px 0px, rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
   z-index: 9999999999999999;
@@ -54,7 +54,7 @@ const RightWrapper = styled.div<{ show: boolean }>`
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     left: 50%;
-    height: 530px;
+    max-height: 530px;
     width: calc(100vw - 2rem);
   }
 `;
@@ -95,7 +95,11 @@ const AccountPageAllAddress: FunctionComponent = ({}) => {
         </LeftWrapper>
 
         <RightWrapper show={show}>
-          <MyAccountAllAddressRightSide handleShowNewAddressModal={handleShowNewAddressModal} isEditMode={isEditMode} existAddress={existAddress} />
+          <MyAccountAllAddressRightSide
+            handleShowNewAddressModal={handleShowNewAddressModal}
+            isEditMode={isEditMode}
+            existAddress={existAddress}
+          />
         </RightWrapper>
         <InvisibleLayer onClick={() => handleShowNewAddressModal(false)} show={show} />
       </>
