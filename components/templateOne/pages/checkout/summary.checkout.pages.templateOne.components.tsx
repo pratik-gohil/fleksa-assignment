@@ -296,6 +296,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
               <Address>
                 {userAddress?.postal_code} {userAddress?.city}
               </Address>
+              <Address>{userAddress?.floor}</Address>
             </>
           ) : (
             <></>
