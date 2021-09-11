@@ -253,7 +253,7 @@ const AddAddressExtendModel = () => {
       const response = await new PyApiHttpPostAddress(configuration).postAll({
         area: area ?? '',
         city,
-        floor: additionalInstruction ?? '',
+        floor: `${additionalInstruction}(${placeSelection})` ?? '',
         address,
         addressType,
         shopId,
@@ -268,7 +268,7 @@ const AddAddressExtendModel = () => {
           const addressData: IParticularAddress = {
             id: response.customer.details?.customer_address_id,
             address_type: addressType,
-            floor: additionalInstruction ?? '',
+            floor: `${additionalInstruction}(${placeSelection})` ?? '',
             address,
             country: '',
             postal_code: postalCode,
@@ -283,7 +283,7 @@ const AddAddressExtendModel = () => {
           // amplitudeEvent(constructEventName(`address model save address user response`, 'success'), { addressData, response });
         } else {
           const guestAddress: IGuestAddress = {
-            floor: additionalInstruction ?? '',
+            floor: `${additionalInstruction}(${placeSelection})` ?? '',
             address,
             address_type: addressType,
             city,
