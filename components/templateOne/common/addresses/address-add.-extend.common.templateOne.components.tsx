@@ -16,7 +16,7 @@ import { selectConfiguration, selectLanguageCode, selectSelectedMenu } from '../
 import PyApiHttpPostAddress from '../../../../http/pyapi/address/post.address.pyapi.http';
 import { updateDeliveryFinances, updateSelectedAddressId } from '../../../../redux/slices/checkout.slices.redux';
 import { AddressTypes } from './address-manager.common.templateOne.components';
-import { updateShowAddAddress } from '../../../../redux/slices/menu.slices.redux';
+import { updateShowAddAddress, updateShowOrderTypeSelect } from '../../../../redux/slices/menu.slices.redux';
 import { IGuestAddress } from './address-add.common.templateOne.components';
 import { LS_GUEST_USER_ADDRESS } from '../../../../constants/keys-local-storage.constants';
 import { useTranslation } from 'react-i18next';
@@ -278,6 +278,7 @@ const AddAddressExtendModel = () => {
           dispatch(updateExistCustomerAddressOrAddNew(addressData));
           dispatch(updateSelectedAddressId(response.customer.details?.customer_address_id));
           dispatch(updateShowAddAddress(false));
+          dispatch(updateShowOrderTypeSelect(false));
 
           // amplitudeEvent(constructEventName(`address model save address user response`, 'success'), { addressData, response });
         } else {
@@ -292,6 +293,7 @@ const AddAddressExtendModel = () => {
           // save the address to local storage. Add on server when checkout opens
           window.localStorage.setItem(LS_GUEST_USER_ADDRESS, JSON.stringify(guestAddress));
           dispatch(updateShowAddAddress(false));
+          dispatch(updateShowOrderTypeSelect(false));
 
           // amplitudeEvent(constructEventName(`address model save address guest response`, 'success'), guestAddress);
         }

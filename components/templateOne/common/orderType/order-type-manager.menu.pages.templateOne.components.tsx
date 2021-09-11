@@ -318,7 +318,7 @@ const OrderTypeManager: FunctionComponent = () => {
 
             if (!isShowAddressSelection)
               return (
-                <ListItem key={item.title} selected={selected}>
+                <ListItem key={item.title} selected={selected && !isShowAddressSelection}>
                   <item.logo onClick={() => item.onClick(item.orderType)} />
 
                   <ListItemContent centerContent={centerContent} onClick={() => item.onClick(item.orderType)}>
@@ -337,7 +337,7 @@ const OrderTypeManager: FunctionComponent = () => {
             else if (isShowAddressSelection && item.orderType === 'DELIVERY')
               return (
                 <AddressContainer>
-                  <ListItem key={item.title} selected={selected} onClick={() => item.onClick(item.orderType)}>
+                  <ListItem key={item.title} selected={selected && !isShowAddressSelection} onClick={() => item.onClick(item.orderType)}>
                     <item.logo />
 
                     <ListItemContent centerContent={centerContent}>
