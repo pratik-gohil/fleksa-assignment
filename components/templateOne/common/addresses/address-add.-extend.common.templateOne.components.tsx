@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 import SvgLocation from '../../../../public/assets/svg/address/map-2.svg';
-import SvgEdit from '../../../../public/assets/svg/edit.svg';
+// import SvgEdit from '../../../../public/assets/svg/edit.svg';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import {
   selectBearerToken,
@@ -73,20 +73,20 @@ const IconContainer = styled.div`
   }
 `;
 
-const EditIconContainer = styled(IconContainer)`
-  cursor: pointer;
-  border-radius: 50%;
-  border: 0.1px solid rgba(0, 0, 0, 0.2);
+// const EditIconContainer = styled(IconContainer)`
+//   cursor: pointer;
+//   border-radius: 50%;
+//   border: 0.1px solid rgba(0, 0, 0, 0.2);
 
-  &:hover {
-    background: rgba(0, 0, 0, 0.1);
-  }
+//   &:hover {
+//     background: rgba(0, 0, 0, 0.1);
+//   }
 
-  svg {
-    width: 20px;
-    height: 20px;
-  }
-`;
+//   svg {
+//     width: 20px;
+//     height: 20px;
+//   }
+// `;
 
 const AddressText = styled.p`
   padding: 0;
@@ -360,9 +360,9 @@ const AddAddressExtendModel = () => {
                   </AddressText>
                 </Address>
 
-                <EditIconContainer>
+                {/* <EditIconContainer>
                   <SvgEdit />
-                </EditIconContainer>
+                </EditIconContainer> */}
               </HistoryAddress>
             );
           })}

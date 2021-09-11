@@ -25,7 +25,7 @@ import {
 import { updateError } from '../../../../redux/slices/common.slices.redux';
 import { selectConfiguration, selectLanguage, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
 import { selectAddress, selectShop, selectSiblings, selectTimings } from '../../../../redux/slices/index.slices.redux';
-import { selectShowAddress, selectShowOrderTypeSelect, updateShowOrderTypeSelect } from '../../../../redux/slices/menu.slices.redux';
+import { selectShowOrderTypeSelect, updateShowOrderTypeSelect } from '../../../../redux/slices/menu.slices.redux';
 import {
   selectAddressById,
   selectAddressByType,
@@ -115,6 +115,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
   const addressByType = useAppSelector((state) => selectAddressByType(state, 'HOME'));
   const shopId = useAppSelector(selectSelectedMenu);
   const customerData = useAppSelector(selectCustomer);
+  const isShowOrderTypeSelection = useAppSelector(selectShowOrderTypeSelect);
 
   const [userAddress, setUserAddress] = useState<IGuestAddress>(INITIAL_ADDRESS);
 
@@ -323,7 +324,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
         </Col>
       </Row>
 
-      <OrderTypeManager />
+      {isShowOrderTypeSelection && <OrderTypeManager />}
 
       {/* <div>
         {(showSelectOrderType || orderType === null) && !showAddAddress ? (

@@ -11,12 +11,7 @@ import {
 import SvgDelivery from '../../../../public/assets/svg/delivery.svg';
 import SvgPickup from '../../../../public/assets/svg/pickup.svg';
 import SvgDinein from '../../../../public/assets/svg/dinein.svg';
-import {
-  selectShowAddress,
-  selectShowOrderTypeSelect,
-  updateShowAddAddress,
-  updateShowOrderTypeSelect,
-} from '../../../../redux/slices/menu.slices.redux';
+import { selectShowAddress, updateShowAddAddress, updateShowOrderTypeSelect } from '../../../../redux/slices/menu.slices.redux';
 import { selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
 import { selectAddress, selectShop, selectSiblings } from '../../../../redux/slices/index.slices.redux';
 import { useState } from 'react';
@@ -167,7 +162,6 @@ const OrderTypeManager: FunctionComponent = () => {
   const choosenAddressId = useAppSelector(selectSelectedAddressId);
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
   const isShowAddressSelection = useAppSelector(selectShowAddress);
-  const isShowOrderTypeSelection = useAppSelector(selectShowOrderTypeSelect);
   const checkoutAddressId = useAppSelector(selectSelectedAddressId);
 
   function onClickDelivery(orderType: ICheckoutOrderTypes) {
@@ -243,7 +237,7 @@ const OrderTypeManager: FunctionComponent = () => {
     else setAddressData(siblings.find((item) => item.id == selectedMenuId)?.address);
   }, []);
 
-  return isShowOrderTypeSelection || orderType === null ? (
+  return (
     <Wrapper>
       <ContentContainer>
         <Header>
@@ -329,8 +323,6 @@ const OrderTypeManager: FunctionComponent = () => {
         </List>
       </ContentContainer>
     </Wrapper>
-  ) : (
-    <></>
   );
 };
 
