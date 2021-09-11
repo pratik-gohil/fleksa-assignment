@@ -20,9 +20,14 @@ import { updateShowAddAddress } from '../../../../redux/slices/menu.slices.redux
 import { IGuestAddress } from './address-add.common.templateOne.components';
 import { LS_GUEST_USER_ADDRESS } from '../../../../constants/keys-local-storage.constants';
 import { useTranslation } from 'react-i18next';
+import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 
 const Wrapper = styled.div`
   padding: 0 2rem 1rem 5rem;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    padding: 0 1rem;
+  }
 `;
 
 const InputContainer = styled.div`
@@ -39,6 +44,11 @@ const Input = styled.input<{ isAddressSelected: boolean }>`
   outline: none;
   border-bottom: ${(p) => (p.isAddressSelected ? '1px solid rgba(0, 0, 0, 1)' : p.theme.border)};
   padding-right: ${(p) => (p.isAddressSelected ? '2rem' : `${p.theme.dimen.X4}px`)};
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    padding: 0.5rem 0;
+    margin-bottom: 0.5rem;
+  }
 `;
 
 const HistoryAddressContainer = styled.div`
@@ -49,7 +59,7 @@ const HistoryAddress = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* padding-top: 0.5rem; */
+
   cursor: pointer;
 
   &:hover {
@@ -73,21 +83,6 @@ const IconContainer = styled.div`
   }
 `;
 
-// const EditIconContainer = styled(IconContainer)`
-//   cursor: pointer;
-//   border-radius: 50%;
-//   border: 0.1px solid rgba(0, 0, 0, 0.2);
-
-//   &:hover {
-//     background: rgba(0, 0, 0, 0.1);
-//   }
-
-//   svg {
-//     width: 20px;
-//     height: 20px;
-//   }
-// `;
-
 const AddressText = styled.p`
   padding: 0;
   margin: 0;
@@ -96,7 +91,12 @@ const AddressText = styled.p`
 
 const AdvanceOptionContainer = styled.div``;
 
-const OptionText = styled.p``;
+const OptionText = styled.p`
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    padding: 0;
+    margin: 0;
+  }
+`;
 
 const AdvanceOptionHeader = styled.div``;
 
@@ -112,6 +112,10 @@ const StyledOptionsRadioButtonContainer = styled.div`
   span {
     padding: 0.5rem;
     font-size: 12px;
+
+    @media (max-width: ${BREAKPOINTS.sm}px) {
+      padding: 0.5rem 0;
+    }
   }
 `;
 
