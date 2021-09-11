@@ -85,6 +85,7 @@ const ListItem = styled.li<{ selected: boolean }>`
   margin: ${(props) => props.theme.dimen.X4}px;
   border-radius: ${(props) => props.theme.borderRadius}px;
   position: relative;
+  background: ${(p) => (p.selected ? '#EAFFD0' : '#fff')};
 
   &::before {
     content: '';
@@ -96,9 +97,6 @@ const ListItem = styled.li<{ selected: boolean }>`
     background: ${(p) => (p.selected ? p.theme.primaryColor : '#fff')};
   }
 
-  &:hover {
-    background-color: #f9f9f9;
-  }
   h3 {
     text-align: left;
     border: none;
