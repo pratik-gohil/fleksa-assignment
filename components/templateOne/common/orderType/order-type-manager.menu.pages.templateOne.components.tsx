@@ -184,6 +184,22 @@ const OrderTypeManager: FunctionComponent = () => {
   const isShowAddressSelection = useAppSelector(selectShowAddress);
   const checkoutAddressId = useAppSelector(selectSelectedAddressId);
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    if (shopData?.id == selectedMenuId) setAddressData(address);
+    else setAddressData(siblings.find((item) => item.id == selectedMenuId)?.address);
+  }, []);
+
+  // TODO: Enable and disable scroll when modal opened
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
   function onClickDelivery(orderType: ICheckoutOrderTypes) {
     if (typeof window === 'undefined') return;
     const guestAddressString = window.localStorage.getItem(LS_GUEST_USER_ADDRESS);
@@ -252,22 +268,6 @@ const OrderTypeManager: FunctionComponent = () => {
 
     return false;
   };
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    if (shopData?.id == selectedMenuId) setAddressData(address);
-    else setAddressData(siblings.find((item) => item.id == selectedMenuId)?.address);
-  }, []);
-
-  // TODO: Enable and disable scroll when modal opened
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
-
-    return () => {
-      document.body.style.overflow = 'auto';
-    };
-  }, []);
 
   return (
     <Wrapper>

@@ -250,6 +250,8 @@ const AddAddressExtendModel = () => {
     // amplitudeEvent(constructEventName(`address model save address`, 'button'), {});
 
     if (shopId) {
+      console.log('addtional ', `${additionalInstruction}(${placeSelection})`);
+
       const response = await new PyApiHttpPostAddress(configuration).postAll({
         area: area ?? '',
         city,
@@ -322,7 +324,7 @@ const AddAddressExtendModel = () => {
     setPlaceSelection('Meet at door');
 
     // ?? Set exist address into local state
-    setAdditionalInstruction(existAddress?.floor ?? '');
+    setAdditionalInstruction(existAddress?.floor?.replace(/ *\([^)]*\) */g, '') ?? ''); // ? update the local state removed by paranthesis
     setAddressMain(existAddress?.address ?? '');
     setPostalCode(existAddress.postal_code);
     setAddress(existAddress?.address ?? '');
