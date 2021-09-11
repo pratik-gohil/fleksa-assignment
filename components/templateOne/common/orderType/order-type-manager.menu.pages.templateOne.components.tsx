@@ -59,8 +59,24 @@ const Title = styled.h3`
   flex: 1;
 `;
 
-const SubTitle = styled.h4`
+const SubTitlesContainer = styled.div`
   padding: 0.5rem 0;
+`;
+
+const SubTitle1 = styled.h4`
+  padding: 0;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    font-size: 14px;
+  }
+`;
+
+const SubTitle2 = styled.h4`
+  padding: 0.3rem 0 0 0;
   margin: 0;
   font-size: 16px;
   font-weight: 400;
@@ -232,10 +248,17 @@ const OrderTypeManager: FunctionComponent = () => {
       : undefined;
 
     if (isLoggedIn && correspondAddress) {
-      return `${correspondAddress?.address ?? ''} ${correspondAddress?.floor ?? ''}`;
-    } else if (guestAddress && !isLoggedIn) return `${guestAddress?.address} ${guestAddress?.floor}`;
+      return { address: `${correspondAddress?.address ?? ''}`, floor: `${correspondAddress?.floor ?? ''}` };
+    } else if (guestAddress && !isLoggedIn)
+      return {
+        address: `${guestAddress?.address}`,
+        floor: `${guestAddress?.floor}`,
+      };
 
-    return 'Enter your delivery details';
+    return {
+      address: 'Enter your delivery details',
+      floor: '',
+    };
   }
 
   /**
@@ -277,7 +300,8 @@ const OrderTypeManager: FunctionComponent = () => {
           {[
             {
               title: t('@delivery'),
-              subTitle: getSelectedAddress(),
+              subTitle1: getSelectedAddress()?.address,
+              subTitle2: getSelectedAddress()?.floor,
               orderType: 'DELIVERY' as ICheckoutOrderTypes,
               logo: SvgDelivery,
               onClick: onClickDelivery,
@@ -287,7 +311,7 @@ const OrderTypeManager: FunctionComponent = () => {
             },
             {
               title: t('@pickup'),
-              subTitle: t('@quote-pickup'),
+              subTitle1: t('@quote-pickup'),
               orderType: 'PICKUP' as ICheckoutOrderTypes,
               logo: SvgPickup,
               onClick: onClickTakeaway,
@@ -296,7 +320,7 @@ const OrderTypeManager: FunctionComponent = () => {
             },
             {
               title: t('@dine-in'),
-              subTitle: t('@dine-in-pickup'),
+              subTitle1: t('@dine-in-pickup'),
               orderType: 'DINE_IN' as ICheckoutOrderTypes,
               logo: SvgDinein,
               onClick: onClickDineIn,
@@ -311,7 +335,7 @@ const OrderTypeManager: FunctionComponent = () => {
             // ? Make default selection
             if (orderType === null && item.orderType === 'PICKUP') selected = true;
 
-            const centerContent = item.subTitle ? item.subTitle.length === 0 : false;
+            const centerContent = item.subTitle1 ? item.subTitle1.length === 0 : false;
 
             if (!isShowAddressSelection)
               return (
@@ -321,7 +345,13 @@ const OrderTypeManager: FunctionComponent = () => {
                   <ListItemContent centerContent={centerContent} onClick={() => item.onClick(item.orderType)}>
                     <Title>{item.title}</Title>
 
-                    {!centerContent && <SubTitle>{item.subTitle}</SubTitle>}
+                    {!centerContent && (
+                      <SubTitlesContainer>
+                        <SubTitle1>{item.subTitle1}</SubTitle1>
+
+                        {!!item?.subTitle2 && <SubTitle2>{item.subTitle2}</SubTitle2>}
+                      </SubTitlesContainer>
+                    )}
                   </ListItemContent>
 
                   {item.isEditable && (
@@ -345,7 +375,7 @@ const OrderTypeManager: FunctionComponent = () => {
                     <ListItemContent centerContent={centerContent}>
                       <Title>{item.title}</Title>
 
-                      {!centerContent && <SubTitle>Enter Your Address</SubTitle>}
+                      {!centerContent && <SubTitle2>Enter Your Address</SubTitle2>}
                     </ListItemContent>
                   </ListItem>
 

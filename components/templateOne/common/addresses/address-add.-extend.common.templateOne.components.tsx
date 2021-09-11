@@ -24,10 +24,6 @@ import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 
 const Wrapper = styled.div`
   padding: 1rem;
-
-  @media (max-width: ${BREAKPOINTS.sm}px) {
-    padding: 0 1rem;
-  }
 `;
 
 const InputContainer = styled.div`
@@ -46,8 +42,8 @@ const Input = styled.input<{ isAddressSelected: boolean }>`
   padding-right: ${(p) => (p.isAddressSelected ? '2rem' : `${p.theme.dimen.X4}px`)};
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    padding: 0.5rem 0;
-    margin-bottom: 0.5rem;
+    padding: ${(p) => (p.isAddressSelected ? '0 0 0.5rem 0' : `${p.theme.dimen.X4}px`)};
+    margin: ${(p) => (p.isAddressSelected ? '0 0 0.5rem 0' : 0)};
   }
 `;
 
@@ -87,6 +83,11 @@ const AddressText = styled.p`
   padding: 0;
   margin: 0;
   font-size: 14px;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    display: flex;
+    flex-direction: column;
+  }
 `;
 
 const AdvanceOptionContainer = styled.div``;
@@ -222,6 +223,7 @@ const AddAddressExtendModel = () => {
    */
   async function onAddressChange(placeReceived?: google.maps.places.PlaceResult) {
     const place = placeReceived || autoComplete.getPlace();
+    let temp: string = '';
 
     if (place.address_components) {
       place.address_components.forEach((component, index) => {
@@ -230,13 +232,23 @@ const AddAddressExtendModel = () => {
 
           setAddress(`${component.long_name} ${street_number?.long_name ?? ''}`);
 
-          setAddressMain(`${component.long_name} ${street_number?.long_name ?? ''}`);
+          // ?? Adding address one by one depends on type
+          if (component.types[0] === 'route') temp += ` ${component.long_name}`;
+          else if (component.types[0] === 'street_number') temp += ` ${street_number?.long_name ?? ' '}`;
         } else if (component.types.indexOf('sublocality') !== -1 || component.types.indexOf('sublocality_level_1') !== -1)
           setArea(component.long_name.includes('Innenstadt') ? 'Innenstadt' : component.long_name);
-        else if (component.types[0] === 'locality') setCity(component.long_name);
-        else if (component.types[0] === 'postal_code') setPostalCode(component.short_name);
+        else if (component.types[0] === 'locality') {
+          setCity(component.long_name);
+          temp += ` ${component.long_name}`;
+        } else if (component.types[0] === 'postal_code') {
+          setPostalCode(component.short_name);
+          temp += ` ${component.short_name}`;
+        }
 
-        if (place?.address_components && index === place.address_components?.length - 1) setIsAddressSelected(true);
+        if (place?.address_components && index === place.address_components?.length - 1) {
+          setAddressMain(temp);
+          setIsAddressSelected(true);
+        }
       });
     }
   }
@@ -325,10 +337,11 @@ const AddAddressExtendModel = () => {
 
     // ?? Set exist address into local state
     setAdditionalInstruction(existAddress?.floor?.replace(/ *\([^)]*\) */g, '') ?? ''); // ? update the local state removed by paranthesis
-    setAddressMain(existAddress?.address ?? '');
     setPostalCode(existAddress.postal_code);
     setAddress(existAddress?.address ?? '');
     setCity(existAddress.city);
+
+    setAddressMain(`${existAddress?.address ?? ''} ${existAddress.postal_code} ${existAddress.city}`);
   };
 
   return (
@@ -364,7 +377,8 @@ const AddAddressExtendModel = () => {
                   </IconContainer>
 
                   <AddressText>
-                    {history.address} {history.floor}
+                    <span>{`${history.address} `}</span>
+                    <span>{history.floor}</span>
                   </AddressText>
                 </Address>
               </HistoryAddress>
