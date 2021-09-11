@@ -187,7 +187,7 @@ const AddAddressExtendModel = () => {
   const [city, setCity] = useState<string>('');
   const [postalCode, setPostalCode] = useState<string>('');
   const [addressType] = useState<AddressTypes>('OTHER');
-  const [placeSelection, setPlaceSelection] = useState('meet-door');
+  const [placeSelection, setPlaceSelection] = useState('Meet at door');
 
   const [addressList, setAddressList] = useState<Array<IParticularAddress>>([]);
   const [isAddressSelected, setIsAddressSelected] = useState(false);
@@ -319,7 +319,7 @@ const AddAddressExtendModel = () => {
    */
   const hanldeHistoryAddressSelectionClick = async (existAddress: IParticularAddress) => {
     setIsAddressSelected(true);
-    setPlaceSelection('meet-door');
+    setPlaceSelection('Meet at door');
 
     // ?? Set exist address into local state
     setAdditionalInstruction(existAddress?.floor ?? '');
@@ -384,21 +384,18 @@ const AddAddressExtendModel = () => {
               {[
                 {
                   text: 'Meet at door',
-                  selected: placeSelection === 'meet-door',
-                  identifier: 'meet-door',
+                  selected: placeSelection === 'Meet at door',
                 },
                 {
                   text: 'Meet outside',
-                  selected: placeSelection === 'meet-outside',
-                  identifier: 'meet-outside',
+                  selected: placeSelection === 'Meet outside',
                 },
                 {
                   text: 'Leave at door',
-                  selected: placeSelection === 'leave-door',
-                  identifier: 'leave-door',
+                  selected: placeSelection === 'Leave at door',
                 },
               ].map((option) => (
-                <StyledOptionsRadioButtonContainer onClick={() => setPlaceSelection(option.identifier)}>
+                <StyledOptionsRadioButtonContainer onClick={() => setPlaceSelection(option.text)}>
                   <StyledOptionsRadioButton selected={option.selected} />
 
                   <span>{option.text}</span>

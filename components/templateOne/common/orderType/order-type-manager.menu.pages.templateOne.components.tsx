@@ -194,6 +194,7 @@ const OrderTypeManager: FunctionComponent = () => {
       dispatch(updateShowOrderTypeSelect(false));
     } else {
       dispatch(updateShowAddAddress(true));
+      dispatch(updateShowOrderTypeSelect(true));
     }
 
     amplitudeEvent(constructEventName(t('@delivery'), 'model'), {});
@@ -313,7 +314,11 @@ const OrderTypeManager: FunctionComponent = () => {
           ].map((item) => {
             if (!item.visible) return null;
 
-            const selected = item.orderType === orderType;
+            let selected = item.orderType === orderType;
+
+            // ? Make default selection
+            if (orderType === null && item.orderType === 'PICKUP') selected = true;
+
             const centerContent = item.subTitle ? item.subTitle.length === 0 : false;
 
             if (!isShowAddressSelection)
