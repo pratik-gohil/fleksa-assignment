@@ -36,7 +36,7 @@ import {
   updateLoadAddressesList,
 } from '../../../../redux/slices/user.slices.redux';
 import RestaurantTimingUtils, { isShopOpened } from '../../../../utils/restaurant-timings.utils';
-import AddressAdd, { IGuestAddress } from '../../common/addresses/address-add.common.templateOne.components';
+import { IGuestAddress } from '../../common/addresses/address-add.common.templateOne.components';
 import OrderTypeManager from '../../common/orderType/order-type-manager.menu.pages.templateOne.components';
 import { INITIAL_TIMING_STATE } from '../index/hero.index.pages.templateOne.components';
 import { StyledCheckoutCard, StyledCheckoutText } from './customer-info.checkout.pages.templateOne.components';
@@ -103,10 +103,8 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
   const siblings = useAppSelector(selectSiblings);
   const shopData = useAppSelector(selectShop);
   const timingsData = useAppSelector(selectTimings);
-  const showAddAddress = useAppSelector(selectShowAddress);
   const selectedMenuId = useAppSelector(selectSelectedMenu);
   const checkoutAddressId = useAppSelector(selectSelectedAddressId);
-  const showSelectOrderType = useAppSelector(selectShowOrderTypeSelect);
   const showDateTimeSelect = useAppSelector(selectShowDateTimeSelect);
   const selectedAddress = useAppSelector((state) => selectAddressById(state, checkoutAddressId));
   const deliveryFinances = useAppSelector(selectDeliveryFinances);
@@ -325,9 +323,10 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
         </Col>
       </Row>
 
-      <div>
+      <OrderTypeManager />
+
+      {/* <div>
         {(showSelectOrderType || orderType === null) && !showAddAddress ? (
-          <OrderTypeManager key="key-ajkndalkwdmalkwmdlkw" />
         ) : (
           (showAddAddress ||
             (orderType === 'DELIVERY' &&
@@ -335,7 +334,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
               orderType === 'DELIVERY' &&
               !window.localStorage.getItem(LS_GUEST_USER_ADDRESS))) && <AddressAdd />
         )}
-      </div>
+      </div> */}
       <div>{showDateTimeSelect && <CheckoutDateTime />}</div>
     </StyledCheckoutCard>
   );

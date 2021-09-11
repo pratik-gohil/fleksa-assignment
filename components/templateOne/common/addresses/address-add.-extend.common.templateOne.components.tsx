@@ -19,6 +19,7 @@ import { AddressTypes } from './address-manager.common.templateOne.components';
 import { updateShowAddAddress } from '../../../../redux/slices/menu.slices.redux';
 import { IGuestAddress } from './address-add.common.templateOne.components';
 import { LS_GUEST_USER_ADDRESS } from '../../../../constants/keys-local-storage.constants';
+import { useTranslation } from 'react-i18next';
 
 const Wrapper = styled.div`
   padding: 0 2rem 1rem 5rem;
@@ -27,6 +28,7 @@ const Wrapper = styled.div`
 const InputContainer = styled.div`
   display: flex;
   justify-content: flex-end;
+  flex-direction: column;
 `;
 const Input = styled.input<{ isAddressSelected: boolean }>`
   width: 100%;
@@ -47,7 +49,12 @@ const HistoryAddress = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 0.5rem;
+  /* padding-top: 0.5rem; */
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.1);
+  }
 `;
 
 const Address = styled.div`
@@ -69,10 +76,10 @@ const IconContainer = styled.div`
 const EditIconContainer = styled(IconContainer)`
   cursor: pointer;
   border-radius: 50%;
-  border: 0.1px solid rgba(0, 0, 0, 0.1);
+  border: 0.1px solid rgba(0, 0, 0, 0.2);
 
   &:hover {
-    background: rgba(0, 0, 0, 0.05);
+    background: rgba(0, 0, 0, 0.1);
   }
 
   svg {
@@ -84,6 +91,7 @@ const EditIconContainer = styled(IconContainer)`
 const AddressText = styled.p`
   padding: 0;
   margin: 0;
+  font-size: 14px;
 `;
 
 const AdvanceOptionContainer = styled.div``;
@@ -99,6 +107,7 @@ const PlaceSelection = styled.div`
 const StyledOptionsRadioButtonContainer = styled.div`
   display: flex;
   align-items: center;
+  cursor: pointer;
 
   span {
     padding: 0.5rem;
@@ -145,6 +154,13 @@ const Button = styled.button`
   }
 `;
 
+const Error = styled.p`
+  font-size: 12px;
+  color: #f44336;
+  margin: 0;
+  padding: 0;
+`;
+
 let autoComplete: google.maps.places.Autocomplete;
 
 const AddAddressExtendModel = () => {
@@ -155,15 +171,23 @@ const AddAddressExtendModel = () => {
   const bearerToken = useAppSelector(selectBearerToken);
   const languageCode = useAppSelector(selectLanguageCode);
   const configuration = useAppSelector(selectConfiguration);
+  const { t } = useTranslation('add-address');
 
   const dispatch = useAppDispatch();
 
-  const [addressMain, setAddressMain] = useState('');
-  const [placeSelection, setPlaceSelection] = useState('meet-door');
+  const [addressMain, setAddressMain] = useState(''); /// ? Only for handle google search input
+
+  const [address, setAddress] = useState<string>('');
+  const [area, setArea] = useState<undefined | string>('');
   const [additionalInstruction, setAdditionalInstruction] = useState('');
+  const [city, setCity] = useState<string>('');
+  const [postalCode, setPostalCode] = useState<string>('');
+  const [addressType] = useState<AddressTypes>('OTHER');
+  const [placeSelection, setPlaceSelection] = useState('meet-door');
+
   const [addressList, setAddressList] = useState<Array<IParticularAddress>>([]);
   const [isAddressSelected, setIsAddressSelected] = useState(false);
-  const [, setErrorMessage] = useState<string>();
+  const [errorMessage, setErrorMessage] = useState<string | undefined>();
 
   // TODO: AutoComplete address input
   useEffect(() => {
@@ -178,7 +202,14 @@ const AddAddressExtendModel = () => {
 
   // TODO: Show address suggestions list
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    let guestAddress = window.localStorage.getItem('@LS_GUEST_USER_ADDRESS')
+      ? (JSON.parse(window.localStorage.getItem('@LS_GUEST_USER_ADDRESS') ?? '') as IParticularAddress)
+      : undefined;
+
     if (isLoggedIn) setAddressList(customerData.all_address);
+    else if (!isLoggedIn && guestAddress) setAddressList([guestAddress]);
   }, []);
 
   /**
@@ -187,33 +218,21 @@ const AddAddressExtendModel = () => {
    */
   async function onAddressChange(placeReceived?: google.maps.places.PlaceResult) {
     const place = placeReceived || autoComplete.getPlace();
-    let address: string;
-    let floor: string | undefined;
-    let area: string | undefined;
-    let postalCode: string;
-    let city: string;
 
     if (place.address_components) {
       place.address_components.forEach((component, index) => {
         if (component.types[0] === 'route' || component.types[0] === 'street_number') {
           const street_number = place?.address_components?.filter((c) => c.types[0] === 'street_number')[0];
 
-          address = `${component.long_name} ${street_number?.long_name}`;
-        } else if (component.types.indexOf('sublocality') !== -1 || component.types.indexOf('sublocality_level_1') !== -1)
-          area = component.long_name.includes('Innenstadt') ? 'Innenstadt' : component.long_name;
-        else if (component.types[0] === 'locality') city = component.long_name;
-        else if (component.types[0] === 'postal_code') postalCode = component.short_name;
+          setAddress(`${component.long_name} ${street_number?.long_name ?? ''}`);
 
-        // TODO: call pyapi at end of the iteration
-        if (place?.address_components && index === place.address_components?.length - 1)
-          makeRequestToPyapi({
-            addressType: 'OTHER',
-            address,
-            floor,
-            postalCode,
-            area,
-            city,
-          });
+          setAddressMain(`${component.long_name} ${street_number?.long_name ?? ''}`);
+        } else if (component.types.indexOf('sublocality') !== -1 || component.types.indexOf('sublocality_level_1') !== -1)
+          setArea(component.long_name.includes('Innenstadt') ? 'Innenstadt' : component.long_name);
+        else if (component.types[0] === 'locality') setCity(component.long_name);
+        else if (component.types[0] === 'postal_code') setPostalCode(component.short_name);
+
+        if (place?.address_components && index === place.address_components?.length - 1) setIsAddressSelected(true);
       });
     }
   }
@@ -222,21 +241,7 @@ const AddAddressExtendModel = () => {
    *
    * @param Object contains seperate portions of the address (floor, address, area, city, addressType, postalCode)
    */
-  async function makeRequestToPyapi({
-    area,
-    city,
-    floor,
-    addressType,
-    postalCode,
-    address,
-  }: {
-    area?: string;
-    floor?: string;
-    city: string;
-    addressType: AddressTypes;
-    postalCode: string;
-    address: string;
-  }) {
+  async function makeRequestToPyapi() {
     setErrorMessage(undefined);
     // amplitudeEvent(constructEventName(`address model save address`, 'button'), {});
 
@@ -244,7 +249,7 @@ const AddAddressExtendModel = () => {
       const response = await new PyApiHttpPostAddress(configuration).postAll({
         area: area ?? '',
         city,
-        floor: floor ?? '',
+        floor: additionalInstruction ?? '',
         address,
         addressType,
         shopId,
@@ -259,7 +264,7 @@ const AddAddressExtendModel = () => {
           const addressData: IParticularAddress = {
             id: response.customer.details?.customer_address_id,
             address_type: addressType,
-            floor: floor ?? '',
+            floor: additionalInstruction ?? '',
             address,
             country: '',
             postal_code: postalCode,
@@ -268,12 +273,12 @@ const AddAddressExtendModel = () => {
           };
           dispatch(updateExistCustomerAddressOrAddNew(addressData));
           dispatch(updateSelectedAddressId(response.customer.details?.customer_address_id));
-          setIsAddressSelected(true);
+          dispatch(updateShowAddAddress(false));
 
           // amplitudeEvent(constructEventName(`address model save address user response`, 'success'), { addressData, response });
         } else {
           const guestAddress: IGuestAddress = {
-            floor: floor ?? '',
+            floor: additionalInstruction ?? '',
             address,
             address_type: addressType,
             city,
@@ -282,22 +287,53 @@ const AddAddressExtendModel = () => {
 
           // save the address to local storage. Add on server when checkout opens
           window.localStorage.setItem(LS_GUEST_USER_ADDRESS, JSON.stringify(guestAddress));
-          setIsAddressSelected(true);
+          dispatch(updateShowAddAddress(false));
 
           // amplitudeEvent(constructEventName(`address model save address guest response`, 'success'), guestAddress);
         }
       } else {
         setErrorMessage(response?.description);
+        console.log('error descripton ', response?.description);
         // amplitudeEvent(constructEventName(`address model save address response`, 'error'), { description: response?.description });
       }
     }
   }
 
-  const handleDoneButtonClick = async () => dispatch(updateShowAddAddress(false));
+  /**
+   *
+   * @returns updating state of show address model extension
+   */
+  const handleDoneButtonClick = async () =>
+    // TODO: call pyapi at end of the iteration
+    await makeRequestToPyapi();
+
+  /**
+   *
+   * @returns make selection of the history address
+   */
+  const hanldeHistoryAddressSelectionClick = async (existAddress: IParticularAddress) => {
+    setIsAddressSelected(true);
+    setPlaceSelection('meet-door');
+
+    // ?? Set exist address into local state
+    setAdditionalInstruction(existAddress?.floor ?? '');
+    setAddressMain(existAddress?.address ?? '');
+    setPostalCode(existAddress.postal_code);
+    setAddress(existAddress?.address ?? '');
+    setCity(existAddress.city);
+  };
 
   return (
     <Wrapper>
       <InputContainer>
+        {!!errorMessage && (
+          <Error>
+            {t('@addressPart1')}
+            <a href={`/${languageCode}/contact-us`}> {t('@contact')} </a>
+            {t('@addressPart2')}
+          </Error>
+        )}
+
         <Input
           value={addressMain}
           onChange={(e) => setAddressMain(e.target.value)}
@@ -307,14 +343,14 @@ const AddAddressExtendModel = () => {
         />
       </InputContainer>
 
-      {isLoggedIn && !isAddressSelected && (
+      {!!addressList.length && !isAddressSelected && (
         <HistoryAddressContainer>
           {addressList.map((history, index) => {
             if (index > 2) return null; // ? for showing only 3 recent addresses
 
             return (
               <HistoryAddress key={index}>
-                <Address>
+                <Address onClick={async () => await hanldeHistoryAddressSelectionClick(history)}>
                   <IconContainer>
                     <SvgLocation />
                   </IconContainer>
