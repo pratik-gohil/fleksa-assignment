@@ -128,10 +128,18 @@ const ListItem = styled.li<{ selected: boolean }>`
     width: 48px;
     height: 48px;
     display: block;
+  }
 
-    @media (max-width: ${BREAKPOINTS.sm}px) {
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    padding: 0.5rem;
+
+    svg {
       width: 36px;
       height: 36px;
+    }
+
+    &::before {
+      width: 6px;
     }
   }
 `;
@@ -156,6 +164,12 @@ const LocationIconContainer = styled.div`
   svg {
     width: 48px;
     height: 48px;
+  }
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    svg {
+      display: none;
+    }
   }
 `;
 

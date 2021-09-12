@@ -39,10 +39,11 @@ const Input = styled.input<{ isAddressSelected: boolean }>`
   width: 100%;
   border: ${(p) => (p.isAddressSelected ? 'none' : p.theme.border)};
   border-radius: ${(p) => (p.isAddressSelected ? '0' : p.theme.borderRadius)}px;
-  padding: ${(p) => (p.isAddressSelected ? `0.5rem 0.5rem 0.5rem 0` : '0.5rem')};
+  padding: ${(p) => (p.isAddressSelected ? `0.5rem 0.5rem 0.5rem 0` : '0.5rem 1rem')};
   font-family: inherit;
   outline: none;
   border-bottom: ${(p) => (p.isAddressSelected ? '1px solid rgba(0, 0, 0, 1)' : p.theme.border)};
+  height: 50px;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     padding: ${(p) => (p.isAddressSelected ? '0 0 0 0' : `${p.theme.dimen.X4}px`)};
@@ -70,6 +71,10 @@ const Address = styled.div`
   display: flex;
   align-items: center;
   margin: 0.5rem 0;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    margin: 0;
+  }
 `;
 
 const IconContainer = styled.div`
@@ -178,26 +183,6 @@ const meetDoor = 'Meet at door';
 const leaveDoor = 'Leave at door';
 const meetOutside = 'Meet outside';
 
-// Remove all instances of the words in the array
-const removeDeliveryOptionWords = function (txt: string) {
-  const uselessWordsArray = [meetDoor, leaveDoor, meetOutside];
-
-  const expStr = uselessWordsArray.join('\\b|\\b');
-
-  return txt.replace(new RegExp(expStr, 'gi'), '').trim().replace(/ +/g, ' ');
-};
-
-/**
- * @returns {string} correspond selected delivery options
- */
-const checkSelectedDeliveryOptions = (txt: string) => {
-  if (txt.indexOf(meetDoor) !== -1) return meetDoor;
-  else if (txt.indexOf(leaveDoor) !== -1) return leaveDoor;
-  else if (txt.indexOf(meetOutside) !== -1) return meetOutside;
-
-  return '';
-};
-
 const AddAddressExtendModel = () => {
   const refAddressInput = useRef<HTMLInputElement>(null);
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
@@ -223,6 +208,26 @@ const AddAddressExtendModel = () => {
   const [addressList, setAddressList] = useState<Array<IParticularAddress>>([]);
   const [isAddressSelected, setIsAddressSelected] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
+
+  // Remove all instances of the words in the array
+  const removeDeliveryOptionWords = function (txt: string) {
+    const uselessWordsArray = [t(`@${meetDoor}`), t(`@${leaveDoor}`), t(`@${meetOutside}`)];
+
+    const expStr = uselessWordsArray.join('\\b|\\b');
+
+    return txt.replace(new RegExp(expStr, 'gi'), '').trim().replace(/ +/g, ' ');
+  };
+
+  /**
+   * @returns {string} correspond selected delivery options
+   */
+  const checkSelectedDeliveryOptions = (txt: string) => {
+    if (txt.indexOf(t(`@${meetDoor}`)) !== -1) return t(`@${meetDoor}`);
+    else if (txt.indexOf(t(`@${leaveDoor}`)) !== -1) return t(`@${leaveDoor}`);
+    else if (txt.indexOf(t(`@${meetOutside}`)) !== -1) return t(`@${meetOutside}`);
+
+    return '';
+  };
 
   // TODO: AutoComplete address input
   useEffect(() => {
@@ -426,15 +431,15 @@ const AddAddressExtendModel = () => {
               {[
                 {
                   text: t(`@${meetDoor}`),
-                  selected: placeSelection === meetDoor,
+                  selected: placeSelection === t(`@${meetDoor}`),
                 },
                 {
                   text: t(`@${meetOutside}`),
-                  selected: placeSelection === meetOutside,
+                  selected: placeSelection === t(`@${meetOutside}`),
                 },
                 {
                   text: t(`@${leaveDoor}`),
-                  selected: placeSelection === leaveDoor,
+                  selected: placeSelection === t(`@${leaveDoor}`),
                 },
               ].map((option) => (
                 <StyledOptionsRadioButtonContainer onClick={async () => await handleDeliveryOptionChoiceClick(option.text)}>
