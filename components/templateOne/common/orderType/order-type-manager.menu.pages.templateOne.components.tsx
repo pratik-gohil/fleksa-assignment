@@ -386,7 +386,7 @@ const OrderTypeManager: FunctionComponent = () => {
                     <ListItemContent centerContent={centerContent}>
                       <Title>{item.title}</Title>
 
-                      {!centerContent && !isShowAddressSelection && <SubTitle2>Enter Your Address</SubTitle2>}
+                      {!centerContent && !isShowAddressSelection && <SubTitle2>{t('@enter-address')}</SubTitle2>}
                     </ListItemContent>
                   </ListItem>
 
