@@ -246,7 +246,7 @@ const AddAddressExtendModel = () => {
     if (isLoggedIn) {
       setAddressList([...customerData.all_address].sort((a, b) => b.id - a.id));
     } else if (!isLoggedIn && guestAddress) setAddressList([guestAddress]);
-  }, []);
+  }, [customerData.all_address]);
 
   /**
    *
@@ -400,8 +400,8 @@ const AddAddressExtendModel = () => {
             if (index > 2) return null; // ? for showing only 3 recent addresses
 
             return (
-              <HistoryAddress key={index}>
-                <Address onClick={async () => await hanldeHistoryAddressSelectionClick(history)}>
+              <HistoryAddress key={index} onClick={async () => await hanldeHistoryAddressSelectionClick(history)}>
+                <Address>
                   <IconContainer>
                     <SvgLocation />
                   </IconContainer>
