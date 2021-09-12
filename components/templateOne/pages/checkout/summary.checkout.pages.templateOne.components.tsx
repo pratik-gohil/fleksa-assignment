@@ -25,7 +25,7 @@ import {
 import { updateError } from '../../../../redux/slices/common.slices.redux';
 import { selectConfiguration, selectLanguage, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
 import { selectAddress, selectShop, selectSiblings, selectTimings } from '../../../../redux/slices/index.slices.redux';
-import { selectShowOrderTypeSelect, updateShowAddAddress, updateShowOrderTypeSelect } from '../../../../redux/slices/menu.slices.redux';
+import { selectShowOrderTypeSelect, updateShowOrderTypeSelect } from '../../../../redux/slices/menu.slices.redux';
 import {
   selectAddressById,
   selectAddressByType,
@@ -283,7 +283,6 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
             <EditButton
               onClick={() => {
                 dispatch(updateShowOrderTypeSelect(true));
-                dispatch(updateShowAddAddress(true));
 
                 amplitudeEvent(constructEventName(`summary order type edit`, 'icon-button'), { orderType });
               }}

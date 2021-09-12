@@ -168,6 +168,31 @@ const Error = styled.p`
 
 let autoComplete: google.maps.places.Autocomplete;
 
+//  ?? Constant delivery options
+const meetDoor = 'Meet at door';
+const leaveDoor = 'Leave at door';
+const meetOutside = 'Meet outside';
+
+// Remove all instances of the words in the array
+const removeDeliveryOptionWords = function (txt: string) {
+  const uselessWordsArray = [meetDoor, leaveDoor, meetOutside];
+
+  const expStr = uselessWordsArray.join('\\b|\\b');
+
+  return txt.replace(new RegExp(expStr, 'gi'), '').trim().replace(/ +/g, ' ');
+};
+
+/**
+ * @returns {string} correspond selected delivery options
+ */
+const checkSelectedDeliveryOptions = (txt: string) => {
+  if (txt.indexOf(meetDoor) !== -1) return meetDoor;
+  else if (txt.indexOf(leaveDoor) !== -1) return leaveDoor;
+  else if (txt.indexOf(meetOutside) !== -1) return meetOutside;
+
+  return '';
+};
+
 const AddAddressExtendModel = () => {
   const refAddressInput = useRef<HTMLInputElement>(null);
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
@@ -188,7 +213,7 @@ const AddAddressExtendModel = () => {
   const [city, setCity] = useState<string>('');
   const [postalCode, setPostalCode] = useState<string>('');
   const [addressType] = useState<AddressTypes>('OTHER');
-  const [placeSelection, setPlaceSelection] = useState('Meet at door');
+  const [placeSelection, setPlaceSelection] = useState('');
 
   const [addressList, setAddressList] = useState<Array<IParticularAddress>>([]);
   const [isAddressSelected, setIsAddressSelected] = useState(false);
@@ -224,7 +249,6 @@ const AddAddressExtendModel = () => {
    */
   async function onAddressChange(placeReceived?: google.maps.places.PlaceResult) {
     const place = placeReceived || autoComplete.getPlace();
-    let temp: string = '';
 
     if (place.address_components) {
       place.address_components.forEach((component, index) => {
@@ -232,27 +256,20 @@ const AddAddressExtendModel = () => {
           const street_number = place?.address_components?.filter((c) => c.types[0] === 'street_number')[0];
 
           setAddress(`${component.long_name} ${street_number?.long_name ?? ''}`);
-
-          // ?? Adding address one by one depends on type
-          if (component.types[0] === 'route') temp += ` ${component.long_name}`;
-          else if (component.types[0] === 'street_number') temp += ` ${street_number?.long_name ?? ' '}`;
         } else if (component.types.indexOf('sublocality') !== -1 || component.types.indexOf('sublocality_level_1') !== -1)
           setArea(component.long_name.includes('Innenstadt') ? 'Innenstadt' : component.long_name);
-        else if (component.types[0] === 'locality') {
-          setCity(component.long_name);
-          temp += ` ${component.long_name}`;
-        } else if (component.types[0] === 'postal_code') {
-          setPostalCode(component.short_name);
-          temp += ` ${component.short_name}`;
-        }
+        else if (component.types[0] === 'locality') setCity(component.long_name);
+        else if (component.types[0] === 'postal_code') setPostalCode(component.short_name);
 
-        if (place?.address_components && index === place.address_components?.length - 1) {
-          setAddressMain(temp);
-          setIsAddressSelected(true);
-        }
+        if (place?.address_components && index === place.address_components?.length - 1) setIsAddressSelected(true);
       });
     }
   }
+
+  // TODO: Update address main on search field
+  useEffect(() => {
+    if (isAddressSelected) setAddressMain(`${address} ${postalCode} ${city}`);
+  }, [isAddressSelected]);
 
   /**
    *
@@ -263,12 +280,10 @@ const AddAddressExtendModel = () => {
     // amplitudeEvent(constructEventName(`address model save address`, 'button'), {});
 
     if (shopId) {
-      console.log('addtional ', `${additionalInstruction}(${placeSelection})`);
-
       const response = await new PyApiHttpPostAddress(configuration).postAll({
         area: area ?? '',
         city,
-        floor: `${additionalInstruction}(${placeSelection})` ?? '',
+        floor: `${additionalInstruction} ${placeSelection}` ?? '',
         address,
         addressType,
         shopId,
@@ -283,7 +298,7 @@ const AddAddressExtendModel = () => {
           const addressData: IParticularAddress = {
             id: response.customer.details?.customer_address_id,
             address_type: addressType,
-            floor: `${additionalInstruction}(${placeSelection})` ?? '',
+            floor: `${additionalInstruction} ${placeSelection}` ?? '',
             address,
             country: '',
             postal_code: postalCode,
@@ -298,7 +313,7 @@ const AddAddressExtendModel = () => {
           // amplitudeEvent(constructEventName(`address model save address user response`, 'success'), { addressData, response });
         } else {
           const guestAddress: IGuestAddress = {
-            floor: `${additionalInstruction}(${placeSelection})` ?? '',
+            floor: `${additionalInstruction} ${placeSelection}` ?? '',
             address,
             address_type: addressType,
             city,
@@ -334,15 +349,24 @@ const AddAddressExtendModel = () => {
    */
   const hanldeHistoryAddressSelectionClick = async (existAddress: IParticularAddress) => {
     setIsAddressSelected(true);
-    setPlaceSelection('Meet at door');
+    setPlaceSelection(checkSelectedDeliveryOptions(existAddress?.floor ?? ''));
 
     // ?? Set exist address into local state
-    setAdditionalInstruction(existAddress?.floor?.replace(/ *\([^)]*\) */g, '') ?? ''); // ? update the local state removed by paranthesis
+    setAdditionalInstruction(removeDeliveryOptionWords(existAddress?.floor ?? '')); // ? update the local state removed by paranthesis
+
     setPostalCode(existAddress.postal_code);
     setAddress(existAddress?.address ?? '');
     setCity(existAddress.city);
 
     setAddressMain(`${existAddress?.address ?? ''} ${existAddress.postal_code} ${existAddress.city}`);
+  };
+
+  /**
+   * @returns update state of place selection state for delivery options
+   */
+  const handleDeliveryOptionChoiceClick = async (label: string) => {
+    if (placeSelection === label) setPlaceSelection('');
+    else setPlaceSelection(label);
   };
 
   return (
@@ -396,19 +420,19 @@ const AddAddressExtendModel = () => {
             <PlaceSelection>
               {[
                 {
-                  text: 'Meet at door',
-                  selected: placeSelection === 'Meet at door',
+                  text: meetDoor,
+                  selected: placeSelection === meetDoor,
                 },
                 {
-                  text: 'Meet outside',
-                  selected: placeSelection === 'Meet outside',
+                  text: meetOutside,
+                  selected: placeSelection === meetOutside,
                 },
                 {
-                  text: 'Leave at door',
-                  selected: placeSelection === 'Leave at door',
+                  text: leaveDoor,
+                  selected: placeSelection === leaveDoor,
                 },
               ].map((option) => (
-                <StyledOptionsRadioButtonContainer onClick={() => setPlaceSelection(option.text)}>
+                <StyledOptionsRadioButtonContainer onClick={async () => await handleDeliveryOptionChoiceClick(option.text)}>
                   <StyledOptionsRadioButton selected={option.selected} />
 
                   <span>{option.text}</span>

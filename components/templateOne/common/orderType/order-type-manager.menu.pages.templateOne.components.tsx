@@ -2,7 +2,12 @@ import { FunctionComponent, useEffect } from 'react';
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
-import { ICheckoutOrderTypes, selectOrderType, updateOrderType } from '../../../../redux/slices/checkout.slices.redux';
+import {
+  ICheckoutOrderTypes,
+  selectOrderType,
+  selectSelectedAddressId,
+  updateOrderType,
+} from '../../../../redux/slices/checkout.slices.redux';
 import SvgDelivery from '../../../../public/assets/svg/delivery.svg';
 import SvgPickup from '../../../../public/assets/svg/pickup.svg';
 import SvgDinein from '../../../../public/assets/svg/dinein.svg';
@@ -12,7 +17,7 @@ import { selectAddress, selectShop, selectSiblings } from '../../../../redux/sli
 import { useState } from 'react';
 import { IAddress } from '../../../../interfaces/common/address.common.interfaces';
 import { useTranslation } from 'next-i18next';
-import { selectAddressByType, selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
+import { selectAddressById, selectAddressByType, selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
 import { IParticularAddress } from '../../../../interfaces/common/customer.common.interfaces';
 import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 import AddAddressExtendModel from '../addresses/address-add.-extend.common.templateOne.components';
@@ -135,6 +140,7 @@ const ListItemContent = styled.div<{ centerContent: boolean }>`
   display: flex;
   flex: 1;
   flex-direction: column;
+  /* align-items: center */
   justify-content: ${(props) => (props.centerContent ? 'center' : 'space-between')};
   margin-left: ${(props) => props.theme.dimen.X4}px;
 `;
@@ -192,7 +198,10 @@ const OrderTypeManager: FunctionComponent = () => {
   const [addressData, setAddressData] = useState<IAddress | null | undefined>(undefined);
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
   const isShowAddressSelection = useAppSelector(selectShowAddress);
+  const checkoutAddressId = useAppSelector(selectSelectedAddressId);
+
   const correspondAddress = useAppSelector((state) => selectAddressByType(state, 'OTHER'));
+  const correspondAddressById = useAppSelector((state) => selectAddressById(state, checkoutAddressId));
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -247,8 +256,13 @@ const OrderTypeManager: FunctionComponent = () => {
       ? (JSON.parse(window.localStorage.getItem('@LS_GUEST_USER_ADDRESS') ?? '') as IParticularAddress)
       : undefined;
 
-    if (isLoggedIn && correspondAddress) {
-      return { address: `${correspondAddress?.address ?? ''}`, floor: `${correspondAddress?.floor ?? ''}` };
+    if (isLoggedIn && checkoutAddressId && correspondAddressById) {
+      return { address: `${correspondAddressById?.address ?? ''}`, floor: `${correspondAddressById?.floor ?? ''}` };
+    } else if (isLoggedIn && !checkoutAddressId && correspondAddress) {
+      return {
+        address: `${correspondAddress?.address ?? ''}`,
+        floor: `${correspondAddress?.floor ?? ''}`,
+      };
     } else if (guestAddress && !isLoggedIn)
       return {
         address: `${guestAddress?.address}`,
@@ -332,9 +346,6 @@ const OrderTypeManager: FunctionComponent = () => {
 
             let selected = item.orderType === orderType;
 
-            // ? Make default selection
-            if (orderType === null && item.orderType === 'PICKUP') selected = true;
-
             const centerContent = item.subTitle1 ? item.subTitle1.length === 0 : false;
 
             if (!isShowAddressSelection)
@@ -375,7 +386,7 @@ const OrderTypeManager: FunctionComponent = () => {
                     <ListItemContent centerContent={centerContent}>
                       <Title>{item.title}</Title>
 
-                      {!centerContent && <SubTitle2>Enter Your Address</SubTitle2>}
+                      {!centerContent && !isShowAddressSelection && <SubTitle2>Enter Your Address</SubTitle2>}
                     </ListItemContent>
                   </ListItem>
 
