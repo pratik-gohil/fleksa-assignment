@@ -23,8 +23,10 @@ import { useTranslation } from 'react-i18next';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 
 const Wrapper = styled.div`
-  padding: 0 1rem;
+  padding: 0 0 0 0.5rem;
   flex: 1;
+
+  transition: all 0.5s;
 `;
 
 const InputContainer = styled.div`
@@ -37,7 +39,7 @@ const Input = styled.input<{ isAddressSelected: boolean }>`
   width: 100%;
   border: ${(p) => (p.isAddressSelected ? 'none' : p.theme.border)};
   border-radius: ${(p) => (p.isAddressSelected ? '0' : p.theme.borderRadius)}px;
-  padding: 0.5rem;
+  padding: ${(p) => (p.isAddressSelected ? `0.5rem 0.5rem 0.5rem 0` : '0.5rem')};
   font-family: inherit;
   outline: none;
   border-bottom: ${(p) => (p.isAddressSelected ? '1px solid rgba(0, 0, 0, 1)' : p.theme.border)};
@@ -73,7 +75,7 @@ const Address = styled.div`
 const IconContainer = styled.div`
   display: flex;
   align-items: center;
-  /* padding: 0.5rem; */
+  padding: 0.5rem;
 
   svg {
     width: 24px;
@@ -88,14 +90,14 @@ const AddressText = styled.p`
   display: flex;
   flex-direction: column;
   flex: 1;
-
-  @media (max-width: ${BREAKPOINTS.sm}px) {
-  }
 `;
 
 const AdvanceOptionContainer = styled.div``;
 
 const OptionText = styled.p`
+  padding: 0.5rem 0 0 0;
+  margin: 0;
+
   @media (max-width: ${BREAKPOINTS.sm}px) {
     padding: 0;
     margin: 0;

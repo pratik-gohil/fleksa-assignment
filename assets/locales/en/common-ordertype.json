@@ -6,5 +6,6 @@
   "@quote-pickup": "I'll pick it up myself",
   "@dine-in-pickup": "I'll eat at the restaurant",
   "@quote-delivery": "",
-  "@enter-address": "Enter Your Address"
+  "@enter-address": "Enter Your Address",
+  "@delivery-details": "DELIVERY DETAILS"
 }

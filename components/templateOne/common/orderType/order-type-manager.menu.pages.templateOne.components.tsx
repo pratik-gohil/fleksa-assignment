@@ -140,7 +140,7 @@ const ListItemContent = styled.div<{ centerContent: boolean }>`
   display: flex;
   flex: 1;
   flex-direction: column;
-  /* align-items: center */
+
   justify-content: ${(props) => (props.centerContent ? 'center' : 'space-between')};
   margin-left: ${(props) => props.theme.dimen.X4}px;
 `;
@@ -152,8 +152,6 @@ const AddressContainer = styled.div`
 
 const LocationIconContainer = styled.div`
   display: flex;
-  /* align-items: center; */
-  /* padding: 0.5rem; */
 
   svg {
     width: 48px;
@@ -322,7 +320,7 @@ const OrderTypeManager: FunctionComponent = () => {
                 <SvgBackIcon />
               </IconContainer>
 
-              <Title>Delivery details</Title>
+              <Title>{t('@delivery-details')}</Title>
             </>
           ) : (
             <Title>{t('@order-details')}</Title>
@@ -397,20 +395,6 @@ const OrderTypeManager: FunctionComponent = () => {
                   <LocationIconContainer>
                     <item.logo />
                   </LocationIconContainer>
-
-                  {/* <ListItem
-                    key={item.title}
-                    selected={selected && !isShowAddressSelection}
-                    onClick={() => item.onClick(item.orderType)}
-                    style={{ padding: '0 0.5rem' }}
-                  >
-
-                    <ListItemContent centerContent={centerContent}>
-                      <Title>{item.title}</Title>
-
-                      {!centerContent && !isShowAddressSelection && <SubTitle2>{t('@enter-address')}</SubTitle2>}
-                    </ListItemContent>
-                  </ListItem> */}
 
                   <AddAddressExtendModel />
                 </AddressContainer>
