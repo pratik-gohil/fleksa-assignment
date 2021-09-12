@@ -384,7 +384,7 @@ const AddAddressExtendModel = () => {
           value={addressMain}
           onChange={(e) => setAddressMain(e.target.value)}
           ref={refAddressInput}
-          placeholder={'Add your address here'}
+          placeholder={t('@add-address')}
           isAddressSelected={isAddressSelected}
         />
       </InputContainer>
@@ -415,20 +415,20 @@ const AddAddressExtendModel = () => {
       {isAddressSelected && (
         <AdvanceOptionContainer>
           <AdvanceOptionHeader>
-            <OptionText>Delivery Options</OptionText>
+            <OptionText>{t('@delivery-options')}</OptionText>
 
             <PlaceSelection>
               {[
                 {
-                  text: meetDoor,
+                  text: t(`@${meetDoor}`),
                   selected: placeSelection === meetDoor,
                 },
                 {
-                  text: meetOutside,
+                  text: t(`@${meetOutside}`),
                   selected: placeSelection === meetOutside,
                 },
                 {
-                  text: leaveDoor,
+                  text: t(`@${leaveDoor}`),
                   selected: placeSelection === leaveDoor,
                 },
               ].map((option) => (
@@ -444,10 +444,10 @@ const AddAddressExtendModel = () => {
           <InputAdditionInstruction
             value={additionalInstruction}
             onChange={(e) => setAdditionalInstruction(e.target.value)}
-            placeholder={'Add delivery instructions'}
+            placeholder={t('@delivery-instructions')}
           />
 
-          <Button onClick={handleDoneButtonClick}>Done</Button>
+          <Button onClick={handleDoneButtonClick}>{t('@done')}</Button>
         </AdvanceOptionContainer>
       )}
     </Wrapper>
