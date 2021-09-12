@@ -71,24 +71,24 @@ const SubTitlesContainer = styled.div`
 const SubTitle1 = styled.h4`
   padding: 0;
   margin: 0;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 400;
   line-height: 1;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    font-size: 14px;
+    font-size: 12px;
   }
 `;
 
 const SubTitle2 = styled.h4`
   padding: 0.3rem 0 0 0;
   margin: 0;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 400;
   line-height: 1;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    font-size: 14px;
+    font-size: 12px;
   }
 `;
 
@@ -114,7 +114,7 @@ const ListItem = styled.li<{ selected: boolean }>`
     left: 0;
     top: 0;
     height: 100%;
-    width: 5px;
+    width: 10px;
     background: ${(p) => (p.selected ? p.theme.primaryColor : '#fff')};
   }
 
@@ -379,7 +379,7 @@ const OrderTypeManager: FunctionComponent = () => {
                     key={item.title}
                     selected={selected && !isShowAddressSelection}
                     onClick={() => item.onClick(item.orderType)}
-                    style={{ padding: 0 }}
+                    style={{ padding: '0 1rem' }}
                   >
                     <item.logo />
 
