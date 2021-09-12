@@ -115,7 +115,7 @@ const ListItem = styled.li<{ selected: boolean }>`
     top: 0;
     height: 100%;
     width: 10px;
-    background: ${(p) => (p.selected ? p.theme.primaryColor : '#fff')};
+    background: ${(p) => (p.selected ? p.theme.primaryColor : 'transparent')};
   }
 
   h3 {
@@ -145,7 +145,21 @@ const ListItemContent = styled.div<{ centerContent: boolean }>`
   margin-left: ${(props) => props.theme.dimen.X4}px;
 `;
 
-const AddressContainer = styled.div``;
+const AddressContainer = styled.div`
+  display: flex;
+  padding: 0 1rem;
+`;
+
+const LocationIconContainer = styled.div`
+  display: flex;
+  /* align-items: center; */
+  /* padding: 0.5rem; */
+
+  svg {
+    width: 48px;
+    height: 48px;
+  }
+`;
 
 const Header = styled.div`
   display: flex;
@@ -302,12 +316,17 @@ const OrderTypeManager: FunctionComponent = () => {
     <Wrapper>
       <ContentContainer>
         <Header>
-          {isShowAddressSelection && (
-            <IconContainer onClick={handleBackButtonClick}>
-              <SvgBackIcon />
-            </IconContainer>
+          {isShowAddressSelection ? (
+            <>
+              <IconContainer onClick={handleBackButtonClick}>
+                <SvgBackIcon />
+              </IconContainer>
+
+              <Title>Delivery details</Title>
+            </>
+          ) : (
+            <Title>{t('@order-details')}</Title>
           )}
-          <Title>{t('@order-details')}</Title>
         </Header>
 
         <List>
@@ -375,20 +394,23 @@ const OrderTypeManager: FunctionComponent = () => {
             else if (isShowAddressSelection && item.orderType === 'DELIVERY')
               return (
                 <AddressContainer>
-                  <ListItem
+                  <LocationIconContainer>
+                    <item.logo />
+                  </LocationIconContainer>
+
+                  {/* <ListItem
                     key={item.title}
                     selected={selected && !isShowAddressSelection}
                     onClick={() => item.onClick(item.orderType)}
-                    style={{ padding: '0 1rem' }}
+                    style={{ padding: '0 0.5rem' }}
                   >
-                    <item.logo />
 
                     <ListItemContent centerContent={centerContent}>
                       <Title>{item.title}</Title>
 
                       {!centerContent && !isShowAddressSelection && <SubTitle2>{t('@enter-address')}</SubTitle2>}
                     </ListItemContent>
-                  </ListItem>
+                  </ListItem> */}
 
                   <AddAddressExtendModel />
                 </AddressContainer>

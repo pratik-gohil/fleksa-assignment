@@ -23,7 +23,8 @@ import { useTranslation } from 'react-i18next';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 
 const Wrapper = styled.div`
-  padding: 1rem;
+  padding: 0 1rem;
+  flex: 1;
 `;
 
 const InputContainer = styled.div`
@@ -31,18 +32,18 @@ const InputContainer = styled.div`
   justify-content: flex-end;
   flex-direction: column;
 `;
+
 const Input = styled.input<{ isAddressSelected: boolean }>`
   width: 100%;
   border: ${(p) => (p.isAddressSelected ? 'none' : p.theme.border)};
   border-radius: ${(p) => (p.isAddressSelected ? '0' : p.theme.borderRadius)}px;
-  padding: ${(p) => p.theme.dimen.X4}px;
+  padding: 0.5rem;
   font-family: inherit;
   outline: none;
   border-bottom: ${(p) => (p.isAddressSelected ? '1px solid rgba(0, 0, 0, 1)' : p.theme.border)};
-  padding-right: ${(p) => (p.isAddressSelected ? '2rem' : `${p.theme.dimen.X4}px`)};
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    padding: ${(p) => (p.isAddressSelected ? '0 0 0.5rem 0' : `${p.theme.dimen.X4}px`)};
+    padding: ${(p) => (p.isAddressSelected ? '0 0 0 0' : `${p.theme.dimen.X4}px`)};
     margin: ${(p) => (p.isAddressSelected ? '0 0 0.5rem 0' : 0)};
   }
 `;
@@ -66,12 +67,13 @@ const HistoryAddress = styled.div`
 const Address = styled.div`
   display: flex;
   align-items: center;
+  margin: 0.5rem 0;
 `;
 
 const IconContainer = styled.div`
   display: flex;
   align-items: center;
-  padding: 0.5rem;
+  /* padding: 0.5rem; */
 
   svg {
     width: 24px;
@@ -83,10 +85,11 @@ const AddressText = styled.p`
   padding: 0;
   margin: 0;
   font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    display: flex;
-    flex-direction: column;
   }
 `;
 
