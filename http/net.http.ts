@@ -19,7 +19,7 @@ export interface IPost extends IGet {
 }
 
 export interface INetConstructor {
-  bearerToken?: string;
+  bearerToken?: string | null;
   additionalHeaders?: IHeaders;
 }
 

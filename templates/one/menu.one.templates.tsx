@@ -6,20 +6,24 @@ import { useEffect } from 'react';
 import { selectShop, selectSiblings } from '../../redux/slices/index.slices.redux';
 import { useState } from 'react';
 import { ITimingsDay } from '../../interfaces/common/shop.common.interfaces';
-import { ICheckoutOrderTypes, updateClearCheckout, updateOrderType, updateSelectedAddressId } from '../../redux/slices/checkout.slices.redux';
+import {
+  ICheckoutOrderTypes,
+  updateClearCheckout,
+  updateOrderType,
+  updateSelectedAddressId,
+} from '../../redux/slices/checkout.slices.redux';
 import { updateClearCart } from '../../redux/slices/cart.slices.redux';
 import PyApiHttpPostAddress from '../../http/pyapi/address/post.address.pyapi.http';
 import { selectConfiguration } from '../../redux/slices/configuration.slices.redux';
 import { ISibling } from '../../interfaces/common/sibling.common.interfaces';
 import { IGuestAddress } from '../../components/templateOne/common/addresses/address-add.common.templateOne.components';
 import { LS_GUEST_USER_ADDRESS } from '../../constants/keys-local-storage.constants';
-import { selectAddressByType, selectBearerToken, selectIsUserLoggedIn } from '../../redux/slices/user.slices.redux';
-import NodeApiHttpPostCreateNewAddressRequest from '../../http/nodeapi/account/post.create-address.nodeapi.http';
-import { updateError } from '../../redux/slices/common.slices.redux';
-import NodeApiHttpPostUpdateAddressRequest from '../../http/nodeapi/account/post.update-address.nodeapi.http';
+import { selectBearerToken, selectIsUserLoggedIn, updateExistCustomerAddressOrAddNew } from '../../redux/slices/user.slices.redux';
+
 import { useTranslation } from 'next-i18next';
 import SvgAutolocate from '../../public/assets/svg/autolocate.svg';
 import CustomLink from '../../components/templateOne/common/amplitude/customLink';
+import { IParticularAddress } from '../../interfaces/common/customer.common.interfaces';
 
 type Filters = 'has_pickup' | 'has_delivery' | 'has_dinein';
 
@@ -244,7 +248,6 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
   const siblingsData = useAppSelector(selectSiblings);
   const bearerToken = useAppSelector(selectBearerToken);
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
-  const addressData = useAppSelector((state) => selectAddressByType(state, 'HOME'));
   const configuration = useAppSelector(selectConfiguration);
   const { t } = useTranslation('page-menu');
   const [locationPermission, setLocationPermission] = useState('not-prompt');
@@ -256,8 +259,16 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
   const refAddressInput = useRef<HTMLInputElement>(null);
 
   const [addressMain, setAddressMain] = useState('');
-  const [addressFloor, setAddressFloor] = useState('');
+
   const [filterName, setFilterName] = useState<Filters>('has_delivery');
+  const [isAddressSelected, setIsAddressSelected] = useState(false);
+
+  // ?? Main address component state
+  const [address, setAddress] = useState<string>('');
+  const [area, setArea] = useState<undefined | string>('');
+  const [additionalInstruction, setAdditionalInstruction] = useState('');
+  const [city, setCity] = useState<string>('');
+  const [postalCode, setPostalCode] = useState<string>('');
 
   useEffect(noDeliveryOptionsAvailable, []);
 
@@ -282,7 +293,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
   }, []);
 
   useEffect(() => {
-    if (window !== 'undefined' && refAddressInput.current) {
+    if (typeof window !== 'undefined' && refAddressInput.current) {
       autoComplete = new google.maps.places.Autocomplete(refAddressInput.current, {
         types: ['geocode'],
       });
@@ -292,6 +303,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
     }
   }, [refAddressInput]);
 
+  // TODO: For updating markers on map
   useEffect(() => {
     const tempRestaurantsToShow =
       filterName === 'has_delivery' && locationPermission === 'granted'
@@ -306,6 +318,15 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
 
     setSelectedId(null);
   }, [filterName, deliveryFilterData]);
+
+  // TODO: Update address main on search field
+  useEffect(() => {
+    if (isAddressSelected) {
+      setAddressMain(`${address} ${postalCode} ${city}`);
+      console.log(`${address} ${postalCode} ${city}`);
+      getAvaibleBasedOnAdress();
+    }
+  }, [isAddressSelected, postalCode]);
 
   function initMap() {
     map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
@@ -398,8 +419,6 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
   }
 
   async function updateCurrentPositionByPermission() {
-    console.log('permission called');
-
     if (navigator.geolocation) {
       navigator.permissions.query({ name: 'geolocation' }).then(function (result) {
         if (result.state === 'granted') {
@@ -462,14 +481,14 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
     return orderType;
   }
 
-  async function getAvaibleBasedOnAdress({ area = '', postalCode = '', main = '', city = '' }) {
+  async function getAvaibleBasedOnAdress() {
     if (shopData?.id) {
       const response = await new PyApiHttpPostAddress(configuration).postAll({
-        floor: '',
-        address: '',
-        addressType: 'HOME',
-        city: '',
-        area,
+        floor: additionalInstruction,
+        address,
+        addressType: 'OTHER',
+        city,
+        area: area ?? '',
         shopId: shopData.id,
         postalCode,
       });
@@ -480,19 +499,28 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
         setDeliveryFilterData(siblingsData.filter((i) => possibilities.indexOf(String(i.id)) !== -1));
 
         if (possibilities.length > 0) {
-          if (isLoggedIn && bearerToken) {
-            if (addressData?.id) {
-              await updateExistingAddress(bearerToken, addressData.id, postalCode, main, city);
-            } else {
-              await addNewAddress(bearerToken, postalCode, main, city);
-            }
+          if (isLoggedIn && bearerToken && response.customer.details) {
+            const addressData: IParticularAddress = {
+              id: response.customer.details?.customer_address_id,
+              address_type: 'OTHER',
+              floor: `${additionalInstruction}` ?? '',
+              address,
+              country: '',
+              postal_code: postalCode,
+              city,
+              state: '',
+              area: area ?? '',
+            };
+            dispatch(updateExistCustomerAddressOrAddNew(addressData));
+            dispatch(updateSelectedAddressId(response.customer.details?.customer_address_id));
           } else {
             const guestAddress: IGuestAddress = {
-              floor: addressFloor,
-              address: main,
-              address_type: 'HOME',
-              city: city,
+              floor: additionalInstruction,
+              address,
+              address_type: 'OTHER',
+              city,
               postal_code: postalCode,
+              area: area ?? '',
             };
 
             // save the address to local storage. Add on server when checkout opens
@@ -505,85 +533,45 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
     }
   }
 
+  /**
+   * @description for updating states of not deliverable options
+   */
   function noDeliveryOptionsAvailable() {
     dispatch(updateSelectedAddressId(null));
     setDeliveryFilterData([]);
     window.localStorage.removeItem(LS_GUEST_USER_ADDRESS);
   }
 
-  async function addNewAddress(bearerToken: string, postalCode: string, main: string, city: string) {
-    if (!isLoggedIn) return;
-
-    const response = await new NodeApiHttpPostCreateNewAddressRequest(configuration, bearerToken).post({
-      floor: addressFloor,
-      address: main,
-      address_type: 'HOME',
-      city: city,
-      postal_code: postalCode,
-    });
-
-    if (!response.result) {
-      dispatch(
-        updateError({
-          show: true,
-          message: response.message,
-          severity: 'error',
-        }),
-      );
-      return;
-    }
-
-    dispatch(updateSelectedAddressId(response.data?.address.id));
-  }
-
-  async function updateExistingAddress(bearerToken: string, addressId: number, postalCode: string, main: string, city: string) {
-    if (!isLoggedIn) return;
-
-    await new NodeApiHttpPostUpdateAddressRequest(configuration, bearerToken).post({
-      customer_address_id: addressId,
-      updating_values: {
-        floor: addressFloor,
-        address: main,
-        address_type: 'HOME',
-        city: city,
-        postal_code: postalCode,
-      },
-    });
-
-    dispatch(updateSelectedAddressId(addressId));
-  }
-
+  /**
+   *
+   * @param placeReceived google.maps.places to make sepearate components of address
+   */
   function onAddressChange(placeReceived?: google.maps.places.PlaceResult) {
     const place = placeReceived || autoComplete.getPlace();
-    let area: string | undefined = undefined;
-    let postalCode: string | undefined = undefined;
-    let main: string | undefined = undefined;
-    let city: string | undefined = undefined;
 
     if (place.address_components) {
-      for (let component of place.address_components) {
-        if (component.types[0] === 'route') {
-          let temp = '';
-          for (let component2 of place.address_components) if (component2.types[0] === 'street_number') temp = component2.short_name;
-          main = `${component.long_name} ${temp}`;
-          setAddressMain(main);
-        } else if (component.types.indexOf('sublocality') !== -1 || component.types.indexOf('sublocality_level_1') !== -1) {
-          area = component.long_name.includes('Innenstadt') ? 'Innenstadt' : component.long_name;
-        } else if (component.types[0] === 'locality') {
-          city = component.long_name;
-        } else if (component.types[0] === 'postal_code') {
-          postalCode = component.short_name;
+      place.address_components.forEach((component, index) => {
+        if (component.types[0] === 'route' || component.types[0] === 'street_number') {
+          const street_number = place?.address_components?.filter((c) => c.types[0] === 'street_number')[0];
+
+          setAddress(`${component.long_name} ${street_number?.long_name ?? ''}`);
+        } else if (component.types.indexOf('sublocality') !== -1 || component.types.indexOf('sublocality_level_1') !== -1)
+          setArea(component.long_name.includes('Innenstadt') ? 'Innenstadt' : component.long_name);
+        else if (component.types[0] === 'locality') setCity(component.long_name);
+        else if (component.types[0] === 'postal_code') setPostalCode(component.short_name);
+
+        if (place?.address_components && index === place.address_components?.length - 1) {
+          setIsAddressSelected(true);
         }
-      }
+      });
     }
 
     currentLocationMarker.setPosition(place.geometry?.location);
-
-    if (postalCode) {
-      getAvaibleBasedOnAdress({ area, postalCode, main, city });
-    }
   }
 
+  /**
+   * @returns update the state of orderType selection on checkout
+   */
   function handleMenuOrderTypeChange() {
     // TODO: Fix Only update if options available
     dispatch(updateOrderType(getOrderTypeConstant(filterName)));
@@ -637,6 +625,7 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
                 />
                 {/* <OrderButton href={`/${languageCode}/menu/${sibling.id}`}>{t('@order')}</OrderButton> */}
               </InfoWithOrderButton>
+
               <TimingContainerHolder>
                 <TimingContainer>
                   <TimingContainerTitle>{t('@store-hours')}</TimingContainerTitle>
@@ -714,7 +703,9 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
                   flex: 1,
                 }}
                 value={addressMain}
-                onChange={(e) => setAddressMain(e.target.value)}
+                onChange={(e) => {
+                  setAddressMain(e.target.value);
+                }}
                 ref={refAddressInput}
                 placeholder={t('@where-deliver')}
               />
@@ -728,8 +719,8 @@ const MenuPageTemplateOne: FunctionComponent = ({}) => {
                 width: 100,
                 marginLeft: 12,
               }}
-              value={addressFloor}
-              onChange={(e) => setAddressFloor(e.target.value)}
+              value={additionalInstruction}
+              onChange={(e) => setAdditionalInstruction(e.target.value)}
               placeholder={t('@optional')}
             />
           </InputContainer>

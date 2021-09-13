@@ -2,7 +2,7 @@ import { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 
-export type AddressTypes = 'HOME' | 'WORK' | 'OTHER';
+export type AddressTypes = 'OTHER';
 
 const Wrapper = styled.div`
   position: fixed;
