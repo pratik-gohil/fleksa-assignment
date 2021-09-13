@@ -358,6 +358,7 @@ const OrderTypeManager: FunctionComponent = () => {
               title: t('@delivery'),
               subTitle1: '',
               subTitle2: '',
+              subTitle3: '',
               orderType: 'DELIVERY' as ICheckoutOrderTypes,
               logo: SvgDelivery,
               onClick: onClickDelivery,
@@ -392,8 +393,9 @@ const OrderTypeManager: FunctionComponent = () => {
 
             if (item.orderType === 'DELIVERY') {
               const currentAddress = getSelectedAddress();
-              item.subTitle1 = `${currentAddress?.address ?? ''} ${currentAddress?.floor ?? ''}`;
-              item.subTitle2 = `${currentAddress?.potalCode ?? ''} ${currentAddress?.city ?? ''}`;
+              item.subTitle1 = `${currentAddress?.address ?? ''}`;
+              item.subTitle2 = `${currentAddress?.floor ?? ''}`;
+              item.subTitle3 = `${currentAddress?.potalCode ?? ''} ${currentAddress?.city ?? ''}`;
             }
 
             if (!isShowAddressSelection)
@@ -409,6 +411,7 @@ const OrderTypeManager: FunctionComponent = () => {
                         <SubTitle1>{item.subTitle1}</SubTitle1>
 
                         {!!item?.subTitle2 && <SubTitle2>{item.subTitle2}</SubTitle2>}
+                        {!!item?.subTitle3 && <SubTitle2>{item.subTitle3}</SubTitle2>}
                       </SubTitlesContainer>
                     )}
                   </ListItemContent>
