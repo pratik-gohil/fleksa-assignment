@@ -4,6 +4,7 @@
   "@address": "Postal Address",
   "@contact": "Contact :",
   "@owner": "Owner",
-  "@powered-by": "Powered By",
-  "@phone": "Phone"
+  "@powered-by": "Restaurant Website & App",
+  "@phone": "Phone",
+  "@by": "by"
 }

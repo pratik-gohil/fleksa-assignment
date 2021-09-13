@@ -66,8 +66,13 @@ const Logo = styled.img`
 
 const PoweredBy = styled.p`
   padding: 0;
-  margin: 0.5rem 0;
+  margin: 0;
   font-size: 1rem;
+`;
+
+const ByText = styled.p`
+  padding: 0;
+  margin: 0 0 0.5rem 0;
 `;
 
 const TermsPageTemplateOne: FunctionComponent = ({}) => {
@@ -116,6 +121,7 @@ const TermsPageTemplateOne: FunctionComponent = ({}) => {
 
             <Info>
               <PoweredBy>{t('@powered-by')}</PoweredBy>
+              <ByText>{t('@by')}</ByText>
               <Logo src={fleksaLogoPath} width={200} />
             </Info>
           </Col>
