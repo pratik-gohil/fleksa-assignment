@@ -113,7 +113,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
   const isUserLoggedIn = useAppSelector(selectIsUserLoggedIn);
   const configuration = useAppSelector(selectConfiguration);
   const bearerToken = useAppSelector(selectBearerToken);
-  const addressByType = useAppSelector((state) => selectAddressByType(state, 'HOME'));
+  const addressByType = useAppSelector((state) => selectAddressByType(state, 'OTHER'));
   const shopId = useAppSelector(selectSelectedMenu);
   const customerData = useAppSelector(selectCustomer);
   const isShowOrderTypeSelection = useAppSelector(selectShowOrderTypeSelect);

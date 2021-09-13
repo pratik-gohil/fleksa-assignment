@@ -203,7 +203,7 @@ export const MyAccountOrder: FunctionComponent<IMyAccountOrderProps> = ({ order 
           floor: response.data?.order?.delivery_address?.floor ?? '',
           shopId: shopData.id,
           address: response.data?.order?.delivery_address?.address ?? '',
-          addressType: response.data?.order?.delivery_address?.address_type ?? 'HOME',
+          addressType: response.data?.order?.delivery_address?.address_type ?? 'OTHER',
           city: response.data?.order?.delivery_address?.city ?? '',
           postalCode: response.data?.order?.delivery_address?.postal_code ?? '',
           token: bearerToken,

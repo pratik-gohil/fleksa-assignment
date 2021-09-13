@@ -70,7 +70,7 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
   const selectedMenuId = useAppSelector(selectSelectedMenu);
 
   const showSelectOrderType = useAppSelector(selectShowOrderTypeSelect);
-  const addressByType = useAppSelector((state) => selectAddressByType(state, 'HOME'));
+  const addressByType = useAppSelector((state) => selectAddressByType(state, 'OTHER'));
   const dispatch = useAppDispatch();
 
   useEffect(() => {

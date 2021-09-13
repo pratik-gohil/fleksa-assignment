@@ -14,8 +14,6 @@ import { deleteCustomerAddress } from '../../../../../redux/slices/user.slices.r
 import { useTranslation } from 'next-i18next';
 import { amplitudeEvent, constructEventName } from '../../../../../utils/amplitude.util';
 
-const HomeIconPath = '/assets/svg/address/home.svg';
-const WorkIconPath = '/assets/svg/address/work.svg';
 const MapIconPath = '/assets/svg/address/map-2.svg';
 const DeleteIconPath = '/assets/svg/account/delete.png';
 
@@ -257,11 +255,7 @@ const MyAccountAllAddressLeftSide: FunctionComponent<IMyAccountAllAddressLeftSid
         <AddressContainer>
           {addressess?.map((address) => (
             <Address key={address.id}>
-              <IconContainer>
-                {address.address_type === 'HOME' && <TypeIcon src={HomeIconPath} />}
-                {address.address_type === 'WORK' && <TypeIcon src={WorkIconPath} />}
-                {address.address_type === 'OTHER' && <TypeIcon src={MapIconPath} />}
-              </IconContainer>
+              <IconContainer>{address.address_type === 'OTHER' && <TypeIcon src={MapIconPath} />}</IconContainer>
 
               <Content>
                 <Label>{address.address_type}</Label>

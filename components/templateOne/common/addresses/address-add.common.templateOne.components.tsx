@@ -208,7 +208,7 @@ const AddressAdd: FunctionComponent = () => {
   const checkoutAddressId = useAppSelector(selectSelectedAddressId);
   const isShowAddressSelection = useAppSelector(selectShowAddress);
 
-  const [addressType, setAddressType] = useState<AddressTypes>('HOME');
+  const [addressType, setAddressType] = useState<AddressTypes>('OTHER');
 
   const addressByType = useAppSelector((state) => selectAddressByType(state, addressType));
   const selectedAddress = useAppSelector((state) => selectAddressById(state, checkoutAddressId));
@@ -224,7 +224,7 @@ const AddressAdd: FunctionComponent = () => {
 
   useEffect(() => {
     if (checkoutAddressId && isShowAddressSelection) {
-      setAddressType(selectedAddress?.address_type ?? 'HOME');
+      setAddressType(selectedAddress?.address_type ?? 'OTHER');
     }
   }, [isShowAddressSelection]);
 
