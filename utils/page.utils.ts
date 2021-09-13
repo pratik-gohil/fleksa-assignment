@@ -22,6 +22,8 @@ import NodeApiHttpGetUserAllAddress from '../http/nodeapi/account/get.account.al
 
 const multiRestaurantHosts = ['127.0.0.1:3000', 'localhost:3000', 'newqa.fleksa.de', 'localhost:3214', '192.168.1.14:3000'];
 
+const localMode = true;
+
 const testingHosts = [
   'roma.fleksa.com',
   'nidda.fleksa.com',
@@ -60,7 +62,7 @@ export async function getServerSidePropsCommon(
     const host: string = isMultiRestaurantHost ? restaurantDomain || 'roma.fleksa.com' : ctx.req.headers.host;
     const testHost = testingHosts.includes(host);
     const baseUrlPyApi = testHost ? 'https://myqa.fleksa.com' : 'https://my.fleksa.com';
-    const baseUrlNodeApi = testHost ? 'https://apiqa.fleksa.com' : 'https://api.fleksa.com';
+    const baseUrlNodeApi = testHost ? (localMode ? 'http://localhost:4000' : 'https://apiqa.fleksa.com') : 'https://api.fleksa.com';
 
     const configuration: IConfiguration = {
       host,

@@ -1,5 +1,7 @@
 {
-  "@privacy": "Privacy",
-  "@imprint": "Impression",
-  "@terms": "Terms"
+  "@privacy": "Privacy Policy",
+  "@imprint": "Imprint",
+  "@terms": "Terms & Conditions",
+  "@ordering-system": "Online Ordering System",
+  "@powered-by": "Powered By"
 }
