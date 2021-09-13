@@ -43,7 +43,7 @@ const Input = styled.input<{ isAddressSelected: boolean }>`
   width: 100%;
   border: ${(p) => (p.isAddressSelected ? 'none' : p.theme.border)};
   border-radius: ${(p) => (p.isAddressSelected ? '0' : p.theme.borderRadius)}px;
-  padding: ${(p) => (p.isAddressSelected ? `0.5rem 0.5rem 0.5rem 0` : '0.5rem 1rem')};
+  padding: 0.5rem 1rem;
   font-family: inherit;
   outline: none;
   border-bottom: ${(p) => (p.isAddressSelected ? '1px solid rgba(0, 0, 0, 1)' : p.theme.border)};
