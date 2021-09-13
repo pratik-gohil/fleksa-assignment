@@ -322,6 +322,7 @@ const AddAddressExtendModel = () => {
             postal_code: postalCode,
             city,
             state: '',
+            area: area ?? '',
           };
           dispatch(updateExistCustomerAddressOrAddNew(addressData));
           dispatch(updateSelectedAddressId(response.customer.details?.customer_address_id));
@@ -336,6 +337,7 @@ const AddAddressExtendModel = () => {
             address_type: addressType,
             city,
             postal_code: postalCode,
+            area: area ?? '',
           };
 
           // save the address to local storage. Add on server when checkout opens

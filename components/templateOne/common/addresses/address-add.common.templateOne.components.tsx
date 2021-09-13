@@ -35,6 +35,7 @@ export interface IGuestAddress {
   address_type: AddressTypes;
   city: string;
   postal_code: string;
+  area: string;
 }
 
 const Wrapper = styled.div`
@@ -363,6 +364,7 @@ const AddressAdd: FunctionComponent = () => {
             address_type: addressType,
             city: addressCity,
             postal_code: addressPostalCode,
+            area: addressArea,
           };
           // save the address to local storage. Add on server when checkout opens
           window.localStorage.setItem(LS_GUEST_USER_ADDRESS, JSON.stringify(guestAddress));

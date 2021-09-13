@@ -92,6 +92,7 @@ const INITIAL_ADDRESS: IGuestAddress = {
   city: '',
   floor: '',
   postal_code: '',
+  area: '',
 };
 
 const CheckoutPageSummary: FunctionComponent = ({}) => {
@@ -139,13 +140,13 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
     if (guestAddressString && bearerToken && shopId) {
       const guestAddress = JSON.parse(guestAddressString) as IGuestAddress;
       const response = await new PyApiHttpPostAddress(configuration).postAll({
-        floor: '',
+        floor: guestAddress.floor,
         shopId: shopId,
         address: guestAddress.address,
         addressType: guestAddress.address_type,
         city: guestAddress.city,
         postalCode: guestAddress.postal_code,
-        area: '',
+        area: guestAddress.area,
         token: bearerToken,
       });
 

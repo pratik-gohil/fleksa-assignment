@@ -38,7 +38,7 @@ const CheckoutPageTemplateOne: FunctionComponent = ({}) => {
   const shopData = useAppSelector(selectShop);
 
   useEffect(() => {
-    if (window !== 'undefined') {
+    if (typeof window !== 'undefined') {
       if ((paymentMethod === 'PAYPAL' && !shopData?.paypal_available) || (paymentMethod === 'STRIPE' && !shopData?.stripe_available))
         dispatch(updatePaymentMethod('CASH')); // ? Default method on checkout
     }
