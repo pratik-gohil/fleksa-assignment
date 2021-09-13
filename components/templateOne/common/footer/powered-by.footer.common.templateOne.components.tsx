@@ -44,7 +44,9 @@ const PoweredBy: FunctionComponent = () => {
 
   return (
     <>
-      <Title href="https://fleksa.com">{t('@ordering-system')}</Title>
+      <Title href="https://fleksa.com" target="_blank">
+        {t('@ordering-system')}
+      </Title>
 
       <PoweredByText>{t('@powered-by')}</PoweredByText>
 
