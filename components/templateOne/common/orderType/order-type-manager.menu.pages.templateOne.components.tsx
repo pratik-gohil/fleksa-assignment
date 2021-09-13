@@ -106,7 +106,7 @@ const ListItem = styled.li<{ selected: boolean }>`
   margin: 0 ${(props) => props.theme.dimen.X4}px;
   border-radius: ${(props) => props.theme.borderRadius}px;
   position: relative;
-  background: ${(p) => (p.selected ? '#EAFFD0' : '#fff')};
+  /* background: ${(p) => (p.selected ? '#EAFFD0' : '#fff')}; */
 
   &::before {
     content: '';
@@ -283,21 +283,32 @@ const OrderTypeManager: FunctionComponent = () => {
       : undefined;
 
     if (isLoggedIn && checkoutAddressId && correspondAddressById) {
-      return { address: `${correspondAddressById?.address ?? ''}`, floor: `${correspondAddressById?.floor ?? ''}` };
+      return {
+        address: correspondAddressById?.address,
+        floor: correspondAddressById?.floor,
+        potalCode: correspondAddressById?.postal_code,
+        city: correspondAddressById?.city,
+      };
     } else if (isLoggedIn && !checkoutAddressId && correspondAddress) {
       return {
-        address: `${correspondAddress?.address ?? ''}`,
-        floor: `${correspondAddress?.floor ?? ''}`,
+        address: correspondAddress?.address,
+        floor: correspondAddress?.floor,
+        potalCode: correspondAddress?.postal_code,
+        city: correspondAddress?.city,
       };
     } else if (guestAddress && !isLoggedIn)
       return {
-        address: `${guestAddress?.address}`,
-        floor: `${guestAddress?.floor}`,
+        address: guestAddress?.address,
+        floor: guestAddress?.floor,
+        potalCode: guestAddress?.postal_code,
+        city: guestAddress?.city,
       };
 
     return {
       address: 'Enter your delivery details',
       floor: '',
+      potalCode: '',
+      city: '',
     };
   }
 
@@ -345,8 +356,8 @@ const OrderTypeManager: FunctionComponent = () => {
           {[
             {
               title: t('@delivery'),
-              subTitle1: getSelectedAddress()?.address,
-              subTitle2: getSelectedAddress()?.floor,
+              subTitle1: '',
+              subTitle2: '',
               orderType: 'DELIVERY' as ICheckoutOrderTypes,
               logo: SvgDelivery,
               onClick: onClickDelivery,
@@ -378,6 +389,12 @@ const OrderTypeManager: FunctionComponent = () => {
             let selected = item.orderType === orderType;
 
             const centerContent = item.subTitle1 ? item.subTitle1.length === 0 : false;
+
+            if (item.orderType === 'DELIVERY') {
+              const currentAddress = getSelectedAddress();
+              item.subTitle1 = `${currentAddress?.address ?? ''} ${currentAddress?.floor ?? ''}`;
+              item.subTitle2 = `${currentAddress?.potalCode ?? ''} ${currentAddress?.city ?? ''}`;
+            }
 
             if (!isShowAddressSelection)
               return (

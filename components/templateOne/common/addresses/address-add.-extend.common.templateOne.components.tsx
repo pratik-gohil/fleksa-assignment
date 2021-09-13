@@ -99,47 +99,47 @@ const AddressText = styled.p`
 
 const AdvanceOptionContainer = styled.div``;
 
-const OptionText = styled.p`
-  padding: 0.5rem 0 0 0;
-  margin: 0;
+// const OptionText = styled.p`
+//   padding: 0.5rem 0 0 0;
+//   margin: 0;
 
-  @media (max-width: ${BREAKPOINTS.sm}px) {
-    padding: 0;
-    margin: 0;
-  }
-`;
+//   @media (max-width: ${BREAKPOINTS.sm}px) {
+//     padding: 0;
+//     margin: 0;
+//   }
+// `;
 
-const AdvanceOptionHeader = styled.div``;
+// const AdvanceOptionHeader = styled.div``;
 
-const PlaceSelection = styled.div`
-  display: flex;
-`;
+// const PlaceSelection = styled.div`
+//   display: flex;
+// `;
 
-const StyledOptionsRadioButtonContainer = styled.div`
-  display: flex;
-  align-items: center;
-  cursor: pointer;
+// const StyledOptionsRadioButtonContainer = styled.div`
+//   display: flex;
+//   align-items: center;
+//   cursor: pointer;
 
-  span {
-    padding: 0.5rem;
-    font-size: 12px;
+//   span {
+//     padding: 0.5rem;
+//     font-size: 12px;
 
-    @media (max-width: ${BREAKPOINTS.sm}px) {
-      padding: 0.5rem 0;
-    }
-  }
-`;
+//     @media (max-width: ${BREAKPOINTS.sm}px) {
+//       padding: 0.5rem 0;
+//     }
+//   }
+// `;
 
-const StyledOptionsRadioButton = styled.div<{ selected: boolean }>`
-  width: 16px;
-  height: 16px;
-  margin: 0 0.5rem;
-  display: block;
-  padding-right: 0.5rem;
-  border-radius: 100%;
-  border: ${(props) => props.theme.border};
-  background-color: ${(props) => props.selected && props.theme.primaryColor};
-`;
+// const StyledOptionsRadioButton = styled.div<{ selected: boolean }>`
+//   width: 16px;
+//   height: 16px;
+//   margin: 0 0.5rem;
+//   display: block;
+//   padding-right: 0.5rem;
+//   border-radius: 100%;
+//   border: ${(props) => props.theme.border};
+//   background-color: ${(props) => props.selected && props.theme.primaryColor};
+// `;
 
 const InputAdditionInstruction = styled.input`
   margin-top: 0.5rem;
@@ -179,9 +179,9 @@ const Error = styled.p`
 let autoComplete: google.maps.places.Autocomplete;
 
 //  ?? Constant delivery options
-const meetDoor = 'Meet at door';
-const leaveDoor = 'Leave at door';
-const meetOutside = 'Meet outside';
+// const meetDoor = 'Meet at door';
+// const leaveDoor = 'Leave at door';
+// const meetOutside = 'Meet outside';
 
 const AddAddressExtendModel = () => {
   const refAddressInput = useRef<HTMLInputElement>(null);
@@ -203,31 +203,31 @@ const AddAddressExtendModel = () => {
   const [city, setCity] = useState<string>('');
   const [postalCode, setPostalCode] = useState<string>('');
   const [addressType] = useState<AddressTypes>('OTHER');
-  const [placeSelection, setPlaceSelection] = useState('');
+  // const [placeSelection, setPlaceSelection] = useState('');
 
   const [addressList, setAddressList] = useState<Array<IParticularAddress>>([]);
   const [isAddressSelected, setIsAddressSelected] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
 
   // Remove all instances of the words in the array
-  const removeDeliveryOptionWords = function (txt: string) {
-    const uselessWordsArray = [t(`@${meetDoor}`), t(`@${leaveDoor}`), t(`@${meetOutside}`)];
+  // const removeDeliveryOptionWords = function (txt: string) {
+  //   const uselessWordsArray = [t(`@${meetDoor}`), t(`@${leaveDoor}`), t(`@${meetOutside}`)];
 
-    const expStr = uselessWordsArray.join('\\b|\\b');
+  //   const expStr = uselessWordsArray.join('\\b|\\b');
 
-    return txt.replace(new RegExp(expStr, 'gi'), '').trim().replace(/ +/g, ' ');
-  };
+  //   return txt.replace(new RegExp(expStr, 'gi'), '').trim().replace(/ +/g, ' ');
+  // };
 
   /**
    * @returns {string} correspond selected delivery options
    */
-  const checkSelectedDeliveryOptions = (txt: string) => {
-    if (txt.indexOf(t(`@${meetDoor}`)) !== -1) return t(`@${meetDoor}`);
-    else if (txt.indexOf(t(`@${leaveDoor}`)) !== -1) return t(`@${leaveDoor}`);
-    else if (txt.indexOf(t(`@${meetOutside}`)) !== -1) return t(`@${meetOutside}`);
+  // const checkSelectedDeliveryOptions = (txt: string) => {
+  //   if (txt.indexOf(t(`@${meetDoor}`)) !== -1) return t(`@${meetDoor}`);
+  //   else if (txt.indexOf(t(`@${leaveDoor}`)) !== -1) return t(`@${leaveDoor}`);
+  //   else if (txt.indexOf(t(`@${meetOutside}`)) !== -1) return t(`@${meetOutside}`);
 
-    return '';
-  };
+  //   return '';
+  // };
 
   // TODO: AutoComplete address input
   useEffect(() => {
@@ -293,7 +293,7 @@ const AddAddressExtendModel = () => {
       const response = await new PyApiHttpPostAddress(configuration).postAll({
         area: area ?? '',
         city,
-        floor: `${additionalInstruction} ${placeSelection}` ?? '',
+        floor: `${additionalInstruction}` ?? '',
         address,
         addressType,
         shopId,
@@ -308,7 +308,7 @@ const AddAddressExtendModel = () => {
           const addressData: IParticularAddress = {
             id: response.customer.details?.customer_address_id,
             address_type: addressType,
-            floor: `${additionalInstruction} ${placeSelection}` ?? '',
+            floor: `${additionalInstruction}` ?? '',
             address,
             country: '',
             postal_code: postalCode,
@@ -323,7 +323,7 @@ const AddAddressExtendModel = () => {
           // amplitudeEvent(constructEventName(`address model save address user response`, 'success'), { addressData, response });
         } else {
           const guestAddress: IGuestAddress = {
-            floor: `${additionalInstruction} ${placeSelection}` ?? '',
+            floor: `${additionalInstruction}` ?? '',
             address,
             address_type: addressType,
             city,
@@ -359,10 +359,10 @@ const AddAddressExtendModel = () => {
    */
   const hanldeHistoryAddressSelectionClick = async (existAddress: IParticularAddress) => {
     setIsAddressSelected(true);
-    setPlaceSelection(checkSelectedDeliveryOptions(existAddress?.floor ?? ''));
+    // setPlaceSelection(existAddress?.floor ?? '');
 
     // ?? Set exist address into local state
-    setAdditionalInstruction(removeDeliveryOptionWords(existAddress?.floor ?? '')); // ? update the local state removed by paranthesis
+    setAdditionalInstruction(existAddress?.floor ?? ''); // ? update the local state removed by paranthesis
 
     setPostalCode(existAddress.postal_code);
     setAddress(existAddress?.address ?? '');
@@ -374,10 +374,10 @@ const AddAddressExtendModel = () => {
   /**
    * @returns update state of place selection state for delivery options
    */
-  const handleDeliveryOptionChoiceClick = async (label: string) => {
-    if (placeSelection === label) setPlaceSelection('');
-    else setPlaceSelection(label);
-  };
+  // const handleDeliveryOptionChoiceClick = async (label: string) => {
+  //   if (placeSelection === label) setPlaceSelection('');
+  //   else setPlaceSelection(label);
+  // };
 
   return (
     <Wrapper>
@@ -424,7 +424,7 @@ const AddAddressExtendModel = () => {
 
       {isAddressSelected && (
         <AdvanceOptionContainer>
-          <AdvanceOptionHeader>
+          {/* <AdvanceOptionHeader>
             <OptionText>{t('@delivery-options')}</OptionText>
 
             <PlaceSelection>
@@ -449,7 +449,7 @@ const AddAddressExtendModel = () => {
                 </StyledOptionsRadioButtonContainer>
               ))}
             </PlaceSelection>
-          </AdvanceOptionHeader>
+          </AdvanceOptionHeader> */}
 
           <InputAdditionInstruction
             value={additionalInstruction}

@@ -292,10 +292,10 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
           {orderType === 'DELIVERY' ? (
             <>
               <Address>{userAddress?.address}</Address>
+              <Address>{userAddress?.floor}</Address>
               <Address>
                 {userAddress?.postal_code} {userAddress?.city}
               </Address>
-              <Address>{userAddress?.floor}</Address>
             </>
           ) : (
             <></>
