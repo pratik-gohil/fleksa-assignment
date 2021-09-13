@@ -26,7 +26,11 @@ const Wrapper = styled.div`
   padding: 0 0 0 0.5rem;
   flex: 1;
 
-  transition: all 0.5s;
+  transition: all 0.3s;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    padding: 0;
+  }
 `;
 
 const InputContainer = styled.div`
@@ -95,6 +99,10 @@ const AddressText = styled.p`
   display: flex;
   flex-direction: column;
   flex: 1;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    font-size: 12px;
+  }
 `;
 
 const AdvanceOptionContainer = styled.div``;
