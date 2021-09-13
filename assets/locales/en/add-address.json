@@ -19,5 +19,13 @@
   "@deliveryAddress": "Delivery Address",
   "@addressPart1": "Sorry, we don't currently offer delivery to your location.",
   "@addressPart2": "the restaurant for more information.",
-  "@contact": "Please contact"
+  "@contact": "Please contact",
+
+  "@add-address": "Add your address here",
+  "@delivery-options": "Delivery Options",
+  "@delivery-instructions": "Additional Delivery Info",
+  "@done": "Done",
+  "@Meet at door": "Meet at door",
+  "@Leave at door": "Leave at door",
+  "@Meet outside": "Meet outside"
 }

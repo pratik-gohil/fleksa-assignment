@@ -35,6 +35,7 @@ export interface IGuestAddress {
   address_type: AddressTypes;
   city: string;
   postal_code: string;
+  area: string;
 }
 
 const Wrapper = styled.div`
@@ -207,7 +208,7 @@ const AddressAdd: FunctionComponent = () => {
   const checkoutAddressId = useAppSelector(selectSelectedAddressId);
   const isShowAddressSelection = useAppSelector(selectShowAddress);
 
-  const [addressType, setAddressType] = useState<AddressTypes>('HOME');
+  const [addressType, setAddressType] = useState<AddressTypes>('OTHER');
 
   const addressByType = useAppSelector((state) => selectAddressByType(state, addressType));
   const selectedAddress = useAppSelector((state) => selectAddressById(state, checkoutAddressId));
@@ -223,7 +224,7 @@ const AddressAdd: FunctionComponent = () => {
 
   useEffect(() => {
     if (checkoutAddressId && isShowAddressSelection) {
-      setAddressType(selectedAddress?.address_type ?? 'HOME');
+      setAddressType(selectedAddress?.address_type ?? 'OTHER');
     }
   }, [isShowAddressSelection]);
 
@@ -265,7 +266,7 @@ const AddressAdd: FunctionComponent = () => {
 
   // TODO: AutoComplete address input
   useEffect(() => {
-    if (window !== 'undefined' && refAddressInput.current) {
+    if (typeof window !== 'undefined' && refAddressInput.current) {
       autoComplete = new google.maps.places.Autocomplete(refAddressInput.current, {
         types: ['geocode'],
       });
@@ -363,6 +364,7 @@ const AddressAdd: FunctionComponent = () => {
             address_type: addressType,
             city: addressCity,
             postal_code: addressPostalCode,
+            area: addressArea,
           };
           // save the address to local storage. Add on server when checkout opens
           window.localStorage.setItem(LS_GUEST_USER_ADDRESS, JSON.stringify(guestAddress));
@@ -408,7 +410,10 @@ const AddressAdd: FunctionComponent = () => {
                 ref={refAddressInput}
                 placeholder={t('@streetAddress')}
                 onBlur={() =>
-                  amplitudeEvent(constructEventName(`address-model-${t('@streetAddress')}`, 'input'), { addressMain, length: addressMain.length })
+                  amplitudeEvent(constructEventName(`address-model-${t('@streetAddress')}`, 'input'), {
+                    addressMain,
+                    length: addressMain.length,
+                  })
                 }
               />
               <Autolocate onClick={updateCurrentPosition}>
@@ -442,7 +447,9 @@ const AddressAdd: FunctionComponent = () => {
               placeholder={t('@city')}
               value={addressCity}
               onChange={(e) => setAddressCity(e.target.value)}
-              onBlur={() => amplitudeEvent(constructEventName(`address-model-${t('@city')}`, 'input'), { addressCity, length: addressCity.length })}
+              onBlur={() =>
+                amplitudeEvent(constructEventName(`address-model-${t('@city')}`, 'input'), { addressCity, length: addressCity.length })
+              }
             />
           </InputItem>
           <InputItem>

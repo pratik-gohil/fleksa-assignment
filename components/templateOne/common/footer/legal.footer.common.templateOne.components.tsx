@@ -99,7 +99,18 @@ const LegalLinks: FunctionComponent = () => {
           <Icon src={'/assets/svg/social/facebook.svg'} />
         </CustomLink>
       </SocialMediaLinks>
+
       <Text>
+        <CustomLink
+          amplitude={{
+            type: 'link',
+            text: 'fleksa',
+          }}
+          target="_blank"
+          externelHref="https://fleksa.com"
+          placeholder={'©️2021 Fleksa'}
+        />{' '}
+        |{' '}
         <CustomLink
           href={`/terms`}
           amplitude={{

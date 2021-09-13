@@ -8,9 +8,9 @@ import MenuPageCategorySidebar from '../../../components/templateOne/pages/menu/
 import OrderTypeManager from '../../../components/templateOne/common/orderType/order-type-manager.menu.pages.templateOne.components';
 import { BREAKPOINTS } from '../../../constants/grid-system-configuration';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks.redux';
-import { selectOrderType, selectSelectedAddressId, updateDeliveryFinances } from '../../../redux/slices/checkout.slices.redux';
-import { selectShowAddress, selectShowOrderTypeSelect, updateShowAddAddress } from '../../../redux/slices/menu.slices.redux';
-import AddressAdd, { IGuestAddress } from '../../../components/templateOne/common/addresses/address-add.common.templateOne.components';
+import { selectOrderType, updateDeliveryFinances } from '../../../redux/slices/checkout.slices.redux';
+import { selectShowOrderTypeSelect, updateShowAddAddress } from '../../../redux/slices/menu.slices.redux';
+import { IGuestAddress } from '../../../components/templateOne/common/addresses/address-add.common.templateOne.components';
 import MenuPageCartSummary from '../../../components/templateOne/pages/menu/cart-summary.pages.templateOne.components';
 import { LS_GUEST_USER_ADDRESS } from '../../../constants/keys-local-storage.constants';
 import { useTranslation } from 'next-i18next';
@@ -66,12 +66,11 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
   const cartData = useAppSelector(selectCart);
   const orderType = useAppSelector(selectOrderType);
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
-  const showAddAddress = useAppSelector(selectShowAddress);
   const configuration = useAppSelector(selectConfiguration);
   const selectedMenuId = useAppSelector(selectSelectedMenu);
-  const checkoutAddressId = useAppSelector(selectSelectedAddressId);
+
   const showSelectOrderType = useAppSelector(selectShowOrderTypeSelect);
-  const addressByType = useAppSelector((state) => selectAddressByType(state, 'HOME'));
+  const addressByType = useAppSelector((state) => selectAddressByType(state, 'OTHER'));
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -150,15 +149,16 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
 
       <div>{cartData.cartCost > 0 && <MenuPageCartSummary />}</div>
 
-      {(showSelectOrderType || orderType === null) && !showAddAddress ? (
-        <OrderTypeManager key="key-ajkndalkwdmalkwmdlkw" />
+      {(showSelectOrderType || orderType === null) && <OrderTypeManager />}
+
+      {/* {(showSelectOrderType || orderType === null) && !showAddAddress ? (
       ) : (
         (showAddAddress ||
           (orderType === 'DELIVERY' &&
             checkoutAddressId === null &&
             orderType === 'DELIVERY' &&
             !window.localStorage.getItem(LS_GUEST_USER_ADDRESS))) && <AddressAdd />
-      )}
+      )} */}
     </>
   );
 };

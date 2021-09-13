@@ -1,21 +1,29 @@
-import { Fragment, FunctionComponent, useEffect } from 'react';
+import { FunctionComponent, useEffect } from 'react';
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
-import { ICheckoutOrderTypes, selectOrderType, selectSelectedAddressId, updateOrderType } from '../../../../redux/slices/checkout.slices.redux';
+import {
+  ICheckoutOrderTypes,
+  selectOrderType,
+  selectSelectedAddressId,
+  updateOrderType,
+} from '../../../../redux/slices/checkout.slices.redux';
 import SvgDelivery from '../../../../public/assets/svg/delivery.svg';
 import SvgPickup from '../../../../public/assets/svg/pickup.svg';
 import SvgDinein from '../../../../public/assets/svg/dinein.svg';
-import SvgTick from '../../../../public/assets/svg/tick.svg';
-import { updateShowAddAddress, updateShowOrderTypeSelect } from '../../../../redux/slices/menu.slices.redux';
+import { selectShowAddress, updateShowAddAddress, updateShowOrderTypeSelect } from '../../../../redux/slices/menu.slices.redux';
 import { selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
 import { selectAddress, selectShop, selectSiblings } from '../../../../redux/slices/index.slices.redux';
 import { useState } from 'react';
 import { IAddress } from '../../../../interfaces/common/address.common.interfaces';
 import { useTranslation } from 'next-i18next';
-import { selectAddressById, selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
+import { selectAddressById, selectAddressByType, selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
 import { IParticularAddress } from '../../../../interfaces/common/customer.common.interfaces';
 import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
+import AddAddressExtendModel from '../addresses/address-add.-extend.common.templateOne.components';
+import SvgBackIcon from '../../../../public/assets/svg/account/back-arrow.svg';
+import SvgEdit from '../../../../public/assets/svg/edit.svg';
+import { LS_GUEST_USER_ADDRESS } from '../../../../constants/keys-local-storage.constants';
 
 const Wrapper = styled.div`
   position: fixed;
@@ -29,6 +37,7 @@ const Wrapper = styled.div`
   background-color: rgba(0, 0, 0, 0.1);
   padding: ${(props) => props.theme.dimen.X4}px;
   z-index: 1;
+
   @media (min-width: ${BREAKPOINTS.lg}px) {
     top: ${(props) => props.theme.navDesktop.height}px;
     bottom: 0;
@@ -40,7 +49,7 @@ const ContentContainer = styled.div`
   flex: 1;
   flex-direction: column;
   max-width: 500px;
-  max-height: 80%;
+  max-height: 85%;
   background-color: #fff;
   overflow: auto;
   border-radius: ${(props) => props.theme.borderRadius}px;
@@ -52,15 +61,35 @@ const Title = styled.h3`
   text-align: center;
   line-height: 1;
   border-bottom: ${(props) => props.theme.border};
+  flex: 1;
 `;
 
-const SubTitle = styled.h4<{ selected: boolean }>`
+const SubTitlesContainer = styled.div`
   padding: 0.5rem 0;
+`;
+
+const SubTitle1 = styled.h4`
+  padding: 0;
   margin: 0;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 400;
   line-height: 1;
-  color: ${(props) => (props.selected ? 'rgb(25, 135, 84)' : '#222')};
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    font-size: 12px;
+  }
+`;
+
+const SubTitle2 = styled.h4`
+  padding: 0.3rem 0 0 0;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    font-size: 12px;
+  }
 `;
 
 const List = styled.ul`
@@ -72,12 +101,23 @@ const ListItem = styled.li<{ selected: boolean }>`
   flex: 1 1 auto;
   flex-direction: row;
   cursor: pointer;
-  padding: ${(props) => props.theme.dimen.X4}px;
-  margin: ${(props) => props.theme.dimen.X4}px;
+  align-items: center;
+  padding: 1rem;
+  margin: 0 ${(props) => props.theme.dimen.X4}px;
   border-radius: ${(props) => props.theme.borderRadius}px;
-  &:hover {
-    background-color: #f9f9f9;
+  position: relative;
+  /* background: ${(p) => (p.selected ? '#EAFFD0' : '#fff')}; */
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 10px;
+    background: ${(p) => (p.selected ? p.theme.primaryColor : 'transparent')};
   }
+
   h3 {
     text-align: left;
     border: none;
@@ -86,9 +126,21 @@ const ListItem = styled.li<{ selected: boolean }>`
   }
   svg {
     width: 48px;
-    min-width: 48px;
     height: 48px;
     display: block;
+  }
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    padding: 0.5rem;
+
+    svg {
+      width: 36px;
+      height: 36px;
+    }
+
+    &::before {
+      width: 6px;
+    }
   }
 `;
 
@@ -96,13 +148,68 @@ const ListItemContent = styled.div<{ centerContent: boolean }>`
   display: flex;
   flex: 1;
   flex-direction: column;
+
   justify-content: ${(props) => (props.centerContent ? 'center' : 'space-between')};
   margin-left: ${(props) => props.theme.dimen.X4}px;
 `;
 
-const SelectedTick = styled.div`
+const AddressContainer = styled.div`
+  display: flex;
+  padding: 0 1rem;
+`;
+
+const LocationIconContainer = styled.div`
+  display: flex;
+
   svg {
-    padding: 12px;
+    width: 48px;
+    height: 48px;
+  }
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    svg {
+      display: none;
+    }
+  }
+`;
+
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+`;
+
+const IconContainer = styled.div`
+  cursor: pointer;
+`;
+
+const EditIconContainer = styled.div`
+  cursor: pointer;
+  border-radius: 50%;
+  border: 0.1px solid rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  width: 50px;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    height: 35px;
+    width: 35px;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
   }
 `;
 
@@ -116,12 +223,40 @@ const OrderTypeManager: FunctionComponent = () => {
   const { t } = useTranslation('common-ordertype');
   const [addressData, setAddressData] = useState<IAddress | null | undefined>(undefined);
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
-  const choosenAddressId = useAppSelector(selectSelectedAddressId);
+  const isShowAddressSelection = useAppSelector(selectShowAddress);
+  const checkoutAddressId = useAppSelector(selectSelectedAddressId);
+
+  const correspondAddress = useAppSelector((state) => selectAddressByType(state, 'OTHER'));
+  const correspondAddressById = useAppSelector((state) => selectAddressById(state, checkoutAddressId));
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    if (shopData?.id == selectedMenuId) setAddressData(address);
+    else setAddressData(siblings.find((item) => item.id == selectedMenuId)?.address);
+  }, []);
+
+  // TODO: Enable and disable scroll when modal opened
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
 
   function onClickDelivery(orderType: ICheckoutOrderTypes) {
+    if (typeof window === 'undefined') return;
+    const guestAddressString = window.localStorage.getItem(LS_GUEST_USER_ADDRESS);
+
     dispatch(updateOrderType(orderType));
-    dispatch(updateShowOrderTypeSelect(false));
-    dispatch(updateShowAddAddress(true));
+
+    if ((isLoggedIn && correspondAddress) || guestAddressString) {
+      dispatch(updateShowOrderTypeSelect(false));
+    } else {
+      dispatch(updateShowAddAddress(true));
+      dispatch(updateShowOrderTypeSelect(true));
+    }
 
     amplitudeEvent(constructEventName(t('@delivery'), 'model'), {});
   }
@@ -141,80 +276,163 @@ const OrderTypeManager: FunctionComponent = () => {
   }
 
   function getSelectedAddress() {
-    if (typeof window === 'undefined') return '';
+    if (typeof window === 'undefined') return;
 
     let guestAddress = window.localStorage.getItem('@LS_GUEST_USER_ADDRESS')
       ? (JSON.parse(window.localStorage.getItem('@LS_GUEST_USER_ADDRESS') ?? '') as IParticularAddress)
       : undefined;
 
-    if (isLoggedIn && choosenAddressId) {
-      const correspondAddress = useAppSelector((state) => selectAddressById(state, choosenAddressId));
-      return `${correspondAddress?.area ?? ''} ${correspondAddress?.address ?? ''}, ${correspondAddress?.postal_code} ${correspondAddress?.city}`;
-    } else if (guestAddress && !isLoggedIn) {
-      return `${guestAddress?.area ?? ''} ${guestAddress?.address}, ${guestAddress?.postal_code} ${guestAddress?.city}`;
-    }
+    if (isLoggedIn && checkoutAddressId && correspondAddressById) {
+      return {
+        address: correspondAddressById?.address,
+        floor: correspondAddressById?.floor,
+        potalCode: correspondAddressById?.postal_code,
+        city: correspondAddressById?.city,
+      };
+    } else if (isLoggedIn && !checkoutAddressId && correspondAddress) {
+      return {
+        address: correspondAddress?.address,
+        floor: correspondAddress?.floor,
+        potalCode: correspondAddress?.postal_code,
+        city: correspondAddress?.city,
+      };
+    } else if (guestAddress && !isLoggedIn)
+      return {
+        address: guestAddress?.address,
+        floor: guestAddress?.floor,
+        potalCode: guestAddress?.postal_code,
+        city: guestAddress?.city,
+      };
 
-    return '';
+    return {
+      address: 'Enter your delivery details',
+      floor: '',
+      potalCode: '',
+      city: '',
+    };
   }
 
-  useEffect(() => {
-    if (shopData?.id == selectedMenuId) setAddressData(address);
-    else setAddressData(siblings.find((item) => item.id == selectedMenuId)?.address);
-  }, []);
+  /**
+   *
+   * @returns updating state of show add address model extension
+   */
+  const handleBackButtonClick = async () => dispatch(updateShowAddAddress(false));
+
+  const handleDeliveryEditIconClick = async () => dispatch(updateShowAddAddress(true));
+
+  /**
+   * @returns {Boolean} check if address selected already or not
+   */
+  const checkAddressSelectionState: () => boolean = () => {
+    if (typeof window === 'undefined') return false;
+
+    let guestAddress = window.localStorage.getItem('@LS_GUEST_USER_ADDRESS')
+      ? (JSON.parse(window.localStorage.getItem('@LS_GUEST_USER_ADDRESS') ?? '') as IParticularAddress)
+      : undefined;
+
+    if ((isLoggedIn && correspondAddress) || (!isLoggedIn && guestAddress)) return true;
+
+    return false;
+  };
 
   return (
     <Wrapper>
       <ContentContainer>
-        <Title>{t('@order-details')}</Title>
+        <Header>
+          {isShowAddressSelection ? (
+            <>
+              <IconContainer onClick={handleBackButtonClick}>
+                <SvgBackIcon />
+              </IconContainer>
+
+              <Title>{t('@delivery-details')}</Title>
+            </>
+          ) : (
+            <Title>{t('@order-details')}</Title>
+          )}
+        </Header>
 
         <List>
           {[
             {
               title: t('@delivery'),
-              subTitle: getSelectedAddress(),
+              subTitle1: '',
+              subTitle2: '',
+              subTitle3: '',
               orderType: 'DELIVERY' as ICheckoutOrderTypes,
               logo: SvgDelivery,
               onClick: onClickDelivery,
               visible: addressData?.has_delivery,
+              isEditable: true && checkAddressSelectionState(),
+              editAction: handleDeliveryEditIconClick,
             },
             {
               title: t('@pickup'),
-              subTitle: t('@quote-pickup'),
+              subTitle1: t('@quote-pickup'),
               orderType: 'PICKUP' as ICheckoutOrderTypes,
               logo: SvgPickup,
               onClick: onClickTakeaway,
               visible: addressData?.has_pickup,
+              isEditable: false,
             },
             {
               title: t('@dine-in'),
-              subTitle: t('@dine-in-pickup'),
+              subTitle1: t('@dine-in-pickup'),
               orderType: 'DINE_IN' as ICheckoutOrderTypes,
               logo: SvgDinein,
               onClick: onClickDineIn,
               visible: addressData?.has_dinein,
+              isEditable: false,
             },
           ].map((item) => {
-            if (item.visible) {
-              const selected = item.orderType === orderType;
-              const centerContent = item.subTitle !== null && item.subTitle.length === 0;
+            if (!item.visible) return null;
 
+            let selected = item.orderType === orderType;
+
+            const centerContent = item.subTitle1 ? item.subTitle1.length === 0 : false;
+
+            if (item.orderType === 'DELIVERY') {
+              const currentAddress = getSelectedAddress();
+              item.subTitle1 = `${currentAddress?.address ?? ''}`;
+              item.subTitle2 = `${currentAddress?.floor ?? ''}`;
+              item.subTitle3 = `${currentAddress?.potalCode ?? ''} ${currentAddress?.city ?? ''}`;
+            }
+
+            if (!isShowAddressSelection)
               return (
-                <ListItem key={item.title} selected={selected} onClick={() => item.onClick(item.orderType)}>
-                  <item.logo />
-                  <ListItemContent centerContent={centerContent}>
+                <ListItem key={item.title} selected={selected && !isShowAddressSelection}>
+                  <item.logo onClick={() => item.onClick(item.orderType)} />
+
+                  <ListItemContent centerContent={centerContent} onClick={() => item.onClick(item.orderType)}>
                     <Title>{item.title}</Title>
-                    {!centerContent && <SubTitle selected={selected}>{item.subTitle}</SubTitle>}
+
+                    {!centerContent && (
+                      <SubTitlesContainer>
+                        <SubTitle1>{item.subTitle1}</SubTitle1>
+
+                        {!!item?.subTitle2 && <SubTitle2>{item.subTitle2}</SubTitle2>}
+                        {!!item?.subTitle3 && <SubTitle2>{item.subTitle3}</SubTitle2>}
+                      </SubTitlesContainer>
+                    )}
                   </ListItemContent>
-                  {selected && (
-                    <SelectedTick>
-                      <SvgTick />
-                    </SelectedTick>
+
+                  {item.isEditable && (
+                    <EditIconContainer onClick={item.editAction}>
+                      <SvgEdit />
+                    </EditIconContainer>
                   )}
                 </ListItem>
               );
-            } else {
-              return <Fragment key={item.title} />;
-            }
+            else if (isShowAddressSelection && item.orderType === 'DELIVERY')
+              return (
+                <AddressContainer>
+                  <LocationIconContainer>
+                    <item.logo />
+                  </LocationIconContainer>
+
+                  <AddAddressExtendModel />
+                </AddressContainer>
+              );
           })}
         </List>
       </ContentContainer>

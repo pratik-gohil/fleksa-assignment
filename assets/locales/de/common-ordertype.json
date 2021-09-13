@@ -5,5 +5,7 @@
   "@dine-in": "Dine-In",
   "@quote-pickup": "Ich hole es selbst ab",
   "@dine-in-pickup": "Ich esse im Restaurant",
-  "@quote-delivery": ""
+  "@quote-delivery": "",
+  "@enter-address": "Geben Sie Ihre Adresse ein",
+  "@delivery-details": "LIEFERDETAILS"
 }

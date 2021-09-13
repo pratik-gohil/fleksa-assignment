@@ -110,7 +110,7 @@ const CheckoutLoginDropdown = () => {
           severity: 'error',
         }),
       );
-      amplitudeEvent(constructEventName(`onTapSendOtp error catch`, 'error'), error);
+      amplitudeEvent(constructEventName(`onTapSendOtp error catch`, 'error'), error as unknown as {});
     } finally {
       setLoading(false);
     }

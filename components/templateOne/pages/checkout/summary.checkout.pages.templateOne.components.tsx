@@ -25,7 +25,7 @@ import {
 import { updateError } from '../../../../redux/slices/common.slices.redux';
 import { selectConfiguration, selectLanguage, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
 import { selectAddress, selectShop, selectSiblings, selectTimings } from '../../../../redux/slices/index.slices.redux';
-import { selectShowAddress, selectShowOrderTypeSelect, updateShowOrderTypeSelect } from '../../../../redux/slices/menu.slices.redux';
+import { selectShowOrderTypeSelect, updateShowOrderTypeSelect } from '../../../../redux/slices/menu.slices.redux';
 import {
   selectAddressById,
   selectAddressByType,
@@ -36,7 +36,7 @@ import {
   updateLoadAddressesList,
 } from '../../../../redux/slices/user.slices.redux';
 import RestaurantTimingUtils, { isShopOpened } from '../../../../utils/restaurant-timings.utils';
-import AddressAdd, { IGuestAddress } from '../../common/addresses/address-add.common.templateOne.components';
+import { IGuestAddress } from '../../common/addresses/address-add.common.templateOne.components';
 import OrderTypeManager from '../../common/orderType/order-type-manager.menu.pages.templateOne.components';
 import { INITIAL_TIMING_STATE } from '../index/hero.index.pages.templateOne.components';
 import { StyledCheckoutCard, StyledCheckoutText } from './customer-info.checkout.pages.templateOne.components';
@@ -92,6 +92,7 @@ const INITIAL_ADDRESS: IGuestAddress = {
   city: '',
   floor: '',
   postal_code: '',
+  area: '',
 };
 
 const CheckoutPageSummary: FunctionComponent = ({}) => {
@@ -103,10 +104,8 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
   const siblings = useAppSelector(selectSiblings);
   const shopData = useAppSelector(selectShop);
   const timingsData = useAppSelector(selectTimings);
-  const showAddAddress = useAppSelector(selectShowAddress);
   const selectedMenuId = useAppSelector(selectSelectedMenu);
   const checkoutAddressId = useAppSelector(selectSelectedAddressId);
-  const showSelectOrderType = useAppSelector(selectShowOrderTypeSelect);
   const showDateTimeSelect = useAppSelector(selectShowDateTimeSelect);
   const selectedAddress = useAppSelector((state) => selectAddressById(state, checkoutAddressId));
   const deliveryFinances = useAppSelector(selectDeliveryFinances);
@@ -114,9 +113,10 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
   const isUserLoggedIn = useAppSelector(selectIsUserLoggedIn);
   const configuration = useAppSelector(selectConfiguration);
   const bearerToken = useAppSelector(selectBearerToken);
-  const addressByType = useAppSelector((state) => selectAddressByType(state, 'HOME'));
+  const addressByType = useAppSelector((state) => selectAddressByType(state, 'OTHER'));
   const shopId = useAppSelector(selectSelectedMenu);
   const customerData = useAppSelector(selectCustomer);
+  const isShowOrderTypeSelection = useAppSelector(selectShowOrderTypeSelect);
 
   const [userAddress, setUserAddress] = useState<IGuestAddress>(INITIAL_ADDRESS);
 
@@ -140,13 +140,13 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
     if (guestAddressString && bearerToken && shopId) {
       const guestAddress = JSON.parse(guestAddressString) as IGuestAddress;
       const response = await new PyApiHttpPostAddress(configuration).postAll({
-        floor: '',
+        floor: guestAddress.floor,
         shopId: shopId,
         address: guestAddress.address,
         addressType: guestAddress.address_type,
         city: guestAddress.city,
         postalCode: guestAddress.postal_code,
-        area: '',
+        area: guestAddress.area,
         token: bearerToken,
       });
 
@@ -284,6 +284,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
             <EditButton
               onClick={() => {
                 dispatch(updateShowOrderTypeSelect(true));
+
                 amplitudeEvent(constructEventName(`summary order type edit`, 'icon-button'), { orderType });
               }}
             />
@@ -292,6 +293,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
           {orderType === 'DELIVERY' ? (
             <>
               <Address>{userAddress?.address}</Address>
+              <Address>{userAddress?.floor}</Address>
               <Address>
                 {userAddress?.postal_code} {userAddress?.city}
               </Address>
@@ -325,18 +327,9 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
         </Col>
       </Row>
 
-      <div>
-        {(showSelectOrderType || orderType === null) && !showAddAddress ? (
-          <OrderTypeManager key="key-ajkndalkwdmalkwmdlkw" />
-        ) : (
-          (showAddAddress ||
-            (orderType === 'DELIVERY' &&
-              checkoutAddressId === null &&
-              orderType === 'DELIVERY' &&
-              !window.localStorage.getItem(LS_GUEST_USER_ADDRESS))) && <AddressAdd />
-        )}
-      </div>
-      <div>{showDateTimeSelect && <CheckoutDateTime />}</div>
+      {isShowOrderTypeSelection && <OrderTypeManager />}
+
+      {showDateTimeSelect && <CheckoutDateTime />}
     </StyledCheckoutCard>
   );
 };

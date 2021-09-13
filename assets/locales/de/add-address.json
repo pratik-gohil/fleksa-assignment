@@ -19,5 +19,13 @@
   "@deliveryAddress": "Lieferadresse",
   "@addressPart1": "Leider bieten wir derzeit keine Lieferung an Ihren Standort an.",
   "@addressPart2": "das Restaurant für weitere Informationen.",
-  "@contact": "Bitte kontaktieren Sie"
+  "@contact": "Bitte kontaktieren Sie",
+
+  "@add-address": "Geben Sie Ihre Adresse",
+  "@delivery-options": "Lieferoptionen",
+  "@delivery-instructions": "Zusätzliche Lieferinformationen",
+  "@done": "Fertig",
+  "@Meet at door": "Treffpunkt vor der Tür",
+  "@Leave at door": "Vor der Tür lassen",
+  "@Meet outside": "Treffen Sie sich draußen"
 }

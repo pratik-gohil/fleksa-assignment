@@ -13,12 +13,8 @@ import NodeApiHttpPostUpdateAddressRequest from '../../../../../http/nodeapi/acc
 import { useEffect } from 'react';
 import { BREAKPOINTS } from '../../../../../constants/grid-system-configuration';
 import { useTranslation } from 'next-i18next';
-import HomeIconPath from '../../../../../public/assets/svg/address/home.svg';
-import WorkIconPath from '../../../../../public/assets/svg/address/work.svg';
-import MapIconPath from '../../../../../public/assets/svg/address/map.svg';
 import SvgCross from '../../../../../public/assets/svg/cross.svg';
 import { amplitudeEvent, constructEventName } from '../../../../../utils/amplitude.util';
-import { AddressTypes } from '../../../common/addresses/address-manager.common.templateOne.components';
 
 const Wrapper = styled.div`
   padding: 1rem;
@@ -46,7 +42,6 @@ const FormContainer = styled.form`
   flex-direction: column;
   justify-content: space-between;
   width: 100%;
-  min-height: max-content;
 `;
 
 const InputBox = styled.div`
@@ -123,77 +118,6 @@ const Input = styled.input`
   }
 `;
 
-const AddressTypeContainer = styled.div``;
-
-const AddressType = styled.button<{ active: boolean }>`
-  width: 100px;
-  height: 100px;
-  padding: 0.5rem;
-  margin: 0 0.5rem;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
-
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  background: ${(p) => (p.active ? 'rgba(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0)')};
-
-  &:hover {
-    background: rgba(0, 0, 0, 1);
-
-    svg {
-      fill: #fff;
-    }
-    p {
-      color: #fff;
-    }
-  }
-
-  svg {
-    fill: ${(p) => (p.active ? '#fff' : '#000')};
-    width: 48px;
-    height: 48px;
-  }
-
-  p {
-    color: ${(p) => (p.active ? '#fff' : '#000')};
-  }
-
-  @media (max-width: ${BREAKPOINTS.sm}px) {
-    width: 70px;
-    height: 70px;
-
-    svg {
-      width: 24px;
-      height: 24px;
-    }
-  }
-`;
-
-const IconLabel = styled.p`
-  padding: 0.3rem 0;
-  margin: 0;
-  font-size: 0.8rem;
-  font-weight: 600;
-
-  @media (max-width: ${BREAKPOINTS.sm}px) {
-    padding: 0.2rem 0;
-    font-size: 0.6rem;
-  }
-`;
-
-const IconContainer = styled.div`
-  display: flex;
-  justify-content: stretch;
-  align-items: center;
-
-  @media (max-width: ${BREAKPOINTS.sm}px) {
-    justify-content: center;
-  }
-`;
-
 const SaveAddressButton = styled.button`
   margin-top: 1rem;
   background: ${(p) => p.theme.textDarkColor};
@@ -212,10 +136,6 @@ const SaveAddressButton = styled.button`
   &:hover {
     background: #575757;
   }
-
-  @media (max-width: ${BREAKPOINTS.sm}px) {
-    /* padding: 0.5rem; */
-  }
 `;
 
 const CloseButton = styled.div`
@@ -232,10 +152,6 @@ const CloseButton = styled.div`
     fill: #222;
   }
 `;
-
-const HomeIcon = styled(HomeIconPath)``;
-const WorkIcon = styled(WorkIconPath)``;
-const MapIcon = styled(MapIconPath)``;
 
 interface IMyAccountAllAddressRightSideProps {
   handleShowNewAddressModal: (isEdit: boolean) => void;
@@ -255,7 +171,7 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
   const [city, setCity] = useState('');
   const [area, setArea] = useState('');
   const [postalCode, setPostalCode] = useState('');
-  const [type, setType] = useState('HOME'); // ? default
+  const [type, setType] = useState('OTHER'); // ? default
   const [proximity, setProximity] = useState('');
   const [loading, setLoading] = useState(false);
   const refAddressInput = useRef<HTMLInputElement>(null);
@@ -267,7 +183,6 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
 
   // TODO: Auto complete
   function onAddressChange() {
-    console.log('changed address');
     const place = autoComplete.getPlace();
     if (place.address_components) {
       for (let component of place.address_components) {
@@ -285,7 +200,7 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
   }
 
   useEffect(() => {
-    if (window !== 'undefined' && refAddressInput.current) {
+    if (typeof window !== 'undefined' && refAddressInput.current) {
       autoComplete = new google.maps.places.Autocomplete(refAddressInput.current, {
         types: ['geocode'],
       });
@@ -441,9 +356,9 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
   useEffect(() => {
     if (isEditMode) {
       // TODO: Update the input by exist values
-      setAddress(existAddress?.address || '');
-      setFloor(existAddress?.floor || '');
-      setCity(existAddress?.city || '');
+      setAddress(existAddress?.address ?? '');
+      setFloor(existAddress?.floor?.replace(/ *\([^)]*\) */g, '') ?? '');
+      setCity(existAddress?.city ?? '');
       setPostalCode(existAddress?.postal_code || '');
       setType(existAddress?.address_type || '');
       setProximity(existAddress?.area || '');
@@ -459,14 +374,8 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
     setCity('');
     setPostalCode('');
     setType('');
-    setType('HOME');
+    setType('OTHER');
     setProximity('');
-  }
-
-  function handleAddressTypeSelectionClick(_e: any, title: AddressTypes) {
-    setType(title);
-
-    amplitudeEvent(constructEventName(`address-model-${title}`, 'button'), {});
   }
 
   return (
@@ -508,8 +417,8 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
           <Label>{t('@details')}</Label>
           <Input
             type="text"
-            value={proximity}
-            onChange={(e) => setProximity(e.target.value)}
+            value={floor}
+            onChange={(e) => setFloor(e.target.value)}
             placeholder={t('@details')}
             onBlur={() =>
               amplitudeEvent(constructEventName(`address-model-${t('@details')}`, 'input'), {
@@ -555,25 +464,6 @@ const MyAccountAllAddressRightSide: FunctionComponent<IMyAccountAllAddressRightS
             />
           </InputBox>
         </InputBoxFlex2>
-
-        <AddressTypeContainer>
-          <Label>{t('@address-type')}</Label>
-
-          <IconContainer>
-            <AddressType type="button" active={type === 'HOME'} onClick={(e) => handleAddressTypeSelectionClick(e, 'HOME')}>
-              <HomeIcon />
-              <IconLabel>HOME</IconLabel>
-            </AddressType>
-            <AddressType type="button" active={type === 'WORK'} onClick={(e) => handleAddressTypeSelectionClick(e, 'WORK')}>
-              <WorkIcon />
-              <IconLabel>WORK</IconLabel>
-            </AddressType>
-            <AddressType type="button" active={type === 'OTHER'} onClick={(e) => handleAddressTypeSelectionClick(e, 'OTHER')}>
-              <MapIcon />
-              <IconLabel>OTHER</IconLabel>
-            </AddressType>
-          </IconContainer>
-        </AddressTypeContainer>
 
         <SaveAddressButton type="submit">
           {loading ? <LoadingIndicator width={20} /> : isEditMode ? t('@update-address') : t('@save-address')}
