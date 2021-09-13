@@ -33,7 +33,7 @@ const Footer: FunctionComponent = ({}) => {
   return (
     <WrapperFooter>
       <Container>
-        <Row>
+        <Row justify="center" align="center">
           <Col>
             <ContentContainer>
               <Address />

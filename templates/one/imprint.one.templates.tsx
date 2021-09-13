@@ -64,15 +64,23 @@ const Logo = styled.img`
   }
 `;
 
-const PoweredBy = styled.p`
+const PoweredBy = styled.a`
   padding: 0;
   margin: 0;
   font-size: 1rem;
+  font-weight: bolder;
+  cursor: pointer;
 `;
 
 const ByText = styled.p`
   padding: 0;
   margin: 0 0 0.5rem 0;
+`;
+
+const LogoLink = styled.a`
+  display: block;
+  margin: auto;
+  cursor: pointer;
 `;
 
 const TermsPageTemplateOne: FunctionComponent = ({}) => {
@@ -120,9 +128,14 @@ const TermsPageTemplateOne: FunctionComponent = ({}) => {
             </Info>
 
             <Info>
-              <PoweredBy>{t('@powered-by')}</PoweredBy>
+              <PoweredBy href="https://fleksa.com" target="_blank">
+                {t('@powered-by')}
+              </PoweredBy>
               <ByText>{t('@by')}</ByText>
-              <Logo src={fleksaLogoPath} width={200} />
+
+              <LogoLink href="https://fleksa.com" target="_blank">
+                <Logo src={fleksaLogoPath} width={200} />
+              </LogoLink>
             </Info>
           </Col>
         </Row>
