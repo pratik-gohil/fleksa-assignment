@@ -70,6 +70,7 @@ const PoweredBy = styled.a`
   font-size: 1rem;
   font-weight: bolder;
   cursor: pointer;
+  font-size: clamp(1rem, 1.5rem, 5vw);
 `;
 
 const ByText = styled.p`
