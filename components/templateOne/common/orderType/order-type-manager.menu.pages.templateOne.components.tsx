@@ -225,6 +225,7 @@ const OrderTypeManager: FunctionComponent = () => {
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
   const isShowAddressSelection = useAppSelector(selectShowAddress);
   const checkoutAddressId = useAppSelector(selectSelectedAddressId);
+  const shopAddressData = useAppSelector(selectAddress);
 
   const correspondAddress = useAppSelector((state) => selectAddressByType(state, 'OTHER'));
   const correspondAddressById = useAppSelector((state) => selectAddressById(state, checkoutAddressId));
@@ -234,6 +235,8 @@ const OrderTypeManager: FunctionComponent = () => {
 
     if (shopData?.id == selectedMenuId) setAddressData(address);
     else setAddressData(siblings.find((item) => item.id == selectedMenuId)?.address);
+
+    // ?? Update default selection
   }, []);
 
   // TODO: Enable and disable scroll when modal opened
@@ -333,6 +336,18 @@ const OrderTypeManager: FunctionComponent = () => {
     if ((isLoggedIn && correspondAddress) || (!isLoggedIn && guestAddress)) return true;
 
     return false;
+  };
+
+  /**
+   * @return {count} no.of available order type
+   */
+  const checkAvailableOrderTypeCount = () => {
+    let count = 0;
+    if (shopAddressData?.has_delivery) count += 1;
+    if (shopAddressData?.has_pickup) count += 1;
+    if (shopAddressData?.has_dinein) count += 1;
+
+    return count;
   };
 
   return (
