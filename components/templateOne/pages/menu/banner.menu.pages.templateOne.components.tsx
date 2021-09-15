@@ -11,6 +11,27 @@ import SvgTag from '../../../../public/assets/svg/tag.svg';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { useTranslation } from 'next-i18next';
 
+const WrapperContainer = styled.div`
+  display: flex;
+  flex: 1;
+  width: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  @media (min-width: ${BREAKPOINTS.lg}px) {
+    flex-direction: row;
+  }
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  min-width: 100%;
+  flex-direction: column;
+  @media (min-width: ${BREAKPOINTS.lg}px) {
+    min-width: 400px;
+  }
+`;
+
 const BannerContainer = styled.section`
   height: 500px;
   position: relative;
@@ -40,6 +61,7 @@ const ContentTopContent = styled.div`
 const Title = styled.h1`
   font-size: 30px;
   margin: 0;
+
   @media (min-width: ${BREAKPOINTS.lg}px) {
     font-size: 40px;
   }
@@ -53,6 +75,7 @@ const SubTitle = styled.h2`
 const OffersWrapper = styled.div`
   position: relative;
   margin-top: 36px;
+
   @media (min-width: ${BREAKPOINTS.lg}px) {
     margin-top: 0;
   }
@@ -60,12 +83,11 @@ const OffersWrapper = styled.div`
 
 const OffersContainer = styled.div`
   background: rgba(0, 0, 0, 0.2);
-  border: ${(props) => props.theme.border};
-  border-color: rgba(255, 255, 255, 0.8);
-  border-radius: ${(props) => props.theme.borderRadius}px;
+
   max-height: 200px;
+  max-width: 450px;
   overflow: auto;
-  padding-top: 12px;
+
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
   &::-webkit-scrollbar {
@@ -77,52 +99,49 @@ const OffersContainer = styled.div`
   }
 `;
 
-const OfferTitle = styled.p`
-  position: absolute;
-  left: -6px;
-  top: -20px;
-  font-weight: 700;
-  margin: 0;
-  padding: 6px 12px;
-  background: #222;
-  border-radius: ${(props) => props.theme.borderRadius}px;
-`;
+// const OfferTitle = styled.p`
+//   position: absolute;
+//   left: -6px;
+//   top: -20px;
+//   font-weight: 700;
+//   margin: 0;
+//   padding: 6px 12px;
+//   background: #222;
+//   border-radius: ${(props) => props.theme.borderRadius}px;
+// `;
 
 const Text = styled.p`
   padding-left: 6px;
   font-size: 14px;
 `;
 
+const AmountOrPercent = styled.span`
+  background: ${(p) => p.theme.primaryColor};
+  color: ${(p) => p.theme.textDarkColor};
+  padding: 0 0.5rem;
+`;
+const Code = styled.span`
+  padding: 0 0.5rem;
+`;
+const Description = styled.p`
+  padding: 0.2rem;
+  font-size: 12px;
+  margin: 0;
+`;
+
 const OfferItem = styled.div`
+  padding: 0.5rem;
+`;
+
+const OfferBody = styled.div`
   display: flex;
   align-items: center;
-  padding: 12px;
+
   svg {
     fill: #fff;
     width: 20px;
     height: 20px;
     display: block;
-  }
-`;
-
-const WrapperContainer = styled.div`
-  display: flex;
-  flex: 1;
-  width: 100%;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  @media (min-width: ${BREAKPOINTS.lg}px) {
-    flex-direction: row;
-  }
-`;
-
-const Wrapper = styled.div`
-  display: flex;
-  min-width: 100%;
-  flex-direction: column;
-  @media (min-width: ${BREAKPOINTS.lg}px) {
-    min-width: 400px;
   }
 `;
 
@@ -160,7 +179,8 @@ const MenuPageBanner: FunctionComponent = ({}) => {
                     <SubTitle>{shopCategory}</SubTitle>
                     <MenuFeatures />
                   </Wrapper>
-                  {offersData.length > 0 && (
+
+                  {/* {offersData.length > 0 && (
                     <Wrapper>
                       <OffersWrapper>
                         <OffersContainer>
@@ -181,7 +201,30 @@ const MenuPageBanner: FunctionComponent = ({}) => {
                         </OffersContainer>
                       </OffersWrapper>
                     </Wrapper>
-                  )}
+                  )} */}
+
+                  <Wrapper>
+                    <OffersWrapper>
+                      <OffersContainer>
+                        {/* <OfferTitle>{t('@offer')}</OfferTitle> */}
+
+                        <OfferItem>
+                          <OfferBody>
+                            <SvgTag />
+                            <Text>
+                              <AmountOrPercent>20%</AmountOrPercent>
+
+                              <Code>
+                                Use code <strong>FLEKSA</strong>
+                              </Code>
+                            </Text>
+                          </OfferBody>
+
+                          <Description>aut repudiandae impedit ullam! Quisquam, suscipit!</Description>
+                        </OfferItem>
+                      </OffersContainer>
+                    </OffersWrapper>
+                  </Wrapper>
                 </WrapperContainer>
               </Col>
             </Row>

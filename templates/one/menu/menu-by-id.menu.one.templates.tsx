@@ -91,7 +91,7 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
     setAvailableCount(availableCount);
 
     //  ?? Available only one option with delivery
-    if (availableCount === 1) {
+    if (availableCount === 1 && orderType === null) {
       if (shopAddressData?.has_delivery) {
         dispatch(updateShowAddAddress(true));
         dispatch(updateShowOrderTypeSelect(true));
