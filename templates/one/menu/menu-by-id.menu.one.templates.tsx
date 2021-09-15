@@ -19,6 +19,7 @@ import PyApiHttpPostAddress from '../../../http/pyapi/address/post.address.pyapi
 import { selectConfiguration, selectSelectedMenu } from '../../../redux/slices/configuration.slices.redux';
 import { selectAddressByType, selectIsUserLoggedIn } from '../../../redux/slices/user.slices.redux';
 import { AddressTypes } from '../../../components/templateOne/common/addresses/address-manager.common.templateOne.components';
+import { selectAddress } from '../../../redux/slices/index.slices.redux';
 
 const SideViewLeft = styled.div`
   display: none;
@@ -68,6 +69,7 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
   const configuration = useAppSelector(selectConfiguration);
   const selectedMenuId = useAppSelector(selectSelectedMenu);
+  const shopAddressData = useAppSelector(selectAddress);
 
   const showSelectOrderType = useAppSelector(selectShowOrderTypeSelect);
   const addressByType = useAppSelector((state) => selectAddressByType(state, 'OTHER'));
@@ -81,6 +83,18 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
     // TODO: cleaning of not available product in the cart => selected by reorder
     dispatch(updateReduceNotAvailableProduct({}));
   }, []);
+
+  /**
+   * @return {count} no.of available order type
+   */
+  const checkAvailableOrderTypeCount = () => {
+    let count = 0;
+    if (shopAddressData?.has_delivery) count += 1;
+    if (shopAddressData?.has_pickup) count += 1;
+    if (shopAddressData?.has_dinein) count += 1;
+
+    return count;
+  };
 
   async function getAddressInfo() {
     if (orderType === 'DELIVERY' && selectedMenuId) {
@@ -149,7 +163,7 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
 
       <div>{cartData.cartCost > 0 && <MenuPageCartSummary />}</div>
 
-      {(showSelectOrderType || orderType === null) && <OrderTypeManager />}
+      {(showSelectOrderType || orderType === null) && checkAvailableOrderTypeCount() !== 0 && <OrderTypeManager />}
 
       {/* {(showSelectOrderType || orderType === null) && !showAddAddress ? (
       ) : (
