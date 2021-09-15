@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-grid-system';
 import styled from 'styled-components';
 import Cart from '../../../components/templateOne/common/cart/cart.common.templateOne.components';
@@ -8,8 +8,8 @@ import MenuPageCategorySidebar from '../../../components/templateOne/pages/menu/
 import OrderTypeManager from '../../../components/templateOne/common/orderType/order-type-manager.menu.pages.templateOne.components';
 import { BREAKPOINTS } from '../../../constants/grid-system-configuration';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks.redux';
-import { selectOrderType, updateDeliveryFinances } from '../../../redux/slices/checkout.slices.redux';
-import { selectShowOrderTypeSelect, updateShowAddAddress } from '../../../redux/slices/menu.slices.redux';
+import { selectOrderType, updateDeliveryFinances, updateOrderType } from '../../../redux/slices/checkout.slices.redux';
+import { selectShowOrderTypeSelect, updateShowAddAddress, updateShowOrderTypeSelect } from '../../../redux/slices/menu.slices.redux';
 import { IGuestAddress } from '../../../components/templateOne/common/addresses/address-add.common.templateOne.components';
 import MenuPageCartSummary from '../../../components/templateOne/pages/menu/cart-summary.pages.templateOne.components';
 import { LS_GUEST_USER_ADDRESS } from '../../../constants/keys-local-storage.constants';
@@ -64,6 +64,8 @@ const Disclaimer = styled.p`
 
 const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
   const { t } = useTranslation('disclaimer');
+  const dispatch = useAppDispatch();
+
   const cartData = useAppSelector(selectCart);
   const orderType = useAppSelector(selectOrderType);
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
@@ -73,7 +75,8 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
 
   const showSelectOrderType = useAppSelector(selectShowOrderTypeSelect);
   const addressByType = useAppSelector((state) => selectAddressByType(state, 'OTHER'));
-  const dispatch = useAppDispatch();
+
+  const [availableCount, setAvailableCount] = useState<number>(0);
 
   useEffect(() => {
     getAddressInfo();
@@ -82,6 +85,19 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
   useEffect(() => {
     // TODO: cleaning of not available product in the cart => selected by reorder
     dispatch(updateReduceNotAvailableProduct({}));
+
+    const availableCount = checkAvailableOrderTypeCount();
+
+    setAvailableCount(availableCount);
+
+    //  ?? Available only one option with delivery
+    if (availableCount === 1) {
+      if (shopAddressData?.has_delivery) {
+        dispatch(updateShowAddAddress(true));
+        dispatch(updateShowOrderTypeSelect(true));
+      } else if (shopAddressData?.has_pickup) dispatch(updateOrderType('PICKUP'));
+      else if (shopAddressData?.has_dinein) dispatch(updateOrderType('DINE-IN'));
+    }
   }, []);
 
   /**
@@ -163,7 +179,7 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
 
       <div>{cartData.cartCost > 0 && <MenuPageCartSummary />}</div>
 
-      {(showSelectOrderType || orderType === null) && checkAvailableOrderTypeCount() !== 0 && <OrderTypeManager />}
+      {(showSelectOrderType || orderType === null) && availableCount !== 0 && <OrderTypeManager />}
     </>
   );
 };

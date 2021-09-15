@@ -225,7 +225,6 @@ const OrderTypeManager: FunctionComponent = () => {
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
   const isShowAddressSelection = useAppSelector(selectShowAddress);
   const checkoutAddressId = useAppSelector(selectSelectedAddressId);
-  const shopAddressData = useAppSelector(selectAddress);
 
   const correspondAddress = useAppSelector((state) => selectAddressByType(state, 'OTHER'));
   const correspondAddressById = useAppSelector((state) => selectAddressById(state, checkoutAddressId));
@@ -248,11 +247,9 @@ const OrderTypeManager: FunctionComponent = () => {
     };
   }, []);
 
-  function onClickDelivery(orderType: ICheckoutOrderTypes) {
+  function onClickDelivery(_orderType: ICheckoutOrderTypes) {
     if (typeof window === 'undefined') return;
     const guestAddressString = window.localStorage.getItem(LS_GUEST_USER_ADDRESS);
-
-    dispatch(updateOrderType(orderType));
 
     if ((isLoggedIn && correspondAddress) || guestAddressString) {
       dispatch(updateShowOrderTypeSelect(false));
@@ -336,18 +333,6 @@ const OrderTypeManager: FunctionComponent = () => {
     if ((isLoggedIn && correspondAddress) || (!isLoggedIn && guestAddress)) return true;
 
     return false;
-  };
-
-  /**
-   * @return {count} no.of available order type
-   */
-  const checkAvailableOrderTypeCount = () => {
-    let count = 0;
-    if (shopAddressData?.has_delivery) count += 1;
-    if (shopAddressData?.has_pickup) count += 1;
-    if (shopAddressData?.has_dinein) count += 1;
-
-    return count;
   };
 
   return (
