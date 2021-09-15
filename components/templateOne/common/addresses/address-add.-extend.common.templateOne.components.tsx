@@ -10,7 +10,7 @@ import {
   updateExistCustomerAddressOrAddNew,
 } from '../../../../redux/slices/user.slices.redux';
 import { IParticularAddress } from '../../../../interfaces/common/customer.common.interfaces';
-// import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
+import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 import { selectConfiguration, selectLanguageCode, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
 import PyApiHttpPostAddress from '../../../../http/pyapi/address/post.address.pyapi.http';
 import { updateDeliveryFinances, updateSelectedAddressId, updateOrderType } from '../../../../redux/slices/checkout.slices.redux';
@@ -227,7 +227,7 @@ const AddAddressExtendModel = () => {
    */
   async function makeRequestToPyapi() {
     setErrorMessage(undefined);
-    // amplitudeEvent(constructEventName(`address model save address`, 'button'), {});
+    amplitudeEvent(constructEventName(`address model save address`, 'button'), {});
 
     if (shopId) {
       const response = await new PyApiHttpPostAddress(configuration).postAll({
@@ -262,7 +262,7 @@ const AddAddressExtendModel = () => {
           dispatch(updateShowOrderTypeSelect(false));
           dispatch(updateOrderType('DELIVERY'));
 
-          // amplitudeEvent(constructEventName(`address model save address user response`, 'success'), { addressData, response });
+          amplitudeEvent(constructEventName(`address model save address user response`, 'success'), { addressData, response });
         } else {
           const guestAddress: IGuestAddress = {
             floor: `${additionalInstruction}` ?? '',
@@ -279,12 +279,12 @@ const AddAddressExtendModel = () => {
           dispatch(updateShowOrderTypeSelect(false));
           dispatch(updateOrderType('DELIVERY'));
 
-          // amplitudeEvent(constructEventName(`address model save address guest response`, 'success'), guestAddress);
+          amplitudeEvent(constructEventName(`address model save address guest response`, 'success'), guestAddress);
         }
       } else {
         setErrorMessage(response?.description);
         console.log('error descripton ', response?.description);
-        // amplitudeEvent(constructEventName(`address model save address response`, 'error'), { description: response?.description });
+        amplitudeEvent(constructEventName(`address model save address response`, 'error'), { description: response?.description });
       }
     }
   }

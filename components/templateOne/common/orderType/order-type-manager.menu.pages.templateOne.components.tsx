@@ -106,7 +106,6 @@ const ListItem = styled.li<{ selected: boolean }>`
   margin: 0 ${(props) => props.theme.dimen.X4}px;
   border-radius: ${(props) => props.theme.borderRadius}px;
   position: relative;
-  /* background: ${(p) => (p.selected ? '#EAFFD0' : '#fff')}; */
 
   &::before {
     content: '';
