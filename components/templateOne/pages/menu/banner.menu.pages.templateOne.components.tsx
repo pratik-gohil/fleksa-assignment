@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import styled from 'styled-components';
 import Image from 'next/image';
 import { useAppSelector } from '../../../../redux/hooks.redux';
@@ -15,20 +15,28 @@ const WrapperContainer = styled.div`
   display: flex;
   flex: 1;
   width: 100%;
-  flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  @media (min-width: ${BREAKPOINTS.lg}px) {
-    flex-direction: row;
+  flex-direction: row;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    flex-direction: column;
   }
 `;
 
 const Wrapper = styled.div`
   display: flex;
-  min-width: 100%;
   flex-direction: column;
-  @media (min-width: ${BREAKPOINTS.lg}px) {
-    min-width: 400px;
+  min-width: 400px;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    min-width: 100%;
+  }
+`;
+
+const OfferWrapper = styled(Wrapper)`
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    padding-top: 1rem;
   }
 `;
 
@@ -74,7 +82,6 @@ const SubTitle = styled.h2`
 
 const OffersWrapper = styled.div`
   position: relative;
-  margin-top: 36px;
 
   @media (min-width: ${BREAKPOINTS.lg}px) {
     margin-top: 0;
@@ -99,16 +106,16 @@ const OffersContainer = styled.div`
   }
 `;
 
-// const OfferTitle = styled.p`
-//   position: absolute;
-//   left: -6px;
-//   top: -20px;
-//   font-weight: 700;
-//   margin: 0;
-//   padding: 6px 12px;
-//   background: #222;
-//   border-radius: ${(props) => props.theme.borderRadius}px;
-// `;
+const OfferTitle = styled.p`
+  font-weight: 700;
+  margin: 0;
+  padding: 6px 12px;
+  background: #222;
+  border-radius: ${(props) => props.theme.borderRadius}px;
+  color: #fff;
+  width: 100px;
+  text-align: center;
+`;
 
 const Text = styled.p`
   padding-left: 6px;
@@ -122,11 +129,29 @@ const AmountOrPercent = styled.span`
 `;
 const Code = styled.span`
   padding: 0 0.5rem;
+
+  strong {
+    cursor: pointer;
+    transition: background 0.2s linear;
+
+    &:hover {
+      background: #fff;
+      color: ${(p) => p.theme.textDarkColor};
+      padding: 0 0.5rem;
+    }
+  }
 `;
 const Description = styled.p`
   padding: 0.2rem;
   font-size: 12px;
   margin: 0;
+  transition: all 0.2s;
+
+  span {
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: underline;
+  }
 `;
 
 const OfferItem = styled.div`
@@ -153,6 +178,8 @@ const MenuPageBanner: FunctionComponent = ({}) => {
   const siblingData = useAppSelector(selectSiblings);
   const { t } = useTranslation('page-menu-id');
 
+  const [moreDescription, setMoreDescription] = useState<string>('');
+
   let shopName: string | undefined;
   let shopCategory: string | undefined;
   const sibling = siblingData.filter((i) => i.id == menuId)[0];
@@ -164,6 +191,18 @@ const MenuPageBanner: FunctionComponent = ({}) => {
     shopName = shopData?.name;
     shopCategory = shopData?.category_json[language];
   }
+
+  /**
+   * @param {text} string needs to copied
+   */
+  const handleCopyClick = async (text: string) => navigator.clipboard.writeText(text);
+
+  /**
+   *
+   * @param desc update state of description expand
+   * @returns Update
+   */
+  const handleDescriptionMoreClick = async (desc: string) => setMoreDescription(desc);
 
   return (
     <BannerContainer>
@@ -180,51 +219,56 @@ const MenuPageBanner: FunctionComponent = ({}) => {
                     <MenuFeatures />
                   </Wrapper>
 
-                  {/* {offersData.length > 0 && (
-                    <Wrapper>
+                  {offersData.length > 0 && (
+                    <OfferWrapper>
+                      <OfferTitle>{t('@offer')}</OfferTitle>
                       <OffersWrapper>
                         <OffersContainer>
-                          <OfferTitle>{t('@offer')}</OfferTitle>
-                          {offersData.map((i) => {
-                            return (
-                              <OfferItem key={i.code}>
+                          {offersData.map((offer, index) => (
+                            <OfferItem key={index}>
+                              <OfferBody>
                                 <SvgTag />
                                 <Text>
-                                  <strong>
-                                    {i.provided}% {t('@off')} - {i.code}
-                                  </strong>{' '}
-                                  {i.description_json && i.description_json[language]}
+                                  <AmountOrPercent>
+                                    {offer.offer_type_ === 'PERCENTAGE'
+                                      ? `${offer.provided}%`
+                                      : offer.offer_type_ === 'AMOUNT'
+                                      ? `${offer.provided} €`
+                                      : ''}
+                                  </AmountOrPercent>
+
+                                  <Code>
+                                    Use code{' '}
+                                    <strong title="Click to copy" onClick={async () => await handleCopyClick(offer.code)}>
+                                      {offer.code}
+                                    </strong>
+                                  </Code>
                                 </Text>
-                              </OfferItem>
-                            );
-                          })}
+                              </OfferBody>
+
+                              <Description>
+                                {(offer.description_json && offer.description_json?.[language].length < 60) ||
+                                moreDescription === `desc-${index}` ? (
+                                  <>
+                                    {`${offer.description_json?.[language]} `}
+
+                                    {moreDescription === `desc-${index}` && (
+                                      <span onClick={async () => await handleDescriptionMoreClick('')}>Less</span>
+                                    )}
+                                  </>
+                                ) : (
+                                  <>
+                                    {offer.description_json?.[language].slice(0, 60)}
+                                    <span onClick={async () => await handleDescriptionMoreClick(`desc-${index}`)}> ... More</span>
+                                  </>
+                                )}
+                              </Description>
+                            </OfferItem>
+                          ))}
                         </OffersContainer>
                       </OffersWrapper>
-                    </Wrapper>
-                  )} */}
-
-                  <Wrapper>
-                    <OffersWrapper>
-                      <OffersContainer>
-                        {/* <OfferTitle>{t('@offer')}</OfferTitle> */}
-
-                        <OfferItem>
-                          <OfferBody>
-                            <SvgTag />
-                            <Text>
-                              <AmountOrPercent>20%</AmountOrPercent>
-
-                              <Code>
-                                Use code <strong>FLEKSA</strong>
-                              </Code>
-                            </Text>
-                          </OfferBody>
-
-                          <Description>aut repudiandae impedit ullam! Quisquam, suscipit!</Description>
-                        </OfferItem>
-                      </OffersContainer>
-                    </OffersWrapper>
-                  </Wrapper>
+                    </OfferWrapper>
+                  )}
                 </WrapperContainer>
               </Col>
             </Row>

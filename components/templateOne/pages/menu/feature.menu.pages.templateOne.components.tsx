@@ -10,12 +10,17 @@ import { selectSiblings } from '../../../../redux/slices/index.slices.redux';
 import { useTranslation } from 'next-i18next';
 import SvgEdit from '../../../../public/assets/svg/edit.svg';
 import CustomLink from '../../common/amplitude/customLink';
+import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 
 const Wrapper = styled.div`
   display: flex;
   flex: 1;
   flex-direction: row;
   margin-top: ${(props) => props.theme.dimen.X4 * 3}px;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    margin-top: 0.5rem;
+  }
 `;
 
 const EditButton = styled.div`
