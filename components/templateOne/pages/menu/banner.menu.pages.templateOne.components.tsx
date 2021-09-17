@@ -126,6 +126,7 @@ const AmountOrPercent = styled.span`
   background: ${(p) => p.theme.primaryColor};
   color: ${(p) => p.theme.textDarkColor};
   padding: 0 0.5rem;
+  font-weight: bold;
 `;
 const Code = styled.span`
   padding: 0 0.5rem;
