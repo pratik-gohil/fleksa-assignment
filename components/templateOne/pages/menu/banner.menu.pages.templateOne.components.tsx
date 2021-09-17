@@ -213,11 +213,8 @@ const MenuPageBanner: FunctionComponent = ({}) => {
     if (orderType) {
       const properTypeName = orderType === 'DINE_IN' ? 'DINEIN' : orderType; // ? change same order type name
 
-      setOffers(offersData.filter((offer) => offer.order_type_ === properTypeName || offer.order_type_ === 'ALL'));
-
-      console.log(
-        properTypeName,
-        offersData.filter((offer) => offer.order_type_ === properTypeName || offer.order_type_ === 'ALL'),
+      setOffers(
+        offersData.filter((offer) => offer.order_type_ === properTypeName || offer.order_type_ === 'ALL' || offer.order_type_ === 'FIRST'),
       );
     }
   }, [orderType]);
