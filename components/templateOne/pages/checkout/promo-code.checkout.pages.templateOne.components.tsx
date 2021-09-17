@@ -245,7 +245,7 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
             <AppliedPromoContainer>
               <SvgTag className="svg-tag-yellow" />
               <TextSaved>
-                {t('@saved')} <strong style={{ marginLeft: 4 }}>{formatCurrency(promoCodeData.value, languageCode)}</strong>
+                {t('@saved')} <strong style={{ marginLeft: 4 }}>{formatCurrency(20, languageCode)}</strong>
               </TextSaved>
 
               <RemovePromo onClick={() => dispatch(updatePromoCode(null))}>
@@ -270,6 +270,7 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
 
                 <ApplyButton onClick={onClickApply}>{t('@apply')}</ApplyButton>
               </InputContainer>
+
               <ChipContainer>
                 {offers.map((offer) => {
                   return (

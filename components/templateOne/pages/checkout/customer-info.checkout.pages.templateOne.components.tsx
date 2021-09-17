@@ -29,6 +29,14 @@ export const StyledCheckoutCard = styled.div`
   margin: ${(props) => props.theme.dimen.X4}px 0;
   overflow: hidden;
   box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
+
+  /* 
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    margin: 0;
+    box-shadow: none;
+    border: none;
+    padding: 0;
+  } */
 `;
 
 export const StyledCheckoutTitle = styled.h3`
