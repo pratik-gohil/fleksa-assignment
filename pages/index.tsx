@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import Image from "next/image";
 import styles from "../styles/Home.module.css";
 
 const dishes: string[] = [
@@ -59,7 +60,14 @@ const Home: NextPage = () => {
       <div className={styles.section1}>
         <div className={styles.navbar}>
           <div className={styles.navbar_left}>
-            <img alt="logo" className={styles.logo} src="/images/logo.png" />
+            <Image
+              width="120"
+              height="25"
+              layout="intrinsic"
+              alt="logo"
+              className={styles.logo}
+              src="/images/logo.png"
+            />
           </div>
           <div className={styles.navbar_right}>
             <select className={styles.nav_item}>
@@ -93,7 +101,13 @@ const Home: NextPage = () => {
             </div>
           </div>
           <div className={styles.content_right}>
-            <img alt="dish" src="/images/dish.png" />
+            <Image
+              width="400"
+              height="400"
+              layout="intrinsic"
+              alt="dish"
+              src="/images/dish.png"
+            />
           </div>
         </div>
       </div>
@@ -103,7 +117,15 @@ const Home: NextPage = () => {
         </div>
         <div className={styles.grid}>
           {dishes.map((value, i) => (
-            <img alt={value.split(".")[0]} key={i} src={`/images/${value}`} />
+            <div className={styles.dish}>
+              <Image
+                layout="fill"
+                alt={value.split(".")[0]}
+                key={i}
+                src={`/images/${value}`}
+                className={styles.dish_img}
+              />
+            </div>
           ))}
         </div>
       </div>
@@ -114,8 +136,13 @@ const Home: NextPage = () => {
         <div className={styles.location_grid}>
           {cities.map((value, i) => (
             <div key={i} className={styles[`item${i}`]}>
-              <img alt={value.split(".")[0]} src={`/images/${value}`} />
-              <div>{value.split(".")[0]}</div>
+              <Image
+                className={styles.city}
+                layout="fill"
+                alt={value.split(".")[0]}
+                src={`/images/${value}`}
+              />
+              <p className={styles.city_name}>{value.split(".")[0]}</p>
             </div>
           ))}
         </div>
@@ -131,7 +158,14 @@ const Home: NextPage = () => {
         <div className={styles.about_sub}>
           {aboutSections.map((sec, i) => (
             <div key={i}>
-              <img src={`/images/${sec.img}`} alt={sec.img.split(".")[0]} />
+              <div className={styles.unset_sub_img}>
+                <Image
+                  layout="fill"
+                  src={`/images/${sec.img}`}
+                  alt={sec.img.split(".")[0]}
+                  className={styles.sub_img}
+                />
+              </div>
               <div className={styles.sub_title}>{sec.title}</div>
               <div className={styles.sub_summary}>{sec.summary}</div>
             </div>
@@ -179,7 +213,10 @@ const Home: NextPage = () => {
       </div>
       <div className={styles.footer}>
         <div>
-          <img
+          <Image
+            width="120"
+            height="25"
+            layout="intrinsic"
             alt="logo"
             className={styles.logo}
             src="/images/logo_white.png"
