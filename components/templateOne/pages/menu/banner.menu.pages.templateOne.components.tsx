@@ -80,20 +80,13 @@ const SubTitle = styled.h2`
   font-weight: 400;
 `;
 
-const OffersWrapper = styled.div`
-  position: relative;
-
-  @media (min-width: ${BREAKPOINTS.lg}px) {
-    margin-top: 0;
-  }
-`;
-
 const OffersContainer = styled.div`
   background: rgba(0, 0, 0, 0.2);
 
   max-height: 200px;
-  max-width: 450px;
+  width: 450px;
   overflow: auto;
+  margin-top: 0.5rem;
 
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
@@ -104,14 +97,19 @@ const OffersContainer = styled.div`
     color: #fff;
     margin: 0;
   }
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    width: 100%;
+  }
 `;
 
 const OfferTitle = styled.p`
   font-weight: 700;
   margin: 0;
   padding: 6px 12px;
-  background: #222;
+  /* background: #222; */
   border-radius: ${(props) => props.theme.borderRadius}px;
+  border: 1px solid ${(p) => p.theme.primaryColor};
   color: #fff;
   width: 100px;
   text-align: center;
@@ -222,51 +220,50 @@ const MenuPageBanner: FunctionComponent = ({}) => {
                   {offersData.length > 0 && (
                     <OfferWrapper>
                       <OfferTitle>{t('@offer')}</OfferTitle>
-                      <OffersWrapper>
-                        <OffersContainer>
-                          {offersData.map((offer, index) => (
-                            <OfferItem key={index}>
-                              <OfferBody>
-                                <SvgTag />
-                                <Text>
-                                  <AmountOrPercent>
-                                    {offer.offer_type_ === 'PERCENTAGE'
-                                      ? `${offer.provided}%`
-                                      : offer.offer_type_ === 'AMOUNT'
-                                      ? `${offer.provided} €`
-                                      : ''}
-                                  </AmountOrPercent>
 
-                                  <Code>
-                                    Use code{' '}
-                                    <strong title="Click to copy" onClick={async () => await handleCopyClick(offer.code)}>
-                                      {offer.code}
-                                    </strong>
-                                  </Code>
-                                </Text>
-                              </OfferBody>
+                      <OffersContainer>
+                        {offersData.map((offer, index) => (
+                          <OfferItem key={index}>
+                            <OfferBody>
+                              <SvgTag />
+                              <Text>
+                                <AmountOrPercent>
+                                  {offer.offer_type_ === 'PERCENTAGE'
+                                    ? `${offer.provided}%`
+                                    : offer.offer_type_ === 'AMOUNT'
+                                    ? `${offer.provided} €`
+                                    : ''}
+                                </AmountOrPercent>
 
-                              <Description>
-                                {(offer.description_json && offer.description_json?.[language].length < 60) ||
-                                moreDescription === `desc-${index}` ? (
-                                  <>
-                                    {`${offer.description_json?.[language]} `}
+                                <Code>
+                                  Off | Use code{' '}
+                                  <strong title="Click to copy" onClick={async () => await handleCopyClick(offer.code)}>
+                                    {offer.code}
+                                  </strong>
+                                </Code>
+                              </Text>
+                            </OfferBody>
 
-                                    {moreDescription === `desc-${index}` && (
-                                      <span onClick={async () => await handleDescriptionMoreClick('')}>Less</span>
-                                    )}
-                                  </>
-                                ) : (
-                                  <>
-                                    {offer.description_json?.[language].slice(0, 60)}
-                                    <span onClick={async () => await handleDescriptionMoreClick(`desc-${index}`)}> ... More</span>
-                                  </>
-                                )}
-                              </Description>
-                            </OfferItem>
-                          ))}
-                        </OffersContainer>
-                      </OffersWrapper>
+                            <Description>
+                              {(offer.description_json && offer.description_json?.[language].length < 60) ||
+                              moreDescription === `desc-${index}` ? (
+                                <>
+                                  {`${offer.description_json?.[language]} `}
+
+                                  {moreDescription === `desc-${index}` && (
+                                    <span onClick={async () => await handleDescriptionMoreClick('')}>Less</span>
+                                  )}
+                                </>
+                              ) : (
+                                <>
+                                  {offer.description_json?.[language].slice(0, 60)}
+                                  <span onClick={async () => await handleDescriptionMoreClick(`desc-${index}`)}> ... More</span>
+                                </>
+                              )}
+                            </Description>
+                          </OfferItem>
+                        ))}
+                      </OffersContainer>
                     </OfferWrapper>
                   )}
                 </WrapperContainer>
