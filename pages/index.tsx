@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
+import Link from "next/link";
 import styles from "../styles/Home.module.css";
 
 const dishes: string[] = [
@@ -117,7 +118,7 @@ const Home: NextPage = () => {
         </div>
         <div className={styles.grid}>
           {dishes.map((value, i) => (
-            <div className={styles.dish}>
+            <div key={i} className={styles.dish}>
               <Image
                 layout="fill"
                 alt={value.split(".")[0]}
@@ -153,7 +154,7 @@ const Home: NextPage = () => {
           Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam
           nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat
           volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation
-          ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.{" "}
+          ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
         </div>
         <div className={styles.about_sub}>
           {aboutSections.map((sec, i) => (
@@ -181,7 +182,7 @@ const Home: NextPage = () => {
               nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam
               erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci
               tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo
-              consequat. Duis autem vel eum{" "}
+              consequat. Duis autem vel eum
             </div>
             <button className={styles.sign_up_store}>Sign up your store</button>
           </div>
@@ -197,7 +198,7 @@ const Home: NextPage = () => {
             nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat
             volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation
             ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo
-            consequat. Duis autem vel eum{" "}
+            consequat. Duis autem vel eum
           </p>
           <div>
             <button className={styles.download_btn}>
@@ -228,48 +229,64 @@ const Home: NextPage = () => {
           </p>
           <p>
             <i className="far fa-envelope"></i>
-            <a href="mailto:contact@eatarian.com">contact@eatarian.com</a>
+            <Link href="mailto:contact@eatarian.com">
+              <a>contact@eatarian.com</a>
+            </Link>
           </p>
           <p>
             <i className="fas fa-phone-alt"></i>
-            <a href="tel:+490000000000">+49 000-000-0000</a>
+            <Link href="tel:+490000000000">
+              <a>+49 000-000-0000</a>
+            </Link>
           </p>
         </div>
         <div>
           <ul>
+            <li>Lorem ipsum</li>
             <li>
-              <a href="/">Lorem ipsum</a>
+              <Link href="/1">
+                <a>Lorem ipsum</a>
+              </Link>
             </li>
             <li>
-              <a href="/">Lorem ipsum</a>
+              <Link href="/2">
+                <a>Lorem ipsum</a>
+              </Link>
             </li>
             <li>
-              <a href="/">Lorem ipsum</a>
+              <Link href="/3">
+                <a>Lorem ipsum</a>
+              </Link>
             </li>
             <li>
-              <a href="/">Lorem ipsum</a>
-            </li>
-            <li>
-              <a href="/">Lorem ipsum</a>
+              <Link href="/4">
+                <a>Lorem ipsum</a>
+              </Link>
             </li>
           </ul>
         </div>
         <div>
           <ul>
+            <li>Lorem ipsum</li>
             <li>
-              <a href="/">Lorem ipsum</a>
+              <Link href="/6">
+                <a>Lorem ipsum</a>
+              </Link>
             </li>
             <li>
-              <a href="/">Lorem ipsum</a>
+              <Link href="/7">
+                <a>Lorem ipsum</a>
+              </Link>
             </li>
             <li>
-              <a href="/">Lorem ipsum</a>
+              <Link href="/8">
+                <a>Lorem ipsum</a>
+              </Link>
             </li>
             <li>
-              <a href="/">Lorem ipsum</a>
-            </li>
-            <li>
-              <a href="/">Lorem ipsum</a>
+              <Link href="/9">
+                <a>Lorem ipsum</a>
+              </Link>
             </li>
           </ul>
         </div>
@@ -286,7 +303,7 @@ const Home: NextPage = () => {
       </div>
       <div className={styles.copy}>
         Copyright 2019 <span className={styles.highlighted}>Organic</span>. All
-        rights reserved. Designed by{" "}
+        rights reserved. Designed by
         <span className={styles.highlighted}>GraphicForest</span>.
       </div>
     </div>
