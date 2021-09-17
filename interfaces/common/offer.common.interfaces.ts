@@ -1,6 +1,6 @@
 import { ILanguageData } from './language-data.common.interfaces';
 
-export type AllowedOrderType = 'FIRST' | 'PICKUP' | 'DINE_IN' | 'DELIVERY';
+export type AllowedOrderType = 'FIRST' | 'PICKUP' | 'DINE_IN' | 'DELIVERY' | 'ALL';
 export type AllowedOfferType = 'PERCENTAGE' | 'AMOUNT';
 
 export interface IOffer {

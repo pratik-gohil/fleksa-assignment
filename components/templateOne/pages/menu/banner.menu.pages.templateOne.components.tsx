@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Image from 'next/image';
 import { useAppSelector } from '../../../../redux/hooks.redux';
@@ -6,6 +6,8 @@ import { selectOffers, selectShop, selectSiblings } from '../../../../redux/slic
 import { Col, Container, Row } from 'react-grid-system';
 import { selectLanguage, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
 import MenuFeatures from './feature.menu.pages.templateOne.components';
+import { IOffer } from '../../../../interfaces/common/offer.common.interfaces';
+import { selectOrderType } from '../../../../redux/slices/checkout.slices.redux';
 
 import SvgTag from '../../../../public/assets/svg/tag.svg';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
@@ -173,10 +175,12 @@ const MenuPageBanner: FunctionComponent = ({}) => {
   const shopData = useAppSelector(selectShop);
   const offersData = useAppSelector(selectOffers);
   const menuId = useAppSelector(selectSelectedMenu);
+  const orderType = useAppSelector(selectOrderType);
   const siblingData = useAppSelector(selectSiblings);
   const { t } = useTranslation('page-menu-id');
 
   const [moreDescription, setMoreDescription] = useState<string>('');
+  const [offers, setOffers] = useState<IOffer[]>(offersData);
 
   let shopName: string | undefined;
   let shopCategory: string | undefined;
@@ -202,6 +206,22 @@ const MenuPageBanner: FunctionComponent = ({}) => {
    */
   const handleDescriptionMoreClick = async (desc: string) => setMoreDescription(desc);
 
+  /**
+   * @description update offers depends on relavent ordery type selection
+   */
+  useEffect(() => {
+    if (orderType) {
+      const properTypeName = orderType === 'DINE_IN' ? 'DINEIN' : orderType; // ? change same order type name
+
+      setOffers(offersData.filter((offer) => offer.order_type_ === properTypeName || offer.order_type_ === 'ALL'));
+
+      console.log(
+        properTypeName,
+        offersData.filter((offer) => offer.order_type_ === properTypeName || offer.order_type_ === 'ALL'),
+      );
+    }
+  }, [orderType]);
+
   return (
     <BannerContainer>
       {shopData?.cover && <Image src={shopData.cover} loading="eager" layout="fill" objectFit="cover" />}
@@ -217,12 +237,12 @@ const MenuPageBanner: FunctionComponent = ({}) => {
                     <MenuFeatures />
                   </Wrapper>
 
-                  {offersData.length > 0 && (
+                  {offers.length > 0 && (
                     <OfferWrapper>
                       <OfferTitle>{t('@offer')}</OfferTitle>
 
                       <OffersContainer>
-                        {offersData.map((offer, index) => (
+                        {offers.map((offer, index) => (
                           <OfferItem key={index}>
                             <OfferBody>
                               <SvgTag />

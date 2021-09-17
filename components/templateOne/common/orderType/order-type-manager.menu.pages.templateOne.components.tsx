@@ -246,12 +246,13 @@ const OrderTypeManager: FunctionComponent = () => {
     };
   }, []);
 
-  function onClickDelivery(_orderType: ICheckoutOrderTypes) {
+  function onClickDelivery(orderType: ICheckoutOrderTypes) {
     if (typeof window === 'undefined') return;
     const guestAddressString = window.localStorage.getItem(LS_GUEST_USER_ADDRESS);
 
     if ((isLoggedIn && correspondAddress) || guestAddressString) {
       dispatch(updateShowOrderTypeSelect(false));
+      dispatch(updateOrderType(orderType));
     } else {
       dispatch(updateShowAddAddress(true));
       dispatch(updateShowOrderTypeSelect(true));
