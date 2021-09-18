@@ -7,6 +7,7 @@ import {
   selectOrderType,
   selectSelectedAddressId,
   updateOrderType,
+  updateSelectedAddressId,
 } from '../../../../redux/slices/checkout.slices.redux';
 import SvgDelivery from '../../../../public/assets/svg/delivery.svg';
 import SvgPickup from '../../../../public/assets/svg/pickup.svg';
@@ -290,6 +291,9 @@ const OrderTypeManager: FunctionComponent = () => {
         city: correspondAddressById?.city,
       };
     } else if (isLoggedIn && !checkoutAddressId && correspondAddress) {
+      // ?? Update the checkoutAddressId on redux state to send for order placing
+      dispatch(updateSelectedAddressId(correspondAddress.id));
+
       return {
         address: correspondAddress?.address,
         floor: correspondAddress?.floor,
