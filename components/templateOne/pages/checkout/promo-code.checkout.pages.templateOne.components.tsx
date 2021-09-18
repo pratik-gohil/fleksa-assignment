@@ -199,7 +199,7 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
         dispatch(
           updatePromoCode({
             code: coupon,
-            value: response.details.amount.discount_total,
+            value: response.details.amount.value,
             token: response.token,
           }),
         );
