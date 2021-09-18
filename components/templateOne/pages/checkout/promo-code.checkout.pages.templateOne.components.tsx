@@ -54,6 +54,7 @@ const AppliedPromoContainer = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+
   svg {
     display: block;
   }
@@ -65,13 +66,14 @@ const AppliedPromoContainer = styled.div`
 `;
 
 const RemovePromo = styled.div`
-  padding: 10px;
+  padding: 0.5rem;
   cursor: pointer;
   border: ${(props) => props.theme.border};
   border-radius: 100px;
+
   svg {
-    width: 14px;
-    height: 14px;
+    width: 10px;
+    height: 10px;
   }
 `;
 
@@ -199,7 +201,7 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
         dispatch(
           updatePromoCode({
             code: coupon,
-            value: response.details.offers.provided,
+            value: response.details.amount.discount_total,
             token: response.token,
           }),
         );
