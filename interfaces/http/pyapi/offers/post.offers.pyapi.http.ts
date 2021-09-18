@@ -21,19 +21,23 @@ type IOfferValidationTrue = {
   result: true;
   description_json: null;
   details: {
-    min_amount: number;
-    offer_type_: string;
-    order_type_: string;
-    provided: number;
-    sub_total_amount: number;
-    value: number;
+    amount: {
+      absolute: number;
+      discount_total: number;
+      sub_total: number;
+      value: number;
+    };
+    offers: {
+      min_amount: number;
+      offer_type_: string;
+      order_type_: string;
+      provided: number;
+    };
   };
   explanation: string;
   message: ILanguageData;
-  english: string;
-  german: string;
   token: string;
-  total_amount: number;
+  resultant: Record<string, { is_applicable: boolean }>;
 };
 
 export type IPyApiHttpPostOffersPostResponse = IOfferValidationFalse | IOfferValidationTrue;

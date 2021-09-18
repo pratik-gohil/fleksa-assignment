@@ -193,11 +193,13 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
         payment_method: paymentMethod,
       });
 
+      console.log('response ', response);
+
       if (response?.result) {
         dispatch(
           updatePromoCode({
             code: coupon,
-            value: response.details.value,
+            value: response.details.offers.provided,
             token: response.token,
           }),
         );
@@ -245,7 +247,7 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
             <AppliedPromoContainer>
               <SvgTag className="svg-tag-yellow" />
               <TextSaved>
-                {t('@saved')} <strong style={{ marginLeft: 4 }}>{formatCurrency(20, languageCode)}</strong>
+                {t('@saved')} <strong style={{ marginLeft: 4 }}>{formatCurrency(promoCodeData.value, languageCode)}</strong>
               </TextSaved>
 
               <RemovePromo onClick={() => dispatch(updatePromoCode(null))}>
