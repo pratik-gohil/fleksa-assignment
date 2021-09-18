@@ -18,6 +18,8 @@ import {
   selectSelectedAddressId,
   selectShowDateTimeSelect,
   selectWantAt,
+  updateCheckoutIsPreOrder,
+  updateCheckoutIsSofort,
   updateSelectedAddressId,
   updateShowDateTimeSelect,
   updateWantAt,
@@ -211,12 +213,20 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
         if (timeData.length > 0) {
           dispatch(updateWantAt({ date: selectedDate, time: timeData[0] }));
           foundDateTime = true;
+
+          // TODO: Updating sofort state
+          if (timeData[0].isSofort) dispatch(updateCheckoutIsSofort(true));
+          else dispatch(updateCheckoutIsSofort(false));
+
           break;
         }
       }
     }
 
-    if (!foundDateTime) updateWantAt(null);
+    if (!foundDateTime) {
+      updateWantAt(null);
+      dispatch(updateCheckoutIsSofort(false));
+    }
   }, [orderType, addressData?.prepare_time, addressData?.delivery_time]);
 
   // TODO: Checking min amount value
@@ -226,14 +236,19 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
 
   // TODO: Pre order checking
   useEffect(() => {
-    if (!address?.has_delivery && !address?.has_pickup && !address?.has_dinein && !address?.has_reservations)
+    if (!address?.has_delivery && !address?.has_pickup && !address?.has_dinein && !address?.has_reservations) {
       return setShop({
         availability: false,
         isClosed: true,
       });
+    }
 
     setShop(isShopOpened(timingsData, moment(), { has_pickup: address.has_pickup, has_delivery: address.has_delivery }));
-  }, []);
+
+    // ? set pre order mode
+    if (!shop.availability && !shop.isClosed) dispatch(updateCheckoutIsPreOrder(true));
+    else dispatch(updateCheckoutIsPreOrder(false));
+  }, [shop.availability, shop.isClosed]);
 
   // TODO: User address update depends on login status
   useEffect(() => {

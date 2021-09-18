@@ -24,7 +24,7 @@ export default class PyApiHttpPostAddress extends ApiHttpCommon {
       const response = await new NetPyApi(this.configuration).post<IPyApiHttpPostAddressResponse>({
         path: `pyapi/address`,
         headers: {
-          'Content-Type': 'text/plain',
+          'Content-Type': 'application/json',
         },
         body,
       });

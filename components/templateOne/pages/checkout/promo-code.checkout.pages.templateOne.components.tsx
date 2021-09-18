@@ -97,7 +97,7 @@ const PromoCodeInput = styled.input`
   border-radius: 0% 0.5rem;
   outline: none;
   text-transform: uppercase;
-  border: 2px solid ${(p) => p.theme.textDarkColor};
+  border: 0.1px solid ${(p) => p.theme.textDarkColor};
 
   &:hover,
   &:active,

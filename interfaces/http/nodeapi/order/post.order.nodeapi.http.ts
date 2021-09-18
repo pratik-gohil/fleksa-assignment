@@ -35,6 +35,7 @@ export interface INodeApiHttpPostOrderRequestData {
     };
     description?: string;
     order_type: ICheckoutOrderTypes;
+    is_sofort: boolean;
   };
 }
 

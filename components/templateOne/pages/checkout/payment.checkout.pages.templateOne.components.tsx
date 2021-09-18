@@ -137,6 +137,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
           phone: customerData.phone as any,
           country_code: customerData.country_code as any,
           is_delivery: orderType === 'DELIVERY',
+          is_sofort: false,
           customer_address_id: addressId || undefined,
           want_at: moment(`${wantAtData?.date.value as string} ${wantAtData?.time.value as string}`).toString(),
           products,
