@@ -109,12 +109,9 @@ const OfferTitle = styled.p`
   font-weight: 700;
   margin: 0;
   padding: 6px 12px;
-  /* background: #222; */
-  border-radius: ${(props) => props.theme.borderRadius}px;
-  border: 1px solid ${(p) => p.theme.primaryColor};
+  border-bottom: 1px solid ${(p) => p.theme.primaryColor};
   color: #fff;
-  width: 100px;
-  text-align: center;
+  width: max-content;
 `;
 
 const Text = styled.p`
