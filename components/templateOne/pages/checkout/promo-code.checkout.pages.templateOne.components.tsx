@@ -195,8 +195,6 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
         payment_method: paymentMethod,
       });
 
-      console.log('response ', response);
-
       if (response?.result) {
         dispatch(
           updatePromoCode({
