@@ -30,7 +30,6 @@ import { selectAddress, selectShop, selectSiblings, selectTimings } from '../../
 import { selectShowOrderTypeSelect, updateShowOrderTypeSelect } from '../../../../redux/slices/menu.slices.redux';
 import {
   selectAddressById,
-  selectAddressByType,
   selectBearerToken,
   selectCustomer,
   selectIsUserLoggedIn,
@@ -107,18 +106,19 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
   const shopData = useAppSelector(selectShop);
   const timingsData = useAppSelector(selectTimings);
   const selectedMenuId = useAppSelector(selectSelectedMenu);
-  const checkoutAddressId = useAppSelector(selectSelectedAddressId);
   const showDateTimeSelect = useAppSelector(selectShowDateTimeSelect);
-  const selectedAddress = useAppSelector((state) => selectAddressById(state, checkoutAddressId));
   const deliveryFinances = useAppSelector(selectDeliveryFinances);
   const cartData = useAppSelector(selectCart);
   const isUserLoggedIn = useAppSelector(selectIsUserLoggedIn);
   const configuration = useAppSelector(selectConfiguration);
   const bearerToken = useAppSelector(selectBearerToken);
-  const addressByType = useAppSelector((state) => selectAddressByType(state, 'OTHER'));
   const shopId = useAppSelector(selectSelectedMenu);
   const customerData = useAppSelector(selectCustomer);
   const isShowOrderTypeSelection = useAppSelector(selectShowOrderTypeSelect);
+
+  // ? Default selectiona ddress state
+  const checkoutAddressId = useAppSelector(selectSelectedAddressId);
+  const selectedAddress = useAppSelector((state) => selectAddressById(state, checkoutAddressId));
 
   const [userAddress, setUserAddress] = useState<IGuestAddress>(INITIAL_ADDRESS);
 
@@ -137,10 +137,12 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
   }
 
   async function addGuestAddressOnServerIfExists() {
-    // check if guest address exists. If it does add it to server
+    // ?? check if guest address exists. If it does add it to server
     const guestAddressString = window.localStorage.getItem(LS_GUEST_USER_ADDRESS);
+
     if (guestAddressString && bearerToken && shopId) {
       const guestAddress = JSON.parse(guestAddressString) as IGuestAddress;
+
       const response = await new PyApiHttpPostAddress(configuration).postAll({
         floor: guestAddress.floor,
         shopId: shopId,
@@ -166,6 +168,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
 
         if (response.customer.is_customer && response.customer.details?.customer_address_id) {
           window.localStorage.removeItem(LS_GUEST_USER_ADDRESS);
+
           const addressAdded: IParticularAddress = {
             id: response.customer.details.customer_address_id,
             address_type: guestAddress.address_type,
@@ -176,10 +179,9 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
             city: guestAddress.city,
             state: '',
           };
+
           dispatch(updateExistCustomerAddressOrAddNew(addressAdded));
-          dispatch(updateSelectedAddressId(response.customer.details.customer_address_id));
-        } else {
-          dispatch(updateSelectedAddressId(addressByType?.id));
+          dispatch(updateSelectedAddressId(addressAdded.id));
         }
       }
     }
@@ -254,6 +256,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
   useEffect(() => {
     async function handleUserAddressUpdate() {
       const addressResponse = await new NodeApiHttpGetUserAllAddress(configuration, bearerToken ?? '').get({});
+
       dispatch(updateLoadAddressesList(addressResponse?.data.customer_address));
     }
 
@@ -270,6 +273,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
         else if (guestAddressString) addGuestAddressOnServerIfExists();
       } else if (guestAddressString) {
         const guestAddress = JSON.parse(guestAddressString) as IGuestAddress;
+
         setUserAddress(guestAddress);
       }
     }
