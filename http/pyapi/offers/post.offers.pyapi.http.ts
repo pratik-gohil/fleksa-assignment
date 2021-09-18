@@ -11,7 +11,7 @@ export default class PyApiHttpPostOffers extends ApiHttpCommon {
       const response = await new NetPyApi(this.configuration).post<IPyApiHttpPostOffersPostResponse>({
         path: `pyapi/offers/apply`,
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'text/plain',
         },
         body: {
           code: data.code,
