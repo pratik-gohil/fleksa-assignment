@@ -45,7 +45,7 @@ const ApplyButton = styled.div`
 `;
 
 const PromoCodeContainer = styled.div`
-  padding: 0;
+  padding-top: 0.5rem;
 `;
 
 const InputContainer = styled.div`

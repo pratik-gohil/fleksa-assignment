@@ -31,6 +31,7 @@ const TipOptionsItem = styled.div<{ isSelected: boolean }>`
   border: ${(props) => props.theme.border};
   border-radius: ${(props) => props.theme.borderRadius}px;
   overflow: hidden;
+  align-items: center;
   ${(props) =>
     props.isSelected &&
     css`
@@ -52,7 +53,7 @@ const TipOptionsItem = styled.div<{ isSelected: boolean }>`
   }
 
   span {
-    padding: ${(props) => props.theme.dimen.X4}px 0 ${(props) => props.theme.dimen.X4}px ${(props) => props.theme.dimen.X4}px;
+    padding: 1rem;
   }
 
   input {
@@ -62,6 +63,18 @@ const TipOptionsItem = styled.div<{ isSelected: boolean }>`
     border: none;
     outline: none;
     overflow: hidden;
+  }
+
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    span {
+      padding: 0.5rem 0.2rem 0.5rem 0.5rem;
+    }
   }
 `;
 
@@ -77,6 +90,7 @@ const CheckoutPageTip: FunctionComponent = ({}) => {
   const languageCode = useAppSelector(selectLanguageCode);
   const { t } = useTranslation('page-checkout');
   const [otherTip, setOtherTip] = useState(false);
+  const [otherTipAmount, setOtherTipAmount] = useState<number | null>(null);
 
   const tipOptions = tipPercentage[cartData.cartCost > 10 ? 0 : 1].map((percent) => Math.ceil((cartData.cartCost * percent) / 100));
 
@@ -117,11 +131,17 @@ const CheckoutPageTip: FunctionComponent = ({}) => {
                   amplitudeEvent(constructEventName(`tip selection`, 'input'), {
                     tipData,
                   });
+
+                  onChangeTip(otherTipAmount);
                 }}
                 autoFocus
                 type="number"
-                value={tipData || ''}
-                onChange={(e) => onChangeTip(e.target.value ? Number(e.target.value) : null)}
+                value={otherTipAmount ?? ''}
+                onChange={(e) => {
+                  if (!Number(e.target.value)) return setOtherTipAmount(null);
+
+                  setOtherTipAmount(Number(e.target.value) ?? null);
+                }}
               />
             </>
           ) : (
