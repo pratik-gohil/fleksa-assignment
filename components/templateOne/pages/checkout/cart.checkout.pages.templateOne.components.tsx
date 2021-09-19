@@ -11,6 +11,7 @@ import {
   selectPromoCode,
   selectTip,
   updatePromoCode,
+  updateTip,
 } from '../../../../redux/slices/checkout.slices.redux';
 import { selectLanguage, selectLanguageCode } from '../../../../redux/slices/configuration.slices.redux';
 import { checkoutFinalAmount } from '../../../../utils/checkout.utils';
@@ -50,7 +51,7 @@ const ContainerCartItemBody = styled(ContainerItem)``;
 
 const Title = styled.p`
   display: flex;
-  flex: 1;
+
   margin: 0;
   font-weight: 600;
   span {
@@ -105,7 +106,7 @@ const InfoCartSvgImage = styled.img`
   cursor: pointer;
 `;
 
-const AppliedPromoContainer = styled.div`
+const AppliedContainer = styled.div`
   display: flex;
   flex: 1;
   flex-direction: row;
@@ -224,7 +225,12 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
 
           {tipData && tipData > 0 ? (
             <ContainerItemTip>
-              <Title>{t('@tip-cart')}</Title>
+              <AppliedContainer>
+                <Title>{t('@tip-cart')}</Title>
+                <RemovePromo onClick={() => dispatch(updateTip(0))}>
+                  <SvgCross />
+                </RemovePromo>
+              </AppliedContainer>
               <Price>{formatCurrency(tipData, languageCode)}</Price>
             </ContainerItemTip>
           ) : (
@@ -233,7 +239,7 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
 
           {promoData ? (
             <ContainerItem>
-              <AppliedPromoContainer>
+              <AppliedContainer>
                 <SvgOffer className="svg-tag-yellow" />
                 <TextSaved>
                   {t('@saved')} <strong style={{ marginLeft: 4 }}>{formatCurrency(promoData.value, languageCode)}</strong>
@@ -242,7 +248,7 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
                 <RemovePromo onClick={() => dispatch(updatePromoCode(null))}>
                   <SvgCross />
                 </RemovePromo>
-              </AppliedPromoContainer>
+              </AppliedContainer>
 
               <Price> - {formatCurrency(promoData.value, languageCode)}</Price>
             </ContainerItem>

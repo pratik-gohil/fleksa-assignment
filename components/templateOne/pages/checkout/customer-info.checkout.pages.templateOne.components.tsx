@@ -41,7 +41,7 @@ export const StyledCheckoutCard = styled.div`
 
 export const StyledCheckoutTitle = styled.h3`
   margin: 0;
-  padding-bottom: ${(props) => props.theme.dimen.X4}px;
+  padding: 0;
 
   span {
     font-size: clamp(0.8rem, 1.2rem, 1vw);

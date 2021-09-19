@@ -10,7 +10,11 @@ import { selectTip, updateTip } from '../../../../redux/slices/checkout.slices.r
 import { selectLanguageCode } from '../../../../redux/slices/configuration.slices.redux';
 import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 import formatCurrency from '../../../../utils/formatCurrency';
-import { StyledCheckoutCard, StyledCheckoutTitle } from './customer-info.checkout.pages.templateOne.components';
+import { StyledCheckoutTitle } from './customer-info.checkout.pages.templateOne.components';
+
+const Wrapper = styled.div`
+  padding-top: 0.5rem;
+`;
 
 const TipOptionsList = styled.div`
   display: flex;
@@ -81,8 +85,9 @@ const CheckoutPageTip: FunctionComponent = ({}) => {
   }
 
   return (
-    <>
+    <Wrapper>
       <StyledCheckoutTitle>{t('@tip')}</StyledCheckoutTitle>
+
       <TipOptionsList>
         {tipOptions.map((amount, index) => {
           const isSelected = amount === tipData;
@@ -102,6 +107,7 @@ const CheckoutPageTip: FunctionComponent = ({}) => {
             </TipOptionsItem>
           );
         })}
+
         <TipOptionsItem key="custom" isSelected={otherTip}>
           {otherTip ? (
             <>
@@ -135,7 +141,7 @@ const CheckoutPageTip: FunctionComponent = ({}) => {
           )}
         </TipOptionsItem>
       </TipOptionsList>
-    </>
+    </Wrapper>
   );
 };
 

@@ -48,6 +48,7 @@ const Wrapper = styled.div`
 
 const PaymentMethodList = styled.div`
   display: flex;
+  padding-top: 1rem;
   align-items: center;
 `;
 
