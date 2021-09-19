@@ -3,15 +3,12 @@ import React, { FunctionComponent } from 'react';
 import { useEffect } from 'react';
 import { Col, Container, Row } from 'react-grid-system';
 import styled from 'styled-components';
-// import { IGuestAddress } from '../../components/templateOne/common/addresses/address-add.common.templateOne.components';
 
 import CheckoutPageCart from '../../components/templateOne/pages/checkout/cart.checkout.pages.templateOne.components';
 import CheckoutPageComments from '../../components/templateOne/pages/checkout/comments.checkout.pages.templateOne.components';
 import CheckoutPageCustomerInfo from '../../components/templateOne/pages/checkout/customer-info.checkout.pages.templateOne.components';
 import CheckoutPagePayment from '../../components/templateOne/pages/checkout/payment.checkout.pages.templateOne.components';
-import CheckoutPagePromoCode from '../../components/templateOne/pages/checkout/promo-code.checkout.pages.templateOne.components';
 import CheckoutPageSummary from '../../components/templateOne/pages/checkout/summary.checkout.pages.templateOne.components';
-import CheckoutPageTip from '../../components/templateOne/pages/checkout/tip.checkout.pahes.templateOne.components';
 import { BREAKPOINTS } from '../../constants/grid-system-configuration';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks.redux';
 import { selectPaymentMethod, updatePaymentMethod } from '../../redux/slices/checkout.slices.redux';
@@ -66,8 +63,6 @@ const CheckoutPageTemplateOne: FunctionComponent = ({}) => {
           <Col lg={5}>
             <CartContainerLarge>
               <CheckoutPageCart />
-              {/* <CheckoutPagePromoCode /> */}
-              {/* <CheckoutPageTip /> */}
             </CartContainerLarge>
           </Col>
         </Row>

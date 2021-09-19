@@ -81,7 +81,7 @@ const CheckoutPageTip: FunctionComponent = ({}) => {
   }
 
   return (
-    <StyledCheckoutCard>
+    <>
       <StyledCheckoutTitle>{t('@tip')}</StyledCheckoutTitle>
       <TipOptionsList>
         {tipOptions.map((amount, index) => {
@@ -135,7 +135,7 @@ const CheckoutPageTip: FunctionComponent = ({}) => {
           )}
         </TipOptionsItem>
       </TipOptionsList>
-    </StyledCheckoutCard>
+    </>
   );
 };
 

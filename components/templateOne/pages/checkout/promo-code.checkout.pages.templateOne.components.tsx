@@ -9,28 +9,22 @@ import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { selectCart } from '../../../../redux/slices/cart.slices.redux';
 import { selectOrderType, selectPaymentMethod, selectPromoCode, updatePromoCode } from '../../../../redux/slices/checkout.slices.redux';
 import { updateError } from '../../../../redux/slices/common.slices.redux';
-import {
-  selectConfiguration,
-  selectLanguage,
-  selectLanguageCode,
-  selectSelectedMenu,
-} from '../../../../redux/slices/configuration.slices.redux';
+import { selectConfiguration, selectLanguage, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
 import { selectBearerToken } from '../../../../redux/slices/user.slices.redux';
 import { getPrductsFromCartData } from '../../../../utils/products.utils';
-import { StyledCheckoutCard, StyledCheckoutTitle } from './customer-info.checkout.pages.templateOne.components';
-import EditButton from './edit-button.checkout.pages.templateOne.components';
-import EditContainer from './edit-container.checkout.pages.templateOne.components';
+import { StyledCheckoutTitle } from './customer-info.checkout.pages.templateOne.components';
 
-import SvgTag from '../../../../public/assets/svg/tag.svg';
-import SvgCross from '../../../../public/assets/svg/cross.svg';
-import formatCurrency from '../../../../utils/formatCurrency';
 import { useTranslation } from 'next-i18next';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 import { IOffer } from '../../../../interfaces/common/offer.common.interfaces';
 import { selectOffers } from '../../../../redux/slices/index.slices.redux';
 
-import SvgArrow from '../../../../public/assets/svg/angle-dropdown.svg';
+import SvgOffer from '../../../../public/assets/svg/checkout/offerIcon.svg';
+
+const Wrapper = styled.div`
+  padding: 1rem 0 0 0;
+`;
 
 const ApplyButton = styled.div`
   padding: 0.5rem 1rem;
@@ -50,43 +44,8 @@ const ApplyButton = styled.div`
   }
 `;
 
-const AppliedPromoContainer = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-
-  svg {
-    display: block;
-  }
-  .svg-tag-yellow {
-    width: 20px;
-    height: 20px;
-    fill: ${(props) => props.theme.primaryColor};
-  }
-`;
-
-const RemovePromo = styled.div`
-  padding: 0.5rem;
-  cursor: pointer;
-  border: ${(props) => props.theme.border};
-  border-radius: 100px;
-
-  svg {
-    width: 10px;
-    height: 10px;
-  }
-`;
-
-const TextSaved = styled.p`
-  display: flex;
-  flex: 1;
-  margin-left: 12px;
-`;
-
 const PromoCodeContainer = styled.div`
-  padding: 0rem 0.5rem 0 0.5rem;
+  padding: 0;
 `;
 
 const InputContainer = styled.div`
@@ -116,7 +75,7 @@ const PromoCodeInput = styled.input`
 `;
 
 const OffersContainer = styled.div`
-  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
 `;
 
 const DropDownContainer = styled.div``;
@@ -143,6 +102,8 @@ const Title = styled.h4`
   padding: 0;
   margin: 0;
   position: relative;
+  color: ${(p) => p.theme.primaryColor};
+  font-weight: 600;
 
   &:after {
     content: '';
@@ -156,19 +117,9 @@ const Title = styled.h4`
     transition: width 0.2s ease;
     -webkit-transition: width 0.2s ease;
   }
-`;
-const ArrowDownIcon = styled.div<{ isDropdown: boolean }>`
-  display: grid;
-  place-items: center;
-  padding: ${(p) => (p.isDropdown ? '0.5rem 0.5rem 0 0.5rem' : '0.5rem 0 0 0.5rem')};
-  height: 100%;
-  transition: transform 0.2s ease-in;
 
-  transform: ${(p) => (p.isDropdown ? 'rotate(180deg)' : 'rotate(0deg)')};
-
-  svg {
-    width: 24px;
-    height: 18px;
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    font-size: 1rem;
   }
 `;
 
@@ -228,8 +179,8 @@ const OfferDescription = styled(OfferGetText)`
 `;
 
 const OfferApplyButton = styled.button`
-  padding: 0.5rem 1rem;
-  margin-left: ${(props) => props.theme.dimen.X4}px;
+  padding: 0.5rem 0.5rem;
+
   font-weight: 700;
   cursor: pointer;
   border-radius: ${(props) => props.theme.borderRadius}px;
@@ -248,6 +199,16 @@ const OfferApplyButton = styled.button`
   }
 `;
 
+const OfferIcon = styled.div`
+  display: grid;
+  place-items: center;
+
+  svg {
+    width: 24px;
+    height: 18px;
+  }
+`;
+
 const CheckoutPagePromoCode: FunctionComponent = ({}) => {
   const language = useAppSelector(selectLanguage);
   const cartData = useAppSelector(selectCart);
@@ -256,13 +217,11 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
   const orderType = useAppSelector(selectOrderType);
   const shopId = useAppSelector(selectSelectedMenu);
   const promoCodeData = useAppSelector(selectPromoCode);
-  const languageCode = useAppSelector(selectLanguageCode);
   const paymentMethod = useAppSelector(selectPaymentMethod);
   const offersData = useAppSelector(selectOffers);
   const { t } = useTranslation('page-checkout');
 
-  const [editing, setEditing] = useState(true);
-  const [isDropdown, setIsDropdown] = useState(true);
+  const [isDropdown, setIsDropdown] = useState(false);
   const [coupon, setCoupon] = useState(promoCodeData?.code || '');
   const [offers, setOffers] = useState<IOffer[]>(offersData);
   const [moreDescription, setMoreDescription] = useState<string>('');
@@ -348,138 +307,106 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
   const hanldeDropdownClick = async () => setIsDropdown(!isDropdown);
 
   return (
-    <>
-      <EditContainer>
-        <StyledCheckoutTitle>{t('@promo')}</StyledCheckoutTitle>
-        {!promoCodeData && (
-          <EditButton
-            onClick={() => {
-              setEditing(!editing);
-              amplitudeEvent(constructEventName(`promo code edit`, 'icon-button'), {});
-            }}
-          />
-        )}
-      </EditContainer>
+    <Wrapper>
+      <StyledCheckoutTitle>{t('@promo')}</StyledCheckoutTitle>
 
       <Row>
         <Col xs={12}>
-          {editing && promoCodeData ? (
-            <AppliedPromoContainer>
-              <SvgTag className="svg-tag-yellow" />
-              <TextSaved>
-                {t('@saved')} <strong style={{ marginLeft: 4 }}>{formatCurrency(promoCodeData.value, languageCode)}</strong>
-              </TextSaved>
+          <PromoCodeContainer>
+            <InputContainer>
+              <PromoCodeInput
+                value={coupon}
+                autoFocus
+                onChange={(e) => setCoupon(e.target.value)}
+                onBlur={() => {
+                  amplitudeEvent(constructEventName(`coupon `, 'input'), {
+                    coupon,
+                    length: coupon.length,
+                  });
+                }}
+                required
+              />
 
-              <RemovePromo onClick={() => dispatch(updatePromoCode(null))}>
-                <SvgCross />
-              </RemovePromo>
-            </AppliedPromoContainer>
-          ) : (
-            <PromoCodeContainer>
-              <InputContainer>
-                <PromoCodeInput
-                  value={coupon}
-                  autoFocus
-                  onChange={(e) => setCoupon(e.target.value)}
-                  onBlur={() => {
-                    amplitudeEvent(constructEventName(`coupon `, 'input'), {
-                      coupon,
-                      length: coupon.length,
-                    });
-                  }}
-                  required
-                />
+              <ApplyButton onClick={onClickApply}>{t('@apply')}</ApplyButton>
+            </InputContainer>
 
-                <ApplyButton onClick={onClickApply}>{t('@apply')}</ApplyButton>
-              </InputContainer>
+            <OffersContainer>
+              <DropDownContainer onClick={hanldeDropdownClick}>
+                <DropDown>
+                  <OfferIcon>
+                    <SvgOffer />
+                  </OfferIcon>
 
-              <OffersContainer>
-                <DropDownContainer onClick={hanldeDropdownClick}>
-                  <DropDown>
-                    <Title>Offers</Title>
+                  <Title>View Offers</Title>
+                </DropDown>
+              </DropDownContainer>
 
-                    <ArrowDownIcon isDropdown={isDropdown}>
-                      <SvgArrow />
-                    </ArrowDownIcon>
-                  </DropDown>
-                </DropDownContainer>
-                <OfferBody isDropdown={isDropdown}>
-                  {[
-                    {
-                      title: 'Available Offers',
-                      offers: offers.filter((offer) => offer.order_type_ === 'FIRST' || offer.order_type_ === 'ALL'),
-                    },
-                    {
-                      title: 'Other Offers',
-                      offers: offers.filter((offer) => offer.order_type_ !== 'FIRST' && offer.order_type_ !== 'ALL'),
-                    },
-                  ].map((offerItem, offerItemIndex) => {
-                    if (!offerItem.offers.length) return null;
+              <OfferBody isDropdown={isDropdown}>
+                {[
+                  {
+                    title: 'Available Offers',
+                    offers: offers.filter((offer) => offer.order_type_ === 'FIRST' || offer.order_type_ === 'ALL'),
+                  },
+                  {
+                    title: 'Other Offers',
+                    offers: offers.filter((offer) => offer.order_type_ !== 'FIRST' && offer.order_type_ !== 'ALL'),
+                  },
+                ].map((offerItem, offerItemIndex) => {
+                  if (!offerItem.offers.length) return null;
 
-                    return (
-                      <OfferItem>
-                        <OfferItemTitle>{offerItem.title}</OfferItemTitle>
-
-                        {offerItem.offers.map((offer, offerIndex) => (
-                          <OfferCard>
-                            <OfferCardBody>
-                              <OfferCode>{offer.code}</OfferCode>
-
-                              <OfferGetText>
-                                Use code FLEKSA Get{' '}
-                                {offer.offer_type_ === 'PERCENTAGE'
-                                  ? `${offer.provided}%`
-                                  : offer.offer_type_ === 'AMOUNT'
-                                  ? `${offer.provided} €`
-                                  : ''}{' '}
-                                Off
-                              </OfferGetText>
-
-                              <OfferDescription>
-                                {(offer.description_json && offer.description_json?.[language].length < 60) ||
-                                moreDescription === `desc-${offerItemIndex}${offerIndex}` ? (
-                                  <>
-                                    {`${offer.description_json?.[language]} `}
-
-                                    {moreDescription === `desc-${offerItemIndex}${offerIndex}` && (
-                                      <span onClick={async () => await handleDescriptionMoreClick('')}>Less</span>
-                                    )}
-                                  </>
-                                ) : (
-                                  <>
-                                    {offer.description_json?.[language].slice(0, 60)}
-                                    <span onClick={async () => await handleDescriptionMoreClick(`desc-${offerItemIndex}${offerIndex}`)}>
-                                      {' '}
-                                      ... More
-                                    </span>
-                                  </>
-                                )}
-                              </OfferDescription>
-                            </OfferCardBody>
-
-                            <OfferApplyButton>Apply</OfferApplyButton>
-                          </OfferCard>
-                        ))}
-                      </OfferItem>
-                    );
-                  })}
-                </OfferBody>
-              </OffersContainer>
-
-              {/* <ChipContainer>
-                {offers.map((offer) => {
                   return (
-                    <Chip active={offer.code === coupon} onClick={async () => await hanldePromoCodeClick(offer.code)}>
-                      {offer.code}
-                    </Chip>
+                    <OfferItem>
+                      <OfferItemTitle>{offerItem.title}</OfferItemTitle>
+
+                      {offerItem.offers.map((offer, offerIndex) => (
+                        <OfferCard>
+                          <OfferCardBody>
+                            <OfferCode>{offer.code}</OfferCode>
+
+                            <OfferGetText>
+                              Use code FLEKSA Get{' '}
+                              {offer.offer_type_ === 'PERCENTAGE'
+                                ? `${offer.provided}%`
+                                : offer.offer_type_ === 'AMOUNT'
+                                ? `${offer.provided} €`
+                                : ''}{' '}
+                              Off
+                            </OfferGetText>
+
+                            <OfferDescription>
+                              {(offer.description_json && offer.description_json?.[language].length < 60) ||
+                              moreDescription === `desc-${offerItemIndex}${offerIndex}` ? (
+                                <>
+                                  {`${offer.description_json?.[language]} `}
+
+                                  {moreDescription === `desc-${offerItemIndex}${offerIndex}` && (
+                                    <span onClick={async () => await handleDescriptionMoreClick('')}>Less</span>
+                                  )}
+                                </>
+                              ) : (
+                                <>
+                                  {offer.description_json?.[language].slice(0, 60)}
+                                  <span onClick={async () => await handleDescriptionMoreClick(`desc-${offerItemIndex}${offerIndex}`)}>
+                                    {' '}
+                                    ... More
+                                  </span>
+                                </>
+                              )}
+                            </OfferDescription>
+                          </OfferCardBody>
+
+                          <OfferApplyButton onClick={async () => await hanldePromoCodeClick(offer.code)}>Use Code</OfferApplyButton>
+                        </OfferCard>
+                      ))}
+                    </OfferItem>
                   );
                 })}
-              </ChipContainer> */}
-            </PromoCodeContainer>
-          )}
+              </OfferBody>
+            </OffersContainer>
+          </PromoCodeContainer>
         </Col>
       </Row>
-    </>
+    </Wrapper>
   );
 };
 

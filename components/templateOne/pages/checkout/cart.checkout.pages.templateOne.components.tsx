@@ -3,15 +3,24 @@ import React, { FunctionComponent } from 'react';
 import { Row, Col } from 'react-grid-system';
 
 import styled from 'styled-components';
-import { useAppSelector } from '../../../../redux/hooks.redux';
+import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { selectCart } from '../../../../redux/slices/cart.slices.redux';
-import { selectDeliveryFinances, selectOrderType, selectPromoCode, selectTip } from '../../../../redux/slices/checkout.slices.redux';
+import {
+  selectDeliveryFinances,
+  selectOrderType,
+  selectPromoCode,
+  selectTip,
+  updatePromoCode,
+} from '../../../../redux/slices/checkout.slices.redux';
 import { selectLanguage, selectLanguageCode } from '../../../../redux/slices/configuration.slices.redux';
 import { checkoutFinalAmount } from '../../../../utils/checkout.utils';
 import formatCurrency from '../../../../utils/formatCurrency';
 import { StyledCheckoutCard, StyledCheckoutTitle } from './customer-info.checkout.pages.templateOne.components';
 import CheckoutPagePromoCode from './promo-code.checkout.pages.templateOne.components';
 import CheckoutPageTip from './tip.checkout.pahes.templateOne.components';
+import SvgOffer from '../../../../public/assets/svg/checkout/offerIcon.svg';
+import SvgCross from '../../../../public/assets/svg/cross.svg';
+import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 
 export const StyledCheckoutTextarea = styled.textarea`
   width: 100%;
@@ -96,6 +105,72 @@ const InfoCartSvgImage = styled.img`
   cursor: pointer;
 `;
 
+const AppliedPromoContainer = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+
+  svg {
+    display: block;
+  }
+  .svg-tag-yellow {
+    width: 20px;
+    height: 20px;
+    fill: ${(props) => props.theme.primaryColor};
+  }
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    svg {
+      width: 8px;
+      height: 8px;
+    }
+  }
+`;
+
+const TextSaved = styled.p`
+  display: flex;
+  margin-left: 12px;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    font-size: 13px;
+    margin-left: 5px;
+  }
+`;
+
+const RemovePromo = styled.div`
+  padding: 0.5rem;
+  cursor: pointer;
+  border: ${(props) => props.theme.border};
+  border-radius: 100px;
+  margin: 0 1rem;
+
+  svg {
+    width: 10px;
+    height: 10px;
+  }
+
+  &:hover,
+  &:active,
+  &:focus {
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    margin: 0 0 0 5px;
+    padding: 0.3rem;
+
+    svg {
+      width: 8px;
+      height: 8px;
+    }
+  }
+`;
+
+const ContainerItemTip = styled(ContainerItem)`
+  padding-top: 0.5rem;
+`;
+
 const CheckoutPageCart: FunctionComponent = ({}) => {
   const language = useAppSelector(selectLanguage);
   const cartData = useAppSelector(selectCart);
@@ -104,6 +179,7 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
   const promoData = useAppSelector(selectPromoCode);
   const languageCode = useAppSelector(selectLanguageCode);
   const deliveryFinances = useAppSelector(selectDeliveryFinances);
+  const dispatch = useAppDispatch();
   const { t } = useTranslation('page-checkout');
 
   const cartItemKeys = cartData.items ? Object.keys(cartData.items) : [];
@@ -146,23 +222,34 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
             <Price>{formatCurrency(cartData.cartCost, languageCode)}</Price>
           </ContainerItem>
 
+          {tipData && tipData > 0 ? (
+            <ContainerItemTip>
+              <Title>{t('@tip-cart')}</Title>
+              <Price>{formatCurrency(tipData, languageCode)}</Price>
+            </ContainerItemTip>
+          ) : (
+            <CheckoutPageTip />
+          )}
+
           {promoData ? (
             <ContainerItem>
-              <Title>{t('@discount')}</Title>
-              <Price>- {formatCurrency(promoData.value, languageCode)}</Price>
+              <AppliedPromoContainer>
+                <SvgOffer className="svg-tag-yellow" />
+                <TextSaved>
+                  {t('@saved')} <strong style={{ marginLeft: 4 }}>{formatCurrency(promoData.value, languageCode)}</strong>
+                </TextSaved>
+
+                <RemovePromo onClick={() => dispatch(updatePromoCode(null))}>
+                  <SvgCross />
+                </RemovePromo>
+              </AppliedPromoContainer>
+
+              <Price> - {formatCurrency(promoData.value, languageCode)}</Price>
             </ContainerItem>
           ) : (
             <CheckoutPagePromoCode />
           )}
 
-          {tipData && tipData > 0 ? (
-            <ContainerItem>
-              <Title>{t('@tip-cart')}</Title>
-              <Price>{formatCurrency(tipData, languageCode)}</Price>
-            </ContainerItem>
-          ) : (
-            <CheckoutPageTip />
-          )}
           {deliveryFee > 0 ? (
             <ContainerItem>
               <Title>{t('@delivery')}</Title>
