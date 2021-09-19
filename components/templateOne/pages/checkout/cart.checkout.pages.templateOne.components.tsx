@@ -10,6 +10,8 @@ import { selectLanguage, selectLanguageCode } from '../../../../redux/slices/con
 import { checkoutFinalAmount } from '../../../../utils/checkout.utils';
 import formatCurrency from '../../../../utils/formatCurrency';
 import { StyledCheckoutCard, StyledCheckoutTitle } from './customer-info.checkout.pages.templateOne.components';
+import CheckoutPagePromoCode from './promo-code.checkout.pages.templateOne.components';
+import CheckoutPageTip from './tip.checkout.pahes.templateOne.components';
 
 export const StyledCheckoutTextarea = styled.textarea`
   width: 100%;
@@ -133,27 +135,33 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
             );
           })}
         </Col>
+
         <Col xs={12}>
           <Divider />
         </Col>
+
         <Col xs={12}>
           <ContainerItem>
             <Title>{t('@subtotal')}</Title>
             <Price>{formatCurrency(cartData.cartCost, languageCode)}</Price>
           </ContainerItem>
-          {promoData && (
+
+          {promoData ? (
             <ContainerItem>
               <Title>{t('@discount')}</Title>
               <Price>- {formatCurrency(promoData.value, languageCode)}</Price>
             </ContainerItem>
+          ) : (
+            <CheckoutPagePromoCode />
           )}
+
           {tipData && tipData > 0 ? (
             <ContainerItem>
               <Title>{t('@tip-cart')}</Title>
               <Price>{formatCurrency(tipData, languageCode)}</Price>
             </ContainerItem>
           ) : (
-            <></>
+            <CheckoutPageTip />
           )}
           {deliveryFee > 0 ? (
             <ContainerItem>
