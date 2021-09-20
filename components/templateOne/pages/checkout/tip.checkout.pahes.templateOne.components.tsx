@@ -21,30 +21,29 @@ const TipOptionsList = styled.div`
   flex: 1;
   flex-direction: row;
   margin: 0 -8px;
-  justify-content: space-evenly;
 `;
 
 const TipOptionsItem = styled.div<{ isSelected: boolean }>`
-  display: flex;
-  flex: 1 1 0px;
   margin: 7px;
   border: ${(props) => props.theme.border};
   border-radius: ${(props) => props.theme.borderRadius}px;
   overflow: hidden;
-  align-items: center;
+  width: 80px;
+
   ${(props) =>
     props.isSelected &&
     css`
       border-color: ${(props) => props.theme.primaryColor};
       box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2);
     `}
+
   p {
-    display: flex;
-    flex: 1;
     margin: 0;
-    justify-content: center;
+    width: 100%;
     cursor: pointer;
-    padding: ${(props) => props.theme.dimen.X4}px;
+    padding: 0.5rem 0;
+    font-size: 0.9rem;
+    text-align: center;
 
     @media (max-width: ${BREAKPOINTS.sm}px) {
       font-size: 14px;
@@ -53,16 +52,19 @@ const TipOptionsItem = styled.div<{ isSelected: boolean }>`
   }
 
   span {
-    padding: 1rem;
+    padding: 0.4rem 0 0 0.3rem;
+    position: absolute;
   }
 
   input {
     display: flex;
     flex: 1;
+    padding-left: 1.5rem;
     font-size: inherit;
     border: none;
     outline: none;
     overflow: hidden;
+    height: 100%;
   }
 
   input[type='number']::-webkit-inner-spin-button,

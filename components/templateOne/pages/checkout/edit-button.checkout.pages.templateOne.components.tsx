@@ -1,13 +1,13 @@
-import { FunctionComponent } from "react";
-import styled from "styled-components";
-import SvgEdit from "../../../../public/assets/svg/edit.svg";
+import { FunctionComponent } from 'react';
+import styled from 'styled-components';
+import SvgEdit from '../../../../public/assets/svg/edit.svg';
 
 export interface IPropsEditButton {
-  onClick?(): void
-  disabled?: boolean
+  onClick?(): void;
+  disabled?: boolean;
 }
 
-const Wrapper = styled.div<{ disabled: boolean|undefined }>`
+const Wrapper = styled.div<{ disabled: boolean | undefined }>`
   min-width: 36px;
   width: 36px;
   height: 36px;
@@ -15,23 +15,26 @@ const Wrapper = styled.div<{ disabled: boolean|undefined }>`
   flex: 0 0 auto;
   justify-content: center;
   align-items: center;
-  border: ${props => props.theme.border};
-  border-radius: 1000px;
+  /* border: ${(props) => props.theme.border}; */
+  /* border-radius: 1000px; */
   cursor: pointer;
-  margin-left: ${props => props.theme.dimen.X4}px;
-  opacity: ${props => props.disabled? 0: 1};
+  margin-left: ${(props) => props.theme.dimen.X4}px;
+  opacity: ${(props) => (props.disabled ? 0 : 1)};
+
   svg {
     width: 36px;
     height: 36px;
     display: block;
-    padding: 6px
+    padding: 6px;
   }
-`
+`;
 
-const EditButton:FunctionComponent<IPropsEditButton> = ({ onClick, disabled }) => {
-  return <Wrapper onClick={disabled? undefined: onClick} disabled={disabled} >
-    <SvgEdit />
-  </Wrapper>
-}
+const EditButton: FunctionComponent<IPropsEditButton> = ({ onClick, disabled }) => {
+  return (
+    <Wrapper onClick={disabled ? undefined : onClick} disabled={disabled}>
+      <SvgEdit />
+    </Wrapper>
+  );
+};
 
-export default EditButton
+export default EditButton;
