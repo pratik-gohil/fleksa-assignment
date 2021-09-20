@@ -15,8 +15,6 @@ const Wrapper = styled.div<{ disabled: boolean | undefined }>`
   flex: 0 0 auto;
   justify-content: center;
   align-items: center;
-  /* border: ${(props) => props.theme.border}; */
-  /* border-radius: 1000px; */
   cursor: pointer;
   margin-left: ${(props) => props.theme.dimen.X4}px;
   opacity: ${(props) => (props.disabled ? 0 : 1)};

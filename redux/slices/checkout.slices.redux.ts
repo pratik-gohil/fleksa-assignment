@@ -27,6 +27,7 @@ export interface ICheckoutSliceState {
   isReOrder: boolean;
   isSofort: boolean;
   isPreOrder: boolean;
+  isOffersOpen: boolean;
 
   promoCode: {
     code: string;
@@ -49,6 +50,7 @@ export const checkoutInitialState: ICheckoutSliceState = {
   isReOrder: false,
   isSofort: false,
   isPreOrder: false,
+  isOffersOpen: false,
 };
 
 export const CheckoutSlice = createSlice({
@@ -94,6 +96,9 @@ export const CheckoutSlice = createSlice({
     updateCheckoutIsSofort(state, action) {
       state.isSofort = action.payload;
     },
+    updateCheckoutIsOffersOpen(state, action) {
+      state.isOffersOpen = action.payload;
+    },
 
     updateClearCheckout(state) {
       state.orderType = null;
@@ -109,6 +114,7 @@ export const CheckoutSlice = createSlice({
       state.isReOrder = false;
       state.isSofort = false;
       state.isPreOrder = false;
+      state.isOffersOpen = false;
     },
     updateCheckout(state, action) {
       state.orderType = action.payload.orderType || state.orderType;
@@ -122,6 +128,7 @@ export const CheckoutSlice = createSlice({
       state.isReOrder = action.payload.isReOrder || state.isReOrder;
       state.isSofort = action.payload.isSofort || state.isSofort;
       state.isPreOrder = action.payload.isPreOrder || state.isPreOrder;
+      state.isOffersOpen = action.payload.isOffersOpen || state.isOffersOpen;
     },
   },
   extraReducers: {
@@ -149,6 +156,7 @@ export const {
   updateCheckoutIsReOrder,
   updateCheckoutIsPreOrder,
   updateCheckoutIsSofort,
+  updateCheckoutIsOffersOpen,
 } = CheckoutSlice.actions;
 
 export const selectDeliveryFinances = (state: RootState) => state.checkout.deliveryFinances;
@@ -164,3 +172,4 @@ export const selectIsReOrder = (state: RootState) => state.checkout.isReOrder;
 export const selectCheckoutLogin = (state: RootState) => state.checkout.checkoutLogin;
 export const selectIsSofort = (state: RootState) => state.checkout.isSofort;
 export const selectIsPreOrder = (state: RootState) => state.checkout.isPreOrder;
+export const selectIsOffersOpen = (state: RootState) => state.checkout.isOffersOpen;
