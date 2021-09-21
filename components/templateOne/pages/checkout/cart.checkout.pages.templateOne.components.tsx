@@ -20,8 +20,8 @@ import { StyledCheckoutCard, StyledCheckoutTitle } from './customer-info.checkou
 import CheckoutPagePromoCode from './promo-code.checkout.pages.templateOne.components';
 import CheckoutPageTip from './tip.checkout.pahes.templateOne.components';
 import SvgOffer from '../../../../public/assets/svg/checkout/offerIcon.svg';
-import SvgCross from '../../../../public/assets/svg/cross.svg';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
+// import SvgCross from '../../../../public/assets/svg/cross.svg';
 
 export const StyledCheckoutTextarea = styled.textarea`
   width: 100%;
@@ -106,27 +106,10 @@ const InfoCartSvgImage = styled.img`
   cursor: pointer;
 `;
 
-const AppliedContainer = styled.div`
+const AppliedCodeContainer = styled.div`
   display: flex;
-  flex: 1;
-  flex-direction: row;
   align-items: center;
-
-  svg {
-    display: block;
-  }
-  .svg-tag-yellow {
-    width: 20px;
-    height: 20px;
-    fill: ${(props) => props.theme.primaryColor};
-  }
-
-  @media (max-width: ${BREAKPOINTS.sm}px) {
-    svg {
-      width: 8px;
-      height: 8px;
-    }
-  }
+  justify-content: flex-start;
 `;
 
 const TextSaved = styled.p`
@@ -140,18 +123,16 @@ const TextSaved = styled.p`
 `;
 
 const RemovePromo = styled.div`
-  padding: 0.5rem;
   cursor: pointer;
   border: ${(props) => props.theme.border};
   border-radius: 100px;
   margin: 0 1rem;
   opacity: 0.5;
   transition: opacity 0.1s ease-out;
-
-  svg {
-    width: 10px;
-    height: 10px;
-  }
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
 
   &:hover,
   &:active,
@@ -162,16 +143,16 @@ const RemovePromo = styled.div`
   @media (max-width: ${BREAKPOINTS.sm}px) {
     margin: 0 0 0 5px;
     padding: 0.3rem;
-
-    svg {
-      width: 8px;
-      height: 8px;
-    }
   }
 `;
 
 const ContainerItemTip = styled(ContainerItem)`
   padding-top: 0.5rem;
+`;
+
+const SvgCrossImage = styled.img`
+  width: 10px;
+  height: 10px;
 `;
 
 const CheckoutPageCart: FunctionComponent = ({}) => {
@@ -227,12 +208,14 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
 
           {tipData && tipData > 0 ? (
             <ContainerItemTip>
-              <AppliedContainer>
+              <AppliedCodeContainer>
                 <Title>{t('@tip-cart')}</Title>
+
                 <RemovePromo onClick={() => dispatch(updateTip(0))}>
-                  <SvgCross />
+                  <SvgCrossImage src="/assets/svg/cross.svg" />
                 </RemovePromo>
-              </AppliedContainer>
+              </AppliedCodeContainer>
+
               <Price>{formatCurrency(tipData, languageCode)}</Price>
             </ContainerItemTip>
           ) : (
@@ -241,16 +224,16 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
 
           {promoData ? (
             <ContainerItem>
-              <AppliedContainer>
-                <SvgOffer className="svg-tag-yellow" />
+              <AppliedCodeContainer>
+                <SvgOffer />
                 <TextSaved>
                   {t('@saved')} <strong style={{ marginLeft: 4 }}>{formatCurrency(promoData.value, languageCode)}</strong>
                 </TextSaved>
 
                 <RemovePromo onClick={() => dispatch(updatePromoCode(null))}>
-                  <SvgCross />
+                  <SvgCrossImage src="/assets/svg/cross.svg" />
                 </RemovePromo>
-              </AppliedContainer>
+              </AppliedCodeContainer>
 
               <Price> - {formatCurrency(promoData.value, languageCode)}</Price>
             </ContainerItem>

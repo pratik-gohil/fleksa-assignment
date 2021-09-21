@@ -269,7 +269,6 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
   const isDropdown = useAppSelector(selectIsOffersOpen);
   const { t } = useTranslation('page-checkout');
 
-  // const [isDropdown, setIsDropdown] = useState(false);
   const [coupon, setCoupon] = useState(promoCodeData?.code || '');
   const [offers, setOffers] = useState<IOffer[]>(offersData);
   const [moreDescription, setMoreDescription] = useState<string>('');
