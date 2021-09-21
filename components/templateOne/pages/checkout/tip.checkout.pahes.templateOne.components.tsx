@@ -80,6 +80,64 @@ const TipOptionsItem = styled.div<{ isSelected: boolean }>`
   }
 `;
 
+const ContainerItemTip = styled.div`
+  padding-top: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const AppliedCodeContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+`;
+
+const Title = styled.p`
+  display: flex;
+
+  margin: 0;
+  font-weight: 600;
+
+  span {
+    font-weight: 600;
+  }
+`;
+
+const RemovePromo = styled.div`
+  cursor: pointer;
+  border: ${(props) => props.theme.border};
+  border-radius: 100px;
+  margin: 0 1rem;
+  opacity: 0.5;
+  transition: opacity 0.1s ease-out;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+
+  &:hover,
+  &:active,
+  &:focus {
+    opacity: 1;
+  }
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    margin: 0 0 0 5px;
+    padding: 0.3rem;
+  }
+`;
+
+const SvgCrossImage = styled.img`
+  width: 10px;
+  height: 10px;
+`;
+
+const Price = styled.p`
+  margin: 0;
+  font-weight: 600;
+`;
+
 const tipPercentage = [
   [5, 10, 20],
   [10, 20, 30],
@@ -100,7 +158,19 @@ const CheckoutPageTip: FunctionComponent = ({}) => {
     if (amount === null || amount >= 0) dispatch(updateTip(amount));
   }
 
-  return (
+  return tipData && tipData > 0 ? (
+    <ContainerItemTip>
+      <AppliedCodeContainer>
+        <Title>{t('@tip-cart')}</Title>
+
+        <RemovePromo onClick={() => dispatch(updateTip(0))}>
+          <SvgCrossImage src="/assets/svg/cross.svg" />
+        </RemovePromo>
+      </AppliedCodeContainer>
+
+      <Price>{formatCurrency(tipData, languageCode)}</Price>
+    </ContainerItemTip>
+  ) : (
     <Wrapper>
       <StyledCheckoutTitle>{t('@tip')}</StyledCheckoutTitle>
 

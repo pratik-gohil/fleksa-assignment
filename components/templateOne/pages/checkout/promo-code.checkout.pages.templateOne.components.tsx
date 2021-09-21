@@ -16,7 +16,12 @@ import {
   updatePromoCode,
 } from '../../../../redux/slices/checkout.slices.redux';
 import { updateError } from '../../../../redux/slices/common.slices.redux';
-import { selectConfiguration, selectLanguage, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
+import {
+  selectConfiguration,
+  selectLanguage,
+  selectLanguageCode,
+  selectSelectedMenu,
+} from '../../../../redux/slices/configuration.slices.redux';
 import { selectBearerToken } from '../../../../redux/slices/user.slices.redux';
 import { getPrductsFromCartData } from '../../../../utils/products.utils';
 import { StyledCheckoutTitle } from './customer-info.checkout.pages.templateOne.components';
@@ -27,10 +32,11 @@ import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.
 import { IOffer } from '../../../../interfaces/common/offer.common.interfaces';
 import { selectOffers } from '../../../../redux/slices/index.slices.redux';
 
-import SvgOffer from '../../../../public/assets/svg/checkout/offerIcon.svg';
 import SvgDelivery from '../../../../public/assets/svg/delivery.svg';
 import SvgPickup from '../../../../public/assets/svg/pickup.svg';
 import SvgDinein from '../../../../public/assets/svg/dinein.svg';
+import SvgOffer from '../../../../public/assets/svg/checkout/offerIcon.svg';
+import formatCurrency from '../../../../utils/formatCurrency';
 
 const Wrapper = styled.div`
   padding: 1rem 0 0 0;
@@ -256,6 +262,62 @@ const Divider = styled.hr`
   border-color: rgba(0, 0, 0, 0.1);
 `;
 
+const AppliedContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  & > div {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+`;
+
+const TextSaved = styled.p`
+  display: flex;
+  margin-left: 12px;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    font-size: 13px;
+    margin-left: 5px;
+  }
+`;
+
+const RemovePromo = styled.div`
+  cursor: pointer;
+  border: ${(props) => props.theme.border};
+  border-radius: 100px;
+  margin: 0 1rem;
+  opacity: 0.5;
+  transition: opacity 0.1s ease-out;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+
+  &:hover,
+  &:active,
+  &:focus {
+    opacity: 1;
+  }
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    margin: 0 0 0 5px;
+    padding: 0.3rem;
+  }
+`;
+
+const SvgCrossImage = styled.img`
+  width: 10px;
+  height: 10px;
+`;
+
+const Price = styled.p`
+  margin: 0;
+  font-weight: 600;
+`;
+
 const CheckoutPagePromoCode: FunctionComponent = ({}) => {
   const language = useAppSelector(selectLanguage);
   const cartData = useAppSelector(selectCart);
@@ -267,6 +329,8 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
   const paymentMethod = useAppSelector(selectPaymentMethod);
   const offersData = useAppSelector(selectOffers);
   const isDropdown = useAppSelector(selectIsOffersOpen);
+  const languageCode = useAppSelector(selectLanguageCode);
+
   const { t } = useTranslation('page-checkout');
 
   const [coupon, setCoupon] = useState(promoCodeData?.code || '');
@@ -376,7 +440,22 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
     }
   };
 
-  return (
+  return promoCodeData ? (
+    <AppliedContainer>
+      <div>
+        <SvgOffer />
+        <TextSaved>
+          {t('@saved')} <strong style={{ marginLeft: 4 }}>{formatCurrency(promoCodeData.value, languageCode)}</strong>
+        </TextSaved>
+
+        <RemovePromo onClick={() => dispatch(updatePromoCode(null))}>
+          <SvgCrossImage src="/assets/svg/cross.svg" />
+        </RemovePromo>
+      </div>
+
+      <Price> - {formatCurrency(promoCodeData.value, languageCode)}</Price>
+    </AppliedContainer>
+  ) : (
     <Wrapper>
       <StyledCheckoutTitle>{t('@promo')}</StyledCheckoutTitle>
 

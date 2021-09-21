@@ -3,25 +3,15 @@ import React, { FunctionComponent } from 'react';
 import { Row, Col } from 'react-grid-system';
 
 import styled from 'styled-components';
-import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
+import { useAppSelector } from '../../../../redux/hooks.redux';
 import { selectCart } from '../../../../redux/slices/cart.slices.redux';
-import {
-  selectDeliveryFinances,
-  selectOrderType,
-  selectPromoCode,
-  selectTip,
-  updatePromoCode,
-  updateTip,
-} from '../../../../redux/slices/checkout.slices.redux';
+import { selectDeliveryFinances, selectOrderType, selectPromoCode, selectTip } from '../../../../redux/slices/checkout.slices.redux';
 import { selectLanguage, selectLanguageCode } from '../../../../redux/slices/configuration.slices.redux';
 import { checkoutFinalAmount } from '../../../../utils/checkout.utils';
 import formatCurrency from '../../../../utils/formatCurrency';
 import { StyledCheckoutCard, StyledCheckoutTitle } from './customer-info.checkout.pages.templateOne.components';
 import CheckoutPagePromoCode from './promo-code.checkout.pages.templateOne.components';
 import CheckoutPageTip from './tip.checkout.pahes.templateOne.components';
-import SvgOffer from '../../../../public/assets/svg/checkout/offerIcon.svg';
-import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
-// import SvgCross from '../../../../public/assets/svg/cross.svg';
 
 export const StyledCheckoutTextarea = styled.textarea`
   width: 100%;
@@ -42,6 +32,7 @@ const ContainerItem = styled.div`
 const ContainerCartItem = styled.p`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: 100%;
   padding: 0.3rem 0;
   margin: 0;
@@ -50,8 +41,6 @@ const ContainerCartItem = styled.p`
 const ContainerCartItemBody = styled(ContainerItem)``;
 
 const Title = styled.p`
-  display: flex;
-
   margin: 0;
   font-weight: 600;
   span {
@@ -106,55 +95,6 @@ const InfoCartSvgImage = styled.img`
   cursor: pointer;
 `;
 
-const AppliedCodeContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-`;
-
-const TextSaved = styled.p`
-  display: flex;
-  margin-left: 12px;
-
-  @media (max-width: ${BREAKPOINTS.sm}px) {
-    font-size: 13px;
-    margin-left: 5px;
-  }
-`;
-
-const RemovePromo = styled.div`
-  cursor: pointer;
-  border: ${(props) => props.theme.border};
-  border-radius: 100px;
-  margin: 0 1rem;
-  opacity: 0.5;
-  transition: opacity 0.1s ease-out;
-  width: 30px;
-  height: 30px;
-  display: grid;
-  place-items: center;
-
-  &:hover,
-  &:active,
-  &:focus {
-    opacity: 1;
-  }
-
-  @media (max-width: ${BREAKPOINTS.sm}px) {
-    margin: 0 0 0 5px;
-    padding: 0.3rem;
-  }
-`;
-
-const ContainerItemTip = styled(ContainerItem)`
-  padding-top: 0.5rem;
-`;
-
-const SvgCrossImage = styled.img`
-  width: 10px;
-  height: 10px;
-`;
-
 const CheckoutPageCart: FunctionComponent = ({}) => {
   const language = useAppSelector(selectLanguage);
   const cartData = useAppSelector(selectCart);
@@ -163,7 +103,7 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
   const promoData = useAppSelector(selectPromoCode);
   const languageCode = useAppSelector(selectLanguageCode);
   const deliveryFinances = useAppSelector(selectDeliveryFinances);
-  const dispatch = useAppDispatch();
+
   const { t } = useTranslation('page-checkout');
 
   const cartItemKeys = cartData.items ? Object.keys(cartData.items) : [];
@@ -206,40 +146,11 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
             <Price>{formatCurrency(cartData.cartCost, languageCode)}</Price>
           </ContainerItem>
 
-          {tipData && tipData > 0 ? (
-            <ContainerItemTip>
-              <AppliedCodeContainer>
-                <Title>{t('@tip-cart')}</Title>
+          {/* Adding Tip section  */}
+          <CheckoutPageTip />
 
-                <RemovePromo onClick={() => dispatch(updateTip(0))}>
-                  <SvgCrossImage src="/assets/svg/cross.svg" />
-                </RemovePromo>
-              </AppliedCodeContainer>
-
-              <Price>{formatCurrency(tipData, languageCode)}</Price>
-            </ContainerItemTip>
-          ) : (
-            <CheckoutPageTip />
-          )}
-
-          {promoData ? (
-            <ContainerItem>
-              <AppliedCodeContainer>
-                <SvgOffer />
-                <TextSaved>
-                  {t('@saved')} <strong style={{ marginLeft: 4 }}>{formatCurrency(promoData.value, languageCode)}</strong>
-                </TextSaved>
-
-                <RemovePromo onClick={() => dispatch(updatePromoCode(null))}>
-                  <SvgCrossImage src="/assets/svg/cross.svg" />
-                </RemovePromo>
-              </AppliedCodeContainer>
-
-              <Price> - {formatCurrency(promoData.value, languageCode)}</Price>
-            </ContainerItem>
-          ) : (
-            <CheckoutPagePromoCode />
-          )}
+          {/* Adding promo code section  */}
+          <CheckoutPagePromoCode />
 
           {deliveryFee > 0 ? (
             <ContainerItem>
