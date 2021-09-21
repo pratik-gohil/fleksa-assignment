@@ -11,6 +11,10 @@
   "@apply": "EINLÖSEN",
   "@discount-of": " ",
   "@above": "Rabatt auf Bestellungen über",
+  "@more": "Mehr",
+  "@less": "Weniger",
+  "@use-code": "CODE VERWENDEN",
+  "@all": "ALLE BESTELLUNGEN",
 
   "@tip": "TRINKGELD",
   "@other": "Andere",
@@ -32,6 +36,7 @@
   "@delivery": "Lieferung",
   "@pickup": "Abholung",
   "@dine-in": "Dine-In",
+  "@dinein": "Dine-In",
   "@min-required": "Mindestbestellwert:",
   "@proceed": "Weiter",
   "@send": "Senden",

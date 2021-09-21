@@ -419,7 +419,7 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
                         <OfferCardBody>
                           <OfferBodyHeader>
                             <SymbolIcon>{getCorrespondOfferIcon(offerItem.order_type_)}</SymbolIcon>
-                            <OfferCode>{offerItem.order_type_}</OfferCode>
+                            <OfferCode>{t(`@${offerItem.order_type_.toLowerCase()}`)}</OfferCode>
                             <Ticket>{offerItem.code}</Ticket>
                           </OfferBodyHeader>
 
@@ -440,19 +440,24 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
                                 {`${offerItem.description_json?.[language]} `}
 
                                 {moreDescription === `desc-${offerItemIndex}` && (
-                                  <span onClick={async () => await handleDescriptionMoreClick('')}>Less</span>
+                                  <span onClick={async () => await handleDescriptionMoreClick('')}>{t('@less')}</span>
                                 )}
                               </>
                             ) : (
                               <>
                                 {offerItem.description_json?.[language].slice(0, 60)}
-                                <span onClick={async () => await handleDescriptionMoreClick(`desc-${offerItemIndex}`)}> ... More</span>
+                                <span onClick={async () => await handleDescriptionMoreClick(`desc-${offerItemIndex}`)}>
+                                  {' '}
+                                  ... {t('@more')}
+                                </span>
                               </>
                             )}
                           </OfferDescription>
                         </OfferCardBody>
 
-                        <OfferApplyButton onClick={async () => await hanldePromoCodeClick(offerItem.code)}>Use Code</OfferApplyButton>
+                        <OfferApplyButton onClick={async () => await hanldePromoCodeClick(offerItem.code)}>
+                          {t('@use-code')}
+                        </OfferApplyButton>
                       </OfferItem>
 
                       <Divider />
