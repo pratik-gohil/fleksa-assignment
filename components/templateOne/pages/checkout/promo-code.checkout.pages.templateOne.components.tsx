@@ -35,7 +35,10 @@ import { selectOffers } from '../../../../redux/slices/index.slices.redux';
 import SvgDelivery from '../../../../public/assets/svg/delivery.svg';
 import SvgPickup from '../../../../public/assets/svg/pickup.svg';
 import SvgDinein from '../../../../public/assets/svg/dinein.svg';
+import SvgFirstOffer from '../../../../public/assets/svg/checkout/allOfferIcon.svg';
+import SvgAllOffer from '../../../../public/assets/svg/checkout/firstOfferIcon.svg';
 import SvgOffer from '../../../../public/assets/svg/checkout/offerIcon.svg';
+
 import formatCurrency from '../../../../utils/formatCurrency';
 
 const Wrapper = styled.div`
@@ -98,7 +101,7 @@ const DropDownContainer = styled.div``;
 const DropDown = styled.div`
   display: flex;
   align-items: center;
-  padding: 0.5rem 0 0 0;
+  justify-content: space-between;
   cursor: pointer;
 
   &:hover,
@@ -112,14 +115,15 @@ const DropDown = styled.div`
   }
 `;
 
-const Title = styled.h4`
+const Title = styled.h4<{ isDropdown: boolean }>`
   font-size: 1rem;
   font-weight: 400;
-  padding: 0;
+  padding: ${(p) => (p.isDropdown ? '1rem 0 0 0' : '0')};
   margin: 0;
   position: relative;
-  color: ${(p) => p.theme.textDarkColor};
-  font-weight: 600;
+  color: ${(p) => p.theme.primaryColor};
+  font-weight: 700;
+  transition: all 0.2s linear;
 
   &:after {
     content: '';
@@ -165,32 +169,10 @@ const OfferBodyHeader = styled.div`
 
 const Ticket = styled.p`
   margin: 0 1rem;
-  padding: 0.5rem 0.5rem;
-  font-size: 0.8rem;
+  padding: 0.3rem 0.3rem;
+  font-size: 0.7rem;
   position: relative;
   border: 1px dotted rgba(0, 0, 0, 1);
-
-  /* &:after {
-    position: absolute;
-    width: 0;
-    height: 25px;
-    content: '';
-    top: -0.5rem;
-    left: 0.5rem;
-    border: 1px dotted rgba(0, 0, 0, 1);
-    transform: rotate(45deg);
-  }
-
-  &:before {
-    position: absolute;
-    width: 0;
-    height: 25px;
-    content: '';
-    bottom: -0.5rem;
-    left: 0.5rem;
-    border: 1px dotted rgba(0, 0, 0, 1);
-    transform: rotate(-45deg);
-  } */
 `;
 
 const SymbolIcon = styled.div`
@@ -318,6 +300,16 @@ const Price = styled.p`
   font-weight: 600;
 `;
 
+const DropDownBody = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const SelectText = styled.p`
+  padding: 0 0.5rem;
+  margin: 0;
+`;
+
 const CheckoutPagePromoCode: FunctionComponent = ({}) => {
   const language = useAppSelector(selectLanguage);
   const cartData = useAppSelector(selectCart);
@@ -430,10 +422,10 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
       case 'DINEIN':
         return <SvgDinein />;
       case 'FIRST':
-        return <img src="/assets/png/welcome.png" />;
+        return <SvgFirstOffer />;
 
       case 'ALL':
-        return <img src="/assets/png/welcome.png" />;
+        return <SvgAllOffer />;
 
       default:
         return <SvgOffer />;
@@ -462,31 +454,36 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
       <Row>
         <Col xs={12}>
           <PromoCodeContainer>
-            <InputContainer>
-              <PromoCodeInput
-                value={coupon}
-                autoFocus
-                onChange={(e) => setCoupon(e.target.value)}
-                onBlur={() => {
-                  amplitudeEvent(constructEventName(`coupon `, 'input'), {
-                    coupon,
-                    length: coupon.length,
-                  });
-                }}
-                required
-              />
+            {isDropdown && (
+              <InputContainer>
+                <PromoCodeInput
+                  value={coupon}
+                  autoFocus
+                  onChange={(e) => setCoupon(e.target.value)}
+                  onBlur={() => {
+                    amplitudeEvent(constructEventName(`coupon `, 'input'), {
+                      coupon,
+                      length: coupon.length,
+                    });
+                  }}
+                  required
+                />
 
-              <ApplyButton onClick={onClickApply}>{t('@apply')}</ApplyButton>
-            </InputContainer>
+                <ApplyButton onClick={onClickApply}>{t('@apply')}</ApplyButton>
+              </InputContainer>
+            )}
 
             <OffersContainer>
               <DropDownContainer onClick={handleDropdownClick}>
                 <DropDown>
-                  <OfferIcon>
-                    <SvgOffer />
-                  </OfferIcon>
+                  <DropDownBody>
+                    <OfferIcon>
+                      <SvgOffer />
+                    </OfferIcon>
+                    <SelectText>Select a promocode</SelectText>
+                  </DropDownBody>
 
-                  <Title>{t('@view-offers')}</Title>
+                  <Title isDropdown={isDropdown}>{isDropdown ? 'Hide' : 'Show'}</Title>
                 </DropDown>
 
                 <Divider />
@@ -536,9 +533,7 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
                           </OfferDescription>
                         </OfferCardBody>
 
-                        <OfferApplyButton onClick={async () => await hanldePromoCodeClick(offerItem.code)}>
-                          {t('@use-code')}
-                        </OfferApplyButton>
+                        <OfferApplyButton onClick={async () => await hanldePromoCodeClick(offerItem.code)}>{t('@apply')}</OfferApplyButton>
                       </OfferItem>
 
                       <Divider />
