@@ -13,9 +13,12 @@
   "@above": "Rabatt auf Bestellungen über",
   "@more": "Mehr",
   "@less": "Weniger",
+  "@hide": "Verstecken",
+  "@show": "Zeigen",
   "@use-code": "CODE VERWENDEN",
   "@all": "ALLE BESTELLUNGEN",
-  "@first": "Zuerst",
+  "@first": "ERSTE BESTELLUNG",
+  "@select-code": "Wählen Sie einen Promocode",
 
   "@tip": "TRINKGELD",
   "@other": "Andere",

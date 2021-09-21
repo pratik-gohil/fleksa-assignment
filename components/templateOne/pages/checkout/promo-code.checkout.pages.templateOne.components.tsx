@@ -347,7 +347,7 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
   /**
    * @description apply discount coupon on checkout
    */
-  async function onClickApply() {
+  async function onClickApply(text: string) {
     amplitudeEvent(constructEventName(`coupon apply`, 'button'), {
       coupon,
       length: coupon.length,
@@ -358,7 +358,7 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
 
       const response = await new PyApiHttpPostOffers(configuration).post({
         products,
-        code: coupon,
+        code: text,
         orderType: orderType,
         shopId,
         token: bearerToken ?? '',
@@ -368,7 +368,7 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
       if (response?.result) {
         dispatch(
           updatePromoCode({
-            code: coupon,
+            code: text,
             value: response.details.amount.value,
             token: response.token,
           }),
@@ -395,7 +395,7 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
   /**
    * @description replace suggested coupon code
    */
-  const hanldePromoCodeClick = async (text: string) => setCoupon(text);
+  const hanldePromoCodeClick = async (text: string) => await onClickApply(text);
 
   /**
    *
@@ -469,7 +469,7 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
                   required
                 />
 
-                <ApplyButton onClick={onClickApply}>{t('@apply')}</ApplyButton>
+                <ApplyButton onClick={async () => await onClickApply(coupon)}>{t('@apply')}</ApplyButton>
               </InputContainer>
             )}
 
@@ -480,10 +480,10 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
                     <OfferIcon>
                       <SvgOffer />
                     </OfferIcon>
-                    <SelectText>Select a promocode</SelectText>
+                    <SelectText>{t('@select-code')}</SelectText>
                   </DropDownBody>
 
-                  <Title isDropdown={isDropdown}>{isDropdown ? 'Hide' : 'Show'}</Title>
+                  <Title isDropdown={isDropdown}>{isDropdown ? t('@hide') : t('@show')}</Title>
                 </DropDown>
 
                 <Divider />
