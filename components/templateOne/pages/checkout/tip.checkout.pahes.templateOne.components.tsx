@@ -10,7 +10,7 @@ import { selectTip, updateTip } from '../../../../redux/slices/checkout.slices.r
 import { selectLanguageCode } from '../../../../redux/slices/configuration.slices.redux';
 import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 import formatCurrency from '../../../../utils/formatCurrency';
-import { StyledCheckoutTitle } from './customer-info.checkout.pages.templateOne.components';
+import SvgTip from '../../../../public/assets/svg/checkout/tipIcon.svg';
 
 const Wrapper = styled.div`
   padding-top: 0.5rem;
@@ -80,19 +80,6 @@ const TipOptionsItem = styled.div<{ isSelected: boolean }>`
   }
 `;
 
-const ContainerItemTip = styled.div`
-  padding-top: 0.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const AppliedCodeContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-`;
-
 const Title = styled.p`
   display: flex;
 
@@ -101,6 +88,23 @@ const Title = styled.p`
 
   span {
     font-weight: 600;
+  }
+`;
+
+const TipTitleContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const TipIconContainer = styled.div`
+  margin-right: 0.5rem;
+  display: grid;
+  place-items: center;
+
+  svg {
+    width: 24px;
+    height: 24px;
   }
 `;
 
@@ -138,6 +142,12 @@ const Price = styled.p`
   font-weight: 600;
 `;
 
+const TipTitleBodyContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
 const tipPercentage = [
   [5, 10, 20],
   [10, 20, 30],
@@ -158,81 +168,89 @@ const CheckoutPageTip: FunctionComponent = ({}) => {
     if (amount === null || amount >= 0) dispatch(updateTip(amount));
   }
 
-  return tipData && tipData > 0 ? (
-    <ContainerItemTip>
-      <AppliedCodeContainer>
-        <Title>{t('@tip-cart')}</Title>
-
-        <RemovePromo onClick={() => dispatch(updateTip(0))}>
-          <SvgCrossImage src="/assets/svg/cross.svg" />
-        </RemovePromo>
-      </AppliedCodeContainer>
-
-      <Price>{formatCurrency(tipData, languageCode)}</Price>
-    </ContainerItemTip>
-  ) : (
+  return (
     <Wrapper>
-      <StyledCheckoutTitle>{t('@tip')}</StyledCheckoutTitle>
+      <TipTitleContainer>
+        <TipTitleBodyContainer>
+          <TipIconContainer>
+            <SvgTip />
+          </TipIconContainer>
 
-      <TipOptionsList>
-        {tipOptions.map((amount, index) => {
-          const isSelected = amount === tipData;
-          return (
-            <TipOptionsItem
-              key={index}
-              isSelected={isSelected}
-              onClick={() => {
-                setOtherTip(false);
-                onChangeTip(isSelected ? null : amount);
-                amplitudeEvent(constructEventName(`tip selection`, 'button'), {
-                  amount,
-                });
-              }}
-            >
-              <p>{formatCurrency(amount, languageCode)}</p>
-            </TipOptionsItem>
-          );
-        })}
+          <Title>{t('@tip')}</Title>
 
-        <TipOptionsItem key="custom" isSelected={otherTip}>
-          {otherTip ? (
-            <>
-              <span>€</span>
-              <input
-                onBlur={() => {
-                  amplitudeEvent(constructEventName(`tip selection`, 'input'), {
-                    tipData,
-                  });
+          {!!tipData && tipData > 0 && (
+            <RemovePromo onClick={() => dispatch(updateTip(0))}>
+              <SvgCrossImage src="/assets/svg/cross.svg" />
+            </RemovePromo>
+          )}
+        </TipTitleBodyContainer>
 
-                  onChangeTip(otherTipAmount);
-                }}
-                autoFocus
-                type="number"
-                value={otherTipAmount ?? ''}
-                onChange={(e) => {
-                  if (!Number(e.target.value)) return setOtherTipAmount(null);
+        {!!tipData && tipData > 0 && <Price>{formatCurrency(tipData, languageCode)}</Price>}
+      </TipTitleContainer>
 
-                  setOtherTipAmount(Number(e.target.value) ?? null);
-                }}
-              />
-            </>
-          ) : (
-            <>
-              <p
+      {tipData && tipData > 0 ? (
+        <></>
+      ) : (
+        <TipOptionsList>
+          {tipOptions.map((amount, index) => {
+            const isSelected = amount === tipData;
+            return (
+              <TipOptionsItem
+                key={index}
+                isSelected={isSelected}
                 onClick={() => {
-                  if (!otherTip) setOtherTip(true);
-
+                  setOtherTip(false);
+                  onChangeTip(isSelected ? null : amount);
                   amplitudeEvent(constructEventName(`tip selection`, 'button'), {
-                    otherTip,
+                    amount,
                   });
                 }}
               >
-                {t('@other')}
-              </p>
-            </>
-          )}
-        </TipOptionsItem>
-      </TipOptionsList>
+                <p>{formatCurrency(amount, languageCode)}</p>
+              </TipOptionsItem>
+            );
+          })}
+
+          <TipOptionsItem key="custom" isSelected={otherTip}>
+            {otherTip ? (
+              <>
+                <span>€</span>
+                <input
+                  onBlur={() => {
+                    amplitudeEvent(constructEventName(`tip selection`, 'input'), {
+                      tipData,
+                    });
+
+                    onChangeTip(otherTipAmount);
+                  }}
+                  autoFocus
+                  type="number"
+                  value={otherTipAmount ?? ''}
+                  onChange={(e) => {
+                    if (!Number(e.target.value)) return setOtherTipAmount(null);
+
+                    setOtherTipAmount(Number(e.target.value) ?? null);
+                  }}
+                />
+              </>
+            ) : (
+              <>
+                <p
+                  onClick={() => {
+                    if (!otherTip) setOtherTip(true);
+
+                    amplitudeEvent(constructEventName(`tip selection`, 'button'), {
+                      otherTip,
+                    });
+                  }}
+                >
+                  {t('@other')}
+                </p>
+              </>
+            )}
+          </TipOptionsItem>
+        </TipOptionsList>
+      )}
     </Wrapper>
   );
 };
