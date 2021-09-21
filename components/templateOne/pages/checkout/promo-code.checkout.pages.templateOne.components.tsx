@@ -405,7 +405,7 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
                     <SvgOffer />
                   </OfferIcon>
 
-                  <Title>View Offers</Title>
+                  <Title>{t('@view-offers')}</Title>
                 </DropDown>
 
                 <Divider />
@@ -424,13 +424,13 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
                           </OfferBodyHeader>
 
                           <OfferGetText>
-                            Discount of
+                            {t('@discount-of')}{' '}
                             {offerItem.offer_type_ === 'PERCENTAGE'
                               ? `${offerItem.provided}%`
                               : offerItem.offer_type_ === 'AMOUNT'
                               ? `${offerItem.provided} €`
                               : ''}{' '}
-                            on orders
+                            {t('@above')} 0 €
                           </OfferGetText>
 
                           <OfferDescription>

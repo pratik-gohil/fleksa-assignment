@@ -8,7 +8,10 @@
   "@comments": "KOMMENTARE",
   "@promo": "GUTSCHEINCODE",
   "@saved": "YAY! Du hast gespeichert",
-  "@apply": "ANWENDEN",
+  "@apply": "EINLÖSEN",
+  "@discount-of": " ",
+  "@above": "Rabatt auf Bestellungen über",
+
   "@tip": "TRINKGELD",
   "@other": "Andere",
   "@credit-card": "Karten und mehr",
@@ -43,5 +46,6 @@
   "@choose-date": "Wählen Sie ein Datum",
   "@choose-time": "Wählen Sie eine Zeit",
   "@done-button": "ERLEDIGT",
-  "@not-available-item": "Zurzeit nicht verfügbar!"
+  "@not-available-item": "Zurzeit nicht verfügbar!",
+  "@view-offers": "Verfügbare Angebote"
 }

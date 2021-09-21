@@ -8,7 +8,10 @@
   "@comments": "COMMENTS",
   "@promo": "PROMO CODE",
   "@saved": "YAY! You saved",
-  "@apply": "APPLY",
+  "@apply": "REDEEM",
+  "@discount-of": "Discount of",
+  "@above": "on orders above",
+
   "@tip": "TIP",
   "@other": "Other",
   "@credit-card": "Cards and more",
@@ -41,5 +44,6 @@
   "@choose-date": "Choose a date",
   "@choose-time": "Choose a time",
   "@done-button": "DONE",
-  "@not-available-item": "Not available now!"
+  "@not-available-item": "Not available now!",
+  "@view-offers": "View Offers"
 }
