@@ -16,6 +16,7 @@
   "@less": "Less",
   "@use-code": "Use Code",
   "@all": "All Order",
+  "@first": "First",
 
   "@tip": "TIP",
   "@other": "Other",

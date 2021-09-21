@@ -364,9 +364,12 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
         return <SvgPickup />;
       case 'DELIVERY':
         return <SvgDelivery />;
-      case 'DINE_IN':
+      case 'DINEIN':
         return <SvgDinein />;
       case 'FIRST':
+        return <img src="/assets/png/welcome.png" />;
+
+      case 'ALL':
         return <img src="/assets/png/welcome.png" />;
 
       default:
@@ -430,7 +433,7 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
                               : offerItem.offer_type_ === 'AMOUNT'
                               ? `${offerItem.provided} €`
                               : ''}{' '}
-                            {t('@above')} 0 €
+                            {t('@above')} {offerItem.min_amount} €
                           </OfferGetText>
 
                           <OfferDescription>
