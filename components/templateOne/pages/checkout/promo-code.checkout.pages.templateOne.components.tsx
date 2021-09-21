@@ -28,7 +28,9 @@ import { IOffer } from '../../../../interfaces/common/offer.common.interfaces';
 import { selectOffers } from '../../../../redux/slices/index.slices.redux';
 
 import SvgOffer from '../../../../public/assets/svg/checkout/offerIcon.svg';
-import SvgWelcome from '../../../../public/assets/svg/checkout/welcomeIcon.svg';
+import SvgDelivery from '../../../../public/assets/svg/delivery.svg';
+import SvgPickup from '../../../../public/assets/svg/pickup.svg';
+import SvgDinein from '../../../../public/assets/svg/dinein.svg';
 
 const Wrapper = styled.div`
   padding: 1rem 0 0 0;
@@ -350,7 +352,27 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
   /**
    * @description Updating dropdown statte
    */
-  const hanldeDropdownClick = async () => dispatch(updateCheckoutIsOffersOpen(!isDropdown));
+  const handleDropdownClick = async () => dispatch(updateCheckoutIsOffersOpen(!isDropdown));
+
+  /**
+   *
+   * @param order_type correspond order type icon component
+   */
+  const getCorrespondOfferIcon = (order_type: string) => {
+    switch (order_type) {
+      case 'PICKUP':
+        return <SvgPickup />;
+      case 'DELIVERY':
+        return <SvgDelivery />;
+      case 'DINE_IN':
+        return <SvgDinein />;
+      case 'FIRST':
+        return <img src="/assets/png/welcome.png" />;
+
+      default:
+        return <SvgOffer />;
+    }
+  };
 
   return (
     <Wrapper>
@@ -377,7 +399,7 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
             </InputContainer>
 
             <OffersContainer>
-              <DropDownContainer onClick={hanldeDropdownClick}>
+              <DropDownContainer onClick={handleDropdownClick}>
                 <DropDown>
                   <OfferIcon>
                     <SvgOffer />
@@ -396,21 +418,19 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
                       <OfferItem>
                         <OfferCardBody>
                           <OfferBodyHeader>
-                            <SymbolIcon>
-                              <SvgOffer />
-                            </SymbolIcon>
+                            <SymbolIcon>{getCorrespondOfferIcon(offerItem.order_type_)}</SymbolIcon>
                             <OfferCode>{offerItem.order_type_}</OfferCode>
                             <Ticket>{offerItem.code}</Ticket>
                           </OfferBodyHeader>
 
                           <OfferGetText>
-                            Use code FLEKSA Get{' '}
+                            Discount of
                             {offerItem.offer_type_ === 'PERCENTAGE'
                               ? `${offerItem.provided}%`
                               : offerItem.offer_type_ === 'AMOUNT'
                               ? `${offerItem.provided} €`
                               : ''}{' '}
-                            Off
+                            on orders
                           </OfferGetText>
 
                           <OfferDescription>
