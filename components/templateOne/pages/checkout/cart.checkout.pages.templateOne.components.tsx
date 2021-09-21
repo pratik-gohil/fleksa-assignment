@@ -145,6 +145,8 @@ const RemovePromo = styled.div`
   border: ${(props) => props.theme.border};
   border-radius: 100px;
   margin: 0 1rem;
+  opacity: 0.5;
+  transition: opacity 0.1s ease-out;
 
   svg {
     width: 10px;
@@ -154,7 +156,7 @@ const RemovePromo = styled.div`
   &:hover,
   &:active,
   &:focus {
-    background: rgba(0, 0, 0, 0.05);
+    opacity: 1;
   }
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
