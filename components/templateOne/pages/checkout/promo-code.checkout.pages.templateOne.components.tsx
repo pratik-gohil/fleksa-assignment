@@ -121,7 +121,7 @@ const DropDown = styled.div`
 const Title = styled.h4<{ isDropdown: boolean }>`
   font-size: 1rem;
   font-weight: 400;
-  padding: ${(p) => (p.isDropdown ? '1rem 0 0 0' : '0')};
+  padding: 0;
   margin: 0;
   position: relative;
   color: ${(p) => p.theme.primaryColor};
