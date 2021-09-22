@@ -196,6 +196,7 @@ const OfferCode = styled.h4`
   padding: 0;
   margin: 0;
   font-size: 1rem;
+  text-transform: uppercase;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     font-size: 0.8rem;
@@ -369,9 +370,10 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
     if (orderType) {
       const properTypeName = orderType === 'DINE_IN' ? 'DINEIN' : orderType; // ? change same order type name
 
-      setOffers(
-        offersData.filter((offer) => offer.order_type_ === properTypeName || offer.order_type_ === 'ALL' || offer.order_type_ === 'FIRST'),
-      );
+      setOffers([
+        ...offers.filter((offer) => offer.order_type_ === 'ALL'),
+        ...offers.filter((offer) => offer.order_type_ === properTypeName),
+      ]);
     }
   }, [orderType]);
 
