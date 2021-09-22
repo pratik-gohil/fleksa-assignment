@@ -201,9 +201,9 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
       amplitudeEvent(constructEventName(`onTapSendOtp success`, 'response'), response);
 
       setCustomerId(response?.customer_id);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      amplitudeEvent(constructEventName(`onTapSendOtp error catch`, 'response'), error ?? {});
+      amplitudeEvent(constructEventName(`onTapSendOtp error catch`, 'response'), error);
 
       dispatch(
         updateError({

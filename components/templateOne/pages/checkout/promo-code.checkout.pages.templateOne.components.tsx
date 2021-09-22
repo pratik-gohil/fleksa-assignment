@@ -21,7 +21,7 @@ import {
   selectLanguageCode,
   selectSelectedMenu,
 } from '../../../../redux/slices/configuration.slices.redux';
-import { selectBearerToken, selectCustomer, selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
+import { selectBearerToken, selectCustomerOrderHistory } from '../../../../redux/slices/user.slices.redux';
 import { getPrductsFromCartData } from '../../../../utils/products.utils';
 // import { StyledCheckoutTitle } from './customer-info.checkout.pages.templateOne.components';
 
@@ -155,9 +155,10 @@ const OfferBody = styled.div<{ isDropdown: boolean }>`
 `;
 
 const OfferItemContainer = styled.div<{ isFirstOrder: boolean }>`
-  background: ${(p) => (p.isFirstOrder ? p.theme.primaryColor : 'transprent')};
+  background: ${(p) =>
+    p.isFirstOrder ? `rgba(${p.theme.primaryColorRed}, ${p.theme.primaryColorGreen}, ${p.theme.primaryColorBlue}, 0.5)` : 'transprent'};
   padding: ${(p) => (p.isFirstOrder ? '0 0.5rem' : '0 0.5rem')};
-  border-radius: ${(p) => (p.isFirstOrder ? '0.5rem' : '0')};
+  border-radius: ${(p) => (p.isFirstOrder ? '0.3rem' : '0')};
 `;
 
 const OfferItem = styled.div`
@@ -362,13 +363,13 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
   const offersData = useAppSelector(selectOffers);
   const isDropdown = useAppSelector(selectIsOffersOpen);
   const languageCode = useAppSelector(selectLanguageCode);
-  const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
-  const customerOrderData = useAppSelector(selectCustomer).orders;
+
+  const customerOrderHistoryData = useAppSelector(selectCustomerOrderHistory);
 
   const { t } = useTranslation('page-checkout');
 
   const [coupon, setCoupon] = useState(promoCodeData?.code || '');
-  const [offers, setOffers] = useState<IOffer[]>(offersData);
+  const [offers, setOffers] = useState<IOffer[]>([]);
   const [moreDescription, setMoreDescription] = useState<string>('');
   const [loading, setLoading] = useState('');
 
@@ -382,17 +383,17 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
       const properTypeName = orderType === 'DINE_IN' ? 'DINEIN' : orderType; // ? change same order type name
 
       let initialOffers = [
-        ...offers.filter((offer) => offer.order_type_ === 'ALL'), // ? Most applicable
-        ...offers.filter((offer) => offer.order_type_ === properTypeName), // ? less applicable
+        ...offersData.filter((offer) => offer.order_type_ === 'ALL'), // ? Most applicable
+        ...offersData.filter((offer) => offer.order_type_ === properTypeName), // ? less applicable
       ];
 
       // TODO: Adding initial offer
-      if (isLoggedIn && customerOrderData && customerOrderData.length === 0)
-        initialOffers = [...offers.filter((offer) => offer.order_type_ === 'FIRST'), ...initialOffers];
+      if (!!bearerToken && customerOrderHistoryData && customerOrderHistoryData.length === 0)
+        initialOffers = [...offersData.filter((offer) => offer.order_type_ === 'FIRST'), ...initialOffers];
 
       setOffers(initialOffers);
     }
-  }, [orderType]);
+  }, [orderType, bearerToken, customerOrderHistoryData]);
 
   /**
    * @description apply discount coupon on checkout
