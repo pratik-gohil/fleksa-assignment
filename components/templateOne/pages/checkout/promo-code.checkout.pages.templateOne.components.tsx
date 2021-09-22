@@ -353,7 +353,7 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
       length: coupon.length,
     });
 
-    if (orderType && shopId && coupon) {
+    if (orderType && shopId && text) {
       const products: Array<IMakeOrderProducts> = getPrductsFromCartData(cartData);
 
       const response = await new PyApiHttpPostOffers(configuration).post({
