@@ -9,7 +9,7 @@ import { selectDeliveryFinances, selectOrderType, selectPromoCode, selectTip } f
 import { selectLanguage, selectLanguageCode } from '../../../../redux/slices/configuration.slices.redux';
 import { checkoutFinalAmount } from '../../../../utils/checkout.utils';
 import formatCurrency from '../../../../utils/formatCurrency';
-import { StyledCheckoutCard, StyledCheckoutTitle } from './customer-info.checkout.pages.templateOne.components';
+import { StyledCheckoutTitle } from './customer-info.checkout.pages.templateOne.components';
 import CheckoutPagePromoCode from './promo-code.checkout.pages.templateOne.components';
 import CheckoutPageTip from './tip.checkout.pahes.templateOne.components';
 
@@ -27,6 +27,7 @@ const ContainerItem = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0 0.5rem;
 `;
 
 const ContainerCartItem = styled.p`
@@ -95,6 +96,23 @@ const InfoCartSvgImage = styled.img`
   cursor: pointer;
 `;
 
+const CustomStyledCheckoutCard = styled.div`
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  border: ${(props) => props.theme.border};
+  border-radius: ${(props) => props.theme.borderRadius}px;
+  padding: 1rem 0;
+
+  margin: ${(props) => props.theme.dimen.X4}px 0;
+  overflow: hidden;
+  box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
+`;
+
+const CustomStyledCheckoutTitle = styled(StyledCheckoutTitle)`
+  padding: 0 1rem;
+`;
+
 const CheckoutPageCart: FunctionComponent = ({}) => {
   const language = useAppSelector(selectLanguage);
   const cartData = useAppSelector(selectCart);
@@ -112,8 +130,8 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
   const deliveryFee = deliveryFeeApplicable && deliveryFinances?.charges ? deliveryFinances?.charges : 0;
 
   return (
-    <StyledCheckoutCard>
-      <StyledCheckoutTitle>{t('@cart')}</StyledCheckoutTitle>
+    <CustomStyledCheckoutCard>
+      <CustomStyledCheckoutTitle>{t('@cart')}</CustomStyledCheckoutTitle>
       <Row>
         <Col xs={12}>
           {cartItemKeys.map((key) => {
@@ -166,7 +184,7 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
           </ContainerItem>
         </Col>
       </Row>
-    </StyledCheckoutCard>
+    </CustomStyledCheckoutCard>
   );
 };
 

@@ -13,6 +13,7 @@ import formatCurrency from '../../../../utils/formatCurrency';
 import SvgTip from '../../../../public/assets/svg/checkout/tipIcon.svg';
 
 const Wrapper = styled.div`
+  padding: 0 0.5rem;
   padding-top: 0.5rem;
 `;
 

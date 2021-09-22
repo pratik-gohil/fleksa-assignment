@@ -18,6 +18,7 @@ const CartContainerLarge = styled.div`
   display: none;
   @media (min-width: ${BREAKPOINTS.lg}px) {
     display: block;
+    margin-left: 1rem;
   }
 `;
 
@@ -50,7 +51,7 @@ const CheckoutPageTemplateOne: FunctionComponent = ({}) => {
       }}
     >
       <Container>
-        <Row>
+        <Row nogutter>
           <Col lg={7}>
             <CartContainerSmall>
               <CheckoutPageCart />

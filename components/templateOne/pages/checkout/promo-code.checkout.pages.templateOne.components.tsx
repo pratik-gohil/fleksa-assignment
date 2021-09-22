@@ -41,7 +41,9 @@ import SvgOffer from '../../../../public/assets/svg/checkout/offerIcon.svg';
 import formatCurrency from '../../../../utils/formatCurrency';
 import LoadingIndicator from '../../common/loadingIndicator/loading-indicator.common.templateOne.components';
 
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+  padding: 0 0.5rem;
+`;
 
 const ApplyButton = styled.div`
   padding: 0.5rem 1rem;
