@@ -21,7 +21,7 @@ import {
   selectLanguageCode,
   selectSelectedMenu,
 } from '../../../../redux/slices/configuration.slices.redux';
-import { selectBearerToken } from '../../../../redux/slices/user.slices.redux';
+import { selectBearerToken, selectCustomer, selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
 import { getPrductsFromCartData } from '../../../../utils/products.utils';
 // import { StyledCheckoutTitle } from './customer-info.checkout.pages.templateOne.components';
 
@@ -152,6 +152,12 @@ const OfferBody = styled.div<{ isDropdown: boolean }>`
   transform: ${(p) => (p.isDropdown ? 'translateY(0%)' : 'translateY(100%)')};
 `;
 
+const OfferItemContainer = styled.div<{ isFirstOrder: boolean }>`
+  background: ${(p) => (p.isFirstOrder ? p.theme.primaryColor : 'transprent')};
+  padding: ${(p) => (p.isFirstOrder ? '0 0.5rem' : '0 0.5rem')};
+  border-radius: ${(p) => (p.isFirstOrder ? '0.5rem' : '0')};
+`;
+
 const OfferItem = styled.div`
   padding: 0.5rem 0;
 `;
@@ -185,10 +191,11 @@ const SymbolIcon = styled.div`
   padding: 0 0.5rem 0 0;
   display: grid;
   place-items: center;
+  width: 28px;
+  height: 28px;
 
   svg {
-    width: 24px;
-    height: 24px;
+    fill: black;
   }
 `;
 
@@ -353,6 +360,8 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
   const offersData = useAppSelector(selectOffers);
   const isDropdown = useAppSelector(selectIsOffersOpen);
   const languageCode = useAppSelector(selectLanguageCode);
+  const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
+  const customerOrderData = useAppSelector(selectCustomer).orders;
 
   const { t } = useTranslation('page-checkout');
 
@@ -370,10 +379,16 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
     if (orderType) {
       const properTypeName = orderType === 'DINE_IN' ? 'DINEIN' : orderType; // ? change same order type name
 
-      setOffers([
-        ...offers.filter((offer) => offer.order_type_ === 'ALL'),
-        ...offers.filter((offer) => offer.order_type_ === properTypeName),
-      ]);
+      let initialOffers = [
+        ...offers.filter((offer) => offer.order_type_ === 'ALL'), // ? Most applicable
+        ...offers.filter((offer) => offer.order_type_ === properTypeName), // ? less applicable
+      ];
+
+      // TODO: Adding initial offer
+      if (isLoggedIn && customerOrderData && customerOrderData.length === 0)
+        initialOffers = [...offers.filter((offer) => offer.order_type_ === 'FIRST'), ...initialOffers];
+
+      setOffers(initialOffers);
     }
   }, [orderType]);
 
@@ -542,7 +557,7 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
               <OfferBody isDropdown={isDropdown}>
                 {offers.map((offerItem, offerItemIndex) => {
                   return (
-                    <>
+                    <OfferItemContainer isFirstOrder={offerItem.order_type_ === 'FIRST'}>
                       <OfferItem>
                         <OfferBodyHeader>
                           <SymbolIcon>{getCorrespondOfferIcon(offerItem.order_type_)}</SymbolIcon>
@@ -597,7 +612,7 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
                       </OfferItem>
 
                       <Divider />
-                    </>
+                    </OfferItemContainer>
                   );
                 })}
               </OfferBody>

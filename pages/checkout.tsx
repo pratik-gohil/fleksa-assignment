@@ -14,7 +14,9 @@ const templateList = [CheckoutPageTemplateOne];
 export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ctx) => {
   try {
     const requiresLogin = false;
-    const { redirect, configuration, bearerToken, responseIndex } = await getServerSidePropsCommon(ctx, requiresLogin);
+    const { redirect, configuration, bearerToken, responseIndex } = await getServerSidePropsCommon(ctx, requiresLogin, {
+      orderHistory: true,
+    });
 
     if (redirect) return redirect;
 
