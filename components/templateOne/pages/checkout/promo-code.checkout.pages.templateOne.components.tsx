@@ -23,7 +23,7 @@ import {
 } from '../../../../redux/slices/configuration.slices.redux';
 import { selectBearerToken } from '../../../../redux/slices/user.slices.redux';
 import { getPrductsFromCartData } from '../../../../utils/products.utils';
-import { StyledCheckoutTitle } from './customer-info.checkout.pages.templateOne.components';
+// import { StyledCheckoutTitle } from './customer-info.checkout.pages.templateOne.components';
 
 import { useTranslation } from 'next-i18next';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
@@ -481,7 +481,7 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
 
       {!promoCodeData && (
         <NotAppliedContainer>
-          <StyledCheckoutTitle>{t('@promo')}</StyledCheckoutTitle>
+          {/* <StyledCheckoutTitle>{t('@promo')}</StyledCheckoutTitle> */}
 
           <PromoCodeContainer>
             <OffersContainer>
