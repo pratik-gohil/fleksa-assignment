@@ -234,19 +234,17 @@ const CheckoutPageTip: FunctionComponent = ({}) => {
                 />
               </>
             ) : (
-              <>
-                <p
-                  onClick={() => {
-                    if (!otherTip) setOtherTip(true);
+              <p
+                onClick={() => {
+                  if (!otherTip) setOtherTip(true);
 
-                    amplitudeEvent(constructEventName(`tip selection`, 'button'), {
-                      otherTip,
-                    });
-                  }}
-                >
-                  {t('@other')}
-                </p>
-              </>
+                  amplitudeEvent(constructEventName(`tip selection`, 'button'), {
+                    otherTip,
+                  });
+                }}
+              >
+                {t('@other')}
+              </p>
             )}
           </TipOptionsItem>
         </TipOptionsList>
