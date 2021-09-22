@@ -40,9 +40,7 @@ import SvgOffer from '../../../../public/assets/svg/checkout/offerIcon.svg';
 
 import formatCurrency from '../../../../utils/formatCurrency';
 
-const Wrapper = styled.div`
-  padding: 0.5rem 0 0 0;
-`;
+const Wrapper = styled.div``;
 
 const ApplyButton = styled.div`
   padding: 0.5rem 1rem;
@@ -94,10 +92,6 @@ const PromoCodeInput = styled.input`
 
 const OffersContainer = styled.div`
   margin-bottom: 0.5rem;
-
-  /* &:nth-child(1) {
-    background: red;
-  } */
 `;
 
 const DropDownContainer = styled.div``;
@@ -142,7 +136,7 @@ const Title = styled.h4<{ isDropdown: boolean }>`
   }
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    font-size: 1rem;
+    font-size: 0.8rem;
   }
 `;
 
@@ -155,19 +149,24 @@ const OfferBody = styled.div<{ isDropdown: boolean }>`
 `;
 
 const OfferItem = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   padding: 0.5rem 0;
 `;
 
-const OfferCardBody = styled.div``;
+const OfferCardBody = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
 
 const OfferBodyHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
   padding-bottom: 0.5rem;
+`;
+
+const OfferBodyContent = styled.div`
+  padding: 0 0.3rem 0 0;
 `;
 
 const Ticket = styled.p`
@@ -192,6 +191,11 @@ const SymbolIcon = styled.div`
 const OfferCode = styled.h4`
   padding: 0;
   margin: 0;
+  font-size: 1rem;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    font-size: 0.8rem;
+  }
 `;
 
 const OfferGetText = styled.p`
@@ -230,17 +234,18 @@ const OfferApplyButton = styled.button`
     background: ${(p) => p.theme.textDarkActiveColor};
     color: #fff;
   }
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    padding: 0.4rem;
+    font-size: 0.8rem;
+  }
 `;
 
 const OfferIcon = styled.div`
   display: grid;
   place-items: center;
-
-  svg {
-    width: 24px;
-    height: 18px;
-    fill: #000000;
-  }
+  width: 24px;
+  height: 18px;
 `;
 
 const Divider = styled.hr`
@@ -262,11 +267,16 @@ const NotAppliedContainer = styled.div``;
 
 const TextSaved = styled.p`
   display: flex;
-  margin-left: 12px;
+  margin-left: 0.5rem;
+  font-size: 14px;
+  align-items: center;
+
+  span {
+    font-weight: 700;
+  }
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    font-size: 13px;
-    margin-left: 5px;
+    font-size: 12px;
   }
 `;
 
@@ -302,16 +312,25 @@ const SvgCrossImage = styled.img`
 const Price = styled.p`
   margin: 0;
   font-weight: 600;
+  min-width: 70px;
+  text-align: right;
 `;
 
-const DropDownBody = styled.div`
+const DropDownBody = styled.div<{ isDropdown: boolean }>`
   display: flex;
   align-items: center;
+
+  padding: ${(p) => (p.isDropdown ? '0.5rem 0' : '0')};
 `;
 
 const SelectText = styled.p`
-  padding: 0 0.5rem;
-  margin: 0;
+  padding: 0;
+  margin: 0 0 0 0.3rem;
+  font-size: 14px;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    font-size: 12px;
+  }
 `;
 
 const CheckoutPagePromoCode: FunctionComponent = ({}) => {
@@ -442,9 +461,12 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
         {!!promoCodeData && (
           <>
             <AppliedBodyContainer>
-              <SvgOffer />
+              <OfferIcon>
+                <SvgOffer />
+              </OfferIcon>
+
               <TextSaved>
-                {t('@saved')} <strong style={{ marginLeft: 4 }}>{formatCurrency(promoCodeData.value, languageCode)}</strong>
+                {t('@saved')} <span style={{ marginLeft: 4 }}>{formatCurrency(promoCodeData.value, languageCode)}</span>
               </TextSaved>
 
               <RemovePromo onClick={() => dispatch(updatePromoCode(null))}>
@@ -486,7 +508,7 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
 
               <DropDownContainer onClick={handleDropdownClick}>
                 <DropDown>
-                  <DropDownBody>
+                  <DropDownBody isDropdown={isDropdown}>
                     <OfferIcon>
                       <SvgOffer />
                     </OfferIcon>
@@ -504,46 +526,50 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
                   return (
                     <>
                       <OfferItem>
+                        <OfferBodyHeader>
+                          <SymbolIcon>{getCorrespondOfferIcon(offerItem.order_type_)}</SymbolIcon>
+                          <OfferCode>{t(`@${offerItem.order_type_.toLowerCase()}`)}</OfferCode>
+                          <Ticket>{offerItem.code}</Ticket>
+                        </OfferBodyHeader>
+
                         <OfferCardBody>
-                          <OfferBodyHeader>
-                            <SymbolIcon>{getCorrespondOfferIcon(offerItem.order_type_)}</SymbolIcon>
-                            <OfferCode>{t(`@${offerItem.order_type_.toLowerCase()}`)}</OfferCode>
-                            <Ticket>{offerItem.code}</Ticket>
-                          </OfferBodyHeader>
+                          <OfferBodyContent>
+                            <OfferGetText>
+                              {t('@discount-of')}{' '}
+                              {offerItem.offer_type_ === 'PERCENTAGE'
+                                ? `${offerItem.provided}%`
+                                : offerItem.offer_type_ === 'AMOUNT'
+                                ? `${offerItem.provided} €`
+                                : ''}{' '}
+                              {t('@above')} {offerItem.min_amount} €
+                            </OfferGetText>
 
-                          <OfferGetText>
-                            {t('@discount-of')}{' '}
-                            {offerItem.offer_type_ === 'PERCENTAGE'
-                              ? `${offerItem.provided}%`
-                              : offerItem.offer_type_ === 'AMOUNT'
-                              ? `${offerItem.provided} €`
-                              : ''}{' '}
-                            {t('@above')} {offerItem.min_amount} €
-                          </OfferGetText>
+                            <OfferDescription>
+                              {(offerItem.description_json && offerItem.description_json?.[language].length < 60) ||
+                              moreDescription === `desc-${offerItemIndex}` ? (
+                                <>
+                                  {`${offerItem.description_json?.[language]} `}
 
-                          <OfferDescription>
-                            {(offerItem.description_json && offerItem.description_json?.[language].length < 60) ||
-                            moreDescription === `desc-${offerItemIndex}` ? (
-                              <>
-                                {`${offerItem.description_json?.[language]} `}
+                                  {moreDescription === `desc-${offerItemIndex}` && (
+                                    <span onClick={async () => await handleDescriptionMoreClick('')}>{t('@less')}</span>
+                                  )}
+                                </>
+                              ) : (
+                                <>
+                                  {offerItem.description_json?.[language].slice(0, 60)}
+                                  <span onClick={async () => await handleDescriptionMoreClick(`desc-${offerItemIndex}`)}>
+                                    {' '}
+                                    ... {t('@more')}
+                                  </span>
+                                </>
+                              )}
+                            </OfferDescription>
+                          </OfferBodyContent>
 
-                                {moreDescription === `desc-${offerItemIndex}` && (
-                                  <span onClick={async () => await handleDescriptionMoreClick('')}>{t('@less')}</span>
-                                )}
-                              </>
-                            ) : (
-                              <>
-                                {offerItem.description_json?.[language].slice(0, 60)}
-                                <span onClick={async () => await handleDescriptionMoreClick(`desc-${offerItemIndex}`)}>
-                                  {' '}
-                                  ... {t('@more')}
-                                </span>
-                              </>
-                            )}
-                          </OfferDescription>
+                          <OfferApplyButton onClick={async () => await hanldePromoCodeClick(offerItem.code)}>
+                            {t('@apply')}
+                          </OfferApplyButton>
                         </OfferCardBody>
-
-                        <OfferApplyButton onClick={async () => await hanldePromoCodeClick(offerItem.code)}>{t('@apply')}</OfferApplyButton>
                       </OfferItem>
 
                       <Divider />
