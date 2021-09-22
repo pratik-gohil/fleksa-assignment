@@ -203,7 +203,7 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
       setCustomerId(response?.customer_id);
     } catch (error) {
       console.error(error);
-      amplitudeEvent(constructEventName(`onTapSendOtp error catch`, 'response'), error);
+      amplitudeEvent(constructEventName(`onTapSendOtp error catch`, 'response'), error ?? {});
 
       dispatch(
         updateError({

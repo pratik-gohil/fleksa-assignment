@@ -39,6 +39,7 @@ import SvgAllOffer from '../../../../public/assets/svg/checkout/firstOfferIcon.s
 import SvgOffer from '../../../../public/assets/svg/checkout/offerIcon.svg';
 
 import formatCurrency from '../../../../utils/formatCurrency';
+import LoadingIndicator from '../../common/loadingIndicator/loading-indicator.common.templateOne.components';
 
 const Wrapper = styled.div``;
 
@@ -52,6 +53,9 @@ const ApplyButton = styled.div`
   border: ${(props) => props.theme.border};
   border-radius: ${(props) => props.theme.borderRadius}px;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover,
   &:active,
@@ -227,6 +231,9 @@ const OfferApplyButton = styled.button`
   color: ${(p) => p.theme.textDarkColor};
   transition: all 0.15s ease-in;
   text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover,
   &:active,
@@ -351,6 +358,7 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
   const [coupon, setCoupon] = useState(promoCodeData?.code || '');
   const [offers, setOffers] = useState<IOffer[]>(offersData);
   const [moreDescription, setMoreDescription] = useState<string>('');
+  const [loading, setLoading] = useState('');
 
   const dispatch = useAppDispatch();
 
@@ -501,7 +509,15 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
                       required
                     />
 
-                    <ApplyButton onClick={async () => await onClickApply(coupon)}>{t('@apply')}</ApplyButton>
+                    <ApplyButton
+                      onClick={async () => {
+                        setLoading(coupon);
+                        await onClickApply(coupon);
+                        setLoading('');
+                      }}
+                    >
+                      {loading === coupon && !!coupon ? <LoadingIndicator width={20} /> : t('@apply')}
+                    </ApplyButton>
                   </>
                 )}
               </InputContainer>
@@ -566,8 +582,14 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
                             </OfferDescription>
                           </OfferBodyContent>
 
-                          <OfferApplyButton onClick={async () => await hanldePromoCodeClick(offerItem.code)}>
-                            {t('@apply')}
+                          <OfferApplyButton
+                            onClick={async () => {
+                              setLoading(`loading-${offerItemIndex}`);
+                              await hanldePromoCodeClick(offerItem.code);
+                              setLoading('');
+                            }}
+                          >
+                            {loading === `loading-${offerItemIndex}` ? <LoadingIndicator width={20} /> : t('@apply')}
                           </OfferApplyButton>
                         </OfferCardBody>
                       </OfferItem>
