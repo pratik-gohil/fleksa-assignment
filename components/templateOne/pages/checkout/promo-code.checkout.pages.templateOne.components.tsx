@@ -1,6 +1,5 @@
 import React, { FunctionComponent, useEffect } from 'react';
 import { useState } from 'react';
-import { Row, Col } from 'react-grid-system';
 import styled from 'styled-components';
 import PyApiHttpPostOffers from '../../../../http/pyapi/offers/post.offers.pyapi.http';
 import { IMakeOrderProducts } from '../../../../interfaces/http/nodeapi/order/post.order.nodeapi.http';
@@ -42,7 +41,7 @@ import SvgOffer from '../../../../public/assets/svg/checkout/offerIcon.svg';
 import formatCurrency from '../../../../utils/formatCurrency';
 
 const Wrapper = styled.div`
-  padding: 1rem 0 0 0;
+  padding: 0.5rem 0 0 0;
 `;
 
 const ApplyButton = styled.div`
@@ -95,6 +94,10 @@ const PromoCodeInput = styled.input`
 
 const OffersContainer = styled.div`
   margin-bottom: 0.5rem;
+
+  /* &:nth-child(1) {
+    background: red;
+  } */
 `;
 
 const DropDownContainer = styled.div``;
@@ -246,15 +249,16 @@ const Divider = styled.hr`
 
 const AppliedContainer = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: center;
-
-  & > div {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-  }
+  justify-content: space-between;
 `;
+
+const AppliedBodyContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const NotAppliedContainer = styled.div``;
 
 const TextSaved = styled.p`
   display: flex;
@@ -432,48 +436,54 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
     }
   };
 
-  return promoCodeData ? (
-    <AppliedContainer>
-      <div>
-        <SvgOffer />
-        <TextSaved>
-          {t('@saved')} <strong style={{ marginLeft: 4 }}>{formatCurrency(promoCodeData.value, languageCode)}</strong>
-        </TextSaved>
-
-        <RemovePromo onClick={() => dispatch(updatePromoCode(null))}>
-          <SvgCrossImage src="/assets/svg/cross.svg" />
-        </RemovePromo>
-      </div>
-
-      <Price> - {formatCurrency(promoCodeData.value, languageCode)}</Price>
-    </AppliedContainer>
-  ) : (
+  return (
     <Wrapper>
-      <StyledCheckoutTitle>{t('@promo')}</StyledCheckoutTitle>
+      <AppliedContainer>
+        {!!promoCodeData && (
+          <>
+            <AppliedBodyContainer>
+              <SvgOffer />
+              <TextSaved>
+                {t('@saved')} <strong style={{ marginLeft: 4 }}>{formatCurrency(promoCodeData.value, languageCode)}</strong>
+              </TextSaved>
 
-      <Row>
-        <Col xs={12}>
+              <RemovePromo onClick={() => dispatch(updatePromoCode(null))}>
+                <SvgCrossImage src="/assets/svg/cross.svg" />
+              </RemovePromo>
+            </AppliedBodyContainer>
+
+            <Price> - {formatCurrency(promoCodeData.value, languageCode)}</Price>
+          </>
+        )}
+      </AppliedContainer>
+
+      {!promoCodeData && (
+        <NotAppliedContainer>
+          <StyledCheckoutTitle>{t('@promo')}</StyledCheckoutTitle>
+
           <PromoCodeContainer>
-            {isDropdown && (
-              <InputContainer>
-                <PromoCodeInput
-                  value={coupon}
-                  autoFocus
-                  onChange={(e) => setCoupon(e.target.value)}
-                  onBlur={() => {
-                    amplitudeEvent(constructEventName(`coupon `, 'input'), {
-                      coupon,
-                      length: coupon.length,
-                    });
-                  }}
-                  required
-                />
-
-                <ApplyButton onClick={async () => await onClickApply(coupon)}>{t('@apply')}</ApplyButton>
-              </InputContainer>
-            )}
-
             <OffersContainer>
+              <InputContainer>
+                {isDropdown && (
+                  <>
+                    <PromoCodeInput
+                      value={coupon}
+                      autoFocus
+                      onChange={(e) => setCoupon(e.target.value)}
+                      onBlur={() => {
+                        amplitudeEvent(constructEventName(`coupon `, 'input'), {
+                          coupon,
+                          length: coupon.length,
+                        });
+                      }}
+                      required
+                    />
+
+                    <ApplyButton onClick={async () => await onClickApply(coupon)}>{t('@apply')}</ApplyButton>
+                  </>
+                )}
+              </InputContainer>
+
               <DropDownContainer onClick={handleDropdownClick}>
                 <DropDown>
                   <DropDownBody>
@@ -543,8 +553,8 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
               </OfferBody>
             </OffersContainer>
           </PromoCodeContainer>
-        </Col>
-      </Row>
+        </NotAppliedContainer>
+      )}
     </Wrapper>
   );
 };
