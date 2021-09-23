@@ -193,18 +193,6 @@ const MenuPageBanner: FunctionComponent = ({}) => {
   }
 
   /**
-   * @param {text} string needs to copied
-   */
-  const handleCopyClick = async (text: string) => navigator.clipboard.writeText(text);
-
-  /**
-   *
-   * @param desc update state of description expand
-   * @returns Update
-   */
-  const handleDescriptionMoreClick = async (desc: string) => setMoreDescription(desc);
-
-  /**
    * @description update offers depends on relavent ordery type selection
    */
   useEffect(() => {
@@ -216,6 +204,18 @@ const MenuPageBanner: FunctionComponent = ({}) => {
       );
     }
   }, [orderType]);
+
+  /**
+   * @param {text} string needs to copied
+   */
+  const handleCopyClick = async (text: string) => navigator.clipboard.writeText(text);
+
+  /**
+   *
+   * @param desc update state of description expand
+   * @returns Updated more description local state
+   */
+  const handleDescriptionMoreClick = async (desc: string) => setMoreDescription(desc);
 
   return (
     <BannerContainer>
