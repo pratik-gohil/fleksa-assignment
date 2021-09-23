@@ -394,16 +394,14 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
       setOffers(initialOffers);
     }
 
-    // ?? Reset if ordertype change to different other than type all
+    // ?? Reset if ordertype change to different other than type **ALL** and **FIRST**
     if (
       promoCodeData &&
       promoCodeData.order_type !== 'ALL' &&
       promoCodeData.order_type !== 'FIRST' &&
       promoCodeData.order_type !== orderType
-    ) {
-      // (promoCodeData.order_type !== 'ALL' || promoCodeData.order_type !== 'FIRST') &&
+    )
       dispatch(updatePromoCode(null));
-    }
   }, [orderType, bearerToken, customerOrderHistoryData]);
 
   /**
