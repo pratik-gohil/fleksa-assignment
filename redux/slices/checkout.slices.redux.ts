@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { HYDRATE } from 'next-redux-wrapper';
+import { AllowedOrderType } from '../../interfaces/common/offer.common.interfaces';
 import { ILabelValue } from '../../utils/restaurant-timings.utils';
 import { RootState } from '../store.redux';
 
@@ -25,11 +26,15 @@ export interface ICheckoutSliceState {
   deliveryFinances: IDeliveryFinances | null;
   checkoutLogin: boolean;
   isReOrder: boolean;
+  isSofort: boolean;
+  isPreOrder: boolean;
+  isOffersOpen: boolean;
 
   promoCode: {
     code: string;
     value: number;
     token: string;
+    order_type: AllowedOrderType;
   } | null;
 }
 
@@ -45,6 +50,9 @@ export const checkoutInitialState: ICheckoutSliceState = {
   promoCode: null,
   checkoutLogin: false,
   isReOrder: false,
+  isSofort: false,
+  isPreOrder: false,
+  isOffersOpen: false,
 };
 
 export const CheckoutSlice = createSlice({
@@ -84,6 +92,15 @@ export const CheckoutSlice = createSlice({
     updateCheckoutIsReOrder(state, action) {
       state.isReOrder = action.payload;
     },
+    updateCheckoutIsPreOrder(state, action) {
+      state.isPreOrder = action.payload;
+    },
+    updateCheckoutIsSofort(state, action) {
+      state.isSofort = action.payload;
+    },
+    updateCheckoutIsOffersOpen(state, action) {
+      state.isOffersOpen = action.payload;
+    },
 
     updateClearCheckout(state) {
       state.orderType = null;
@@ -97,6 +114,9 @@ export const CheckoutSlice = createSlice({
       state.promoCode = null;
       state.checkoutLogin = false;
       state.isReOrder = false;
+      state.isSofort = false;
+      state.isPreOrder = false;
+      state.isOffersOpen = false;
     },
     updateCheckout(state, action) {
       state.orderType = action.payload.orderType || state.orderType;
@@ -108,6 +128,9 @@ export const CheckoutSlice = createSlice({
       state.deliveryFinances = action.payload.deliveryFinances || state.deliveryFinances;
       state.promoCode = action.payload.promoCode || state.promoCode;
       state.isReOrder = action.payload.isReOrder || state.isReOrder;
+      state.isSofort = action.payload.isSofort || state.isSofort;
+      state.isPreOrder = action.payload.isPreOrder || state.isPreOrder;
+      state.isOffersOpen = action.payload.isOffersOpen || state.isOffersOpen;
     },
   },
   extraReducers: {
@@ -133,6 +156,9 @@ export const {
   updateCheckout,
   updateCheckoutLogin,
   updateCheckoutIsReOrder,
+  updateCheckoutIsPreOrder,
+  updateCheckoutIsSofort,
+  updateCheckoutIsOffersOpen,
 } = CheckoutSlice.actions;
 
 export const selectDeliveryFinances = (state: RootState) => state.checkout.deliveryFinances;
@@ -146,3 +172,6 @@ export const selectSelectedAddressId = (state: RootState) => state.checkout.sele
 export const selectPromoCode = (state: RootState) => state.checkout.promoCode;
 export const selectIsReOrder = (state: RootState) => state.checkout.isReOrder;
 export const selectCheckoutLogin = (state: RootState) => state.checkout.checkoutLogin;
+export const selectIsSofort = (state: RootState) => state.checkout.isSofort;
+export const selectIsPreOrder = (state: RootState) => state.checkout.isPreOrder;
+export const selectIsOffersOpen = (state: RootState) => state.checkout.isOffersOpen;

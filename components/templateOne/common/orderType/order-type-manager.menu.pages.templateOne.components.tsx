@@ -7,6 +7,7 @@ import {
   selectOrderType,
   selectSelectedAddressId,
   updateOrderType,
+  updateSelectedAddressId,
 } from '../../../../redux/slices/checkout.slices.redux';
 import SvgDelivery from '../../../../public/assets/svg/delivery.svg';
 import SvgPickup from '../../../../public/assets/svg/pickup.svg';
@@ -106,7 +107,6 @@ const ListItem = styled.li<{ selected: boolean }>`
   margin: 0 ${(props) => props.theme.dimen.X4}px;
   border-radius: ${(props) => props.theme.borderRadius}px;
   position: relative;
-  /* background: ${(p) => (p.selected ? '#EAFFD0' : '#fff')}; */
 
   &::before {
     content: '';
@@ -234,6 +234,8 @@ const OrderTypeManager: FunctionComponent = () => {
 
     if (shopData?.id == selectedMenuId) setAddressData(address);
     else setAddressData(siblings.find((item) => item.id == selectedMenuId)?.address);
+
+    // ?? Update default selection
   }, []);
 
   // TODO: Enable and disable scroll when modal opened
@@ -249,10 +251,9 @@ const OrderTypeManager: FunctionComponent = () => {
     if (typeof window === 'undefined') return;
     const guestAddressString = window.localStorage.getItem(LS_GUEST_USER_ADDRESS);
 
-    dispatch(updateOrderType(orderType));
-
     if ((isLoggedIn && correspondAddress) || guestAddressString) {
       dispatch(updateShowOrderTypeSelect(false));
+      dispatch(updateOrderType(orderType));
     } else {
       dispatch(updateShowAddAddress(true));
       dispatch(updateShowOrderTypeSelect(true));
@@ -290,6 +291,9 @@ const OrderTypeManager: FunctionComponent = () => {
         city: correspondAddressById?.city,
       };
     } else if (isLoggedIn && !checkoutAddressId && correspondAddress) {
+      // ?? Update the checkoutAddressId on redux state to send for order placing
+      dispatch(updateSelectedAddressId(correspondAddress.id));
+
       return {
         address: correspondAddress?.address,
         floor: correspondAddress?.floor,

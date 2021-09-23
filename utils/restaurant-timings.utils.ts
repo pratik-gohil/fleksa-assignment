@@ -6,6 +6,7 @@ export interface ILabelValue {
   value: string;
   label: string;
   break?: boolean;
+  isSofort?: boolean;
 }
 
 export interface IPropsGenerateTimeList {
@@ -50,7 +51,7 @@ export default class RestaurantTimingUtils {
    * @returns - Array of array timing list for each period
    */
   public generateTimeList({ date, timingsData, type, interval, isReservation, language }: IPropsGenerateTimeList) {
-    let result: Array<{ value: string; label: string; break?: boolean }> = [];
+    let result: Array<ILabelValue> = [];
 
     const deliveryType = type === 'DELIVERY';
 
@@ -89,6 +90,7 @@ export default class RestaurantTimingUtils {
             value: now.format('HH:mm'),
             label: `${now.format('HH:mm')} - ${now.add(adjacentPeriodIntervel, 'm').format('HH:mm')}`,
             break: false,
+            isSofort: false,
           });
         }
 
@@ -115,18 +117,20 @@ export default class RestaurantTimingUtils {
           value: now.format('HH:mm'),
           label: `${now.format('HH:mm')} - ${now.add(adjacentPeriodIntervel, 'm').format('HH:mm')}`,
           break: false,
+          isSofort: false,
         });
 
         // ? To prevent exceeded interval issue
         if (now > close) break;
       }
 
-      result = ([] as Array<{ value: string; label: string; break?: boolean }>).concat(...result);
+      result = ([] as Array<ILabelValue>).concat(...result);
     });
 
-    if (isToday && currentlyOpened && result.length) result[0].label = language === 'english' ? 'As soon as possible' : 'So schnell wie möglich';
-
-    // console.log('result => ', result);
+    if (isToday && currentlyOpened && result.length) {
+      result[0].label = language === 'english' ? 'As soon as possible' : 'So schnell wie möglich';
+      result[0].isSofort = true;
+    }
 
     return result;
   }

@@ -5,7 +5,13 @@ import Select from 'react-select';
 import styled from 'styled-components';
 import { IAddress } from '../../../../interfaces/common/address.common.interfaces';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
-import { selectOrderType, selectWantAt, updateShowDateTimeSelect, updateWantAt } from '../../../../redux/slices/checkout.slices.redux';
+import {
+  selectOrderType,
+  selectWantAt,
+  updateCheckoutIsSofort,
+  updateShowDateTimeSelect,
+  updateWantAt,
+} from '../../../../redux/slices/checkout.slices.redux';
 import { selectLanguage } from '../../../../redux/slices/configuration.slices.redux';
 import { selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
 import { selectAddress, selectShop, selectSiblings, selectTimings } from '../../../../redux/slices/index.slices.redux';
@@ -98,6 +104,7 @@ const CheckoutDateTime: FunctionComponent = ({}) => {
         },
         language: currentLanguage,
       });
+
       setTimeList(timeData);
       dispatch(updateWantAt(null));
     }
@@ -128,6 +135,7 @@ const CheckoutDateTime: FunctionComponent = ({}) => {
             options={timeList}
             onChange={(value) => {
               dispatch(updateWantAt({ date: selectedDate, time: value }));
+              dispatch(updateCheckoutIsSofort(value?.isSofort));
 
               amplitudeEvent(constructEventName(`summary time selection`, 'model'), {
                 prevSelected: wantAtData?.time,

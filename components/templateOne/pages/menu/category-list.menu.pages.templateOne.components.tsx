@@ -22,6 +22,7 @@ const CategoryImageContainer = styled.div`
   z-index: 1;
   margin: 0 -15px;
   height: 200px;
+
   top: -80px;
   overflow: hidden;
   @media (min-width: ${BREAKPOINTS.lg}px) {
@@ -85,6 +86,10 @@ const CategoryTitleSticky = styled.h3`
 const Space = styled.div`
   width: 100%;
   height: 100px;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    height: 1rem;
+  }
 `;
 
 const CateogryDescription = styled.p`
@@ -111,46 +116,54 @@ const MenuPageCategoryList: FunctionComponent = ({}) => {
   const [openItemId, setOpenItemId] = useState<number | undefined>();
 
   return (
-    <List>
-      {categories.map((category, index) => {
-        if (category.products.length === 0) return <Fragment key={index} />;
-        return (
-          <Fragment key={index}>
-            <Space />
-            <ListItem
-              id={category.name_json.english
-                .toLowerCase()
-                .replace(/[^A-Za-z0-9]/g, '')
-                .split(' ')
-                .join('-')}
-            >
-              {!!category.image ? (
-                <CategoryImageContainer>
-                  <CategoryImage src={category.image} alt="category image" />
-                  <CategoryTitle>
-                    {category.name_json[language]}
-                    <br />
-                    {!!category.description_json?.[language] && <span>{category.description_json[language]}</span>}
-                  </CategoryTitle>
-                </CategoryImageContainer>
-              ) : (
-                <>
+    <>
+      <Space />
+      <List>
+        {categories.map((category, index) => {
+          if (category.products.length === 0) return <Fragment key={index} />;
+
+          return (
+            <Fragment key={index}>
+              <ListItem
+                id={category.name_json.english
+                  .toLowerCase()
+                  .replace(/[^A-Za-z0-9]/g, '')
+                  .split(' ')
+                  .join('-')}
+              >
+                {!!category.image ? (
+                  <CategoryImageContainer>
+                    <CategoryImage src={category.image} alt="category image" />
+                    <CategoryTitle>
+                      {category.name_json[language]}
+                      <br />
+                      {!!category.description_json?.[language] && <span>{category.description_json[language]}</span>}
+                    </CategoryTitle>
+                  </CategoryImageContainer>
+                ) : (
                   <CategoryTitleSticky>
                     <CategoryStickyTitle>{category.name_json[language]}</CategoryStickyTitle>
-                    <CateogryDescription>{!!category.description_json?.[language] && category.description_json[language]}</CateogryDescription>
+                    <CateogryDescription>
+                      {!!category.description_json?.[language] && category.description_json[language]}
+                    </CateogryDescription>
                   </CategoryTitleSticky>
-                </>
-              )}
-              <List>
-                {category.products.map((product) => (
-                  <MenuPageProductListItem key={product.id} product={product} isOpen={product.id === openItemId} setOpenItemId={setOpenItemId} />
-                ))}
-              </List>
-            </ListItem>
-          </Fragment>
-        );
-      })}
-    </List>
+                )}
+                <List>
+                  {category.products.map((product) => (
+                    <MenuPageProductListItem
+                      key={product.id}
+                      product={product}
+                      isOpen={product.id === openItemId}
+                      setOpenItemId={setOpenItemId}
+                    />
+                  ))}
+                </List>
+              </ListItem>
+            </Fragment>
+          );
+        })}
+      </List>
+    </>
   );
 };
 

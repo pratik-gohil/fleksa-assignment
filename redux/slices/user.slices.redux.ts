@@ -21,6 +21,7 @@ const initialState: IUserSliceState = {
     email_verified: 0,
     phone_verified: 0,
     all_address: [],
+    orders: [],
   },
 };
 
@@ -51,6 +52,9 @@ export const UserSlice = createSlice({
     },
     updateLoadAddressesList(state, action) {
       state.customer.all_address = action.payload;
+    },
+    updateCustomerOrderHistory(state, action) {
+      state.customer.orders = action.payload;
     },
     updateNewCustomerAddress(state, action) {
       state.customer.all_address?.push(action.payload);
@@ -98,11 +102,13 @@ export const {
   updateCustomerEmailVerification,
   updateCustomerPhone,
   updateCustomerCountryCode,
+  updateCustomerOrderHistory,
 } = UserSlice.actions;
 
 export const selectIsUserLoggedIn = (state: RootState) => !!state.user.bearerToken;
 export const selectBearerToken = (state: RootState) => state.user.bearerToken;
 export const selectCustomer = (state: RootState) => state.user.customer;
+export const selectCustomerOrderHistory = (state: RootState) => state.user.customer.orders;
 export const selectAddressByType = (state: RootState, addressType: AddressTypes) =>
   state.user.customer.all_address?.find((i) => i.address_type === addressType);
 export const selectAddressById = (state: RootState, id: number | null) =>

@@ -8,7 +8,7 @@ const Wrapper = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin: 0.3rem;
+  margin: 0.3rem 0.5rem;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     margin: 0.2rem;

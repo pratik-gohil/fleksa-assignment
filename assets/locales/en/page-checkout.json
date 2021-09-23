@@ -6,10 +6,22 @@
   "@summary": "SUMMARY",
   "@select-time": "Select Time",
   "@comments": "COMMENTS",
-  "@promo": "PROMO CODE",
+
+  "@promo": "Promo Code",
   "@saved": "YAY! You saved",
-  "@apply": "APPLY",
-  "@tip": "TIP",
+  "@apply": "REDEEM",
+  "@discount-of": "Discount of",
+  "@above": "on orders above",
+  "@more": "More",
+  "@less": "Less",
+  "@hide": "Hide",
+  "@show": "Show",
+  "@use-code": "Use Code",
+  "@all": "ALL ORDER",
+  "@first": "FIRST ORDER",
+  "@select-code": "Select a promocode",
+
+  "@tip": "Tip",
   "@other": "Other",
   "@credit-card": "Cards and more",
   "@payment": "PAYMENT",
@@ -28,6 +40,7 @@
   "@delivery": "Delivery",
   "@pickup": "Pickup",
   "@dine-in": "Dine-In",
+  "@dinein": "Dine-In",
   "@min-required": "Minimum Order Value: ",
   "@proceed": "Proceed",
   "@send": "Send",
@@ -41,5 +54,6 @@
   "@choose-date": "Choose a date",
   "@choose-time": "Choose a time",
   "@done-button": "DONE",
-  "@not-available-item": "Not available now!"
+  "@not-available-item": "Not available now!",
+  "@view-offers": "View Offers"
 }

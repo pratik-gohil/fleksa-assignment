@@ -9,7 +9,9 @@ import { selectDeliveryFinances, selectOrderType, selectPromoCode, selectTip } f
 import { selectLanguage, selectLanguageCode } from '../../../../redux/slices/configuration.slices.redux';
 import { checkoutFinalAmount } from '../../../../utils/checkout.utils';
 import formatCurrency from '../../../../utils/formatCurrency';
-import { StyledCheckoutCard, StyledCheckoutTitle } from './customer-info.checkout.pages.templateOne.components';
+import { StyledCheckoutTitle } from './customer-info.checkout.pages.templateOne.components';
+import CheckoutPagePromoCode from './promo-code.checkout.pages.templateOne.components';
+import CheckoutPageTip from './tip.checkout.pahes.templateOne.components';
 
 export const StyledCheckoutTextarea = styled.textarea`
   width: 100%;
@@ -25,21 +27,23 @@ const ContainerItem = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0 1rem;
 `;
 
 const ContainerCartItem = styled.p`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: 100%;
   padding: 0.3rem 0;
   margin: 0;
 `;
 
-const ContainerCartItemBody = styled(ContainerItem)``;
+const ContainerCartItemBody = styled(ContainerItem)`
+  padding: 0;
+`;
 
 const Title = styled.p`
-  display: flex;
-  flex: 1;
   margin: 0;
   font-weight: 600;
   span {
@@ -94,6 +98,23 @@ const InfoCartSvgImage = styled.img`
   cursor: pointer;
 `;
 
+const CustomStyledCheckoutCard = styled.div`
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  border: ${(props) => props.theme.border};
+  border-radius: ${(props) => props.theme.borderRadius}px;
+  padding: 1rem 0;
+
+  margin: ${(props) => props.theme.dimen.X4}px 0;
+  overflow: hidden;
+  box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
+`;
+
+const CustomStyledCheckoutTitle = styled(StyledCheckoutTitle)`
+  padding: 0 1rem;
+`;
+
 const CheckoutPageCart: FunctionComponent = ({}) => {
   const language = useAppSelector(selectLanguage);
   const cartData = useAppSelector(selectCart);
@@ -102,6 +123,7 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
   const promoData = useAppSelector(selectPromoCode);
   const languageCode = useAppSelector(selectLanguageCode);
   const deliveryFinances = useAppSelector(selectDeliveryFinances);
+
   const { t } = useTranslation('page-checkout');
 
   const cartItemKeys = cartData.items ? Object.keys(cartData.items) : [];
@@ -110,8 +132,8 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
   const deliveryFee = deliveryFeeApplicable && deliveryFinances?.charges ? deliveryFinances?.charges : 0;
 
   return (
-    <StyledCheckoutCard>
-      <StyledCheckoutTitle>{t('@cart')}</StyledCheckoutTitle>
+    <CustomStyledCheckoutCard>
+      <CustomStyledCheckoutTitle>{t('@cart')}</CustomStyledCheckoutTitle>
       <Row>
         <Col xs={12}>
           {cartItemKeys.map((key) => {
@@ -133,28 +155,23 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
             );
           })}
         </Col>
+
         <Col xs={12}>
           <Divider />
         </Col>
+
         <Col xs={12}>
           <ContainerItem>
             <Title>{t('@subtotal')}</Title>
             <Price>{formatCurrency(cartData.cartCost, languageCode)}</Price>
           </ContainerItem>
-          {promoData && (
-            <ContainerItem>
-              <Title>{t('@discount')}</Title>
-              <Price>- {formatCurrency(promoData.value, languageCode)}</Price>
-            </ContainerItem>
-          )}
-          {tipData && tipData > 0 ? (
-            <ContainerItem>
-              <Title>{t('@tip-cart')}</Title>
-              <Price>{formatCurrency(tipData, languageCode)}</Price>
-            </ContainerItem>
-          ) : (
-            <></>
-          )}
+
+          {/* Adding Tip section  */}
+          <CheckoutPageTip />
+
+          {/* Adding promo code section  */}
+          <CheckoutPagePromoCode />
+
           {deliveryFee > 0 ? (
             <ContainerItem>
               <Title>{t('@delivery')}</Title>
@@ -169,7 +186,7 @@ const CheckoutPageCart: FunctionComponent = ({}) => {
           </ContainerItem>
         </Col>
       </Row>
-    </StyledCheckoutCard>
+    </CustomStyledCheckoutCard>
   );
 };
 
