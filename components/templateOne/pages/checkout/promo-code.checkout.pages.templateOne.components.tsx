@@ -79,10 +79,10 @@ const PromoCodeInput = styled.input`
   flex: 1;
   padding: 0.6rem 1rem;
   font-size: 1rem;
-  border-radius: 0% 0.5rem;
+  border-radius: ${(p) => p.theme.borderRadius}px;
   outline: none;
   text-transform: uppercase;
-  border: 0.1px solid ${(p) => p.theme.textDarkColor};
+  border: ${(p) => p.theme.border};
 
   &:hover,
   &:active,
