@@ -39,7 +39,9 @@ const ContainerCartItem = styled.p`
   margin: 0;
 `;
 
-const ContainerCartItemBody = styled(ContainerItem)``;
+const ContainerCartItemBody = styled(ContainerItem)`
+  padding: 0;
+`;
 
 const Title = styled.p`
   margin: 0;
