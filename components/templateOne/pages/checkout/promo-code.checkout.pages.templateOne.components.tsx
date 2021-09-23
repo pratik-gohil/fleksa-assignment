@@ -42,7 +42,7 @@ import formatCurrency from '../../../../utils/formatCurrency';
 import LoadingIndicator from '../../common/loadingIndicator/loading-indicator.common.templateOne.components';
 
 const Wrapper = styled.div`
-  padding: 0 0.5rem;
+  padding: 0 1rem;
 `;
 
 const ApplyButton = styled.div`
