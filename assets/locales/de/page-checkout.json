@@ -6,7 +6,7 @@
   "@summary": "ZUSAMMENFASSUNG",
   "@select-time": "Wählen Sie Zeit",
   "@comments": "KOMMENTARE",
-  "@promo": "GUTSCHEINCODE",
+  "@promo": "Gutschincode",
   "@saved": "YAY! Du hast gespeichert",
   "@apply": "EINLÖSEN",
   "@discount-of": " ",
@@ -20,7 +20,7 @@
   "@first": "ERSTE BESTELLUNG",
   "@select-code": "Wählen Sie einen Promocode",
 
-  "@tip": "TRINKGELD",
+  "@tip": "Trinkgeld",
   "@other": "Andere",
   "@credit-card": "Karten und mehr",
   "@payment": "ZAHLUNG",

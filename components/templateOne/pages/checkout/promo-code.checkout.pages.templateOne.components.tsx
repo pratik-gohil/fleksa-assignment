@@ -23,7 +23,7 @@ import {
 } from '../../../../redux/slices/configuration.slices.redux';
 import { selectBearerToken, selectCustomerOrderHistory } from '../../../../redux/slices/user.slices.redux';
 import { getPrductsFromCartData } from '../../../../utils/products.utils';
-// import { StyledCheckoutTitle } from './customer-info.checkout.pages.templateOne.components';
+import { StyledCheckoutTitle } from './customer-info.checkout.pages.templateOne.components';
 
 import { useTranslation } from 'next-i18next';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
@@ -118,9 +118,13 @@ const DropDown = styled.div`
   }
 `;
 
+const CustomStyledCheckoutTitle = styled(StyledCheckoutTitle)`
+  font-size: 1rem;
+  font-weight: 700;
+`;
+
 const Title = styled.h4<{ isDropdown: boolean }>`
   font-size: 1rem;
-  font-weight: 400;
   padding: 0;
   margin: 0;
   position: relative;
@@ -519,7 +523,7 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
 
       {!promoCodeData && (
         <NotAppliedContainer>
-          {/* <StyledCheckoutTitle>{t('@promo')}</StyledCheckoutTitle> */}
+          <CustomStyledCheckoutTitle>{t('@promo')}</CustomStyledCheckoutTitle>
 
           <PromoCodeContainer>
             <OffersContainer>
