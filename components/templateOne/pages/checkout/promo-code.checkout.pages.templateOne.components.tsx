@@ -393,6 +393,17 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
 
       setOffers(initialOffers);
     }
+
+    // ?? Reset if ordertype change to different other than type all
+    if (
+      promoCodeData &&
+      promoCodeData.order_type !== 'ALL' &&
+      promoCodeData.order_type !== 'FIRST' &&
+      promoCodeData.order_type !== orderType
+    ) {
+      // (promoCodeData.order_type !== 'ALL' || promoCodeData.order_type !== 'FIRST') &&
+      dispatch(updatePromoCode(null));
+    }
   }, [orderType, bearerToken, customerOrderHistoryData]);
 
   /**
@@ -422,6 +433,7 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
             code: text,
             value: response.details.amount.value,
             token: response.token,
+            order_type: response.details.offers.order_type_,
           }),
         );
 

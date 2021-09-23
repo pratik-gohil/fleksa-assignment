@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { HYDRATE } from 'next-redux-wrapper';
+import { AllowedOrderType } from '../../interfaces/common/offer.common.interfaces';
 import { ILabelValue } from '../../utils/restaurant-timings.utils';
 import { RootState } from '../store.redux';
 
@@ -33,6 +34,7 @@ export interface ICheckoutSliceState {
     code: string;
     value: number;
     token: string;
+    order_type: AllowedOrderType;
   } | null;
 }
 
