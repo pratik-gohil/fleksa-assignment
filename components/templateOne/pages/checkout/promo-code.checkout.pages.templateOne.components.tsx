@@ -101,11 +101,12 @@ const OffersContainer = styled.div`
 `;
 
 const DropDownContainer = styled.div``;
-const DropDown = styled.div`
+const DropDown = styled.div<{ isDropdown: boolean }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
+  padding: ${(p) => (p.isDropdown ? '0.5rem 0 0 0' : '0')};
 
   &:hover,
   &:focus,
@@ -121,6 +122,7 @@ const DropDown = styled.div`
 const CustomStyledCheckoutTitle = styled(StyledCheckoutTitle)`
   font-size: 1rem;
   font-weight: 700;
+  padding-top: 0.5rem;
 `;
 
 const Title = styled.h4<{ isDropdown: boolean }>`
@@ -338,11 +340,9 @@ const Price = styled.p`
   text-align: right;
 `;
 
-const DropDownBody = styled.div<{ isDropdown: boolean }>`
+const DropDownBody = styled.div`
   display: flex;
   align-items: center;
-
-  padding: ${(p) => (p.isDropdown ? '0.5rem 0' : '0')};
 `;
 
 const SelectText = styled.p`
@@ -557,8 +557,8 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
               </InputContainer>
 
               <DropDownContainer onClick={handleDropdownClick}>
-                <DropDown>
-                  <DropDownBody isDropdown={isDropdown}>
+                <DropDown isDropdown={isDropdown}>
+                  <DropDownBody>
                     <OfferIcon>
                       <SvgOffer />
                     </OfferIcon>
