@@ -105,7 +105,7 @@ export const selectViewableCategoriesSearch = (state: RootState, searchQuery: st
 };
 
 export const selectCategoryNames = (state: RootState) =>
-  state.menu.categories.map((category) => {
+  state.menu.viewableCategoreis.map((category) => {
     return {
       name_json: category.name_json,
     };
