@@ -49,6 +49,11 @@ export interface ICategory {
     always: boolean;
 
     order_type_?: Array<ICheckoutOrderTypes>;
+    days?: Array<[0, 1, 2, 3, 4, 5, 6]>;
+    time?: {
+      end: string;
+      start: string;
+    };
   };
   description_json: ILanguageData;
   image: string;
