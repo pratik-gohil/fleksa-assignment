@@ -14,6 +14,7 @@ import {
 import MenuPageProductListItem from './product-list-item.menu.pages.templateOne.components';
 import { ICheckoutOrderTypes } from '../../../../redux/slices/checkout.slices.redux';
 import { ICategory } from '../../../../interfaces/common/category.common.interfaces';
+import moment from 'moment';
 
 const List = styled.ul``;
 
@@ -131,20 +132,47 @@ const MenuPageCategoryList: FunctionComponent = ({}) => {
     if (orderType) {
       const properOrderType = (orderType === 'DINE_IN' ? 'DINEIN' : orderType) as ICheckoutOrderTypes;
 
-      const alwaysCategories = menuCategories.filter((category) => category.availability.always);
+      const alwaysAvailableCategories = menuCategories.filter((category) => category.availability.always);
 
       const specificCategories: ICategory[] = [];
+      const currentDay = moment();
 
-      // ?? Loop through specificCategories for update the array
+      /**
+       * Loop through specificCategories for update the array
+       *
+       * Category filteration based on day, time and selected order type
+       *
+       * Priority based list below
+       * day -> High
+       * time -> Medium
+       * ordertype -> Low
+       *
+       */
       menuCategories
         .filter((category) => !category.availability.always)
         .forEach((category) => {
-          if (category.availability.order_type_?.includes(properOrderType)) {
+          /**
+           * With moment object
+           * dayCount -> [0,1,2,3,4,5,6] -> moment().day() -> 5
+           * weekDayStart -> Sunday[0]
+           */
+
+          // ?? For current time is applicable for category available
+          if (category.availability.time) {
+            const start = moment(category.availability.time.start);
+            const end = moment(category.availability.time.end);
+
+            // ?? Checking Time and correspond order type
+            if (currentDay.isBetween(start, end) && category.availability.order_type_?.includes(properOrderType))
+              specificCategories.push(category);
+          }
+          // ?? Without time only order type
+          else if (!category.availability?.time && category.availability.order_type_?.includes(properOrderType)) {
             specificCategories.push(category);
           }
         });
 
-      dispatch(updateMenuViewableCategories([...specificCategories, ...alwaysCategories]));
+      dispatch(updateMenuViewableCategories([...specificCategories, ...alwaysAvailableCategories]));
     }
   }, [orderType]);
 
