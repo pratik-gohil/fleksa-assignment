@@ -3,7 +3,7 @@ import React from 'react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import IndexStoreWrapper from '../../redux/store.redux';
 import TemplateToShow from '../../templates/template-to-show.templates';
-import { updateCategories, updateParts, updateSides } from '../../redux/slices/menu.slices.redux';
+import { updateCategories, updateMenuViewableCategories, updateParts, updateSides } from '../../redux/slices/menu.slices.redux';
 import PyApiHttpGetMenu from '../../http/pyapi/menu/get.menu.index.pyapi.http';
 import { getServerSidePropsCommon } from '../../utils/page.utils';
 import Cookies from 'cookies';
@@ -78,6 +78,7 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ct
 
     const responseMenu = await new PyApiHttpGetMenu(configuration).get({ shopId: menuId || shopId });
     ctx.store.dispatch(updateCategories(responseMenu?.categories));
+    ctx.store.dispatch(updateMenuViewableCategories(responseMenu?.categories));
     ctx.store.dispatch(updateSides(responseMenu?.sides));
     ctx.store.dispatch(updateParts(responseMenu?.parts));
 

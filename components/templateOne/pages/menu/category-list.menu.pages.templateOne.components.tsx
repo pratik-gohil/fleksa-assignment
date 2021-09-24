@@ -1,11 +1,19 @@
-import React, { Fragment, FunctionComponent, useState } from 'react';
+import React, { Fragment, FunctionComponent, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 
-import { useAppSelector } from '../../../../redux/hooks.redux';
+import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
+import { selectOrderType } from '../../../../redux/slices/checkout.slices.redux';
 import { selectLanguage } from '../../../../redux/slices/configuration.slices.redux';
-import { selectCategoriesSearch, selectSearchQuery } from '../../../../redux/slices/menu.slices.redux';
+import {
+  selectCategoriesSearch,
+  selectMenuCategories,
+  selectSearchQuery,
+  updateMenuViewableCategories,
+} from '../../../../redux/slices/menu.slices.redux';
 import MenuPageProductListItem from './product-list-item.menu.pages.templateOne.components';
+import { ICheckoutOrderTypes } from '../../../../redux/slices/checkout.slices.redux';
+import { ICategory } from '../../../../interfaces/common/category.common.interfaces';
 
 const List = styled.ul``;
 
@@ -72,7 +80,6 @@ const CategoryTitleSticky = styled.h3`
   right: 0;
   background: #fff;
   z-index: 1;
-  /* padding: ${(props) => props.theme.dimen.X4}px 0 ${(props) => props.theme.dimen.X4}px; */
   span {
     font-size: 16px;
     font-weight: 400;
@@ -110,10 +117,37 @@ const CategoryStickyTitle = styled.h3`
 
 const MenuPageCategoryList: FunctionComponent = ({}) => {
   const language = useAppSelector(selectLanguage);
+  const dispatch = useAppDispatch();
+
   const searchQuery = useAppSelector(selectSearchQuery);
   const categories = useAppSelector((state) => selectCategoriesSearch(state, searchQuery));
+  const orderType = useAppSelector(selectOrderType);
+  const menuCategories = useAppSelector(selectMenuCategories);
 
   const [openItemId, setOpenItemId] = useState<number | undefined>();
+  // const [categories, setCategories] = useState<Array<ICategory>>([]);
+
+  // TODO: Filter categories based on ordertype selection
+  useEffect(() => {
+    if (orderType) {
+      const properOrderType = (orderType === 'DINE_IN' ? 'DINEIN' : orderType) as ICheckoutOrderTypes;
+
+      const alwaysCategories = menuCategories.filter((category) => category.availability.always);
+
+      const specificCategories: ICategory[] = [];
+
+      // ?? Loop through specificCategories for update the array
+      menuCategories
+        .filter((category) => !category.availability.always)
+        .forEach((category) => {
+          if (category.availability.order_type_?.includes(properOrderType)) {
+            specificCategories.push(category);
+          }
+        });
+
+      dispatch(updateMenuViewableCategories([...specificCategories, ...alwaysCategories]));
+    }
+  }, [orderType]);
 
   return (
     <>
