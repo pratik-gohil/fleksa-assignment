@@ -165,13 +165,6 @@ const MenuPageCategoryList: FunctionComponent = ({}) => {
             );
             const end = moment(`${category.availability.time.end.slice(0, 2)}:${category.availability.time.end.slice(2, 4)}`, 'h:mm a');
 
-            console.log(currentDay.isBetween(start, end));
-            console.log(start);
-            console.log(end);
-            console.log(currentDay.format('HH:mm'));
-
-            console.log(currentDay.isBetween(start, end));
-
             // ?? Checking Time and correspond order type
             if (currentDay.isBetween(start, end) && category.availability.order_type_?.includes(properOrderType))
               specificCategories.push(category);
