@@ -1,11 +1,20 @@
-import React, { Fragment, FunctionComponent, useState } from 'react';
+import React, { Fragment, FunctionComponent, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 
-import { useAppSelector } from '../../../../redux/hooks.redux';
+import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
+import { selectOrderType } from '../../../../redux/slices/checkout.slices.redux';
 import { selectLanguage } from '../../../../redux/slices/configuration.slices.redux';
-import { selectCategoriesSearch, selectSearchQuery } from '../../../../redux/slices/menu.slices.redux';
+import {
+  selectViewableCategoriesSearch,
+  selectMenuCategories,
+  selectSearchQuery,
+  updateMenuViewableCategories,
+} from '../../../../redux/slices/menu.slices.redux';
 import MenuPageProductListItem from './product-list-item.menu.pages.templateOne.components';
+import { ICheckoutOrderTypes } from '../../../../redux/slices/checkout.slices.redux';
+import { ICategory } from '../../../../interfaces/common/category.common.interfaces';
+import moment from 'moment';
 
 const List = styled.ul``;
 
@@ -72,7 +81,6 @@ const CategoryTitleSticky = styled.h3`
   right: 0;
   background: #fff;
   z-index: 1;
-  /* padding: ${(props) => props.theme.dimen.X4}px 0 ${(props) => props.theme.dimen.X4}px; */
   span {
     font-size: 16px;
     font-weight: 400;
@@ -110,14 +118,71 @@ const CategoryStickyTitle = styled.h3`
 
 const MenuPageCategoryList: FunctionComponent = ({}) => {
   const language = useAppSelector(selectLanguage);
+  const dispatch = useAppDispatch();
+
   const searchQuery = useAppSelector(selectSearchQuery);
-  const categories = useAppSelector((state) => selectCategoriesSearch(state, searchQuery));
+  const categories = useAppSelector((state) => selectViewableCategoriesSearch(state, searchQuery));
+  const orderType = useAppSelector(selectOrderType);
+  const menuCategories = useAppSelector(selectMenuCategories);
 
   const [openItemId, setOpenItemId] = useState<number | undefined>();
+
+  // TODO: Filter categories based on ordertype selection
+  useEffect(() => {
+    if (orderType) {
+      const properOrderType = (orderType === 'DINE_IN' ? 'DINEIN' : orderType) as ICheckoutOrderTypes;
+
+      const alwaysAvailableCategories = menuCategories.filter((category) => category.availability.always);
+
+      const specificCategories: ICategory[] = [];
+      const currentDay = moment();
+
+      /**
+       * Loop through specificCategories for update the array
+       *
+       * Category filteration based on day, time and selected order type
+       *
+       * Priority based list below
+       * day -> High
+       * time -> Medium
+       * ordertype -> Low
+       *
+       */
+      menuCategories
+        .filter((category) => !category.availability.always)
+        .forEach((category) => {
+          /**
+           * With moment object
+           * dayCount -> [0,1,2,3,4,5,6] -> moment().day() -> 5
+           * weekDayStart -> Sunday[0]
+           */
+
+          // ?? For current time is applicable for category available
+          if (category.availability.time) {
+            const start = moment(
+              `${category.availability.time.start.slice(0, 2)}:${category.availability.time.start.slice(2, 4)}`,
+              'h:mm a',
+            );
+            const end = moment(`${category.availability.time.end.slice(0, 2)}:${category.availability.time.end.slice(2, 4)}`, 'h:mm a');
+
+            // ?? Checking Time and correspond order type
+            if (currentDay.isBetween(start, end) && category.availability.order_type_?.includes(properOrderType))
+              specificCategories.push(category);
+          }
+          // ?? Without time only order type
+          else if (!category.availability?.time && category.availability.order_type_?.includes(properOrderType)) {
+            specificCategories.push(category);
+          }
+        });
+
+      dispatch(updateMenuViewableCategories([...specificCategories, ...alwaysAvailableCategories]));
+    }
+  }, [orderType]);
 
   return (
     <>
       <Space />
+
       <List>
         {categories.map((category, index) => {
           if (category.products.length === 0) return <Fragment key={index} />;
@@ -148,6 +213,7 @@ const MenuPageCategoryList: FunctionComponent = ({}) => {
                     </CateogryDescription>
                   </CategoryTitleSticky>
                 )}
+
                 <List>
                   {category.products.map((product) => (
                     <MenuPageProductListItem

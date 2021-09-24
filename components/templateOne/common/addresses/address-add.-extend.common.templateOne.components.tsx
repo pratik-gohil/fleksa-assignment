@@ -188,9 +188,8 @@ const AddAddressExtendModel = () => {
       ? (JSON.parse(window.localStorage.getItem('@LS_GUEST_USER_ADDRESS') ?? '') as IParticularAddress)
       : undefined;
 
-    if (isLoggedIn) {
-      setAddressList([...customerData.all_address].sort((a, b) => b.id - a.id));
-    } else if (!isLoggedIn && guestAddress) setAddressList([guestAddress]);
+    if (isLoggedIn) setAddressList([...customerData.all_address].sort((a, b) => b.id - a.id));
+    else if (!isLoggedIn && guestAddress) setAddressList([guestAddress]);
   }, [customerData.all_address]);
 
   /**
