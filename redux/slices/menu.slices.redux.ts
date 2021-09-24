@@ -88,7 +88,7 @@ export const {
   updateMenuViewableCategories,
 } = MenuSlice.actions;
 
-export const selectCategoriesSearch = (state: RootState, searchQuery: string) => {
+export const selectViewableCategoriesSearch = (state: RootState, searchQuery: string) => {
   if (searchQuery.length === 0) {
     return state.menu.viewableCategoreis;
   } else {

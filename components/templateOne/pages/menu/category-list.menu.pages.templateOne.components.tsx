@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { selectOrderType } from '../../../../redux/slices/checkout.slices.redux';
 import { selectLanguage } from '../../../../redux/slices/configuration.slices.redux';
 import {
-  selectCategoriesSearch,
+  selectViewableCategoriesSearch,
   selectMenuCategories,
   selectSearchQuery,
   updateMenuViewableCategories,
@@ -120,12 +120,11 @@ const MenuPageCategoryList: FunctionComponent = ({}) => {
   const dispatch = useAppDispatch();
 
   const searchQuery = useAppSelector(selectSearchQuery);
-  const categories = useAppSelector((state) => selectCategoriesSearch(state, searchQuery));
+  const categories = useAppSelector((state) => selectViewableCategoriesSearch(state, searchQuery));
   const orderType = useAppSelector(selectOrderType);
   const menuCategories = useAppSelector(selectMenuCategories);
 
   const [openItemId, setOpenItemId] = useState<number | undefined>();
-  // const [categories, setCategories] = useState<Array<ICategory>>([]);
 
   // TODO: Filter categories based on ordertype selection
   useEffect(() => {
@@ -152,6 +151,7 @@ const MenuPageCategoryList: FunctionComponent = ({}) => {
   return (
     <>
       <Space />
+
       <List>
         {categories.map((category, index) => {
           if (category.products.length === 0) return <Fragment key={index} />;
@@ -182,6 +182,7 @@ const MenuPageCategoryList: FunctionComponent = ({}) => {
                     </CateogryDescription>
                   </CategoryTitleSticky>
                 )}
+
                 <List>
                   {category.products.map((product) => (
                     <MenuPageProductListItem
