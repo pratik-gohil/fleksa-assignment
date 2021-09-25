@@ -72,18 +72,13 @@ export const UserSlice = createSlice({
     updateExistCustomerAddress(state, action) {
       const index = state.all_address?.findIndex((address) => action.payload.id === address.id);
 
-      if (index !== -1) {
-        state.all_address[index] = action.payload;
-      }
+      if (index !== -1) state.all_address[index] = action.payload;
     },
     updateExistCustomerAddressOrAddNew(state, action) {
       const index = state.all_address?.findIndex((address) => action.payload.id === address.id);
 
-      if (index !== -1) {
-        state.all_address[index] = action.payload;
-      } else {
-        state.all_address?.push(action.payload);
-      }
+      if (index !== -1) state.all_address[index] = action.payload;
+      else state.all_address?.push(action.payload);
     },
     deleteCustomerAddress(state, action) {
       state.all_address = state.all_address.filter((address) => address.id !== action.payload);
