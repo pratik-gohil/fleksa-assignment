@@ -182,6 +182,7 @@ const ButtonContainer = styled.div`
     right: 1rem;
     bottom: calc(${(p) => p.theme.navMobile.height}px + 1rem);
     position: fixed;
+    z-index: 99999;
   }
 `;
 
@@ -195,6 +196,15 @@ const OffersPageTemplateOne: FunctionComponent = ({}) => {
   const [currentContent, setCurrentContent] = useState<IContent | null>(null);
   let index = useRef(0);
 
+  // ?? Set offer contents on local state
+  useEffect(() => {
+    if (contents.length) setCurrentContent(contents[index.current]);
+  }, []);
+
+  /**
+   *
+   * @returns handle left arrow click event to move slide
+   */
   const handleLeftArrowClick = async () => {
     amplitudeEvent(constructEventName(`image left arrow`, 'image'), {
       content: contents[index.current],
@@ -223,6 +233,10 @@ const OffersPageTemplateOne: FunctionComponent = ({}) => {
     }
   };
 
+  /**
+   *
+   * @returns handle right arrow click event to move slide
+   */
   const handleRightArrowClick = async () => {
     amplitudeEvent(constructEventName(`image right arrow`, 'image'), {
       content: contents[index.current],
@@ -251,14 +265,15 @@ const OffersPageTemplateOne: FunctionComponent = ({}) => {
     }
   };
 
+  /**
+   *
+   * @param e Event object
+   * @description handle keyboard left and right arrow click event
+   */
   const handleKeyPressClick = async (e: any) => {
     if (e.keyCode === 37) await handleLeftArrowClick();
     else if (e.keyCode === 39) await handleRightArrowClick();
   };
-
-  useEffect(() => {
-    if (contents.length) setCurrentContent(contents[index.current]);
-  }, []);
 
   return (
     <Wrapper onKeyDown={handleKeyPressClick} tabIndex={-1}>

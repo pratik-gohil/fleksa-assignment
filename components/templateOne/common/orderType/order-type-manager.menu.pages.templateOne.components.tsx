@@ -6,24 +6,32 @@ import {
   ICheckoutOrderTypes,
   selectOrderType,
   selectSelectedAddressId,
+  updateDeliveryFinances,
   updateOrderType,
+  updateSelectedAddressId,
 } from '../../../../redux/slices/checkout.slices.redux';
 import SvgDelivery from '../../../../public/assets/svg/delivery.svg';
 import SvgPickup from '../../../../public/assets/svg/pickup.svg';
 import SvgDinein from '../../../../public/assets/svg/dinein.svg';
 import { selectShowAddress, updateShowAddAddress, updateShowOrderTypeSelect } from '../../../../redux/slices/menu.slices.redux';
-import { selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
+import { selectConfiguration, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
 import { selectAddress, selectShop, selectSiblings } from '../../../../redux/slices/index.slices.redux';
 import { useState } from 'react';
 import { IAddress } from '../../../../interfaces/common/address.common.interfaces';
 import { useTranslation } from 'next-i18next';
-import { selectAddressById, selectAddressByType, selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
+import {
+  selectAddressById,
+  selectAddressByType,
+  selectBearerToken,
+  selectIsUserLoggedIn,
+} from '../../../../redux/slices/user.slices.redux';
 import { IParticularAddress } from '../../../../interfaces/common/customer.common.interfaces';
 import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 import AddAddressExtendModel from '../addresses/address-add.-extend.common.templateOne.components';
 import SvgBackIcon from '../../../../public/assets/svg/account/back-arrow.svg';
 import SvgEdit from '../../../../public/assets/svg/edit.svg';
 import { LS_GUEST_USER_ADDRESS } from '../../../../constants/keys-local-storage.constants';
+import PyApiHttpPostAddress from '../../../../http/pyapi/address/post.address.pyapi.http';
 
 const Wrapper = styled.div`
   position: fixed;
@@ -106,7 +114,6 @@ const ListItem = styled.li<{ selected: boolean }>`
   margin: 0 ${(props) => props.theme.dimen.X4}px;
   border-radius: ${(props) => props.theme.borderRadius}px;
   position: relative;
-  /* background: ${(p) => (p.selected ? '#EAFFD0' : '#fff')}; */
 
   &::before {
     content: '';
@@ -225,6 +232,8 @@ const OrderTypeManager: FunctionComponent = () => {
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
   const isShowAddressSelection = useAppSelector(selectShowAddress);
   const checkoutAddressId = useAppSelector(selectSelectedAddressId);
+  const bearerToken = useAppSelector(selectBearerToken);
+  const configuration = useAppSelector(selectConfiguration);
 
   const correspondAddress = useAppSelector((state) => selectAddressByType(state, 'OTHER'));
   const correspondAddressById = useAppSelector((state) => selectAddressById(state, checkoutAddressId));
@@ -234,6 +243,8 @@ const OrderTypeManager: FunctionComponent = () => {
 
     if (shopData?.id == selectedMenuId) setAddressData(address);
     else setAddressData(siblings.find((item) => item.id == selectedMenuId)?.address);
+
+    // ?? Update default selection
   }, []);
 
   // TODO: Enable and disable scroll when modal opened
@@ -249,10 +260,12 @@ const OrderTypeManager: FunctionComponent = () => {
     if (typeof window === 'undefined') return;
     const guestAddressString = window.localStorage.getItem(LS_GUEST_USER_ADDRESS);
 
-    dispatch(updateOrderType(orderType));
-
     if ((isLoggedIn && correspondAddress) || guestAddressString) {
       dispatch(updateShowOrderTypeSelect(false));
+      dispatch(updateOrderType(orderType));
+
+      // ?? Make the pyapi request to get delivery finance information and valid address checking
+      makeConfirmRequestToPyapi(correspondAddress);
     } else {
       dispatch(updateShowAddAddress(true));
       dispatch(updateShowOrderTypeSelect(true));
@@ -275,6 +288,9 @@ const OrderTypeManager: FunctionComponent = () => {
     amplitudeEvent(constructEventName(t('@dine-in'), 'model'), {});
   }
 
+  /**
+   * @description get selected default address on user profile or local storage
+   */
   function getSelectedAddress() {
     if (typeof window === 'undefined') return;
 
@@ -290,6 +306,9 @@ const OrderTypeManager: FunctionComponent = () => {
         city: correspondAddressById?.city,
       };
     } else if (isLoggedIn && !checkoutAddressId && correspondAddress) {
+      // ?? Update the checkoutAddressId on redux state to send for order placing
+      dispatch(updateSelectedAddressId(correspondAddress.id));
+
       return {
         address: correspondAddress?.address,
         floor: correspondAddress?.floor,
@@ -310,6 +329,56 @@ const OrderTypeManager: FunctionComponent = () => {
       potalCode: '',
       city: '',
     };
+  }
+
+  /**
+   *
+   * @param Object contains seperate portions of the address (floor, address, area, city, addressType, postalCode)
+   */
+  async function makeConfirmRequestToPyapi(address?: IParticularAddress) {
+    if (!address) return;
+
+    amplitudeEvent(constructEventName(`address model save address`, 'button'), {});
+
+    if (selectedMenuId) {
+      const response = await new PyApiHttpPostAddress(configuration).postAll({
+        area: address.area ?? '',
+        city: address.city,
+        floor: `${address.floor}` ?? '',
+        address: address.address ?? '',
+        addressType: address.address_type,
+        shopId: selectedMenuId,
+        postalCode: address.postal_code,
+        token: bearerToken,
+      });
+
+      if (response?.result && response.possibilities[selectedMenuId].is_available) {
+        dispatch(updateDeliveryFinances(response.possibilities[selectedMenuId].details));
+
+        if (isLoggedIn && bearerToken && response.customer.details) {
+          const addressData: IParticularAddress = {
+            id: response.customer.details?.customer_address_id,
+            address_type: address.address_type,
+            floor: `${address.floor}` ?? '',
+            address: address.address ?? '',
+            country: '',
+            postal_code: address.postal_code,
+            city: address.city,
+            state: '',
+            area: address.area ?? '',
+          };
+
+          dispatch(updateSelectedAddressId(response.customer.details?.customer_address_id));
+          dispatch(updateShowAddAddress(false));
+          dispatch(updateOrderType('DELIVERY'));
+
+          amplitudeEvent(constructEventName(`address model save address user response`, 'success'), { addressData, response });
+        }
+      } else {
+        console.log('error descripton ', response?.description);
+        amplitudeEvent(constructEventName(`address model save address response`, 'error'), { description: response?.description });
+      }
+    }
   }
 
   /**

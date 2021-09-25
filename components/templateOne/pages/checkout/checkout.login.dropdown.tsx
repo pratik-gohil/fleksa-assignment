@@ -6,11 +6,12 @@ import PhoneInput from 'react-phone-input-2';
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { COOKIE_BEARER_TOKEN } from '../../../../constants/keys-cookies.constants';
+import NodeApiHttpGetUserOrderHistory from '../../../../http/nodeapi/account/get.account.order-history.nodeapi.http';
 import NodeApiHttpPostLogin from '../../../../http/nodeapi/login/post.login.nodeapi.http';
 import NodeApiHttpPostVerify from '../../../../http/nodeapi/verify/post.verify.nodeapi.http';
 import { IUpgradedCredential } from '../../../../interfaces/common/login.common.interfaces';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
-import { updateCheckoutLogin } from '../../../../redux/slices/checkout.slices.redux';
+import { updateCheckoutIsOffersOpen, updateCheckoutLogin } from '../../../../redux/slices/checkout.slices.redux';
 import { updateError } from '../../../../redux/slices/common.slices.redux';
 import { selectConfiguration, selectLanguageCode } from '../../../../redux/slices/configuration.slices.redux';
 import { selectShop } from '../../../../redux/slices/index.slices.redux';
@@ -19,6 +20,7 @@ import {
   updateBearerToken,
   updateCustomerEmail,
   updateCustomerName,
+  updateCustomerOrderHistory,
   updateCustomerPhone,
 } from '../../../../redux/slices/user.slices.redux';
 import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
@@ -116,6 +118,10 @@ const CheckoutLoginDropdown = () => {
     }
   }
 
+  /**
+   *
+   * @returns verify the customer by make the verify request to node server
+   */
   async function onAutoTapLogin() {
     setLoading(true);
     try {
@@ -148,7 +154,19 @@ const CheckoutLoginDropdown = () => {
 
         amplitudeEvent(constructEventName(`onAutoTapLogin success`, 'response'), response);
 
+        // TODO: Updating customer history order information to the state
+        const orderHistory = await new NodeApiHttpGetUserOrderHistory(configuration, response.token).get({
+          shop_id: shopData?.id as unknown as number,
+        });
+
         await finishLogin(response.token);
+
+        if (orderHistory?.result) {
+          await dispatch(updateCustomerOrderHistory(orderHistory.data.orders?.sort((a, b) => b.id - a.id)));
+
+          // TODO: Open when first order login to show for applying promo code
+          if (orderHistory.data.orders?.length === 0) dispatch(updateCheckoutIsOffersOpen(true));
+        }
       }
     } catch (error) {
       console.error(error);

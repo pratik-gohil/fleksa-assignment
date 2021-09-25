@@ -18,6 +18,7 @@ const OrderButton = styled.div<{ active: boolean; isLoggedIn: boolean }>`
   cursor: pointer;
   min-height: 55px;
   width: 100%;
+  margin-bottom: 0.5rem;
 `;
 
 interface ICheckoutOrderAndPayButtonProps {

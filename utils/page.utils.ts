@@ -63,6 +63,8 @@ export async function getServerSidePropsCommon(
     const isMultiRestaurantHost = multiRestaurantHosts.includes(ctx.req.headers.host);
     const host: string = isMultiRestaurantHost ? restaurantDomain || 'roma.fleksa.com' : ctx.req.headers.host;
     const testHost = testingHosts.includes(host);
+
+    // ? Setting base url of api services
     const baseUrlPyApi = testHost ? 'https://myqa.fleksa.com' : 'https://my.fleksa.com';
     const baseUrlNodeApi = testHost ? (localMode ? 'http://localhost:4000' : 'https://apiqa.fleksa.com') : 'https://api.fleksa.com';
 

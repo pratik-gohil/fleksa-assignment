@@ -10,10 +10,10 @@ import {
   updateExistCustomerAddressOrAddNew,
 } from '../../../../redux/slices/user.slices.redux';
 import { IParticularAddress } from '../../../../interfaces/common/customer.common.interfaces';
-// import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
+import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 import { selectConfiguration, selectLanguageCode, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
 import PyApiHttpPostAddress from '../../../../http/pyapi/address/post.address.pyapi.http';
-import { updateDeliveryFinances, updateSelectedAddressId } from '../../../../redux/slices/checkout.slices.redux';
+import { updateDeliveryFinances, updateSelectedAddressId, updateOrderType } from '../../../../redux/slices/checkout.slices.redux';
 import { AddressTypes } from './address-manager.common.templateOne.components';
 import { updateShowAddAddress, updateShowOrderTypeSelect } from '../../../../redux/slices/menu.slices.redux';
 import { IGuestAddress } from './address-add.common.templateOne.components';
@@ -188,9 +188,8 @@ const AddAddressExtendModel = () => {
       ? (JSON.parse(window.localStorage.getItem('@LS_GUEST_USER_ADDRESS') ?? '') as IParticularAddress)
       : undefined;
 
-    if (isLoggedIn) {
-      setAddressList([...customerData.all_address].sort((a, b) => b.id - a.id));
-    } else if (!isLoggedIn && guestAddress) setAddressList([guestAddress]);
+    if (isLoggedIn) setAddressList([...customerData.all_address].sort((a, b) => b.id - a.id));
+    else if (!isLoggedIn && guestAddress) setAddressList([guestAddress]);
   }, [customerData.all_address]);
 
   /**
@@ -227,7 +226,7 @@ const AddAddressExtendModel = () => {
    */
   async function makeRequestToPyapi() {
     setErrorMessage(undefined);
-    // amplitudeEvent(constructEventName(`address model save address`, 'button'), {});
+    amplitudeEvent(constructEventName(`address model save address`, 'button'), {});
 
     if (shopId) {
       const response = await new PyApiHttpPostAddress(configuration).postAll({
@@ -260,8 +259,9 @@ const AddAddressExtendModel = () => {
           dispatch(updateSelectedAddressId(response.customer.details?.customer_address_id));
           dispatch(updateShowAddAddress(false));
           dispatch(updateShowOrderTypeSelect(false));
+          dispatch(updateOrderType('DELIVERY'));
 
-          // amplitudeEvent(constructEventName(`address model save address user response`, 'success'), { addressData, response });
+          amplitudeEvent(constructEventName(`address model save address user response`, 'success'), { addressData, response });
         } else {
           const guestAddress: IGuestAddress = {
             floor: `${additionalInstruction}` ?? '',
@@ -276,13 +276,14 @@ const AddAddressExtendModel = () => {
           window.localStorage.setItem(LS_GUEST_USER_ADDRESS, JSON.stringify(guestAddress));
           dispatch(updateShowAddAddress(false));
           dispatch(updateShowOrderTypeSelect(false));
+          dispatch(updateOrderType('DELIVERY'));
 
-          // amplitudeEvent(constructEventName(`address model save address guest response`, 'success'), guestAddress);
+          amplitudeEvent(constructEventName(`address model save address guest response`, 'success'), guestAddress);
         }
       } else {
         setErrorMessage(response?.description);
         console.log('error descripton ', response?.description);
-        // amplitudeEvent(constructEventName(`address model save address response`, 'error'), { description: response?.description });
+        amplitudeEvent(constructEventName(`address model save address response`, 'error'), { description: response?.description });
       }
     }
   }
