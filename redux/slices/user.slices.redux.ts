@@ -118,6 +118,8 @@ export const selectIsUserLoggedIn = (state: RootState) => !!state.user.bearerTok
 export const selectBearerToken = (state: RootState) => state.user.bearerToken;
 export const selectCustomer = (state: RootState) => state.user.customer;
 export const selectCustomerOrderHistory = (state: RootState) => state.user.orders;
+export const selectCustomerCurrentOrder = (state: RootState) => state.user.current_order;
+export const selectCustomerAllAddress = (state: RootState) => state.user.all_address;
 export const selectAddressByType = (state: RootState, addressType: AddressTypes) =>
   state.user.all_address?.find((i) => i.address_type === addressType);
 export const selectAddressById = (state: RootState, id: number | null) =>
