@@ -6,9 +6,7 @@ import {
   updateSelectedMenu,
   updateSelectedMenuUrlpath,
 } from '../redux/slices/configuration.slices.redux';
-import {
-  updateSeo
-} from "../redux/slices/seo.slices.redux"
+import { updateSeo } from '../redux/slices/seo.slices.redux';
 import {
   COOKIE_BEARER_TOKEN,
   COOKIE_SELECTED_MENU_ID,
@@ -89,15 +87,13 @@ export async function getServerSidePropsCommon(
       };
     }
 
-    
     const responseIndex = await new PyApiHttpGetIndex(configuration).get();
     if (!responseIndex?.shop.id) throw new Error('Shop id not found');
-    
 
-    // get seo tags
+    // ??get seo tags
     const responseSEO = await new PyApiHttpGetSEO(configuration).get(responseIndex?.shop.id, ctx.req.url);
-    // console.log("responseSEO", responseSEO)
-    if(responseSEO)  await ctx.store.dispatch(updateSeo(responseSEO?.shop.seo_tags_json))
+
+    if (responseSEO) await ctx.store.dispatch(updateSeo(responseSEO?.shop.seo_tags_json));
 
     /**
      * Update current restarurnat menu id and url if it's not present
