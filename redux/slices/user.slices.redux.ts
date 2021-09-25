@@ -88,6 +88,9 @@ export const UserSlice = createSlice({
     deleteCustomerAddress(state, action) {
       state.all_address = state.all_address.filter((address) => address.id !== action.payload);
     },
+    updateCustomerCurrentOrder(state, action) {
+      state.current_order = action.payload;
+    },
   },
   extraReducers: {
     [HYDRATE]: (state, action) => {
@@ -113,6 +116,7 @@ export const {
   updateCustomerPhone,
   updateCustomerCountryCode,
   updateCustomerOrderHistory,
+  updateCustomerCurrentOrder,
 } = UserSlice.actions;
 
 export const selectIsUserLoggedIn = (state: RootState) => !!state.user.bearerToken;

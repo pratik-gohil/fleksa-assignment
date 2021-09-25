@@ -12,7 +12,13 @@ import {
   COOKIE_SELECTED_MENU_URLPATH,
   COOKIE_SELECTED_RESTAURANT_DOMAIN,
 } from '../constants/keys-cookies.constants';
-import { updateBearerToken, updateCustomer } from '../redux/slices/user.slices.redux';
+import {
+  updateBearerToken,
+  updateCustomer,
+  updateCustomerCurrentOrder,
+  updateCustomerOrderHistory,
+  updateLoadAddressesList,
+} from '../redux/slices/user.slices.redux';
 import PyApiHttpGetIndex from '../http/pyapi/index/get.index.pyapi.http';
 import { updateIndex } from '../redux/slices/index.slices.redux';
 import NodeApiHttpGetUser from '../http/nodeapi/user/get.user.nodeapi.http';
@@ -121,34 +127,34 @@ export async function getServerSidePropsCommon(
         configuration,
       };
     } else if (bearerToken) {
-      const userData = await new NodeApiHttpGetUser(configuration, bearerToken).get({});
-      await ctx.store.dispatch(updateCustomer(userData?.data.customer));
-
       // * Make page addition request if it's needed
 
+      const userData = await new NodeApiHttpGetUser(configuration, bearerToken).get({});
+
+      // ?? Update basic login information of user
+      await ctx.store.dispatch(updateCustomer(userData?.data.customer));
+
       // TODO: Request order order history page
-      if (options?.orderHistory && bearerToken) {
+      if (options?.orderHistory) {
         const orderHistory = await new NodeApiHttpGetUserOrderHistory(configuration, bearerToken).get({ shop_id: responseIndex?.shop.id });
 
-        if (orderHistory?.result) {
-          await ctx.store.dispatch(
-            updateCustomer({ ...userData?.data.customer, orders: orderHistory.data.orders?.sort((a, b) => b.id - a.id) }),
-          );
-        } else await ctx.store.dispatch(updateCustomer({ ...userData?.data.customer, orders: [] }));
+        if (orderHistory?.result)
+          await ctx.store.dispatch(updateCustomerOrderHistory(orderHistory.data.orders?.sort((a, b) => b.id - a.id)));
+        else await ctx.store.dispatch(updateCustomerOrderHistory([]));
       }
 
       // TODO: Request for particular order page
-      if (options?.particularOrder && bearerToken) {
+      if (options?.particularOrder) {
         const particularOrder = await new NodeApiHttpGetUserParticularOrder(configuration, bearerToken).get({
           order_id: ctx.query.id,
         });
-        await ctx.store.dispatch(updateCustomer({ ...userData?.data.customer, current_order: particularOrder?.data?.order }));
+        await ctx.store.dispatch(updateCustomerCurrentOrder(particularOrder?.data?.order));
       }
 
       // TODO: Request for all address order page
-      if (options?.getAllAddress && bearerToken) {
+      if (options?.getAllAddress) {
         const response = await new NodeApiHttpGetUserAllAddress(configuration, bearerToken).get({});
-        await ctx.store.dispatch(updateCustomer({ ...userData?.data.customer, all_address: response?.data.customer_address }));
+        await ctx.store.dispatch(updateLoadAddressesList(response?.data.customer_address ?? []));
       }
     }
 
