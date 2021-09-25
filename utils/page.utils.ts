@@ -7,6 +7,9 @@ import {
   updateSelectedMenuUrlpath,
 } from '../redux/slices/configuration.slices.redux';
 import {
+  updateSeo
+} from "../redux/slices/seo.slices.redux"
+import {
   COOKIE_BEARER_TOKEN,
   COOKIE_SELECTED_MENU_ID,
   COOKIE_SELECTED_MENU_URLPATH,
@@ -14,6 +17,7 @@ import {
 } from '../constants/keys-cookies.constants';
 import { updateBearerToken, updateCustomer } from '../redux/slices/user.slices.redux';
 import PyApiHttpGetIndex from '../http/pyapi/index/get.index.pyapi.http';
+import PyApiHttpGetSEO from '../http/pyapi/seo/get.seo.pyapi.http';
 import { updateIndex } from '../redux/slices/index.slices.redux';
 import NodeApiHttpGetUser from '../http/nodeapi/user/get.user.nodeapi.http';
 import NodeApiHttpGetUserOrderHistory from '../http/nodeapi/account/get.account.order-history.nodeapi.http';
@@ -85,8 +89,15 @@ export async function getServerSidePropsCommon(
       };
     }
 
+    
     const responseIndex = await new PyApiHttpGetIndex(configuration).get();
     if (!responseIndex?.shop.id) throw new Error('Shop id not found');
+    
+
+    // get seo tags
+    const responseSEO = await new PyApiHttpGetSEO(configuration).get(responseIndex?.shop.id, ctx.req.url);
+    // console.log("responseSEO", responseSEO)
+    if(responseSEO)  await ctx.store.dispatch(updateSeo(responseSEO?.shop.seo_tags_json))
 
     /**
      * Update current restarurnat menu id and url if it's not present

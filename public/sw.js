@@ -96,11 +96,7 @@ define("./sw.js",['./workbox-6b19f60b'], function (workbox) { 'use strict';
   */
 
   importScripts("worker-development.js");
-  self.addEventListener('message', event => {
-    if (event.data && event.data.type === 'SKIP_WAITING') {
-      self.skipWaiting();
-    }
-  });
+  self.skipWaiting();
   workbox.clientsClaim();
   workbox.registerRoute("/", new workbox.NetworkFirst({
     "cacheName": "start-url",

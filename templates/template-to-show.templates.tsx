@@ -53,9 +53,11 @@ const TemplateToShow: FunctionComponent<IPropsTemplateToShow> = ({ meta, templat
       <NextSeo
         title={meta?.title}
         description={meta?.description}
+        keywords={meta?.keywords}
         openGraph={{
           title: meta?.title,
           description: meta?.description,
+          type: meta?.og_type_,
           images: imagesForSeo,
           site_name: shop?.name,
           locale: languageCode,
