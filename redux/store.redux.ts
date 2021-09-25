@@ -57,10 +57,9 @@ const wrapper = createWrapper(
       if (typeof window !== 'undefined') {
         try {
           const state = store.getState();
-
           localStorage.setItem(LS_CART, JSON.stringify(state.cart));
           localStorage.setItem(LS_CHECKOUT, JSON.stringify(state.checkout));
-          localStorage.setItem(LS_CUSTOMER_INFO, JSON.stringify(state.user));
+          localStorage.setItem(LS_CUSTOMER_INFO, JSON.stringify({ ...userInitialState, customer: state.user.customer }));
         } catch (error) {
           console.error(error);
         }
