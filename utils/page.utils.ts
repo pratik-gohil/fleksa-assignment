@@ -6,7 +6,6 @@ import {
   updateSelectedMenu,
   updateSelectedMenuUrlpath,
 } from '../redux/slices/configuration.slices.redux';
-import { updateSeo } from '../redux/slices/seo.slices.redux';
 import {
   COOKIE_BEARER_TOKEN,
   COOKIE_SELECTED_MENU_ID,
@@ -21,6 +20,7 @@ import NodeApiHttpGetUser from '../http/nodeapi/user/get.user.nodeapi.http';
 import NodeApiHttpGetUserOrderHistory from '../http/nodeapi/account/get.account.order-history.nodeapi.http';
 import NodeApiHttpGetUserParticularOrder from '../http/nodeapi/account/get.order-view-by-id.nodeapi.http';
 import NodeApiHttpGetUserAllAddress from '../http/nodeapi/account/get.account.all-address.nodeapi.http';
+import { updateSeoTagJson } from '../redux/slices/seo.slices.redux';
 
 const multiRestaurantHosts = ['127.0.0.1:3000', 'localhost:3000', 'newqa.fleksa.de', 'localhost:3214', '192.168.1.14:3000'];
 
@@ -95,7 +95,7 @@ export async function getServerSidePropsCommon(
     // ??get seo tags
     const responseSEO = await new PyApiHttpGetSEO(configuration).get(responseIndex?.shop.id, ctx.req.url);
 
-    if (responseSEO) await ctx.store.dispatch(updateSeo(responseSEO?.shop.seo_tags_json));
+    if (responseSEO) await ctx.store.dispatch(updateSeoTagJson(responseSEO?.shop.seo_tags_json));
 
     /**
      * Update current restarurnat menu id and url if it's not present
