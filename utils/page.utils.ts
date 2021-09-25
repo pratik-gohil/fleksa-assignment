@@ -20,7 +20,7 @@ import NodeApiHttpGetUser from '../http/nodeapi/user/get.user.nodeapi.http';
 import NodeApiHttpGetUserOrderHistory from '../http/nodeapi/account/get.account.order-history.nodeapi.http';
 import NodeApiHttpGetUserParticularOrder from '../http/nodeapi/account/get.order-view-by-id.nodeapi.http';
 import NodeApiHttpGetUserAllAddress from '../http/nodeapi/account/get.account.all-address.nodeapi.http';
-import { updateSeoTagJson } from '../redux/slices/seo.slices.redux';
+import { updateSeoTagJson } from '../redux/slices/common.slices.redux';
 
 const multiRestaurantHosts = ['127.0.0.1:3000', 'localhost:3000', 'newqa.fleksa.de', 'localhost:3214', '192.168.1.14:3000'];
 

@@ -9,7 +9,6 @@ import { CartSlice } from './slices/cart.slices.redux';
 import { LS_CART, LS_CHECKOUT } from '../constants/keys-local-storage.constants';
 import { checkoutInitialState, CheckoutSlice } from './slices/checkout.slices.redux';
 import { CommonSlice } from './slices/common.slices.redux';
-import { SeoSlice } from './slices/seo.slices.redux';
 
 const makeStore = () =>
   configureStore({
@@ -22,7 +21,6 @@ const makeStore = () =>
       configuration: ConfigurationSlice.reducer,
       itemSelection: ItemSelectionSlice.reducer,
       common: CommonSlice.reducer,
-      seo: SeoSlice.reducer,
     },
     preloadedState: {
       cart:
