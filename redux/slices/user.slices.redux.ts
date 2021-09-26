@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { HYDRATE } from 'next-redux-wrapper';
 import { AddressTypes } from '../../components/templateOne/common/addresses/address-manager.common.templateOne.components';
+import { LS_CUSTOMER_INFO } from '../../constants/keys-local-storage.constants';
 import {
   ICustomer,
   IParticularAddress,
@@ -89,6 +90,13 @@ export const UserSlice = createSlice({
   },
   extraReducers: {
     [HYDRATE]: (state, action) => {
+      // TODO: Don't hydrate on front end if localhost had something (guest user)
+      if (typeof window !== 'undefined' && localStorage.getItem(LS_CUSTOMER_INFO) && !action.payload[SLICE_NAME].bearerToken)
+        return {
+          ...state,
+        };
+
+      // ?? hydrate if it's loged in user
       return {
         ...state,
         ...action.payload[SLICE_NAME],

@@ -1,8 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { HYDRATE } from 'next-redux-wrapper';
+import { LS_CHECKOUT } from '../../constants/keys-local-storage.constants';
 import { ICategory } from '../../interfaces/common/category.common.interfaces';
 import { IMenuPart } from '../../interfaces/common/menu-part.common.interfaces';
 import { IMenuSide } from '../../interfaces/common/menu-side.common.interfaces';
+import { filterViewableCategoriesByOrderType } from '../../utils/menu.util';
 import { RootState } from '../store.redux';
 
 const SLICE_NAME = 'menu';
@@ -70,10 +72,21 @@ export const MenuSlice = createSlice({
   },
   extraReducers: {
     [HYDRATE]: (state, action) => {
-      return {
-        ...state,
-        ...action.payload[SLICE_NAME],
+      const nextState = {
+        ...state, // use previous state
+        ...action.payload[SLICE_NAME], // apply delta from hydration
       };
+
+      if (typeof window !== 'undefined' && localStorage.getItem(LS_CHECKOUT)) {
+        const localCheckoutState = JSON.parse(localStorage.getItem(LS_CHECKOUT) as string);
+
+        if (localCheckoutState.orderType) {
+          // ?? Apply filter along with hydration
+          nextState.viewableCategoreis = filterViewableCategoriesByOrderType(nextState.categories, localCheckoutState.orderType);
+        }
+      }
+
+      return nextState;
     },
   },
 });
