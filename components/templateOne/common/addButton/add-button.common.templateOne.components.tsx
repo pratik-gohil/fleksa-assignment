@@ -9,7 +9,7 @@ import { selectItemSelectionByTopProductId } from '../../../../redux/slices/item
 import SvgButtonPlus from '../../../../public/assets/svg/button-plus.svg';
 import SvgButtonMinus from '../../../../public/assets/svg/button-minus.svg';
 import CustomLink from '../amplitude/customLink';
-import { selectIsReOrder, updateCheckoutIsReOrder } from '../../../../redux/slices/checkout.slices.redux';
+import { selectIsReOrder, selectPromoCode, updateCheckoutIsReOrder, updatePromoCode } from '../../../../redux/slices/checkout.slices.redux';
 
 export interface IPropsAddButton {
   hasImage: boolean;
@@ -90,6 +90,8 @@ const AddButton: FunctionComponent<IPropsAddButton> = ({ setOpenItemId, product,
   const selectionData = useAppSelector((state) => selectItemSelectionByTopProductId(state, product.id));
   const cartData = useAppSelector((state) => selectCartItemByCartId(state, lastCartId));
   const isReOrder = useAppSelector(selectIsReOrder);
+  const promoCodeData = useAppSelector(selectPromoCode);
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -100,6 +102,9 @@ const AddButton: FunctionComponent<IPropsAddButton> = ({ setOpenItemId, product,
   function addItemToCart() {
     // ? Update reorder state if it's
     if (isReOrder) dispatch(updateCheckoutIsReOrder(false));
+
+    // ? Reset promo code if it's applied
+    if (promoCodeData) dispatch(updatePromoCode(null));
 
     if (canOpen && isOpen && selectionData) {
       dispatch(

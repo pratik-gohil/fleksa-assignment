@@ -4,8 +4,6 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import IndexStoreWrapper from '../redux/store.redux';
 import TemplateToShow from '../templates/template-to-show.templates';
 import { getServerSidePropsCommon } from '../utils/page.utils';
-import NodeApiHttpGetUserAllAddress from '../http/nodeapi/account/get.account.all-address.nodeapi.http';
-import { updateLoadAddressesList } from '../redux/slices/user.slices.redux';
 
 const CheckoutPageTemplateOne = dynamic(import('../templates/one/checkout.one.templates'));
 
@@ -14,16 +12,12 @@ const templateList = [CheckoutPageTemplateOne];
 export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ctx) => {
   try {
     const requiresLogin = false;
-    const { redirect, configuration, bearerToken, responseIndex } = await getServerSidePropsCommon(ctx, requiresLogin, {
+    const { redirect, responseIndex } = await getServerSidePropsCommon(ctx, requiresLogin, {
       orderHistory: true,
+      getAllAddress: true,
     });
 
     if (redirect) return redirect;
-
-    if (bearerToken && configuration) {
-      const addressResponse = await new NodeApiHttpGetUserAllAddress(configuration, bearerToken).get({});
-      await ctx.store.dispatch(updateLoadAddressesList(addressResponse?.data.customer_address));
-    }
 
     return {
       props: {

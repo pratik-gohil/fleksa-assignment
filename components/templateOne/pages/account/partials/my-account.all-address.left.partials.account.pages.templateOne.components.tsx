@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import EditIconPath from '../../../../../public/assets/svg/pencil.svg';
 import PlusIconPath from '../../../../../public/assets/svg/account/plus.svg';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks.redux';
-import { selectBearerToken, selectCustomer } from '../../../../../redux/slices/user.slices.redux';
+import { selectBearerToken, selectCustomerAllAddress } from '../../../../../redux/slices/user.slices.redux';
 import { IParticularAddress } from '../../../../../interfaces/common/customer.common.interfaces';
 import { BREAKPOINTS } from '../../../../../constants/grid-system-configuration';
 import NodeApiHttpPostDeleteAddressRequest from '../../../../../http/nodeapi/account/post.delete-address.nodeapi.http';
@@ -185,7 +185,7 @@ const MyAccountAllAddressLeftSide: FunctionComponent<IMyAccountAllAddressLeftSid
   handleChangeEditMode,
   handleSetExistAddress,
 }) => {
-  const addressess = useAppSelector(selectCustomer).all_address;
+  const addressess = useAppSelector(selectCustomerAllAddress);
   const bearerToken = useAppSelector(selectBearerToken);
   const configuration = useAppSelector(selectConfiguration);
   const { t } = useTranslation('account');

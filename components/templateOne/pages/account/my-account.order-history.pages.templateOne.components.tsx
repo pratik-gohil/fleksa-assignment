@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { useAppSelector } from '../../../../redux/hooks.redux';
-import { selectCustomer } from '../../../../redux/slices/user.slices.redux';
+import { selectCustomerOrderHistory } from '../../../../redux/slices/user.slices.redux';
 import { MyAccountOrder } from './partials/my-account.order-history.partials.account.templateOne.components';
 import MobileBackButton from '../../common/backButton/backButton.common.templateOne.components';
 
@@ -21,16 +21,14 @@ const InnerWrapper = styled.div`
 `;
 
 export const MyAccountAllOrderHistory = () => {
-  const customerData = useAppSelector(selectCustomer);
+  const customerOrderHistory = useAppSelector(selectCustomerOrderHistory);
 
   return (
     <Wrapper>
       <InnerWrapper>
         <MobileBackButton path="/account" />
 
-        {customerData.orders?.map((order) => (
-          <MyAccountOrder key={order.id} order={order} />
-        ))}
+        {!!customerOrderHistory && customerOrderHistory.map((order) => <MyAccountOrder key={order.id} order={order} />)}
       </InnerWrapper>
     </Wrapper>
   );

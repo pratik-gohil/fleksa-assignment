@@ -2,7 +2,7 @@ import moment from 'moment';
 import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import { useAppSelector } from '../../../../redux/hooks.redux';
-import { selectCustomer } from '../../../../redux/slices/user.slices.redux';
+import { selectCustomerCurrentOrder } from '../../../../redux/slices/user.slices.redux';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import MobileBackButton from '../../common/backButton/backButton.common.templateOne.components';
 import { useTranslation } from 'next-i18next';
@@ -158,7 +158,7 @@ const SetGap = styled.hr`
 `;
 
 const AccountPageParticularOrder: FunctionComponent = ({}) => {
-  const order = useAppSelector(selectCustomer).current_order;
+  const order = useAppSelector(selectCustomerCurrentOrder);
   const { t } = useTranslation('account');
 
   return (
