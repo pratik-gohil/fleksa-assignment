@@ -129,7 +129,6 @@ const MenuPageCategoryList: FunctionComponent = ({}) => {
   useEffect(() => {
     if (orderType) {
       const filteredCategoreis = filterViewableCategoriesByOrderType(menuCategories, orderType);
-      console.log('filteredCategoreis ', menuCategories);
       dispatch(updateMenuViewableCategories(filteredCategoreis));
     }
   }, [orderType, categories.length]);
