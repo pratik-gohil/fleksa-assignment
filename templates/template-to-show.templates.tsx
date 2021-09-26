@@ -102,7 +102,7 @@ const TemplateToShow: FunctionComponent<IPropsTemplateToShow> = ({ meta, templat
         // nofollow={seoTagsJson?.nofollow}
         title={seoTagsJson?.title || meta?.title}
         description={seoTagsJson?.description || meta?.description}
-        keywords={meta?.keywords}
+        // keywords={meta?.keywords}
         openGraph={{
           title: seoTagsJson?.['openGraph.title'] || meta?.title,
           description: seoTagsJson?.['openGraph.description'] || meta?.description,
