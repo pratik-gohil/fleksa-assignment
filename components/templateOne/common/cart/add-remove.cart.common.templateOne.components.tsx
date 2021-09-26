@@ -1,12 +1,13 @@
 import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 
-import { useAppDispatch } from '../../../../redux/hooks.redux';
+import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { ICartItem, updateAddProduct, updateReduceProduct } from '../../../../redux/slices/cart.slices.redux';
 
 import SvgButtonPlus from '../../../../public/assets/svg/button-plus.svg';
 import SvgButtonMinus from '../../../../public/assets/svg/button-minus.svg';
 import CustomLink from '../amplitude/customLink';
+import { selectPromoCode, updatePromoCode } from '../../../../redux/slices/checkout.slices.redux';
 
 export interface IPropsCartAddRemoveButton {
   cartItem: ICartItem;
@@ -50,7 +51,28 @@ const Reduce = styled.a`
 const QuantityCount = styled.div``;
 
 const CartAddRemoveButton: FunctionComponent<IPropsCartAddRemoveButton> = ({ cartItem }) => {
+  const promoCodeData = useAppSelector(selectPromoCode);
+
   const dispatch = useAppDispatch();
+
+  /**
+   *
+   * @param action type of remove
+   * @param id cart id of the item
+   */
+  const handleAddOrRemoveProduct = async (action: string, id: string) => {
+    // ? Reset promo code if it's applied
+    if (promoCodeData) dispatch(updatePromoCode(null));
+
+    switch (action) {
+      case 'ADD':
+        dispatch(updateReduceProduct({ cartId: id }));
+        break;
+      case 'REMOVE':
+        dispatch(updateAddProduct({ cartId: id }));
+        break;
+    }
+  };
 
   return (
     <Wrapper>
@@ -59,7 +81,7 @@ const CartAddRemoveButton: FunctionComponent<IPropsCartAddRemoveButton> = ({ car
           type: 'button',
           text: 'cart add',
         }}
-        callback={() => dispatch(updateReduceProduct({ cartId: cartItem.cartId }))}
+        callback={async () => await handleAddOrRemoveProduct('ADD', cartItem.cartId)}
         Override={Reduce}
       >
         <SvgButtonMinus />
@@ -72,7 +94,7 @@ const CartAddRemoveButton: FunctionComponent<IPropsCartAddRemoveButton> = ({ car
           type: 'button',
           text: 'cart minus',
         }}
-        callback={() => dispatch(updateAddProduct({ cartId: cartItem.cartId }))}
+        callback={async () => await handleAddOrRemoveProduct('REMOVE', cartItem.cartId)}
         Override={Add}
       >
         <SvgButtonPlus />
