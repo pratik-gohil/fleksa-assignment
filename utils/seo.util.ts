@@ -10,6 +10,6 @@ export const getPageType = async (type: string, shop_id: number): Promise<string
     case `/menu/${shop_id}`:
       return 'menu';
     default:
-      return type;
+      return type.replace('/','');
   }
 };
