@@ -28,13 +28,12 @@ const TemplateToShow: FunctionComponent<IPropsTemplateToShow> = ({ meta, templat
   const shop = useAppSelector(selectShop);
   const images = useAppSelector(selectImages);
   const seoTagsJson = useAppSelector(selectSeoTagJson);
-  console.log(seoTagsJson);
 
   const imagesForSeo = images.map((i) => ({ url: i }));
   if (meta?.image) {
     imagesForSeo.unshift({ url: meta.image });
   }
-  if (seoTagsJson['openGraph.url']) imagesForSeo.unshift({ url: seoTagsJson['openGraph.url'] });
+  if (seoTagsJson?.['openGraph.url']) imagesForSeo.unshift({ url: seoTagsJson['openGraph.url'] });
 
   useEffect(() => {
     if (typeof window !== 'undefined' && 'serviceWorker' in navigator && window.workbox !== undefined) {
@@ -55,96 +54,92 @@ const TemplateToShow: FunctionComponent<IPropsTemplateToShow> = ({ meta, templat
     <ThemeProvider theme={themes[isNaN(Number(shop?.website_template)) ? 1 : Number(shop?.website_template)]}>
       <PwaMeta />
       <NextSeo
-        robotsProps={
-          // seoTagsJson?.additionRobotsProps
-          {
-            nosnippet: true,
-            notranslate: false,
-            noimageindex: true,
-            noarchive: true,
-            maxSnippet: -1,
-            maxImagePreview: 'none',
-            maxVideoPreview: -1,
-            unavailableAfter: 'string',
-          } // api returns string instead of object
-        }
+        // robotsProps={
+        //   {
+        //     nosnippet: seoTagsJson?.additionRobotsProps.nosnippet,
+        //     notranslate: seoTagsJson?.additionRobotsProps.notranslate,
+        //     noimageindex: seoTagsJson?.additionRobotsProps.noimageindex,
+        //     noarchive: seoTagsJson?.additionRobotsProps.noarchive,
+        //     maxSnippet: seoTagsJson?.additionRobotsProps.maxSnippet,
+        //     maxImagePreview: seoTagsJson?.additionRobotsProps.maxImagePreview,
+        //     maxVideoPreview: seoTagsJson?.additionRobotsProps.maxVideoPreview,
+        //     unavailableAfter: seoTagsJson?.additionRobotsProps.unavailableAfter,
+        //   }
+        // }
         canonical={seoTagsJson?.canonical}
         mobileAlternate={{
           media: seoTagsJson?.['mobileAlternate.media'],
           href: seoTagsJson?.['mobileAlternate.href'],
         }}
-        languageAlternates={[
-          {
-            // seoTagsJson?.languageAlternates
-            hrefLang: 'string',
-            href: 'string',
-          },
-        ]} // api returns string instead of object
-        additionalMetaTags={[
-          {
-            content: 'string',
-            keyOverride: 'string',
-            property: 'string',
-            name: undefined,
-            httpEquiv: undefined,
-          },
-        ]} // api returns string instead of array
-        additionalLinkTags={[
-          {
-            rel: 'string',
-            href: 'string',
-            sizes: 'string',
-            type: 'string',
-            color: 'string',
-            keyOverride: 'string',
-          },
-        ]} // api returns string instead of array
+        // languageAlternates={[
+        //   {
+        //     hrefLang: seoTagsJson?.languageAlternates.hrefLang,
+        //     href: seoTagsJson?.languageAlternates.href,
+        //   },
+        // ]}
+        // additionalMetaTags={[
+        //   {
+        //     content: seoTagsJson?.additionalMetaTags.content,
+        //     keyOverride: seoTagsJson?.additionalMetaTags.keyOverride,
+        //     property: seoTagsJson?.additionalMetaTags.property,
+        //     name: seoTagsJson?.additionalMetaTags.name,
+        //     httpEquiv: seoTagsJson?.additionalMetaTags.httpEquiv,
+        //   },
+        // ]}
+        // additionalLinkTags={[
+        //   {
+        //     rel: seoTagsJson?.additionalMetaTags.rel,
+        //     href: seoTagsJson?.additionalMetaTags.href,
+        //     sizes: seoTagsJson?.additionalMetaTags.sizes,
+        //     type: seoTagsJson?.additionalMetaTags.type,
+        //     color: seoTagsJson?.additionalMetaTags.color,
+        //     keyOverride: seoTagsJson?.additionalMetaTags.keyOverride,
+        //   },
+        // ]}
         defaultTitle={seoTagsJson?.defaultTitle}
         titleTemplate={seoTagsJson?.titleTemplate}
-        noindex={!seoTagsJson.noindex} // accepts boolean returned string from api
-        nofollow={!seoTagsJson.nofollow} // accepts boolean returned string from ap
+        // noindex={seoTagsJson?.noindex}
+        // nofollow={seoTagsJson?.nofollow}
         title={seoTagsJson?.title || meta?.title}
         description={seoTagsJson?.description || meta?.description}
         keywords={meta?.keywords}
         openGraph={{
-          title: seoTagsJson['openGraph.title'] || meta?.title,
-          description: seoTagsJson['openGraph.description'] || meta?.description,
-          type: seoTagsJson['openGraph.type'] || meta?.og_type_,
+          title: seoTagsJson?.['openGraph.title'] || meta?.title,
+          description: seoTagsJson?.['openGraph.description'] || meta?.description,
+          type: seoTagsJson?.['openGraph.type'] || meta?.og_type_,
           images: imagesForSeo,
-          videos: [
-            {
-              url: seoTagsJson['openGraph.videos'],
-            },
-          ],
-          site_name: seoTagsJson['openGraph.site_name'] || shop?.name,
-          locale: seoTagsJson['openGraph.locale'] || languageCode,
-          url: seoTagsJson['openGraph.url'],
+          // videos: [
+          //     url: seoTagsJson?.['openGraph.videos'],
+          // ],
+          site_name: seoTagsJson?.['openGraph.site_name'] || shop?.name,
+          locale: seoTagsJson?.['openGraph.locale'] || languageCode,
+          url: seoTagsJson?.['openGraph.url'],
           profile: {
-            firstName: seoTagsJson['openGraph.profile.firstName'],
-            lastName: seoTagsJson['openGraph.profile.lastName'],
-            username: seoTagsJson['openGraph.profile.username'],
-            gender: seoTagsJson['openGraph.profile.gender'],
+            firstName: seoTagsJson?.['openGraph.profile.firstName'],
+            lastName: seoTagsJson?.['openGraph.profile.lastName'],
+            username: seoTagsJson?.['openGraph.profile.username'],
+            gender: seoTagsJson?.['openGraph.profile.gender'],
           },
-          book: {
-            authors: [seoTagsJson['openGraph.book.authors']], // returns string instead of array
-            isbn: seoTagsJson['openGraph.book.isbn'],
-            releaseDate: seoTagsJson['openGraph.book.releaseDate'],
-            tags: [seoTagsJson['openGraph.book.tags']], // returns string instead of array
-          },
-          article: {
-            publishedTime: seoTagsJson['openGraph.article.publishedTime'],
-            modifiedTime: seoTagsJson['openGraph.article.modifiedTime'],
-            expirationTime: seoTagsJson['openGraph.article.expirationTime'],
-            authors: [seoTagsJson['openGraph.article.authors']], // returns string instead of array
-            section: seoTagsJson['openGraph.article.section'],
-            tags: [seoTagsJson['openGraph.article.tags']], // returns string instead of array
-          },
+          // book: {
+          //   authors: seoTagsJson?.['openGraph.book.authors'],
+          //   isbn: seoTagsJson?.['openGraph.book.isbn'],
+          //   releaseDate: seoTagsJson?.['openGraph.book.releaseDate'],
+          //   tags: seoTagsJson?.['openGraph.book.tags'],
+          // },
+          // article: {
+          //   publishedTime: seoTagsJson?.['openGraph.article.publishedTime'],
+          //   modifiedTime: seoTagsJson?.['openGraph.article.modifiedTime'],
+          //   expirationTime: seoTagsJson?.['openGraph.article.expirationTime'],
+          //   authors: seoTagsJson?.['openGraph.article.authors'],
+          //   section: seoTagsJson?.['openGraph.article.section'],
+          //   tags: seoTagsJson?.['openGraph.article.tags'],
+          // },
         }}
-        facebook={{ appId: seoTagsJson['facebook.appId'] }}
+        // facebook={seoTagsJson?.['facebook.appId']}
         twitter={{
-          cardType: seoTagsJson['twitter.cardType'] || 'summary_large_image',
-          handle: seoTagsJson['twitter.handle'],
-          site: seoTagsJson['twitter.site'],
+          cardType: seoTagsJson?.['twitter.cardType'] || 'summary_large_image',
+          handle: seoTagsJson?.['twitter.handle'],
+          site: seoTagsJson?.['twitter.site'],
         }}
       />
       <GlobalStyle />

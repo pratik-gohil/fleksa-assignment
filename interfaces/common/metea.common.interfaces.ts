@@ -1,7 +1,7 @@
 export interface IMeta {
   description: string
   image: string
-  keywords: string | any
+  keywords: string
   og_type_: string
   title: string
   seo: {
