@@ -81,7 +81,7 @@ export const MenuSlice = createSlice({
         const localCheckoutState = JSON.parse(localStorage.getItem(LS_CHECKOUT) as string);
 
         if (localCheckoutState.orderType) {
-          // ?? Apply hydration issue menu
+          // ?? Apply filter along with hydration
           nextState.viewableCategoreis = filterViewableCategoriesByOrderType(nextState.categories, localCheckoutState.orderType);
         }
       }
