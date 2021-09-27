@@ -172,7 +172,7 @@ const AccountPageParticularOrder: FunctionComponent = ({}) => {
             text: t('@view-receipt'),
           }}
           Override={ReceiptButton}
-          externelHref={order?.pdf_url}
+          externalHref={order?.pdf_url}
           placeholder={t('@view-receipt')}
           target="_blank"
         />
