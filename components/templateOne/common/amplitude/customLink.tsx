@@ -14,7 +14,7 @@ interface ICustomLinkProps {
   };
   placeholder?: string;
   href?: string;
-  externelHref?: string;
+  externalHref?: string;
   isLanguageChange?: boolean;
   Override?: StyledComponent<'a', DefaultTheme>;
   callback?: () => void | Promise<void>;
@@ -28,7 +28,7 @@ const CustomLink: FunctionComponent<ICustomLinkProps> = ({
   href,
   isLanguageChange,
   Override,
-  externelHref,
+  externalHref,
   callback,
   target,
 }) => {
@@ -49,24 +49,24 @@ const CustomLink: FunctionComponent<ICustomLinkProps> = ({
 
       amplitudeEvent(constructEventName(amplitude.text, amplitude.type), amplitude.eventProperties);
 
-      // TODO:  change the route if href and externelHref is exit
+      // TODO:  change the route if href and externalHref is exit
       if (href) router.push(`/${isLanguageChange ? (router.locale === 'en' ? 'de' : 'en') : languageCode}${href}`);
-      else if (externelHref && target)
+      else if (externalHref && target)
         window.open(
-          externelHref,
+          externalHref,
           target, // <- This is what makes it open in a new window.
         );
-      else if (externelHref) window.location.href = externelHref;
+      else if (externalHref) window.location.href = externalHref;
     }
   };
 
   return Override ? (
-    <Override onClick={handleLinkClick} href="">
+    <Override onClick={handleLinkClick} href={externalHref}>
       {placeholder}
       {children}
     </Override>
   ) : (
-    <Link onClick={handleLinkClick} href="">
+    <Link onClick={handleLinkClick} href={externalHref}>
       {placeholder}
       {children}
     </Link>
