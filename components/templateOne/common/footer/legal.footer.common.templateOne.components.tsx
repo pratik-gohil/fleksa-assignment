@@ -54,50 +54,40 @@ const Icon = styled.img`
 const LegalLinks: FunctionComponent = () => {
   const socialData = useAppSelector(selectShop)?.social;
   const { t } = useTranslation('footer');
-  const socialLinks = {
-    facebook: socialData?.facebook ?? 'https://www.facebook.com/fleksaofficial',
-    instagram: socialData?.instagram ?? 'https://www.instagram.com/fleksaofficial/',
-    twitter: socialData?.twitter ?? 'https://twitter.com/fleksaofficial',
-  };
+  const socialLinks = [
+    {
+      name: 'instagram',
+      icon: '/assets/svg/social/twitter.svg',
+      url: socialData?.instagram ?? 'https://www.instagram.com/fleksaofficial/',
+    },
+    {
+      name: 'twitter',
+      icon: '/assets/svg/social/facebook.svg',
+      url: socialData?.twitter ?? 'https://twitter.com/fleksaofficial',
+    },
+    {
+      name: 'facebook',
+      icon: '/assets/svg/social/instagram.svg',
+      url: socialData?.facebook ?? 'https://www.facebook.com/fleksaofficial',
+    },
+  ];
 
   return (
     <Wrapper>
       <SocialMediaLinks>
-        <CustomLink
-          amplitude={{
-            type: 'icon',
-            text: 'instagram',
-          }}
-          href="/"
-          externelHref={socialLinks.instagram}
-          Override={IconContainer}
-        >
-          <Icon src={'/assets/svg/social/instagram.svg'} />
-        </CustomLink>
-
-        <CustomLink
-          amplitude={{
-            type: 'icon',
-            text: 'twitter',
-          }}
-          href="/"
-          externelHref={socialLinks.twitter}
-          Override={IconContainer}
-        >
-          <Icon src={'/assets/svg/social/twitter.svg'} />
-        </CustomLink>
-
-        <CustomLink
-          amplitude={{
-            type: 'icon',
-            text: 'facebook',
-          }}
-          href="/"
-          externelHref={socialLinks.facebook}
-          Override={IconContainer}
-        >
-          <Icon src={'/assets/svg/social/facebook.svg'} />
-        </CustomLink>
+        {socialLinks.map((link) => (
+          <CustomLink
+            amplitude={{
+              type: 'icon',
+              text: link.name,
+            }}
+            href={link.url}
+            externalHref={link.url}
+            Override={IconContainer}
+          >
+            <Icon src={link.icon} />
+          </CustomLink>
+        ))}
       </SocialMediaLinks>
 
       <Text>
@@ -107,7 +97,7 @@ const LegalLinks: FunctionComponent = () => {
             text: 'fleksa',
           }}
           target="_blank"
-          externelHref="https://fleksa.com"
+          externalHref="https://fleksa.com"
           placeholder={'©️2021 Fleksa'}
         />{' '}
         |{' '}
