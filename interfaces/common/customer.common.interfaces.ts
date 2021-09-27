@@ -7,9 +7,6 @@ export interface ICustomer {
   phone?: string;
   email_verified: number;
   phone_verified: number;
-  orders?: Array<IParticularOrder>;
-  current_order?: IParticularOrderBriefInfo;
-  all_address: Array<IParticularAddress>;
 }
 
 export interface IParticularOrder {

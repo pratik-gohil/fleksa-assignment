@@ -5,7 +5,7 @@ import SvgLocation from '../../../../public/assets/svg/address/map-2.svg';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import {
   selectBearerToken,
-  selectCustomer,
+  selectCustomerAllAddress,
   selectIsUserLoggedIn,
   updateExistCustomerAddressOrAddNew,
 } from '../../../../redux/slices/user.slices.redux';
@@ -146,7 +146,7 @@ let autoComplete: google.maps.places.Autocomplete;
 const AddAddressExtendModel = () => {
   const refAddressInput = useRef<HTMLInputElement>(null);
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
-  const customerData = useAppSelector(selectCustomer);
+  const customerAddresses = useAppSelector(selectCustomerAllAddress);
   const shopId = useAppSelector(selectSelectedMenu);
   const bearerToken = useAppSelector(selectBearerToken);
   const languageCode = useAppSelector(selectLanguageCode);
@@ -188,9 +188,9 @@ const AddAddressExtendModel = () => {
       ? (JSON.parse(window.localStorage.getItem('@LS_GUEST_USER_ADDRESS') ?? '') as IParticularAddress)
       : undefined;
 
-    if (isLoggedIn) setAddressList([...customerData.all_address].sort((a, b) => b.id - a.id));
+    if (isLoggedIn) setAddressList([...customerAddresses].sort((a, b) => b.id - a.id));
     else if (!isLoggedIn && guestAddress) setAddressList([guestAddress]);
-  }, [customerData.all_address]);
+  }, [customerAddresses]);
 
   /**
    *

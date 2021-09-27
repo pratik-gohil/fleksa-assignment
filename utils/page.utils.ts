@@ -12,13 +12,21 @@ import {
   COOKIE_SELECTED_MENU_URLPATH,
   COOKIE_SELECTED_RESTAURANT_DOMAIN,
 } from '../constants/keys-cookies.constants';
-import { updateBearerToken, updateCustomer } from '../redux/slices/user.slices.redux';
+import {
+  updateBearerToken,
+  updateCustomer,
+  updateCustomerCurrentOrder,
+  updateCustomerOrderHistory,
+  updateLoadAddressesList,
+} from '../redux/slices/user.slices.redux';
 import PyApiHttpGetIndex from '../http/pyapi/index/get.index.pyapi.http';
+import PyApiHttpGetSEO from '../http/pyapi/seo/get.seo.pyapi.http';
 import { updateIndex } from '../redux/slices/index.slices.redux';
 import NodeApiHttpGetUser from '../http/nodeapi/user/get.user.nodeapi.http';
 import NodeApiHttpGetUserOrderHistory from '../http/nodeapi/account/get.account.order-history.nodeapi.http';
 import NodeApiHttpGetUserParticularOrder from '../http/nodeapi/account/get.order-view-by-id.nodeapi.http';
 import NodeApiHttpGetUserAllAddress from '../http/nodeapi/account/get.account.all-address.nodeapi.http';
+import { updateSeoTagJson } from '../redux/slices/common.slices.redux';
 
 const multiRestaurantHosts = ['127.0.0.1:3000', 'localhost:3000', 'newqa.fleksa.de', 'localhost:3214', '192.168.1.14:3000'];
 
@@ -90,6 +98,11 @@ export async function getServerSidePropsCommon(
     const responseIndex = await new PyApiHttpGetIndex(configuration).get();
     if (!responseIndex?.shop.id) throw new Error('Shop id not found');
 
+    // ??get seo tags
+    const responseSEO = await new PyApiHttpGetSEO(configuration).get(responseIndex?.shop.id, ctx.req.url);
+
+    if (responseSEO) await ctx.store.dispatch(updateSeoTagJson(responseSEO?.shop.seo_tags_json));
+
     /**
      * Update current restarurnat menu id and url if it's not present
      */
@@ -121,34 +134,34 @@ export async function getServerSidePropsCommon(
         configuration,
       };
     } else if (bearerToken) {
-      const userData = await new NodeApiHttpGetUser(configuration, bearerToken).get({});
-      await ctx.store.dispatch(updateCustomer(userData?.data.customer));
-
       // * Make page addition request if it's needed
 
+      const userData = await new NodeApiHttpGetUser(configuration, bearerToken).get({});
+
+      // ?? Update basic login information of user
+      await ctx.store.dispatch(updateCustomer(userData?.data.customer));
+
       // TODO: Request order order history page
-      if (options?.orderHistory && bearerToken) {
+      if (options?.orderHistory) {
         const orderHistory = await new NodeApiHttpGetUserOrderHistory(configuration, bearerToken).get({ shop_id: responseIndex?.shop.id });
 
-        if (orderHistory?.result) {
-          await ctx.store.dispatch(
-            updateCustomer({ ...userData?.data.customer, orders: orderHistory.data.orders?.sort((a, b) => b.id - a.id) }),
-          );
-        } else await ctx.store.dispatch(updateCustomer({ ...userData?.data.customer, orders: [] }));
+        if (orderHistory?.result)
+          await ctx.store.dispatch(updateCustomerOrderHistory(orderHistory.data.orders?.sort((a, b) => b.id - a.id)));
+        else await ctx.store.dispatch(updateCustomerOrderHistory([]));
       }
 
       // TODO: Request for particular order page
-      if (options?.particularOrder && bearerToken) {
+      if (options?.particularOrder) {
         const particularOrder = await new NodeApiHttpGetUserParticularOrder(configuration, bearerToken).get({
           order_id: ctx.query.id,
         });
-        await ctx.store.dispatch(updateCustomer({ ...userData?.data.customer, current_order: particularOrder?.data?.order }));
+        await ctx.store.dispatch(updateCustomerCurrentOrder(particularOrder?.data?.order));
       }
 
       // TODO: Request for all address order page
-      if (options?.getAllAddress && bearerToken) {
+      if (options?.getAllAddress) {
         const response = await new NodeApiHttpGetUserAllAddress(configuration, bearerToken).get({});
-        await ctx.store.dispatch(updateCustomer({ ...userData?.data.customer, all_address: response?.data.customer_address }));
+        await ctx.store.dispatch(updateLoadAddressesList(response?.data.customer_address ?? []));
       }
     }
 

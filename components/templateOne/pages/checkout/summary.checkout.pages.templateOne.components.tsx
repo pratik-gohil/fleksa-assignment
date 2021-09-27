@@ -31,7 +31,7 @@ import { selectShowOrderTypeSelect, updateShowOrderTypeSelect } from '../../../.
 import {
   selectAddressById,
   selectBearerToken,
-  selectCustomer,
+  selectCustomerAllAddress,
   selectIsUserLoggedIn,
   updateExistCustomerAddressOrAddNew,
   updateLoadAddressesList,
@@ -113,7 +113,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
   const configuration = useAppSelector(selectConfiguration);
   const bearerToken = useAppSelector(selectBearerToken);
   const shopId = useAppSelector(selectSelectedMenu);
-  const customerData = useAppSelector(selectCustomer);
+  const customerAddresses = useAppSelector(selectCustomerAllAddress);
   const isShowOrderTypeSelection = useAppSelector(selectShowOrderTypeSelect);
 
   // ? Default selectiona ddress state
@@ -265,7 +265,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
 
       // * If user logged in
       if (isUserLoggedIn) {
-        if (!customerData.all_address?.length) handleUserAddressUpdate();
+        if (!customerAddresses?.length) handleUserAddressUpdate();
 
         // * If selected address already there
         if (selectedAddress) setUserAddress(selectedAddress as IGuestAddress);
