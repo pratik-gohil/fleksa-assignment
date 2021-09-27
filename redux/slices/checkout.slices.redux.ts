@@ -52,7 +52,7 @@ export const checkoutInitialState: ICheckoutSliceState = {
   isReOrder: false,
   isSofort: false,
   isPreOrder: false,
-  isOffersOpen: false,
+  isOffersOpen: true,
 };
 
 export const CheckoutSlice = createSlice({

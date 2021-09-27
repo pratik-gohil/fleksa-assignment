@@ -8,6 +8,7 @@ import { IReview } from '../../interfaces/common/review.common.interfaces';
 import { IShop, ITimings } from '../../interfaces/common/shop.common.interfaces';
 import { ISibling } from '../../interfaces/common/sibling.common.interfaces';
 import { RootState } from '../store.redux';
+import { ICheckoutOrderTypes } from './checkout.slices.redux';
 
 const SLICE_NAME = 'index';
 
@@ -101,6 +102,7 @@ export const {
   updateIndex,
 } = IndexSlice.actions;
 
+// ?? Data selection reducers functions
 export const selectAddress = (state: RootState) => state.index.address;
 export const selectShop = (state: RootState) => state.index.shop;
 export const selectProducts = (state: RootState) => state.index.products;
@@ -112,3 +114,38 @@ export const selectOffers = (state: RootState) => state.index.offers;
 export const selectContents = (state: RootState) => state.index.contents;
 export const selectBanner = (state: RootState) => state.index.banner;
 export const selectOwner = (state: RootState) => state.index.owner;
+
+export const selectAvailableOrderType = (state: RootState) => {
+  const availableOrderTypes = [
+    {
+      type: 'PICKUP',
+      isAvailable: state.index.address?.has_pickup,
+    },
+    {
+      type: 'DELIVERY',
+      isAvailable: state.index.address?.has_delivery,
+    },
+    {
+      type: 'DINE_IN',
+      isAvailable: state.index.address?.has_dinein,
+    },
+  ].filter((selection) => selection.isAvailable);
+
+  return {
+    count: availableOrderTypes.length,
+    types: availableOrderTypes.map((available) => available.type),
+  };
+};
+
+export const checkIsSelectedOrderTypeAvailable = (state: RootState, type: ICheckoutOrderTypes | null) => {
+  if (!type) return false;
+
+  if (
+    (type === 'PICKUP' && state.index.address?.has_pickup) ||
+    (type === 'DELIVERY' && state.index.address?.has_delivery) ||
+    (type === 'DINE_IN' && state.index.address?.has_dinein)
+  )
+    return true;
+
+  return false;
+};
