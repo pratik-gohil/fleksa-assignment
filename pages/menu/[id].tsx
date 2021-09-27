@@ -23,7 +23,9 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ct
 
     if (isNaN(shopId)) throw new Error('Shop id not found');
 
-    const { redirect, configuration, responseIndex, bearerToken } = await getServerSidePropsCommon(ctx, false);
+    const { redirect, configuration, responseIndex, bearerToken } = await getServerSidePropsCommon(ctx, false, {
+      getAllAddress: true,
+    });
     if (redirect) return redirect;
 
     const cookies = new Cookies(ctx.req, ctx.res);
@@ -47,18 +49,17 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ct
     } else if (Number(ctx.query.id) === responseIndex?.shop.id) {
       urlPath = responseIndex?.shop.urlpath;
       menuId = responseIndex?.shop.id;
-    } else {
-      /**
-       * In case customer try to visit different restaurant menu redirect them to correspond restaurant
-       * location.
-       */
+    } else
+    /**
+     * In case customer try to visit different restaurant menu redirect them to correspond restaurant
+     * location.
+     */
       return {
         redirect: {
           permanent: false,
           destination: `/menu/${responseIndex?.shop.id}`,
         },
       };
-    }
 
     cookies.set(COOKIE_SELECTED_MENU_ID, `${menuId}`, {
       path: '/',

@@ -4,14 +4,20 @@ import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import SvgDelivery from '../../../../public/assets/svg/delivery.svg';
 import SvgPickup from '../../../../public/assets/svg/pickup.svg';
 import SvgDinein from '../../../../public/assets/svg/dinein.svg';
-import { ICheckoutOrderTypes, selectOrderType, updateOrderType } from '../../../../redux/slices/checkout.slices.redux';
-import { updateShowOrderTypeSelect } from '../../../../redux/slices/menu.slices.redux';
+import {
+  ICheckoutOrderTypes,
+  selectOrderType,
+  updateOrderType,
+  updateSelectedAddressId,
+} from '../../../../redux/slices/checkout.slices.redux';
+import { updateShowAddAddress, updateShowOrderTypeSelect } from '../../../../redux/slices/menu.slices.redux';
 import { checkIsSelectedOrderTypeAvailable, selectAvailableOrderType, selectSiblings } from '../../../../redux/slices/index.slices.redux';
 import { useTranslation } from 'next-i18next';
 import SvgEdit from '../../../../public/assets/svg/edit.svg';
 import CustomLink from '../../common/amplitude/customLink';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { RootState } from '../../../../redux/store.redux';
+import { selectAddressByType, selectCustomerAllAddress } from '../../../../redux/slices/user.slices.redux';
 
 const Wrapper = styled.div`
   display: flex;
@@ -112,7 +118,9 @@ const MenuFeatures: FunctionComponent = () => {
 
   const selectedOrderType = useAppSelector(selectOrderType);
   const siblingsData = useAppSelector(selectSiblings);
-  const availabeOrderTypes = useAppSelector(selectAvailableOrderType);
+  const availableOrderTypes = useAppSelector(selectAvailableOrderType);
+  const customerAddresses = useAppSelector(selectCustomerAllAddress);
+  const correspondAddress = useAppSelector((state) => selectAddressByType(state, 'OTHER'));
 
   const orderTypeData = selectedOrderType && OrderType[selectedOrderType];
   const isSelectedOrderTypeAvailable = useAppSelector((state: RootState) => checkIsSelectedOrderTypeAvailable(state, selectedOrderType));
@@ -122,12 +130,29 @@ const MenuFeatures: FunctionComponent = () => {
    * to use this effect and also we update if they've only one ordertype available it'll be auto select otherwise vice versa.
    */
   useEffect(() => {
-    if (!isSelectedOrderTypeAvailable && selectedOrderType && availabeOrderTypes.count > 1) {
+    if (!isSelectedOrderTypeAvailable && selectedOrderType && availableOrderTypes.count > 1) {
       dispatch(updateShowOrderTypeSelect(true));
       dispatch(updateOrderType(null));
-    } else if (availabeOrderTypes.count === 1)
+    } else if (availableOrderTypes.count === 1) {
+      /**
+       * if available only delivery but user doesn't have any address whot the edit model instead default select
+       */
+      if (availableOrderTypes.types[0] === 'DELIVERY') {
+        if (!customerAddresses.length) {
+          dispatch(updateShowOrderTypeSelect(true));
+          dispatch(updateShowAddAddress(true));
+        }
+
+        // ?? Update the address id if they've address already
+        else if (correspondAddress) {
+          dispatch(updateSelectedAddressId(correspondAddress.id));
+          dispatch(updateOrderType(availableOrderTypes.types[0]));
+        }
+      }
+
       // ?? If only one avaiable then update without asking to user
-      dispatch(updateOrderType(availabeOrderTypes.types[0]));
+      else dispatch(updateOrderType(availableOrderTypes.types[0]));
+    }
   }, []);
 
   function onClickOrderType() {
@@ -137,7 +162,7 @@ const MenuFeatures: FunctionComponent = () => {
   return (
     <Wrapper>
       <OrderTypeView>
-        {selectedOrderType && orderTypeData && !!availabeOrderTypes.count && (
+        {selectedOrderType && orderTypeData && !!availableOrderTypes.count && (
           <CustomLink
             amplitude={{
               type: 'button',
