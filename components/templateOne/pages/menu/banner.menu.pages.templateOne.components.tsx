@@ -169,13 +169,14 @@ const OfferBody = styled.div`
 `;
 
 const MenuPageBanner: FunctionComponent = ({}) => {
+  const { t } = useTranslation('page-menu-id');
+
   const language = useAppSelector(selectLanguage);
   const shopData = useAppSelector(selectShop);
   const offersData = useAppSelector(selectOffers);
   const menuId = useAppSelector(selectSelectedMenu);
   const orderType = useAppSelector(selectOrderType);
   const siblingData = useAppSelector(selectSiblings);
-  const { t } = useTranslation('page-menu-id');
 
   const [moreDescription, setMoreDescription] = useState<string>('');
   const [offers, setOffers] = useState<IOffer[]>(offersData);

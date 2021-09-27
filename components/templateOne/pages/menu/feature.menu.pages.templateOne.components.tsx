@@ -1,16 +1,17 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useEffect } from 'react';
 import styled from 'styled-components';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import SvgDelivery from '../../../../public/assets/svg/delivery.svg';
 import SvgPickup from '../../../../public/assets/svg/pickup.svg';
 import SvgDinein from '../../../../public/assets/svg/dinein.svg';
-import { ICheckoutOrderTypes, selectOrderType } from '../../../../redux/slices/checkout.slices.redux';
+import { ICheckoutOrderTypes, selectOrderType, updateOrderType } from '../../../../redux/slices/checkout.slices.redux';
 import { updateShowOrderTypeSelect } from '../../../../redux/slices/menu.slices.redux';
-import { selectSiblings } from '../../../../redux/slices/index.slices.redux';
+import { checkIsSelectedOrderTypeAvailable, selectAvailableOrderType, selectSiblings } from '../../../../redux/slices/index.slices.redux';
 import { useTranslation } from 'next-i18next';
 import SvgEdit from '../../../../public/assets/svg/edit.svg';
 import CustomLink from '../../common/amplitude/customLink';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
+import { RootState } from '../../../../redux/store.redux';
 
 const Wrapper = styled.div`
   display: flex;
@@ -106,11 +107,28 @@ const OrderType: Record<
 };
 
 const MenuFeatures: FunctionComponent = () => {
+  const { t } = useTranslation('page-menu-id');
+  const dispatch = useAppDispatch();
+
   const selectedOrderType = useAppSelector(selectOrderType);
   const siblingsData = useAppSelector(selectSiblings);
-  const dispatch = useAppDispatch();
+  const availabeOrderTypes = useAppSelector(selectAvailableOrderType);
+
   const orderTypeData = selectedOrderType && OrderType[selectedOrderType];
-  const { t } = useTranslation('page-menu-id');
+  const isSelectedOrderTypeAvailable = useAppSelector((state: RootState) => checkIsSelectedOrderTypeAvailable(state, selectedOrderType));
+
+  /**
+   * ?? When change on my.fleksa.com order type front end user facing some type mismatch selection issue fix for that
+   * to use this effect and also we update if they've only one ordertype available it'll be auto select otherwise vice versa.
+   */
+  useEffect(() => {
+    if (!isSelectedOrderTypeAvailable && selectedOrderType && availabeOrderTypes.count > 1) {
+      dispatch(updateShowOrderTypeSelect(true));
+      dispatch(updateOrderType(null));
+    } else if (availabeOrderTypes.count === 1)
+      // ?? If only one avaiable then update without asking to user
+      dispatch(updateOrderType(availabeOrderTypes.types[0]));
+  }, []);
 
   function onClickOrderType() {
     dispatch(updateShowOrderTypeSelect(true));
@@ -119,7 +137,7 @@ const MenuFeatures: FunctionComponent = () => {
   return (
     <Wrapper>
       <OrderTypeView>
-        {selectedOrderType && orderTypeData && (
+        {selectedOrderType && orderTypeData && !!availabeOrderTypes.count && (
           <CustomLink
             amplitude={{
               type: 'button',
