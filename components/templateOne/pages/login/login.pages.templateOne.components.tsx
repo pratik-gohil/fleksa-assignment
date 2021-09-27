@@ -382,7 +382,7 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
                 enableSearch
                 specialLabel={t('@phone')}
                 onBlur={() => {
-                  amplitudeEvent(constructEventName(`login-card`, 'input'), {
+                  amplitudeEvent(constructEventName('phone', 'input'), {
                     phone: phone,
                     length: phone.length,
                   });
