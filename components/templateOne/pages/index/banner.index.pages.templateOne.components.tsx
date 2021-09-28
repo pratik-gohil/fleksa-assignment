@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useAppSelector } from '../../../../redux/hooks.redux';
 import { selectBanner } from '../../../../redux/slices/index.slices.redux';
-import CustomLink from '../../common/amplitude/customLink';
 
 const Wrapper = styled.div<{ visible: boolean }>`
   position: fixed;
@@ -75,6 +74,8 @@ const Temp = styled.div<{ visible: boolean }>`
   display: ${(p) => (p.visible ? 'unset' : 'none')};
 `;
 
+const CrossButton = styled.div``;
+
 const IndexBanner = () => {
   const banner = useAppSelector(selectBanner);
   const [showOfferPopup, setOfferPopup] = useState(true);
@@ -98,17 +99,9 @@ const IndexBanner = () => {
         <Title>{banner.title}</Title>
         <Description>{banner.description}</Description>
 
-        <CustomLink
-          href=""
-          amplitude={{
-            type: 'button',
-            text: 'banner cross icon',
-            eventProperties: banner,
-          }}
-          callback={handleOfferClose}
-        >
+        <CrossButton onClick={handleOfferClose}>
           <Cross src={'/assets/svg/account/x-circle.svg'}></Cross>
-        </CustomLink>
+        </CrossButton>
       </Container>
       <Temp onClick={handleOfferClose} visible={showOfferPopup} />
     </Wrapper>
