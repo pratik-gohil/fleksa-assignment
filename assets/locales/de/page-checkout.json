@@ -19,6 +19,8 @@
   "@all": "ALLE BESTELLUNGEN",
   "@first": "ERSTE BESTELLUNG",
   "@select-code": "Wählen Sie einen Promocode",
+  "@your-cart": "Warenkorb",
+  "@order": "Zur Kasse",
 
   "@tip": "Trinkgeld",
   "@other": "Andere",
