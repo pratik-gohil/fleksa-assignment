@@ -20,11 +20,7 @@ module.exports = withPWA({
   },
   i18n,
   images: {
-    domains: [
-      'fleksa-cdn.s3.eu-central-1.amazonaws.com',
-      'fleksa-image.s3.eu-central-1.amazonaws.com',
-      'fleksa.s3.eu-central-1.amazonaws.com',
-    ],
+    domains: ['fleksa-cdn.s3.eu-central-1.amazonaws.com'],
     disableStaticImages: true,
   },
 });
