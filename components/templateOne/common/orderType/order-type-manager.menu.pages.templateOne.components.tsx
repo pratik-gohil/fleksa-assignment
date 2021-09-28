@@ -236,7 +236,7 @@ const OrderTypeManager: FunctionComponent = () => {
   const configuration = useAppSelector(selectConfiguration);
   const correspondAddress = useAppSelector((state) => selectAddressByType(state, 'OTHER'));
   const correspondAddressById = useAppSelector((state) => selectAddressById(state, checkoutAddressId));
-  
+
   const [addressData, setAddressData] = useState<IAddress | null | undefined>(undefined);
 
   useEffect(() => {
@@ -257,7 +257,7 @@ const OrderTypeManager: FunctionComponent = () => {
     };
   }, []);
 
-    /**
+  /**
    * @param orderType Allowed order type selection
    * @return update states of Delivery selection
    */
@@ -279,7 +279,7 @@ const OrderTypeManager: FunctionComponent = () => {
     amplitudeEvent(constructEventName(t('@delivery'), 'model'), {});
   }
 
-    /**
+  /**
    * @param orderType Allowed order type selection
    * @return update states of takeaway selection
    */
@@ -289,7 +289,6 @@ const OrderTypeManager: FunctionComponent = () => {
 
     amplitudeEvent(constructEventName(t('@pickup'), 'model'), {});
   }
-
 
   /**
    * @param orderType Allowed order type selection
@@ -308,8 +307,8 @@ const OrderTypeManager: FunctionComponent = () => {
   function getSelectedAddress() {
     if (typeof window === 'undefined') return;
 
-    let guestAddress = window.localStorage.getItem('@LS_GUEST_USER_ADDRESS')
-      ? (JSON.parse(window.localStorage.getItem('@LS_GUEST_USER_ADDRESS') ?? '') as IParticularAddress)
+    let guestAddress = window.localStorage.getItem(LS_GUEST_USER_ADDRESS)
+      ? (JSON.parse(window.localStorage.getItem(LS_GUEST_USER_ADDRESS) ?? '') as IParticularAddress)
       : undefined;
 
     if (isLoggedIn && checkoutAddressId && correspondAddressById) {
@@ -329,13 +328,15 @@ const OrderTypeManager: FunctionComponent = () => {
         potalCode: correspondAddress?.postal_code,
         city: correspondAddress?.city,
       };
-    } else if (guestAddress && !isLoggedIn)
+    } else if (guestAddress && !isLoggedIn) {
       return {
         address: guestAddress?.address,
         floor: guestAddress?.floor,
         potalCode: guestAddress?.postal_code,
         city: guestAddress?.city,
       };
+    }
+    console.log('Guest ', guestAddress, ' login ', isLoggedIn);
 
     return {
       address: 'Enter your delivery details',
@@ -409,8 +410,8 @@ const OrderTypeManager: FunctionComponent = () => {
   const checkAddressSelectionState: () => boolean = () => {
     if (typeof window === 'undefined') return false;
 
-    let guestAddress = window.localStorage.getItem('@LS_GUEST_USER_ADDRESS')
-      ? (JSON.parse(window.localStorage.getItem('@LS_GUEST_USER_ADDRESS') ?? '') as IParticularAddress)
+    let guestAddress = window.localStorage.getItem(LS_GUEST_USER_ADDRESS)
+      ? (JSON.parse(window.localStorage.getItem(LS_GUEST_USER_ADDRESS) ?? '') as IParticularAddress)
       : undefined;
 
     if ((isLoggedIn && correspondAddress) || (!isLoggedIn && guestAddress)) return true;
