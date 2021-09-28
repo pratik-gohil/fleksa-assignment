@@ -56,19 +56,19 @@ const LegalLinks: FunctionComponent = () => {
   const { t } = useTranslation('footer');
   const socialLinks = [
     {
-      name: 'instagram',
-      icon: '/assets/svg/social/twitter.svg',
-      url: socialData?.instagram ?? 'https://www.instagram.com/fleksaofficial/',
-    },
-    {
       name: 'twitter',
-      icon: '/assets/svg/social/facebook.svg',
+      icon: '/assets/svg/social/twitter.svg',
       url: socialData?.twitter ?? 'https://twitter.com/fleksaofficial',
     },
     {
       name: 'facebook',
-      icon: '/assets/svg/social/instagram.svg',
+      icon: '/assets/svg/social/facebook.svg',
       url: socialData?.facebook ?? 'https://www.facebook.com/fleksaofficial',
+    },
+    {
+      name: 'instagram',
+      icon: '/assets/svg/social/instagram.svg',
+      url: socialData?.instagram ?? 'https://www.instagram.com/fleksaofficial/',
     },
   ];
 
@@ -81,7 +81,7 @@ const LegalLinks: FunctionComponent = () => {
               type: 'icon',
               text: link.name,
             }}
-            href={link.url}
+            target="_blank"
             externalHref={link.url}
             Override={IconContainer}
           >

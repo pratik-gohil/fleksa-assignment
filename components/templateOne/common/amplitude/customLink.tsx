@@ -42,10 +42,7 @@ const CustomLink: FunctionComponent<ICustomLinkProps> = ({
       // TODO: call back if it's present
       if (callback) {
         callback();
-        // console.log('callback called');
       }
-
-      // console.log('amplitude ', amplitude);
 
       amplitudeEvent(constructEventName(amplitude.text, amplitude.type), amplitude.eventProperties);
 
@@ -56,17 +53,16 @@ const CustomLink: FunctionComponent<ICustomLinkProps> = ({
           externalHref,
           target, // <- This is what makes it open in a new window.
         );
-      else if (externalHref) window.location.href = externalHref;
     }
   };
 
   return Override ? (
-    <Override onClick={handleLinkClick} href={externalHref}>
+    <Override onClick={handleLinkClick} href="">
       {placeholder}
       {children}
     </Override>
   ) : (
-    <Link onClick={handleLinkClick} href={externalHref}>
+    <Link onClick={handleLinkClick} href="">
       {placeholder}
       {children}
     </Link>
