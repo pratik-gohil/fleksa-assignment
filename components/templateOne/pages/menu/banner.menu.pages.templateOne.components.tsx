@@ -220,7 +220,9 @@ const MenuPageBanner: FunctionComponent = ({}) => {
 
   return (
     <BannerContainer>
-      {!!shopData?.cover && <Image src={shopData.cover} loading="eager" layout="fill" objectFit="cover" />}
+      {!!shopData?.cover_json?.images.length && (
+        <Image src={shopData?.cover_json?.images[0]} loading="eager" layout="fill" objectFit="cover" />
+      )}
 
       <ContentTop>
         <ContentTopContent>

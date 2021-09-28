@@ -310,7 +310,9 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
 
   return (
     <LoginContainer>
-      <SectionOne>{shopData?.cover && <Image src={shopData.cover} loading="eager" layout="fill" objectFit="cover" />}</SectionOne>
+      <SectionOne>
+        {shopData?.cover_json?.images[0] && <Image src={shopData?.cover_json?.images[0]} loading="eager" layout="fill" objectFit="cover" />}
+      </SectionOne>
 
       <SectionTwo>
         {customerId ? (
