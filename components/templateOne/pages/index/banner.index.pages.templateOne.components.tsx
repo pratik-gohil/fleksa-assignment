@@ -107,8 +107,9 @@ const IndexBanner = () => {
             text: 'banner cross icon',
             eventProperties: banner,
           }}
+          callback={handleOfferClose}
         >
-          <Cross onClick={handleOfferClose} src={'/assets/svg/account/x-circle.svg'}></Cross>
+          <Cross src={'/assets/svg/account/x-circle.svg'}></Cross>
         </CustomLink>
       </Container>
       <Temp onClick={handleOfferClose} visible={showOfferPopup} />
