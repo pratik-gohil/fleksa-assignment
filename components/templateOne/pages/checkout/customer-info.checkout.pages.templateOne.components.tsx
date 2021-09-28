@@ -199,8 +199,8 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
       <EditContainer>
         <Text>{t('@phone')}</Text>
 
-        {editablePhone ? (
-          <PhoneInputContainer>
+        <PhoneInputContainer>
+          {editablePhone ? (
             <PhoneInput
               country={'de'}
               value={phone}
@@ -226,12 +226,12 @@ const CheckoutPageCustomerInfo: FunctionComponent = ({}) => {
               }}
               inputStyle={{ width: '100%', position: 'relative' }}
             />
-          </PhoneInputContainer>
-        ) : (
-          <StyledCheckoutText>
-            +{userData.country_code} {userData.phone}
-          </StyledCheckoutText>
-        )}
+          ) : (
+            <StyledCheckoutText>
+              +{userData.country_code} {userData.phone}
+            </StyledCheckoutText>
+          )}
+        </PhoneInputContainer>
 
         <EditButton
           onClick={() => {
