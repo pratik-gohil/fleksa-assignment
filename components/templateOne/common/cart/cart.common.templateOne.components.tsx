@@ -231,7 +231,6 @@ const Cart: FunctionComponent = ({}) => {
                       {((cartItem.sideProducts && cartItem.sideProducts.length > 0) || (cartItem.choice && cartItem.choice.length > 0)) && (
                         <ItemTitleAdditional>
                           {cartItem.choice?.map((i) => i.name[language]).join(', ')}
-                          {cartItem.sideProducts && cartItem.sideProducts.length > 0 && ', '}
                           {cartItem.sideProducts?.map((i) => i.name[language]).join(', ')}
                         </ItemTitleAdditional>
                       )}
