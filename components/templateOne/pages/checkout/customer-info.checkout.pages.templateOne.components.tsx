@@ -3,6 +3,7 @@ import React, { FunctionComponent } from 'react';
 
 import { useState } from 'react';
 import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/material.css';
 
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
