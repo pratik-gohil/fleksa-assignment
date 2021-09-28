@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useAppSelector } from '../../../../redux/hooks.redux';
@@ -79,7 +78,6 @@ const Temp = styled.div<{ visible: boolean }>`
 const IndexBanner = () => {
   const banner = useAppSelector(selectBanner);
   const [showOfferPopup, setOfferPopup] = useState(true);
-  const router = useRouter();
 
   const handleOfferClose = async () => {
     setOfferPopup(false);
@@ -101,7 +99,7 @@ const IndexBanner = () => {
         <Description>{banner.description}</Description>
 
         <CustomLink
-          href={router.pathname}
+          href=""
           amplitude={{
             type: 'button',
             text: 'banner cross icon',
