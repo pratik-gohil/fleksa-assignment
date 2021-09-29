@@ -22,32 +22,45 @@ export const StyledCheckoutTextarea = styled.textarea`
 `;
 
 const CheckoutPageComments: FunctionComponent = ({}) => {
-  const [editing, setEditing] = useState(false);
-  const comment = useAppSelector(selectComment);
-  const dispatch = useAppDispatch();
   const { t } = useTranslation('page-checkout');
+  const dispatch = useAppDispatch();
+
+  const comment = useAppSelector(selectComment);
+
+  const [commentEdit, setCommentEdit] = useState(false);
+
+  /**
+   *
+   * @returns Update editing state for comment
+   */
+  const handleEditIconClick = async () => {
+    setCommentEdit(!commentEdit);
+  };
 
   return (
     <StyledCheckoutCard>
       <EditContainer>
         <StyledCheckoutTitle>{t('@comments')}</StyledCheckoutTitle>
+
         <EditButton
-          onClick={() => {
-            setEditing(!editing);
+          onClick={async () => {
+            await handleEditIconClick();
+
             amplitudeEvent(constructEventName(`comments edit`, 'icon-button'), {
               comment,
             });
           }}
         />
       </EditContainer>
+
       <Row>
         <Col xs={12}>
-          {editing ? (
+          {commentEdit ? (
             <StyledCheckoutTextarea
               value={comment}
               autoFocus
               onBlur={() => {
-                setEditing(false);
+                setCommentEdit(false);
                 amplitudeEvent(constructEventName(`comment `, 'input'), {
                   comment,
                   length: comment.length,

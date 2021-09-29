@@ -443,7 +443,6 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
       } else {
         dispatch(updatePromoCode(null));
 
-        console.log(response?.message);
         dispatch(
           updateError({
             show: true,
