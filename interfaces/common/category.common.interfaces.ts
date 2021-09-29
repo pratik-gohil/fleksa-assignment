@@ -49,7 +49,7 @@ export interface ICategory {
     always: boolean;
 
     order_type_?: Array<ICheckoutOrderTypes>;
-    days?: Array<[0, 1, 2, 3, 4, 5, 6]>;
+    days?: Array<[0, 1, 2, 3, 4, 5, 6] | number>;
     time?: {
       end: string;
       start: string;
