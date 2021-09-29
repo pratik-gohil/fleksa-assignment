@@ -4,7 +4,7 @@
 
 ## Installation
 
-- Step 1 : Make sure that you're already installed [NODE JS](https://nodejs.org) on your system.
+- Step 1 : Make sure that you're already installed [NODE JS](https://nodejs.org) and NPM on your system.
 - Step 2 : If not click the link and downloaded [LTS](https://nodejs.org/dist/v14.15.0/node-v14.15.0-x64.msi) version of Nodejs.
 - Step 3 : Open your terminal and then type
 
