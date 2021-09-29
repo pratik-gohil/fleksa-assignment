@@ -25,7 +25,7 @@ git remote add origin https://code.fleksa.com/root/webv2.git
 - Step 5 : Clone the repo by using following command.
 
 ```cmd
-git pull origin main
+git pull origin master
 ```
 
 > DANGER :
