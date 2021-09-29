@@ -336,7 +336,6 @@ const OrderTypeManager: FunctionComponent = () => {
         city: guestAddress?.city,
       };
     }
-    console.log('Guest ', guestAddress, ' login ', isLoggedIn);
 
     return {
       address: 'Enter your delivery details',
