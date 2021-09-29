@@ -67,8 +67,8 @@ const Cross = styled.img`
 `;
 
 const Temp = styled.div<{ visible: boolean }>`
-  width: 100vmax;
-  height: 100vmin;
+  width: 100%;
+  height: 100%;
   position: absolute;
   z-index: -1;
   display: ${(p) => (p.visible ? 'unset' : 'none')};
