@@ -120,81 +120,83 @@ const NavbarMobileOptions: FunctionComponent<IPropsNavbarMobileOptions> = ({ isO
   const { t } = useTranslation('header');
 
   return (
-    <>
-      <Wrapper isOpen={isOpen}>
-        <List isOpen={isOpen}>
-          {[
-            {
-              title: shopData?.name,
-              icon: SvgRestaurant,
-              link: `/${languageCode}/`,
-              show: true,
-            },
-            {
-              title: t('@reservation'),
-              icon: SvgReservation,
-              link: `/${languageCode}/reservation`,
-              show: addressData?.has_reservations,
-            },
-            {
-              title: t('@gallery'),
-              icon: SvgGallery,
-              link: `/${languageCode}/gallery`,
-              show: imagesData.length > 0,
-            },
-            {
-              title: t('@offers'),
-              icon: SvgGallery,
-              link: `/${languageCode}/offers`,
-              show: offersData.length > 0,
-            },
-            {
-              title: t('@contact'),
-              icon: SvgContact,
-              link: `/${languageCode}/contact-us`,
-              show: true,
-            },
-          ].map((item) =>
-            item.show ? (
-              <ListItem key={item.title}>
-                <LinkItem href={item.link}>
-                  <item.icon />
-                  <Title>{item.title}</Title>
-                </LinkItem>
-              </ListItem>
-            ) : (
-              <Fragment key={item.title} />
-            ),
-          )}
-          <ListItem key="lang-change">
-            <NavLanguageChange showTitle={true} style={{ padding: '12px 24px' }} />
-          </ListItem>
-
-          {isLoggedIn ? (
-            <ListItem key="account">
-              <NavUserProfile />
-              <LinkItem href={`/${languageCode}/account`}>
-                <Title>{customerData.name}</Title>
+    <Wrapper isOpen={isOpen}>
+      <List isOpen={isOpen}>
+        {[
+          {
+            title: shopData?.name,
+            icon: SvgRestaurant,
+            link: `/${languageCode}/`,
+            show: true,
+          },
+          {
+            title: t('@reservation'),
+            icon: SvgReservation,
+            link: `/${languageCode}/reservation`,
+            show: addressData?.has_reservations,
+          },
+          {
+            title: t('@gallery'),
+            icon: SvgGallery,
+            link: `/${languageCode}/gallery`,
+            show: imagesData.length > 0,
+          },
+          {
+            title: t('@offers'),
+            icon: SvgGallery,
+            link: `/${languageCode}/offers`,
+            show: offersData.length > 0,
+          },
+          {
+            title: t('@contact'),
+            icon: SvgContact,
+            link: `/${languageCode}/contact-us`,
+            show: true,
+          },
+        ].map((item) =>
+          item.show ? (
+            <ListItem key={item.title}>
+              <LinkItem href={item.link}>
+                <item.icon />
+                <Title>{item.title}</Title>
               </LinkItem>
             </ListItem>
           ) : (
-            <ListItem key="login">
-              <LinkItem href={`/${languageCode}/login`}>
-                <IconContainer>
-                  <Icon src={SvgLoginIconPath} />
-                </IconContainer>
-                <Title>{t('@login')}</Title>
-              </LinkItem>
-            </ListItem>
-          )}
+            <Fragment key={item.title} />
+          ),
+        )}
 
-          <LegalLinksContainer key="legal-links">
-            <LegalLinks />
-          </LegalLinksContainer>
-        </List>
-        {isOpen && <TempHider onClick={toggleOptions} />}
-      </Wrapper>
-    </>
+        <ListItem key="lang-change">
+          <NavLanguageChange showTitle={true} style={{ padding: '12px 24px' }} />
+        </ListItem>
+
+        {isLoggedIn ? (
+          <ListItem key="account">
+            <NavUserProfile />
+
+            <LinkItem href={`/${languageCode}/account`}>
+              <Title>{customerData.name}</Title>
+            </LinkItem>
+          </ListItem>
+        ) : (
+          <ListItem key="login">
+            <LinkItem href={`/${languageCode}/login`}>
+              <IconContainer>
+                <Icon src={SvgLoginIconPath} />
+              </IconContainer>
+
+              <Title>{t('@login')}</Title>
+            </LinkItem>
+          </ListItem>
+        )}
+
+        <LegalLinksContainer key="legal-links">
+          <LegalLinks />
+        </LegalLinksContainer>
+      </List>
+
+      {isOpen && <TempHider onClick={toggleOptions} />}
+    </Wrapper>
   );
 };
 

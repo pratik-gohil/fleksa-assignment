@@ -42,9 +42,20 @@ const NavLanguageChange: FunctionComponent<IPropsNavLanguageChange> = ({ showTit
   const language = useAppSelector(selectLanguage);
   const router = useRouter();
 
+  /**
+   * @returns {string} corresponding link needs to switch
+   */
+  const getCorrespondLink = () => {
+    if (router.pathname === '/menu/[id]')
+      // ?? Only switch for menu by id on mobile view
+      return `/menu/${router.query.id}`;
+
+    return router.pathname;
+  };
+
   return (
     <CustomLink
-      href={router.pathname}
+      href={getCorrespondLink()}
       isLanguageChange={true}
       amplitude={{
         text: 'language icon',

@@ -75,7 +75,7 @@ const LegalLinks: FunctionComponent = () => {
   return (
     <Wrapper>
       <SocialMediaLinks>
-        {socialLinks.map((link) => (
+        {socialLinks.map((link, index) => (
           <CustomLink
             amplitude={{
               type: 'icon',
@@ -84,6 +84,7 @@ const LegalLinks: FunctionComponent = () => {
             target="_blank"
             externalHref={link.url}
             Override={IconContainer}
+            key={index}
           >
             <Icon src={link.icon} />
           </CustomLink>
@@ -92,6 +93,7 @@ const LegalLinks: FunctionComponent = () => {
 
       <Text>
         <CustomLink
+          key="fleksa-default-link"
           amplitude={{
             type: 'link',
             text: 'fleksa',
@@ -102,6 +104,7 @@ const LegalLinks: FunctionComponent = () => {
         />{' '}
         |{' '}
         <CustomLink
+          key="terms-default-link"
           href={`/terms`}
           amplitude={{
             text: t('@terms'),
@@ -111,6 +114,7 @@ const LegalLinks: FunctionComponent = () => {
         />{' '}
         |{' '}
         <CustomLink
+          key="privacy-default-link"
           href={`/privacy-policy`}
           amplitude={{
             text: t('@privacy'),
@@ -120,6 +124,7 @@ const LegalLinks: FunctionComponent = () => {
         />{' '}
         |{' '}
         <CustomLink
+          key="imprint-default-link"
           href={`/imprint`}
           amplitude={{
             text: t('@imprint'),

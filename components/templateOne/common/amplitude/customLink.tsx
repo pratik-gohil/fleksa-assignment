@@ -47,8 +47,12 @@ const CustomLink: FunctionComponent<ICustomLinkProps> = ({
       amplitudeEvent(constructEventName(amplitude.text, amplitude.type), amplitude.eventProperties);
 
       // TODO:  change the route if href and externalHref is exit
-      if (href) router.push(`/${isLanguageChange ? (router.locale === 'en' ? 'de' : 'en') : languageCode}${href}`);
-      else if (externalHref && target)
+      if (href) {
+        const jumpLink = isLanguageChange ? (router.locale === 'en' ? `/de${href}` : `/en${href}`) : `/${languageCode}${href}`;
+
+        window.location.href = jumpLink; // ? Reload transition
+        // router.push(jumpLink); // ?  Smooth transition
+      } else if (externalHref && target)
         window.open(
           externalHref,
           target, // <- This is what makes it open in a new window.
