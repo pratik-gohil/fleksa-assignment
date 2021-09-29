@@ -1,16 +1,54 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<div align="center">
+ <h1> FLEKSA WEBSITE RESTAURANT </h1>
+</div>
 
-## Getting Started
+## Installation
 
-First, run the development server:
+- Step 1 : Make sure that you're already installed [NODE JS](https://nodejs.org) on your system.
+- Step 2 : If not click the link and downloaded [LTS](https://nodejs.org/dist/v14.15.0/node-v14.15.0-x64.msi) version of Nodejs.
+- Step 3 : Open your terminal and then type
 
-```bash
-npm run dev
-# or
-yarn dev
+```cmd
+mkdir web
+cd web
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Step 4 : Type following commands to initialize the git and set remote origin(for updated package in future).
+
+```cmd
+git init
+git remote add origin https://code.fleksa.com/root/webv2.git
+```
+
+> Note : Make sure that you've correct rights of this repository because this is private organization repo. If you're not please contact your manager.
+
+- Step 5 : Clone the repo by using following command.
+
+```cmd
+git pull origin main
+```
+
+> DANGER :
+>
+> 1. Don't use `git push` command.
+> 2. Don't modify any files by yourself without contact mainteners even is single dot.
+
+- Step 7 : Get `.env` file from maintainer and put that file in root directory.
+
+- Step 8 : Type in the terminal.
+
+```cmd
+npm install
+npm run dev
+```
+
+- Step 9 : In future would you like to update your local package just type in the terminal.
+
+```cmd
+git pull origin <branch_name>
+```
+
+🎉🎉 tada 🎉🎉
 
 #### Change Logs of Merge request #80
 
