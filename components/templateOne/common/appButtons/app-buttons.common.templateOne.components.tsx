@@ -14,6 +14,7 @@ const AppButton = styled.div`
   flex: 1;
   display: inline-flex;
   background: #202020;
+  color: #fff;
   border: 2px solid #fff;
   border-radius: 0.6rem;
   padding: 8px;
