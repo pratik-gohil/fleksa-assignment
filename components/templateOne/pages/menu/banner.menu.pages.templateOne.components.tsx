@@ -169,13 +169,14 @@ const OfferBody = styled.div`
 `;
 
 const MenuPageBanner: FunctionComponent = ({}) => {
+  const { t } = useTranslation('page-menu-id');
+
   const language = useAppSelector(selectLanguage);
   const shopData = useAppSelector(selectShop);
   const offersData = useAppSelector(selectOffers);
   const menuId = useAppSelector(selectSelectedMenu);
   const orderType = useAppSelector(selectOrderType);
   const siblingData = useAppSelector(selectSiblings);
-  const { t } = useTranslation('page-menu-id');
 
   const [moreDescription, setMoreDescription] = useState<string>('');
   const [offers, setOffers] = useState<IOffer[]>(offersData);
@@ -219,7 +220,10 @@ const MenuPageBanner: FunctionComponent = ({}) => {
 
   return (
     <BannerContainer>
-      {shopData?.cover && <Image src={shopData.cover} loading="eager" layout="fill" objectFit="cover" />}
+      {!!shopData?.cover_json?.images.length && (
+        <Image src={shopData?.cover_json?.images[0]} loading="eager" layout="fill" objectFit="cover" />
+      )}
+
       <ContentTop>
         <ContentTopContent>
           <Container>

@@ -14,5 +14,6 @@
   "@min-amount-1": "Leider können Sie noch nicht bestellen, der Mindestbestellbetrag beträgt ",
   "@min-amount-2": " ohne Lieferkosten.",
   "@not-accept": "Das Restaurant nimmt im Moment keine Bestellungen an.",
-  "@choose-one": "Wähle ein"
+  "@choose-one": "Wähle ein",
+  "@proceed": "Weiter"
 }

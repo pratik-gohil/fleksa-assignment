@@ -35,6 +35,7 @@
   "@total": "Gesamt",
   "@subtotal": "Zwischensumme",
   "@tip": "Trinkgeld",
+  "@discount": "Rabatt",
   "@items": "Artikel",
   "@update-success": "Erfolgreich aktualisiert 🙌",
   "@remove-success": "Erfolgreich entfernt 🙌",

@@ -27,6 +27,7 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ct
           'add-address',
           'login',
           'page-checkout',
+          'page-menu-id',
           'common-ordertype',
         ])),
         templateNumber: 0,

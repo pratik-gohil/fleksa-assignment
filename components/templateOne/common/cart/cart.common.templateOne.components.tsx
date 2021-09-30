@@ -15,7 +15,6 @@ import CartAddRemoveButton from './add-remove.cart.common.templateOne.components
 import SvgCartEmpty from '../../../../public/assets/svg/cart-empty.svg';
 import { useEffect } from 'react';
 import { useState } from 'react';
-import LoginAllPages from '../login/login.common.templateOne.components';
 import formatCurrency from '../../../../utils/formatCurrency';
 import { selectDeliveryFinances, selectOrderType } from '../../../../redux/slices/checkout.slices.redux';
 import { selectAddress, selectShop, selectSiblings } from '../../../../redux/slices/index.slices.redux';
@@ -232,7 +231,6 @@ const Cart: FunctionComponent = ({}) => {
                       {((cartItem.sideProducts && cartItem.sideProducts.length > 0) || (cartItem.choice && cartItem.choice.length > 0)) && (
                         <ItemTitleAdditional>
                           {cartItem.choice?.map((i) => i.name[language]).join(', ')}
-                          {cartItem.sideProducts && cartItem.sideProducts.length > 0 && ', '}
                           {cartItem.sideProducts?.map((i) => i.name[language]).join(', ')}
                         </ItemTitleAdditional>
                       )}
@@ -280,12 +278,6 @@ const Cart: FunctionComponent = ({}) => {
       <OrderButton isActive={orderPossible} onClick={onClickOrderButton}>
         {t('@order')}
       </OrderButton>
-
-      <LoginAllPages
-        callback={() => {
-          router.push('/checkout');
-        }}
-      />
     </Wrapper>
   );
 };

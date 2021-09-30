@@ -172,7 +172,7 @@ const AccountPageParticularOrder: FunctionComponent = ({}) => {
             text: t('@view-receipt'),
           }}
           Override={ReceiptButton}
-          externelHref={order?.pdf_url}
+          externalHref={order?.pdf_url}
           placeholder={t('@view-receipt')}
           target="_blank"
         />
@@ -205,10 +205,15 @@ const AccountPageParticularOrder: FunctionComponent = ({}) => {
             <SetGap />
 
             <PriceContainer>
-              {!!order?.price.tip && (
+              <BasePrice>
+                <PriceLabel>{t('@subtotal')}</PriceLabel>
+                <PriceValue>{order?.price.sub_total.toFixed(2).replace('.', ',')} €</PriceValue>
+              </BasePrice>
+
+              {!!order?.price.discount && (
                 <BasePrice>
-                  <PriceLabel>{t('@tip')}</PriceLabel>
-                  <PriceValue>{order?.price.tip.toFixed(2).replace('.', ',')} €</PriceValue>
+                  <PriceLabel>{t('@discount')}</PriceLabel>
+                  <PriceValue>- {order?.price.discount.toFixed(2).replace('.', ',')} €</PriceValue>
                 </BasePrice>
               )}
 
@@ -219,10 +224,12 @@ const AccountPageParticularOrder: FunctionComponent = ({}) => {
                 </BasePrice>
               )}
 
-              <BasePrice>
-                <PriceLabel>{t('@subtotal')}</PriceLabel>
-                <PriceValue>{order?.price.sub_total.toFixed(2).replace('.', ',')} €</PriceValue>
-              </BasePrice>
+              {!!order?.price.tip && (
+                <BasePrice>
+                  <PriceLabel>{t('@tip')}</PriceLabel>
+                  <PriceValue>{order?.price.tip.toFixed(2).replace('.', ',')} €</PriceValue>
+                </BasePrice>
+              )}
 
               <BasePrice>
                 <PriceLabel

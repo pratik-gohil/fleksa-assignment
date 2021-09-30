@@ -1,34 +1,62 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<div align="center">
+ <h1> FLEKSA WEBSITE RESTAURANT </h1>
+</div>
 
-## Getting Started
+## Installation
 
-First, run the development server:
+- Step 1 : Make sure that you're already installed [NODE JS](https://nodejs.org) and NPM on your system.
+- Step 2 : If not click the link and downloaded [LTS](https://nodejs.org/dist/v14.15.0/node-v14.15.0-x64.msi) version of Nodejs.
+- Step 3 : Open your terminal and then type
 
-```bash
-npm run dev
-# or
-yarn dev
+```cmd
+mkdir web
+cd web
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Step 4 : Type following commands to initialize the git and set remote origin(for updated package in future).
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+```cmd
+git init
+git remote add origin https://code.fleksa.com/root/webv2.git
+```
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+> Note : Make sure that you've correct rights of this repository because this is private organization repo. If you're not please contact your manager.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+- Step 5 : Clone the repo by using following command.
 
-## Learn More
+```cmd
+git pull origin master
+```
 
-To learn more about Next.js, take a look at the following resources:
+> DANGER :
+>
+> 1. Don't use `git push` command.
+> 2. Don't modify any files by yourself without contact mainteners even is single dot.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Step 7 : Get `.env` file from maintainer and put that file in root directory.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- Step 8 : Type in the terminal.
 
-## Deploy on Vercel
+```cmd
+npm install
+npm run dev
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Step 9 : In future would you like to update your local package just type in the terminal.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```cmd
+git pull origin <branch_name>
+```
+
+🎉🎉 tada 🎉🎉
+
+#### Change Logs of Merge request #80
+
+1. Bottom space issue on reservation and menu.
+2. Offer default setting change.
+3. Added discount field on profile order view by id.
+4. Fixed footer links not working issue.
+5. When change on my.fleksa.com order type front end user facing some type mismatch selection issue fix.
+6. Menu add side ,(comma) issue.
+7. Issue on address model in checkout page with constant.
+8. Translation issue on mobile view checkout -> cart.

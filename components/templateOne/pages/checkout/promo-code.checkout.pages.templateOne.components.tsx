@@ -443,7 +443,6 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
       } else {
         dispatch(updatePromoCode(null));
 
-        console.log(response?.message);
         dispatch(
           updateError({
             show: true,
@@ -574,7 +573,7 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
               <OfferBody isDropdown={isDropdown}>
                 {offers.map((offerItem, offerItemIndex) => {
                   return (
-                    <OfferItemContainer isFirstOrder={offerItem.order_type_ === 'FIRST'}>
+                    <OfferItemContainer isFirstOrder={offerItem.order_type_ === 'FIRST'} key={offerItemIndex}>
                       <OfferItem>
                         <OfferBodyHeader>
                           <SymbolIcon>{getCorrespondOfferIcon(offerItem.order_type_)}</SymbolIcon>
