@@ -174,7 +174,7 @@ const Cart: FunctionComponent = ({}) => {
   const languageCode = useAppSelector(selectLanguageCode);
   const selectedMenuId = useAppSelector(selectSelectedMenu);
   const deliveryFinances = useAppSelector(selectDeliveryFinances);
-  const { t } = useTranslation('page-menu-id');
+  const { t } = useTranslation('cart');
 
   const [orderPossible, setOrderPossible] = useState(false);
   const [noOrderTypeAvailable, setNoOrderTypeAvailable] = useState(true);

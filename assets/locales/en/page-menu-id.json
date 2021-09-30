@@ -2,18 +2,10 @@
   "@delivery": "Delivery",
   "@pickup": "Pickup",
   "@dine-in": "Dine-In",
+
+  "@choose-one": "Choose one",
   "@offer": "OFFER",
   "@change-shop": "CHANGE SHOP",
   "@off": "OFF",
-  "@search": "Search here",
-  "@your-cart": "Your Cart",
-  "@order": "Checkout",
-  "@total": "Total",
-  "@hungry": "Feeling hungry?",
-  "@choose": "Choose delicious dishes from the menu to place an order.",
-  "@min-amount-1": "Minimum cart value required to place an order is ",
-  "@min-amount-2": ".",
-  "@not-accept": "The restaurant is not accepting any orders at the moment.",
-  "@choose-one": "Choose one",
-  "@proceed": "Proceed"
+  "@search": "Search here"
 }
