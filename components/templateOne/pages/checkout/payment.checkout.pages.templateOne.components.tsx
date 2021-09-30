@@ -42,6 +42,12 @@ import { isEmailValid } from '../../../../utils/checkout.utils';
 import CheckoutLoginDropdown from './checkout.login.dropdown';
 import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 
+import SvgCashIcon from '../../../../public/assets/svg/checkout/v1/cash-icon.svg';
+import SvgCashHoverIcon from '../../../../public/assets/svg/checkout/v1/cash-icon-hover.svg';
+
+import SvgPaypalIcon from '../../../../public/assets/svg/checkout/v1/paypal-icon.svg';
+import SvgPaypalHoverIcon from '../../../../public/assets/svg/checkout/v1/paypal-icon-hover.svg';
+
 const Wrapper = styled.div`
   margin-bottom: 48px;
 
@@ -59,12 +65,10 @@ const PaymentMethodList = styled.div`
 const PaymentMethodItems = styled.button<{ isActive: boolean }>`
   display: flex;
   flex: 1;
-  margin: 0 ${(props) => props.theme.dimen.X4}px;
-  padding: ${(props) => props.theme.dimen.X4}px;
+  margin: 0;
 
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
-  border-radius: 3rem;
   background: transparent;
 
   height: max-content;
@@ -73,18 +77,13 @@ const PaymentMethodItems = styled.button<{ isActive: boolean }>`
   outline: none;
 
   cursor: pointer;
-  border-color: ${(p) => (p.isActive ? '#FFD100' : 'none')};
-  box-shadow: ${(p) => (p.isActive ? `0 0 4px 4px #FFD100` : '0 0 4px 0 transparent')};
-  border: ${(p) => (p.isActive ? '2px solid rgba(0,0,0,0.2)' : 'none')};
 
-  img {
-    width: 100%;
-    height: 100%;
+  div {
+    background: ${(p) => (p.isActive ? p.theme.textDarkActiveColor : 'transparent')};
   }
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     margin: 0 0.1rem;
-    /* padding: 0.2rem; */
 
     &:first-child {
       padding: 0;
@@ -104,7 +103,29 @@ const OrderButtonTopLevelContainer = styled.div`
   margin-top: ${(props) => props.theme.dimen.X4}px;
 `;
 
-const PaymentIconImage = styled.img``;
+const PaymentIconContainer = styled.div`
+  display: flex;
+  width: 200px;
+  height: 100px;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.35s ease-out;
+
+  border: 2px solid ${(p) => p.theme.textDarkActiveColor};
+  border-radius: 0.5rem;
+
+  svg {
+  }
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    width: 100px;
+    height: 70px;
+  }
+
+  &:hover {
+    background: ${(p) => p.theme.textDarkColor};
+  }
+`;
 
 const CheckoutPagePayment: FunctionComponent = ({}) => {
   const router = useRouter();
@@ -133,7 +154,11 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
 
   const { t } = useTranslation('page-checkout');
   const [currentPaymentMethod, setCurrentPaymentMethod] = useState('STRIPE');
+  const [inHover, setHover] = useState('');
 
+  /**
+   * @description for creating a order from node api
+   */
   async function createOrder() {
     try {
       const products: Array<IMakeOrderProducts> = getPrductsFromCartData(cartData);
@@ -295,18 +320,34 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
               {[
                 {
                   method: 'STRIPE' as ICheckoutPaymentMethods,
-                  img: <PaymentIconImage src="/assets/svg/checkout/card.svg" alt="stripe" />,
+                  img: (
+                    <PaymentIconContainer onMouseEnter={() => setHover('STRIPE')} onMouseLeave={() => setHover('')}>
+                      {inHover === 'STRIPE' || currentPaymentMethod === 'STRIPE' ? <SvgCashHoverIcon /> : <SvgCashIcon />}
+                    </PaymentIconContainer>
+                  ),
+
                   show: shopData?.stripe_available,
+                  isHover: inHover === 'STRIPE',
                 },
                 {
                   method: 'PAYPAL' as ICheckoutPaymentMethods,
-                  img: <PaymentIconImage src="/assets/svg/checkout/paypal.svg" alt="paypal" />,
+                  img: (
+                    <PaymentIconContainer onMouseEnter={() => setHover('PAYPAL')} onMouseLeave={() => setHover('')}>
+                      {inHover === 'PAYPAL' || currentPaymentMethod === 'PAYPAL' ? <SvgPaypalHoverIcon /> : <SvgPaypalIcon />}
+                    </PaymentIconContainer>
+                  ),
                   show: shopData?.paypal_available,
+                  isHover: inHover === 'PAYPAL',
                 },
                 {
                   method: 'CASH' as ICheckoutPaymentMethods,
-                  img: <PaymentIconImage src="/assets/svg/checkout/cash.svg" alt="cash" />,
+                  img: (
+                    <PaymentIconContainer onMouseEnter={() => setHover('CASH')} onMouseLeave={() => setHover('')}>
+                      {inHover === 'CASH' || currentPaymentMethod === 'CASH' ? <SvgCashHoverIcon /> : <SvgCashIcon />}
+                    </PaymentIconContainer>
+                  ),
                   show: true,
+                  isHover: inHover === 'CASH',
                 },
               ].map((item) => {
                 return (
