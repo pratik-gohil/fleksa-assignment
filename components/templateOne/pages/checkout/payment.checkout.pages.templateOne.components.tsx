@@ -43,7 +43,11 @@ import CheckoutLoginDropdown from './checkout.login.dropdown';
 import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 
 const Wrapper = styled.div`
-  /* margin-bottom: 48px; */
+  margin-bottom: 48px;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    margin-bottom: 0;
+  }
 `;
 
 const PaymentMethodList = styled.div`
