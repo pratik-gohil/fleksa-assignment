@@ -14,6 +14,7 @@ import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { selectCart } from '../../../../redux/slices/cart.slices.redux';
 import {
   selectDeliveryFinances,
+  selectIsPreOrder,
   selectOrderType,
   selectSelectedAddressId,
   selectShowDateTimeSelect,
@@ -115,6 +116,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
   const shopId = useAppSelector(selectSelectedMenu);
   const customerAddresses = useAppSelector(selectCustomerAllAddress);
   const isShowOrderTypeSelection = useAppSelector(selectShowOrderTypeSelect);
+  const isPreOrder = useAppSelector(selectIsPreOrder);
 
   // ? Default selectiona ddress state
   const checkoutAddressId = useAppSelector(selectSelectedAddressId);
@@ -129,63 +131,6 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
   const { t } = useTranslation('page-checkout');
 
   const [addressData, setAddressData] = useState<IAddress | null | undefined>(undefined);
-
-  function isOrderPossible() {
-    if (orderType === 'DELIVERY') return deliveryFinances && deliveryFinances.amount ? cartData.cartCost >= deliveryFinances.amount : true;
-
-    return true;
-  }
-
-  async function addGuestAddressOnServerIfExists() {
-    // ?? check if guest address exists. If it does add it to server
-    const guestAddressString = window.localStorage.getItem(LS_GUEST_USER_ADDRESS);
-
-    if (guestAddressString && bearerToken && shopId) {
-      const guestAddress = JSON.parse(guestAddressString) as IGuestAddress;
-
-      const response = await new PyApiHttpPostAddress(configuration).postAll({
-        floor: guestAddress.floor,
-        shopId: shopId,
-        address: guestAddress.address,
-        addressType: guestAddress.address_type,
-        city: guestAddress.city,
-        postalCode: guestAddress.postal_code,
-        area: guestAddress.area,
-        token: bearerToken,
-      });
-
-      if (response) {
-        if (!response.result) {
-          dispatch(
-            updateError({
-              show: true,
-              message: response.description,
-              severity: 'error',
-            }),
-          );
-          return;
-        }
-
-        if (response.customer.is_customer && response.customer.details?.customer_address_id) {
-          window.localStorage.removeItem(LS_GUEST_USER_ADDRESS);
-
-          const addressAdded: IParticularAddress = {
-            id: response.customer.details.customer_address_id,
-            address_type: guestAddress.address_type,
-            floor: guestAddress.floor,
-            address: guestAddress.address,
-            country: '',
-            postal_code: guestAddress.postal_code,
-            city: guestAddress.city,
-            state: '',
-          };
-
-          dispatch(updateExistCustomerAddressOrAddNew(addressAdded));
-          dispatch(updateSelectedAddressId(addressAdded.id));
-        }
-      }
-    }
-  }
 
   useEffect(() => {
     if (shopData?.id === selectedMenuId) setAddressData(address);
@@ -279,6 +224,64 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
     }
   }, [isUserLoggedIn, deliveryFinances, orderType, selectedAddress]);
 
+  function isOrderPossible() {
+    if (orderType === 'DELIVERY') return deliveryFinances && deliveryFinances.amount ? cartData.cartCost >= deliveryFinances.amount : true;
+
+    return true;
+  }
+
+  async function addGuestAddressOnServerIfExists() {
+    // ?? check if guest address exists. If it does add it to server
+    const guestAddressString = window.localStorage.getItem(LS_GUEST_USER_ADDRESS);
+
+    if (guestAddressString && bearerToken && shopId) {
+      const guestAddress = JSON.parse(guestAddressString) as IGuestAddress;
+
+      const response = await new PyApiHttpPostAddress(configuration).postAll({
+        floor: guestAddress.floor,
+        shopId: shopId,
+        address: guestAddress.address,
+        addressType: guestAddress.address_type,
+        city: guestAddress.city,
+        postalCode: guestAddress.postal_code,
+        area: guestAddress.area,
+        token: bearerToken,
+      });
+
+      if (response) {
+        if (!response.result) {
+          dispatch(
+            updateError({
+              show: true,
+              message: response.description,
+              severity: 'error',
+            }),
+          );
+          return;
+        }
+
+        if (response.customer.is_customer && response.customer.details?.customer_address_id) {
+          window.localStorage.removeItem(LS_GUEST_USER_ADDRESS);
+
+          const addressAdded: IParticularAddress = {
+            id: response.customer.details.customer_address_id,
+            address_type: guestAddress.address_type,
+            floor: guestAddress.floor,
+            address: guestAddress.address,
+            country: '',
+            postal_code: guestAddress.postal_code,
+            city: guestAddress.city,
+            state: '',
+          };
+
+          dispatch(updateExistCustomerAddressOrAddNew(addressAdded));
+          dispatch(updateSelectedAddressId(addressAdded.id));
+        }
+      }
+    }
+  }
+
+  // !shop.availability && !shop.isClosed
   return (
     <StyledCheckoutCard>
       <Row>
@@ -287,7 +290,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
             <TextContainer>
               <StyledCheckoutText>
                 {orderType === 'DINE_IN' ? t('@dine-in') : t(`@${orderType?.toLowerCase()}`)}{' '}
-                <span>{!shop.availability && !shop.isClosed && `(${t('@pre-order')})`}</span>
+                <span>{isPreOrder && `(${t('@pre-order')})`}</span>
               </StyledCheckoutText>
 
               {orderType === 'DELIVERY' && !minAmountCheck && (
