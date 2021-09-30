@@ -30,7 +30,7 @@ import { updateSeoTagJson } from '../redux/slices/common.slices.redux';
 
 const multiRestaurantHosts = ['127.0.0.1:3000', 'localhost:3000', 'newqa.fleksa.de', 'localhost:3214', '192.168.1.14:3000'];
 
-const localMode = false;
+const localMode = true;
 
 const testingHosts = [
   'roma.fleksa.com',

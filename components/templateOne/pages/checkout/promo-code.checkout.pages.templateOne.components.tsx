@@ -408,6 +408,11 @@ const CheckoutPagePromoCode: FunctionComponent = ({}) => {
       dispatch(updatePromoCode(null));
   }, [orderType, bearerToken, customerOrderHistoryData]);
 
+  // TODO: Remove the open mode of promo code when component unmounted
+  useEffect(() => {
+    if (isDropdown) dispatch(updateCheckoutIsOffersOpen(false));
+  }, []);
+
   /**
    * @description apply discount coupon on checkout
    */
