@@ -48,6 +48,9 @@ import SvgCashHoverIcon from '../../../../public/assets/svg/checkout/v1/cash-ico
 import SvgPaypalIcon from '../../../../public/assets/svg/checkout/v1/paypal-icon.svg';
 import SvgPaypalHoverIcon from '../../../../public/assets/svg/checkout/v1/paypal-icon-hover.svg';
 
+import StripeIcon from '../../../../public/assets/svg/checkout/v1/stripe-icon.svg';
+import StripeHoverIcon from '../../../../public/assets/svg/checkout/v1/stripe-icon-hover.svg';
+
 const Wrapper = styled.div`
   margin-bottom: 48px;
 
@@ -60,6 +63,25 @@ const PaymentMethodList = styled.div`
   display: flex;
   padding-top: 1rem;
   align-items: center;
+`;
+
+const PaymentIconContainer = styled.div`
+  display: flex;
+  width: 200px;
+  height: 100px;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 250ms ease-out;
+  border-radius: 0.5rem;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    width: 100px;
+    height: 70px;
+  }
+
+  &:hover {
+    background: ${(p) => p.theme.textDarkActiveColor};
+  }
 `;
 
 const PaymentMethodItems = styled.button<{ isActive: boolean }>`
@@ -80,6 +102,7 @@ const PaymentMethodItems = styled.button<{ isActive: boolean }>`
 
   div {
     background: ${(p) => (p.isActive ? p.theme.textDarkActiveColor : 'transparent')};
+    border: ${(p) => (p.isActive ? '2px solid transparent' : '2px solid black')};
   }
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
@@ -101,30 +124,6 @@ const Disclaimer = styled.p`
 
 const OrderButtonTopLevelContainer = styled.div`
   margin-top: ${(props) => props.theme.dimen.X4}px;
-`;
-
-const PaymentIconContainer = styled.div`
-  display: flex;
-  width: 200px;
-  height: 100px;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.35s ease-out;
-
-  border: 2px solid ${(p) => p.theme.textDarkActiveColor};
-  border-radius: 0.5rem;
-
-  svg {
-  }
-
-  @media (max-width: ${BREAKPOINTS.sm}px) {
-    width: 100px;
-    height: 70px;
-  }
-
-  &:hover {
-    background: ${(p) => p.theme.textDarkColor};
-  }
 `;
 
 const CheckoutPagePayment: FunctionComponent = ({}) => {
@@ -322,7 +321,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
                   method: 'STRIPE' as ICheckoutPaymentMethods,
                   img: (
                     <PaymentIconContainer onMouseEnter={() => setHover('STRIPE')} onMouseLeave={() => setHover('')}>
-                      {inHover === 'STRIPE' || currentPaymentMethod === 'STRIPE' ? <SvgCashHoverIcon /> : <SvgCashIcon />}
+                      {inHover === 'STRIPE' || currentPaymentMethod === 'STRIPE' ? <StripeHoverIcon /> : <StripeIcon />}
                     </PaymentIconContainer>
                   ),
 
