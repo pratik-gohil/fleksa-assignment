@@ -73,10 +73,17 @@ const PaymentIconContainer = styled.div`
   justify-content: center;
   transition: background-color 250ms ease-out;
   border-radius: 0.5rem;
+  padding: 10px;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     width: 100px;
     height: 70px;
+    padding: 5px;
+  }
+
+  & > img {
+    width: 100%;
+    height: 100%;
   }
 
   &:hover {
@@ -319,32 +326,28 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
               {[
                 {
                   method: 'STRIPE' as ICheckoutPaymentMethods,
-                  img: (
-                    <PaymentIconContainer onMouseEnter={() => setHover('STRIPE')} onMouseLeave={() => setHover('')}>
-                      {inHover === 'STRIPE' || currentPaymentMethod === 'STRIPE' ? <StripeHoverIcon /> : <StripeIcon />}
-                    </PaymentIconContainer>
-                  ),
-
+                  img:
+                    inHover === 'STRIPE' || currentPaymentMethod === 'STRIPE'
+                      ? '/assets/svg/checkout/v1/stripe-icon-hover.svg'
+                      : '/assets/svg/checkout/v1/stripe-icon.svg',
                   show: shopData?.stripe_available,
                   isHover: inHover === 'STRIPE',
                 },
                 {
                   method: 'PAYPAL' as ICheckoutPaymentMethods,
-                  img: (
-                    <PaymentIconContainer onMouseEnter={() => setHover('PAYPAL')} onMouseLeave={() => setHover('')}>
-                      {inHover === 'PAYPAL' || currentPaymentMethod === 'PAYPAL' ? <SvgPaypalHoverIcon /> : <SvgPaypalIcon />}
-                    </PaymentIconContainer>
-                  ),
+                  img:
+                    inHover === 'PAYPAL' || currentPaymentMethod === 'PAYPAL'
+                      ? '/assets/svg/checkout/v1/paypal-icon-hover.svg'
+                      : '/assets/svg/checkout/v1/paypal-icon.svg',
                   show: shopData?.paypal_available,
                   isHover: inHover === 'PAYPAL',
                 },
                 {
                   method: 'CASH' as ICheckoutPaymentMethods,
-                  img: (
-                    <PaymentIconContainer onMouseEnter={() => setHover('CASH')} onMouseLeave={() => setHover('')}>
-                      {inHover === 'CASH' || currentPaymentMethod === 'CASH' ? <SvgCashHoverIcon /> : <SvgCashIcon />}
-                    </PaymentIconContainer>
-                  ),
+                  img:
+                    inHover === 'CASH' || currentPaymentMethod === 'CASH'
+                      ? '/assets/svg/checkout/v1/cash-icon-hover.svg'
+                      : '/assets/svg/checkout/v1/cash-icon.svg',
                   show: true,
                   isHover: inHover === 'CASH',
                 },
@@ -362,7 +365,9 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
                         });
                       }}
                     >
-                      {item.img}
+                      <PaymentIconContainer onMouseEnter={() => setHover(item.method)} onMouseLeave={() => setHover('')}>
+                        <img src={item.img} />
+                      </PaymentIconContainer>
                     </PaymentMethodItems>
                   )
                 );
