@@ -58,6 +58,10 @@ const ButtonContainer = styled.div`
   font-weight: 700;
   transition-duration: 500ms;
   overflow: hidden;
+  & > * {
+    width: 100%;
+    text-align: center;
+  }
 `;
 
 const Separator = styled.div`
@@ -106,7 +110,7 @@ const AddButton: FunctionComponent<IPropsAddButton> = ({ setOpenItemId, product,
     // ? Reset promo code if it's applied
     if (promoCodeData) dispatch(updatePromoCode(null));
 
-    if (canOpen && isOpen && selectionData) {
+    if (selectionData) {
       dispatch(
         updateAddProduct({
           topProductId: product.id,
@@ -155,48 +159,8 @@ const AddButton: FunctionComponent<IPropsAddButton> = ({ setOpenItemId, product,
       hasImage={hasImage}
       isOpen={isOpen}
     >
-      <ButtonContainer>
-        {cartData?.quantity ? (
-          <>
-            <CustomLink
-              amplitude={{
-                type: 'button',
-                text: `product minus`,
-                eventProperties: {
-                  product,
-                  canOpen,
-                  hasImage,
-                  isOpen,
-                  cartData,
-                },
-              }}
-              callback={reduceItemFromCart}
-              Override={ButtonItem}
-            >
-              <SvgButtonMinus />
-            </CustomLink>
-
-            <Separator />
-
-            <CustomLink
-              amplitude={{
-                type: 'button',
-                text: `product plus`,
-                eventProperties: {
-                  product,
-                  canOpen,
-                  hasImage,
-                  isOpen,
-                  cartData,
-                },
-              }}
-              callback={addItemToCart}
-              Override={ButtonItem}
-            >
-              <SvgButtonPlus />
-            </CustomLink>
-          </>
-        ) : (
+      {!isOpen && (
+        <ButtonContainer>
           <CustomLink
             amplitude={{
               type: 'button',
@@ -210,10 +174,10 @@ const AddButton: FunctionComponent<IPropsAddButton> = ({ setOpenItemId, product,
               },
             }}
             callback={addItemToCart}
-            placeholder={`ADD${!!canOpen ? ' +' : ''}`}
+            placeholder={`ADD`}
           />
-        )}
-      </ButtonContainer>
+        </ButtonContainer>
+      )}
     </WrapperButton>
   );
 };

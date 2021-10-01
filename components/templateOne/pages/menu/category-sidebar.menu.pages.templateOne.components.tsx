@@ -87,7 +87,22 @@ const MenuPageCategorySidebar: FunctionComponent = ({}) => {
       behavior: 'smooth',
     });
 
+  function isInViewport(element: any) {
+    const rect = element.getBoundingClientRect();
+    return (
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+  }
+
   function navHighlighter(sections: NodeListOf<Element>) {
+    // console.log(sections);
+    // console.log(sections.entries());
+    for (let i in sections.entries()) {
+      console.log('i', i);
+    }
     let lastVisible: string | undefined = undefined;
     for (const current in sections) {
       let el = sections[current] as any;
@@ -120,7 +135,7 @@ const MenuPageCategorySidebar: FunctionComponent = ({}) => {
 
   useEffect(() => {
     let sections: NodeListOf<Element>;
-    if (window !== 'undefined' && idList.length > 0) {
+    if (window !== undefined && idList.length > 0) {
       sections = document.querySelectorAll(idList.join(','));
       window.addEventListener('scroll', navHighlighter.bind(null, sections));
     }

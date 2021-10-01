@@ -58,17 +58,27 @@ const LegalLinks: FunctionComponent = () => {
     {
       name: 'twitter',
       icon: '/assets/svg/social/twitter.svg',
-      url: socialData?.twitter ?? 'https://twitter.com/fleksaofficial',
+      url: socialData?.twitter || 'https://twitter.com/fleksaofficial',
     },
     {
       name: 'facebook',
       icon: '/assets/svg/social/facebook.svg',
-      url: socialData?.facebook ?? 'https://www.facebook.com/fleksaofficial',
+      url: socialData?.facebook || 'https://www.facebook.com/fleksaofficial',
     },
     {
       name: 'instagram',
       icon: '/assets/svg/social/instagram.svg',
-      url: socialData?.instagram ?? 'https://www.instagram.com/fleksaofficial/',
+      url: socialData?.instagram || 'https://www.instagram.com/fleksaofficial/',
+    },
+    {
+      name: 'google',
+      icon: '/assets/svg/app/google-playstore.svg',
+      url: '/',
+    },
+    {
+      name: 'apple',
+      icon: '/assets/svg/app/apple-appstore.svg',
+      url: '/',
     },
   ];
 
