@@ -147,6 +147,10 @@ const AddButton: FunctionComponent<IPropsAddButton> = ({ setOpenItemId, product,
     }
   }
 
+  function reduceItemFromCart() {
+    if ((!canOpen || (canOpen && isOpen)) && lastCartId) dispatch(updateReduceProduct({ cartId: lastCartId }));
+  }
+
   return (
     <WrapperButton
       onClick={(e) => {
@@ -170,7 +174,7 @@ const AddButton: FunctionComponent<IPropsAddButton> = ({ setOpenItemId, product,
               },
             }}
             callback={addItemToCart}
-            placeholder={`ADD${canOpen ? ' +' : ''}`}
+            placeholder={`ADD`}
           />
         </ButtonContainer>
       )}

@@ -139,12 +139,10 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
   function toggle() {
     amplitudeEvent(constructEventName('product wrapper', 'card'), { product, isOpen });
 
-    if ((!!product.choice && product.choice.length > 0) || (!!product.side_products_json && product.side_products_json.length > 0)) {
-      if (isOpen) setOpenItemId(undefined);
-      else {
-        setOpenItemId(product.id);
-        setSelectedOption(1);
-      }
+    if (isOpen) setOpenItemId(undefined);
+    else {
+      setOpenItemId(product.id);
+      setSelectedOption(1);
     }
   }
 
