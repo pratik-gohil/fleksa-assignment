@@ -146,7 +146,9 @@ const TextFeelingHungry = styled.p`
   margin: ${(props) => props.theme.dimen.X4}px 0 0 0;
 `;
 
-const TextChooseDishes = styled(TextFeelingHungry)``;
+const TextChooseDishes = styled(TextFeelingHungry)`
+  font-size: 16px;
+`;
 
 const MinimumOrderMessage = styled.p`
   font-size: 16px;
