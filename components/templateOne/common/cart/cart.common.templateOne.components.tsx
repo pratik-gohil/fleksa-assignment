@@ -71,6 +71,7 @@ const ListItem = styled.li`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  overflow: hidden;
 `;
 
 const ItemTitle = styled.p`
@@ -91,7 +92,8 @@ const ItemTitleAdditional = styled.p`
 `;
 
 const OrderButton = styled.p<{ isActive: boolean }>`
-  background-color: ${(props) => (props.isActive ? '#222' : '#aaa')};
+  display: ${(props) => !props.isActive && 'none'};
+  background: #222;
   color: #fff;
   padding: ${(props) => props.theme.dimen.X4}px;
   margin: 0 0 ${(props) => props.theme.dimen.X4}px 0;
@@ -144,12 +146,6 @@ const TextFeelingHungry = styled.p`
   font-size: 24px;
   font-weight: 600;
   margin: ${(props) => props.theme.dimen.X4}px 0 0 0;
-`;
-
-const TextChooseDishes = styled(TextFeelingHungry)`
-  font-size: 16px;
-  font-weight: 400;
-  margin: 0 0 ${(props) => props.theme.dimen.X4}px 0;
 `;
 
 const MinimumOrderMessage = styled.p`
@@ -266,8 +262,8 @@ const Cart: FunctionComponent = ({}) => {
           <ListItem key="empty-cart">
             <CartEmptyContainer>
               <SvgCartEmpty />
-              <TextFeelingHungry>{t('@hungry')}</TextFeelingHungry>
-              <TextChooseDishes>{t('@choose')}</TextChooseDishes>
+              {/* <TextFeelingHungry>{t('@hungry')}</TextFeelingHungry> */}
+              {/* <TextChooseDishes>{t('@choose')}</TextChooseDishes> */}
             </CartEmptyContainer>
           </ListItem>
         )}

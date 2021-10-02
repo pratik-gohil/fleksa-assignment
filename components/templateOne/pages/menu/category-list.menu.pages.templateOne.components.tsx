@@ -150,23 +150,14 @@ const MenuPageCategoryList: FunctionComponent = ({}) => {
                   .split(' ')
                   .join('-')}
               >
-                {!!category.image ? (
-                  <CategoryImageContainer>
-                    <CategoryImage src={category.image} alt="category image" />
-                    <CategoryTitle>
-                      {category.name_json[language]}
-                      <br />
-                      {!!category.description_json?.[language] && <span>{category.description_json[language]}</span>}
-                    </CategoryTitle>
-                  </CategoryImageContainer>
-                ) : (
+                {
                   <CategoryTitleSticky>
                     <CategoryStickyTitle>{category.name_json[language]}</CategoryStickyTitle>
                     <CateogryDescription>
                       {!!category.description_json?.[language] && category.description_json[language]}
                     </CateogryDescription>
                   </CategoryTitleSticky>
-                )}
+                }
 
                 <List>
                   {category.products.map((product) => (
