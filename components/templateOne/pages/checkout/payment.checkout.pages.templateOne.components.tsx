@@ -42,15 +42,6 @@ import { isEmailValid } from '../../../../utils/checkout.utils';
 import CheckoutLoginDropdown from './checkout.login.dropdown';
 import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 
-import SvgCashIcon from '../../../../public/assets/svg/checkout/v1/cash-icon.svg';
-import SvgCashHoverIcon from '../../../../public/assets/svg/checkout/v1/cash-icon-hover.svg';
-
-import SvgPaypalIcon from '../../../../public/assets/svg/checkout/v1/paypal-icon.svg';
-import SvgPaypalHoverIcon from '../../../../public/assets/svg/checkout/v1/paypal-icon-hover.svg';
-
-import StripeIcon from '../../../../public/assets/svg/checkout/v1/stripe-icon.svg';
-import StripeHoverIcon from '../../../../public/assets/svg/checkout/v1/stripe-icon-hover.svg';
-
 const Wrapper = styled.div`
   margin-bottom: 48px;
 
