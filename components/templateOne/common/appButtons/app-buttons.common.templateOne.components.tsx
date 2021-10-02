@@ -18,7 +18,7 @@ const AppButton = styled.div`
   color: #fff;
   border: 2px solid #fff;
   border-radius: 0.6rem;
-  padding: 8px;
+  padding: 0.5rem;
   line-height: 1rem;
 `;
 
@@ -26,32 +26,40 @@ const WrapperContainer = styled.div<IPropsWrapperContainer>`
   display: flex;
   flex-direction: ${(props) => props.direction};
   min-width: fit-content;
-  max-width: 360px;
   margin-top: 1rem;
+
   & > a:nth-child(2) {
     margin-left: 10px;
   }
 `;
 
 const Icon = styled.img`
-  margin-right: 10px;
+  margin-right: 0.5rem;
   width: 30px;
   height: 30px;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    width: 24px;
+    height: 24px;
+  }
 `;
 
 const Title = styled.span`
   font-size: 12px;
   display: block;
+
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    display: none;
+    font-size: 10px;
   }
 `;
 
 const StoreName = styled.span`
   font-weight: 700;
   display: block;
+
   @media (max-width: ${BREAKPOINTS.sm}px) {
     text-align: right;
+    font-size: 14px;
   }
 `;
 
@@ -61,15 +69,18 @@ const AppButtons: FunctionComponent<IPropsAppButton> = ({ direction }) => {
       <CustomLink amplitude={{ type: 'button', text: '' }} target="_blank" externalHref="/">
         <AppButton>
           <Icon src="/assets/svg/app/google-playstore.svg" />
+
           <div>
             <Title>GET IT ON</Title>
             <StoreName>Google Play</StoreName>
           </div>
         </AppButton>
       </CustomLink>
+
       <CustomLink amplitude={{ type: 'button', text: '' }} target="_blank" externalHref="/">
         <AppButton>
           <Icon src="/assets/svg/app/apple-appstore.svg" />
+
           <div>
             <Title>Download on the</Title>
             <StoreName>Apple Store</StoreName>
