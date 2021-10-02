@@ -2,6 +2,7 @@ import React, { FunctionComponent } from 'react';
 import { Col, Container, Row } from 'react-grid-system';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+import AppButtons from '../../components/templateOne/common/appButtons/app-buttons.common.templateOne.components';
 import { BREAKPOINTS } from '../../constants/grid-system-configuration';
 import { useAppSelector } from '../../redux/hooks.redux';
 import { selectLanguageCode } from '../../redux/slices/configuration.slices.redux';
@@ -56,6 +57,7 @@ const OrderPlacedPageTemplateOne: FunctionComponent = ({}) => {
             <Title>{t('@greetings')}</Title>
             <Image src={OrderPlacedImage} alt="person jumping" />
             <ViewManageButton href={`/${languageCode}/account/order-history`}>{t('@manage')}</ViewManageButton>
+            <AppButtons direction="column" />
           </Col>
         </Row>
       </Container>
