@@ -12,7 +12,6 @@ import MenuPageSides from './sides.menu.pages.templateOne.components';
 import formatCurrency from '../../../../utils/formatCurrency';
 import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 import { updateItemSelectionNewItem } from '../../../../redux/slices/item-selection.slices.redux';
-// import { selectCart } from '../../../../redux/slices/cart.slices.redux';
 
 export interface IPropsMenuPageCategoryListItem {
   product: ICategoryProduct;
@@ -34,7 +33,6 @@ const ListItem = styled.li<IPropsListItem>`
   margin: -2px -15px;
   transition-duration: 500ms;
   z-index: -1;
-  padding: ${(props) => props.isOpen && '20px'};
   @media (min-width: ${BREAKPOINTS.sm}px) {
     margin: 20px 0;
     border: ${(props) => (props.isOpen ? props.theme.border : '1px solid transparent')};
@@ -58,14 +56,10 @@ const BannerImage = styled.img<IPropsBannerImage>`
   transition-duration: 500ms;
 `;
 
-interface IPropsClosedViewContainer {
-  isOpen: boolean;
-}
-
-const ClosedViewContainer = styled.div<IPropsClosedViewContainer>`
+const ClosedViewContainer = styled.div`
   cursor: pointer;
   transition-duration: 500ms;
-  border-top: ${(props) => !props.isOpen && props.theme.border};
+  border-top: ${(props) => props.theme.border};
 `;
 
 const ClosedViewInfoContainer = styled.div`
@@ -99,10 +93,6 @@ const ClosedViewInfoImage = styled.img<IPropsClosedViewInfoImage>`
 `;
 
 const OptionsContainer = styled.div<IPropsOptionsContainer>`
-  padding: ${(props) => props.isOpen && '20px 0px'};
-  border-top: ${(props) => props.isOpen && props.theme.border};
-  border-bottom: ${(props) => props.isOpen && props.theme.border};
-  margin-bottom: ${(props) => props.isOpen && '20px'};
   max-height: ${(props) => (props.isOpen ? '700px' : '0px')};
   transition-duration: 500ms;
 `;
@@ -129,7 +119,6 @@ const RecipeCost = styled.p`
 const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem> = ({ product, isOpen, setOpenItemId }) => {
   const language = useAppSelector(selectLanguage);
   const languageCode = useAppSelector(selectLanguageCode);
-  // const cartData = useAppSelector(selectCart);
   const [selectedOption, setSelectedOption] = useState<number | undefined>(1);
   const dispatch = useAppDispatch();
 
@@ -161,11 +150,9 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
     }
   }, [isOpen]);
 
-  let cost = product.price;
-
   return (
     <ListItem isOpen={isOpen} id={`product-id-${product.id}`}>
-      <ClosedViewContainer isOpen={isOpen} onClick={toggle}>
+      <ClosedViewContainer onClick={toggle}>
         {product.image && <BannerImage src={product.image} loading="lazy" isOpen={isOpen} />}
 
         <ClosedViewInfoContainer>
@@ -174,7 +161,7 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
 
             <RecipeDescription>{product.description_json[language]}</RecipeDescription>
 
-            <RecipeCost>{formatCurrency(cost, languageCode)}</RecipeCost>
+            <RecipeCost>{formatCurrency(product.price, languageCode)}</RecipeCost>
           </ClosedViewInfoContainerSection1>
 
           <ClosedViewInfoContainerSection2>
@@ -223,13 +210,6 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
             );
           })}
       </OptionsContainer>
-      <AddButton
-        setOpenItemId={setOpenItemId}
-        product={product}
-        canOpen={(!!product.choice && product.choice.length > 0) || (!!product.side_products_json && product.side_products_json.length > 0)}
-        hasImage={!!product.image}
-        isOpen={!isOpen}
-      />
     </ListItem>
   );
 };
