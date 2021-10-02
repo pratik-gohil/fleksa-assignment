@@ -58,42 +58,33 @@ const LegalLinks: FunctionComponent = () => {
     {
       name: 'twitter',
       icon: '/assets/svg/social/twitter.svg',
-      url: socialData?.twitter || 'https://twitter.com/fleksaofficial',
+      url: socialData?.twitter ?? 'https://twitter.com/fleksaofficial',
     },
     {
       name: 'facebook',
       icon: '/assets/svg/social/facebook.svg',
-      url: socialData?.facebook || 'https://www.facebook.com/fleksaofficial',
+      url: socialData?.facebook ?? 'https://www.facebook.com/fleksaofficial',
     },
     {
       name: 'instagram',
       icon: '/assets/svg/social/instagram.svg',
-      url: socialData?.instagram || 'https://www.instagram.com/fleksaofficial/',
-    },
-    {
-      name: 'google',
-      icon: '/assets/svg/app/google-playstore.svg',
-      url: '/',
-    },
-    {
-      name: 'apple',
-      icon: '/assets/svg/app/apple-appstore.svg',
-      url: '/',
+      url: socialData?.instagram ?? 'https://www.instagram.com/fleksaofficial/',
     },
   ];
 
   return (
     <Wrapper>
       <SocialMediaLinks>
-        {socialLinks.map((link) => (
+        {socialLinks.map((link, index) => (
           <CustomLink
             amplitude={{
               type: 'icon',
               text: link.name,
             }}
             target="_blank"
-            externelHref={link.url}
+            externalHref={link.url}
             Override={IconContainer}
+            key={index}
           >
             <Icon src={link.icon} />
           </CustomLink>
@@ -102,16 +93,18 @@ const LegalLinks: FunctionComponent = () => {
 
       <Text>
         <CustomLink
+          key="fleksa-default-link"
           amplitude={{
             type: 'link',
             text: 'fleksa',
           }}
           target="_blank"
-          externelHref="https://fleksa.com"
+          externalHref="https://fleksa.com"
           placeholder={'©️2021 Fleksa'}
         />{' '}
         |{' '}
         <CustomLink
+          key="terms-default-link"
           href={`/terms`}
           amplitude={{
             text: t('@terms'),
@@ -121,6 +114,7 @@ const LegalLinks: FunctionComponent = () => {
         />{' '}
         |{' '}
         <CustomLink
+          key="privacy-default-link"
           href={`/privacy-policy`}
           amplitude={{
             text: t('@privacy'),
@@ -130,6 +124,7 @@ const LegalLinks: FunctionComponent = () => {
         />{' '}
         |{' '}
         <CustomLink
+          key="imprint-default-link"
           href={`/imprint`}
           amplitude={{
             text: t('@imprint'),

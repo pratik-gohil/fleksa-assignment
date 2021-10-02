@@ -1,4 +1,5 @@
 import { FunctionComponent } from 'react';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
@@ -28,6 +29,7 @@ const Text = styled.p`
 `;
 
 const MenuPageCartSummary: FunctionComponent = ({}) => {
+  const { t } = useTranslation('page-menu-id');
   const cartData = useAppSelector(selectCart);
   const languageCode = useAppSelector(selectLanguageCode);
   const dispatch = useAppDispatch();
@@ -42,7 +44,7 @@ const MenuPageCartSummary: FunctionComponent = ({}) => {
         </strong>
       </Text>
       <Text onClick={() => dispatch(updateShowCart(true))}>
-        <strong>Proceed</strong>
+        <strong>{t('@proceed')}</strong>
       </Text>
     </WrapperCartSummary>
   );

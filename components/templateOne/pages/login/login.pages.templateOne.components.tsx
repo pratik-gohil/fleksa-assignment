@@ -2,10 +2,12 @@ import React, { FunctionComponent, useState } from 'react';
 import Image from 'next/image';
 import styled from 'styled-components';
 import OtpInput from 'react-otp-input';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/material.css';
+
 import { useCookies } from 'react-cookie';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { selectShop } from '../../../../redux/slices/index.slices.redux';
-import PhoneInput from 'react-phone-input-2';
 import NodeApiHttpPostLogin from '../../../../http/nodeapi/login/post.login.nodeapi.http';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import LoadingIndicator from '../../common/loadingIndicator/loading-indicator.common.templateOne.components';
@@ -64,7 +66,7 @@ const SectionTwo = styled.section`
 
 const Title = styled.h2`
   margin: 0;
-  padding: 20px;
+  padding: 20px 20px 10px 20px;
   margin-top: -24px;
 `;
 
@@ -74,7 +76,7 @@ const Text = styled.p`
 `;
 
 const InputContainer = styled.div`
-  margin: 56px 24px 24px 24px;
+  margin: 24px 24px 24px 24px;
 `;
 
 const SendOtpButtonContainer = styled.div`
@@ -308,7 +310,10 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
 
   return (
     <LoginContainer>
-      <SectionOne>{shopData?.cover && <Image src={shopData.cover} loading="eager" layout="fill" objectFit="cover" />}</SectionOne>
+      <SectionOne>
+        {shopData?.cover_json?.images[0] && <Image src={shopData?.cover_json?.images[0]} loading="eager" layout="fill" objectFit="cover" />}
+      </SectionOne>
+
       <SectionTwo>
         {customerId ? (
           <>
@@ -323,9 +328,11 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
                 <SvgBack />
               </BackButton>
             </OTPTopContainer>
+
             <Text>
               {t('@sent-at')} +{phone}
             </Text>
+
             <InputContainer style={{ margin: 24, display: 'flex', justifyContent: 'center' }}>
               <OtpInput
                 isInputNum={true}
@@ -354,11 +361,13 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
                 }}
               />
             </InputContainer>
+
             <SendOtpButtonContainer>
               <VerifyOtpButton onClick={onAutoTapLogin}>
                 {loading ? <LoadingIndicator width={20} /> : <SendOtpButtonText>{t('@login')}</SendOtpButtonText>}
               </VerifyOtpButton>
             </SendOtpButtonContainer>
+
             <SendOtpButtonContainer style={{ marginTop: 24 }}>
               {t('@not-received')} <SendOtpButtonText onClick={onTapSendOtp}>{t('@resend')}</SendOtpButtonText>
             </SendOtpButtonContainer>
@@ -367,27 +376,29 @@ const LoginComponent: FunctionComponent<IPropsLoginComponent> = ({ onLogin }) =>
           <>
             <Title>{t('@title')}</Title>
             <Text>{t('@sub-title')}</Text>
+
             <InputContainer style={{ height: 58 }}>
               <PhoneInput
                 country={'de'}
                 value={phone}
                 enableSearch
                 specialLabel={t('@phone')}
+                onBlur={() => {
+                  amplitudeEvent(constructEventName('phone', 'input'), {
+                    phone: phone,
+                    length: phone.length,
+                  });
+                }}
                 onChange={(ph, data) => {
                   if ((data as any).dialCode !== countryCode) {
                     setCountryCode((data as any).dialCode);
                   }
                   setPhone(ph);
                 }}
-                onBlur={() => {
-                  amplitudeEvent(constructEventName(`phone`, 'input'), {
-                    phone: phone,
-                    length: phone.length,
-                  });
-                }}
                 inputStyle={{ width: '100%', position: 'relative' }}
               />
             </InputContainer>
+
             <SendOtpButtonContainer>
               <SendOtpButton onClick={onTapSendOtp}>
                 {loading ? <LoadingIndicator width={20} /> : <SendOtpButtonText>{t('@send-otp')}</SendOtpButtonText>}

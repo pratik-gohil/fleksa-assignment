@@ -1,16 +1,23 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useEffect } from 'react';
 import styled from 'styled-components';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import SvgDelivery from '../../../../public/assets/svg/delivery.svg';
 import SvgPickup from '../../../../public/assets/svg/pickup.svg';
 import SvgDinein from '../../../../public/assets/svg/dinein.svg';
-import { ICheckoutOrderTypes, selectOrderType } from '../../../../redux/slices/checkout.slices.redux';
-import { updateShowOrderTypeSelect } from '../../../../redux/slices/menu.slices.redux';
-import { selectSiblings } from '../../../../redux/slices/index.slices.redux';
+import {
+  ICheckoutOrderTypes,
+  selectOrderType,
+  updateOrderType,
+  updateSelectedAddressId,
+} from '../../../../redux/slices/checkout.slices.redux';
+import { updateShowAddAddress, updateShowOrderTypeSelect } from '../../../../redux/slices/menu.slices.redux';
+import { checkIsSelectedOrderTypeAvailable, selectAvailableOrderType, selectSiblings } from '../../../../redux/slices/index.slices.redux';
 import { useTranslation } from 'next-i18next';
 import SvgEdit from '../../../../public/assets/svg/edit.svg';
 import CustomLink from '../../common/amplitude/customLink';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
+import { RootState } from '../../../../redux/store.redux';
+import { selectAddressByType, selectCustomerAllAddress } from '../../../../redux/slices/user.slices.redux';
 
 const Wrapper = styled.div`
   display: flex;
@@ -106,11 +113,47 @@ const OrderType: Record<
 };
 
 const MenuFeatures: FunctionComponent = () => {
+  const { t } = useTranslation('page-menu-id');
+  const dispatch = useAppDispatch();
+
   const selectedOrderType = useAppSelector(selectOrderType);
   const siblingsData = useAppSelector(selectSiblings);
-  const dispatch = useAppDispatch();
+  const availableOrderTypes = useAppSelector(selectAvailableOrderType);
+  const customerAddresses = useAppSelector(selectCustomerAllAddress);
+  const correspondAddress = useAppSelector((state) => selectAddressByType(state, 'OTHER'));
+
   const orderTypeData = selectedOrderType && OrderType[selectedOrderType];
-  const { t } = useTranslation('page-menu-id');
+  const isSelectedOrderTypeAvailable = useAppSelector((state: RootState) => checkIsSelectedOrderTypeAvailable(state, selectedOrderType));
+
+  /**
+   * ?? When change on my.fleksa.com order type front end user facing some type mismatch selection issue fix for that
+   * to use this effect and also we update if they've only one ordertype available it'll be auto select otherwise vice versa.
+   */
+  useEffect(() => {
+    if (!isSelectedOrderTypeAvailable && selectedOrderType && availableOrderTypes.count > 1) {
+      dispatch(updateShowOrderTypeSelect(true));
+      dispatch(updateOrderType(null));
+    } else if (availableOrderTypes.count === 1) {
+      /**
+       * if available only delivery but user doesn't have any address whot the edit model instead default select
+       */
+      if (availableOrderTypes.types[0] === 'DELIVERY') {
+        if (!customerAddresses.length) {
+          dispatch(updateShowOrderTypeSelect(true));
+          dispatch(updateShowAddAddress(true));
+        }
+
+        // ?? Update the address id if they've address already
+        else if (correspondAddress) {
+          dispatch(updateSelectedAddressId(correspondAddress.id));
+          dispatch(updateOrderType(availableOrderTypes.types[0]));
+        }
+      }
+
+      // ?? If only one avaiable then update without asking to user
+      else dispatch(updateOrderType(availableOrderTypes.types[0]));
+    }
+  }, []);
 
   function onClickOrderType() {
     dispatch(updateShowOrderTypeSelect(true));
@@ -119,7 +162,7 @@ const MenuFeatures: FunctionComponent = () => {
   return (
     <Wrapper>
       <OrderTypeView>
-        {selectedOrderType && orderTypeData && (
+        {selectedOrderType && orderTypeData && !!availableOrderTypes.count && (
           <CustomLink
             amplitude={{
               type: 'button',

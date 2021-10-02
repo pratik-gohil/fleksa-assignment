@@ -56,11 +56,16 @@ const CheckoutPageTemplateOne: FunctionComponent = ({}) => {
             <CartContainerSmall>
               <CheckoutPageCart />
             </CartContainerSmall>
+
             <CheckoutPageCustomerInfo />
+
             <CheckoutPageSummary />
+
             <CheckoutPageComments />
+
             <CheckoutPagePayment />
           </Col>
+
           <Col lg={5}>
             <CartContainerLarge>
               <CheckoutPageCart />

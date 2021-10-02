@@ -221,22 +221,23 @@ const EditIconContainer = styled.div`
 `;
 
 const OrderTypeManager: FunctionComponent = () => {
+  const { t } = useTranslation('common-ordertype');
+  const dispatch = useAppDispatch();
+
   const shopData = useAppSelector(selectShop);
   const address = useAppSelector(selectAddress);
   const siblings = useAppSelector(selectSiblings);
   const orderType = useAppSelector(selectOrderType);
   const selectedMenuId = useAppSelector(selectSelectedMenu);
-  const dispatch = useAppDispatch();
-  const { t } = useTranslation('common-ordertype');
-  const [addressData, setAddressData] = useState<IAddress | null | undefined>(undefined);
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
   const isShowAddressSelection = useAppSelector(selectShowAddress);
   const checkoutAddressId = useAppSelector(selectSelectedAddressId);
   const bearerToken = useAppSelector(selectBearerToken);
   const configuration = useAppSelector(selectConfiguration);
-
   const correspondAddress = useAppSelector((state) => selectAddressByType(state, 'OTHER'));
   const correspondAddressById = useAppSelector((state) => selectAddressById(state, checkoutAddressId));
+
+  const [addressData, setAddressData] = useState<IAddress | null | undefined>(undefined);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -256,6 +257,10 @@ const OrderTypeManager: FunctionComponent = () => {
     };
   }, []);
 
+  /**
+   * @param orderType Allowed order type selection
+   * @return update states of Delivery selection
+   */
   function onClickDelivery(orderType: ICheckoutOrderTypes) {
     if (typeof window === 'undefined') return;
     const guestAddressString = window.localStorage.getItem(LS_GUEST_USER_ADDRESS);
@@ -274,6 +279,10 @@ const OrderTypeManager: FunctionComponent = () => {
     amplitudeEvent(constructEventName(t('@delivery'), 'model'), {});
   }
 
+  /**
+   * @param orderType Allowed order type selection
+   * @return update states of takeaway selection
+   */
   function onClickTakeaway(orderType: ICheckoutOrderTypes) {
     dispatch(updateOrderType(orderType));
     dispatch(updateShowOrderTypeSelect(false));
@@ -281,6 +290,10 @@ const OrderTypeManager: FunctionComponent = () => {
     amplitudeEvent(constructEventName(t('@pickup'), 'model'), {});
   }
 
+  /**
+   * @param orderType Allowed order type selection
+   * @return update states of Dine in selection
+   */
   function onClickDineIn(orderType: ICheckoutOrderTypes) {
     dispatch(updateOrderType(orderType));
     dispatch(updateShowOrderTypeSelect(false));
@@ -294,8 +307,8 @@ const OrderTypeManager: FunctionComponent = () => {
   function getSelectedAddress() {
     if (typeof window === 'undefined') return;
 
-    let guestAddress = window.localStorage.getItem('@LS_GUEST_USER_ADDRESS')
-      ? (JSON.parse(window.localStorage.getItem('@LS_GUEST_USER_ADDRESS') ?? '') as IParticularAddress)
+    let guestAddress = window.localStorage.getItem(LS_GUEST_USER_ADDRESS)
+      ? (JSON.parse(window.localStorage.getItem(LS_GUEST_USER_ADDRESS) ?? '') as IParticularAddress)
       : undefined;
 
     if (isLoggedIn && checkoutAddressId && correspondAddressById) {
@@ -315,13 +328,14 @@ const OrderTypeManager: FunctionComponent = () => {
         potalCode: correspondAddress?.postal_code,
         city: correspondAddress?.city,
       };
-    } else if (guestAddress && !isLoggedIn)
+    } else if (guestAddress && !isLoggedIn) {
       return {
         address: guestAddress?.address,
         floor: guestAddress?.floor,
         potalCode: guestAddress?.postal_code,
         city: guestAddress?.city,
       };
+    }
 
     return {
       address: 'Enter your delivery details',
@@ -395,8 +409,8 @@ const OrderTypeManager: FunctionComponent = () => {
   const checkAddressSelectionState: () => boolean = () => {
     if (typeof window === 'undefined') return false;
 
-    let guestAddress = window.localStorage.getItem('@LS_GUEST_USER_ADDRESS')
-      ? (JSON.parse(window.localStorage.getItem('@LS_GUEST_USER_ADDRESS') ?? '') as IParticularAddress)
+    let guestAddress = window.localStorage.getItem(LS_GUEST_USER_ADDRESS)
+      ? (JSON.parse(window.localStorage.getItem(LS_GUEST_USER_ADDRESS) ?? '') as IParticularAddress)
       : undefined;
 
     if ((isLoggedIn && correspondAddress) || (!isLoggedIn && guestAddress)) return true;

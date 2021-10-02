@@ -184,8 +184,8 @@ const AddAddressExtendModel = () => {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    let guestAddress = window.localStorage.getItem('@LS_GUEST_USER_ADDRESS')
-      ? (JSON.parse(window.localStorage.getItem('@LS_GUEST_USER_ADDRESS') ?? '') as IParticularAddress)
+    let guestAddress = window.localStorage.getItem(LS_GUEST_USER_ADDRESS)
+      ? (JSON.parse(window.localStorage.getItem(LS_GUEST_USER_ADDRESS) ?? '') as IParticularAddress)
       : undefined;
 
     if (isLoggedIn) setAddressList([...customerAddresses].sort((a, b) => b.id - a.id));

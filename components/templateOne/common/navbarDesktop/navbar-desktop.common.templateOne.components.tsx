@@ -80,7 +80,11 @@ const NavbarDesktop: FunctionComponent = ({}) => {
           <Col md={8}>
             <Navbar>
               <NavbarList>
-                <NavLink title={t('@menu')} path={selectedMenuId ? `/menu/${selectedMenuId}` : `/menu`} isActive={router.pathname === `/menu/[id]`} />
+                <NavLink
+                  title={t('@menu')}
+                  path={selectedMenuId ? `/menu/${selectedMenuId}` : `/menu`}
+                  isActive={router.pathname === `/menu/[id]`}
+                />
 
                 {!!offerData.length && <NavLink title={t('@offers')} path={`/offers`} isActive={router.pathname === `/offers`} />}
 
@@ -88,11 +92,15 @@ const NavbarDesktop: FunctionComponent = ({}) => {
                   <NavLink title={t('@reservation')} path={`/reservation`} isActive={router.pathname === `/reservation`} />
                 )}
 
-                {imageData && !!imageData.length && <NavLink title={t('@gallery')} path={`/gallery`} isActive={router.pathname === `/gallery`} />}
+                {imageData && !!imageData.length && (
+                  <NavLink title={t('@gallery')} path={`/gallery`} isActive={router.pathname === `/gallery`} />
+                )}
 
                 <NavLink title={t('@contact')} path={`/contact-us`} isActive={router.pathname === '/contact-us'} />
 
                 {isLoggedIn ? <NavUserProfile /> : <NavLink title={t('@login')} path={`/login`} isActive={router.pathname === `/login`} />}
+
+                {/* // Languge switch */}
                 <NavLanguageChange />
               </NavbarList>
             </Navbar>

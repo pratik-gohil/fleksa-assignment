@@ -14,7 +14,7 @@ interface ICustomLinkProps {
   };
   placeholder?: string;
   href?: string;
-  externelHref?: string;
+  externalHref?: string;
   isLanguageChange?: boolean;
   Override?: StyledComponent<'a', DefaultTheme>;
   callback?: () => void | Promise<void>;
@@ -28,7 +28,7 @@ const CustomLink: FunctionComponent<ICustomLinkProps> = ({
   href,
   isLanguageChange,
   Override,
-  externelHref,
+  externalHref,
   callback,
   target,
 }) => {
@@ -42,21 +42,21 @@ const CustomLink: FunctionComponent<ICustomLinkProps> = ({
       // TODO: call back if it's present
       if (callback) {
         callback();
-        // console.log('callback called');
       }
-
-      // console.log('amplitude ', amplitude);
 
       amplitudeEvent(constructEventName(amplitude.text, amplitude.type), amplitude.eventProperties);
 
-      // TODO:  change the route if href and externelHref is exit
-      if (href) router.push(`/${isLanguageChange ? (router.locale === 'en' ? 'de' : 'en') : languageCode}${href}`);
-      else if (externelHref && target)
+      // TODO:  change the route if href and externalHref is exit
+      if (href) {
+        const jumpLink = isLanguageChange ? (router.locale === 'en' ? `/de${href}` : `/en${href}`) : `/${languageCode}${href}`;
+
+        window.location.href = jumpLink; // ? Reload transition
+        // router.push(jumpLink); // ?  Smooth transition
+      } else if (externalHref && target)
         window.open(
-          externelHref,
+          externalHref,
           target, // <- This is what makes it open in a new window.
         );
-      else if (externelHref) window.location.href = externelHref;
     }
   };
 

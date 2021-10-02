@@ -16,6 +16,7 @@ const List = styled.ul`
   @media (min-width: ${BREAKPOINTS.lg}px) {
     padding-left: 0;
     flex-direction: column;
+    padding-bottom: 1.5rem;
   }
 `;
 

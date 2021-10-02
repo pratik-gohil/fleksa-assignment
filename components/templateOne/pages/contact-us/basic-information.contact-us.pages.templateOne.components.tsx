@@ -266,7 +266,7 @@ export const BasicContactUsInformation = () => {
 
             <LinkArea>
               <CustomLink
-                externelHref={`/mailto:${addressData.email}`}
+                externalHref={`/mailto:${addressData.email}`}
                 amplitude={{
                   type: 'link',
                   text: t('@phone'),
@@ -293,7 +293,7 @@ export const BasicContactUsInformation = () => {
 
             <LinkArea>
               <CustomLink
-                externelHref={`tel:+${addressData.country_code}${addressData.phone}`}
+                externalHref={`tel:+${addressData.country_code}${addressData.phone}`}
                 amplitude={{
                   type: 'link',
                   text: t('@phone'),
