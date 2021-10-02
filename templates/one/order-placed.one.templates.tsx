@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { Col, Container, Row } from 'react-grid-system';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import AppButtons from '../../components/templateOne/common/appButtons/app-buttons.common.templateOne.components';
 import { BREAKPOINTS } from '../../constants/grid-system-configuration';
@@ -46,16 +47,17 @@ const Image = styled.img`
 
 const OrderPlacedPageTemplateOne: FunctionComponent = ({}) => {
   const languageCode = useAppSelector(selectLanguageCode);
+  const { t } = useTranslation('page-order-placed');
 
   return (
     <Wrapper>
       <Container>
         <Row>
           <Col style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-            <Title>Your order is placed successfully</Title>
+            <Title>{t('@greetings')}</Title>
             <Image src={OrderPlacedImage} alt="person jumping" />
-            <ViewManageButton href={`/${languageCode}/account/order-history`}>View or Manage Order</ViewManageButton>
-            <AppButtons direction="row" />
+            <ViewManageButton href={`/${languageCode}/account/order-history`}>{t('@manage')}</ViewManageButton>
+            <AppButtons direction="column" />
           </Col>
         </Row>
       </Container>

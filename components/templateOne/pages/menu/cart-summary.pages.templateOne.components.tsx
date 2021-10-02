@@ -29,7 +29,7 @@ const Text = styled.p`
 `;
 
 const MenuPageCartSummary: FunctionComponent = ({}) => {
-  const { t } = useTranslation('page-menu-id');
+  const { t } = useTranslation('cart');
   const cartData = useAppSelector(selectCart);
   const languageCode = useAppSelector(selectLanguageCode);
   const dispatch = useAppDispatch();

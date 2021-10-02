@@ -3,7 +3,7 @@ import { ICategory } from '../interfaces/common/category.common.interfaces';
 import { ICheckoutOrderTypes } from '../redux/slices/checkout.slices.redux';
 
 // ?? Setup default first day of the week[MONDAY]
-moment.defineLocale('', {
+moment.updateLocale('', {
   week: {
     dow: 1,
   },
