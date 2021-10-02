@@ -1,6 +1,7 @@
 import { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import CustomLink from '../amplitude/customLink';
+import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 
 interface IPropsAppButton {
   direction: string;
@@ -27,8 +28,8 @@ const WrapperContainer = styled.div<IPropsWrapperContainer>`
   min-width: fit-content;
   max-width: 360px;
   margin-top: 1rem;
-  ${AppButton}:nth-child(1) {
-    margin-right: 10px;
+  & > a:nth-child(2) {
+    margin-left: 10px;
   }
 `;
 
@@ -41,17 +42,23 @@ const Icon = styled.img`
 const Title = styled.span`
   font-size: 12px;
   display: block;
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    display: none;
+  }
 `;
 
 const StoreName = styled.span`
   font-weight: 700;
   display: block;
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    text-align: right;
+  }
 `;
 
 const AppButtons: FunctionComponent<IPropsAppButton> = ({ direction }) => {
   return (
     <WrapperContainer direction={direction}>
-      <CustomLink amplitude={{ type: 'button', text: '' }} target="_blank" externelHref="/">
+      <CustomLink amplitude={{ type: 'button', text: '' }} target="_blank" externalHref="/">
         <AppButton>
           <Icon src="/assets/svg/app/google-playstore.svg" />
           <div>
@@ -60,7 +67,7 @@ const AppButtons: FunctionComponent<IPropsAppButton> = ({ direction }) => {
           </div>
         </AppButton>
       </CustomLink>
-      <CustomLink amplitude={{ type: 'button', text: '' }} target="_blank" externelHref="/">
+      <CustomLink amplitude={{ type: 'button', text: '' }} target="_blank" externalHref="/">
         <AppButton>
           <Icon src="/assets/svg/app/apple-appstore.svg" />
           <div>

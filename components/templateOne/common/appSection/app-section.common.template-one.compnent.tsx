@@ -29,7 +29,7 @@ const WrapperContainer = styled.div`
     & > div:nth-child(1) {
       background-image: url('/assets/svg/app-section-background.svg');
       background-repeat: no-repeat;
-      background-size: contain;
+      background-size: cover;
     }
   }
 `;
@@ -54,6 +54,10 @@ const ImageSection = styled.div`
 
 const Image = styled.img`
   height: 100%;
+  @media (max-width: ${BREAKPOINTS.lg}px) {
+    width: 70%;
+    height: 50%;
+  }
 `;
 
 const AppSection: FunctionComponent = () => {
