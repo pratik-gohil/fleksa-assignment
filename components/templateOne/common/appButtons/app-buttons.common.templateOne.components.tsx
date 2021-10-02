@@ -69,7 +69,7 @@ const AppButtons: FunctionComponent<IPropsAppButtonComponent> = ({ direction, th
     <WrapperContainer direction={direction}>
       <CustomLink amplitude={{ type: 'button', text: 'android' }} target="_blank" externalHref={appLinks.android}>
         <AppButton theme_color={theme}>
-          <Icon src="/assets/svg/app/google-playstore.svg" />
+          <Icon src={theme == 'light' ? '/assets/svg/app/google-playstore-dark.svg' : '/assets/svg/app/google-playstore.svg'} />
           <div>
             <Title>GET IT ON</Title>
             <StoreName>Google Play</StoreName>
@@ -78,7 +78,7 @@ const AppButtons: FunctionComponent<IPropsAppButtonComponent> = ({ direction, th
       </CustomLink>
       <CustomLink amplitude={{ type: 'button', text: 'ios' }} target="_blank" externalHref={appLinks.ios}>
         <AppButton theme_color={theme}>
-          <Icon src="/assets/svg/app/apple-appstore.svg" />
+          <Icon src={theme == 'light' ? '/assets/svg/app/apple-appstore-dark.svg' : '/assets/svg/app/apple-appstore.svg'} />
           <div>
             <Title>Download on the</Title>
             <StoreName>Apple Store</StoreName>

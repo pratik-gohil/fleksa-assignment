@@ -73,9 +73,7 @@ const AppSection: FunctionComponent = () => {
           bestellen! Worauf warten Sie also noch? Es ist an der Zeit, dass wir uns jetzt treffen, also laden Sie unsere App sofort herunter,
           indem Sie im iTunes oder Google Play Store suchen.
         </Summary>
-        <AppButtons direction="row"
-        // theme="light"
-         />
+        <AppButtons direction="row" />
       </div>
     </WrapperContainer>
   );
