@@ -99,11 +99,6 @@ const MenuPageCategorySidebar: FunctionComponent = ({}) => {
   }
 
   function navHighlighter(sections: NodeListOf<Element>) {
-    // console.log(sections);
-    // console.log(sections.entries());
-    for (let i in sections.entries()) {
-      console.log('i', i);
-    }
     let lastVisible: string | undefined = undefined;
     for (const current in sections) {
       let el = sections[current] as any;
@@ -119,19 +114,28 @@ const MenuPageCategorySidebar: FunctionComponent = ({}) => {
       }
 
       const visible =
-        top < window.pageYOffset + window.innerHeight &&
-        left < window.pageXOffset + window.innerWidth &&
-        top + height > window.pageYOffset &&
-        left + width > window.pageXOffset;
+        top >= window.pageYOffset &&
+        left >= window.pageXOffset &&
+        top + height <= window.pageYOffset + window.innerHeight &&
+        left + width <= window.pageXOffset + window.innerWidth;
+
+      // const visible =
+      //   top < window.pageYOffset + window.innerHeight &&
+      //   left < window.pageXOffset + window.innerWidth &&
+      //   top + height > window.pageYOffset &&
+      //   left + width > window.pageXOffset;
 
       if (!sections[current].getAttribute) break;
 
-      lastVisible = sections[current].getAttribute('id') as string;
-
-      if (visible) break;
+      if (visible) {
+        lastVisible = sections[current].getAttribute('id') as string;
+        break;
+      }
     }
 
-    if (lastVisible && lastVisible !== activeId) setActiveId(lastVisible);
+    if (lastVisible && lastVisible !== activeId) {
+      setActiveId(lastVisible);
+    }
   }
 
   useEffect(() => {
