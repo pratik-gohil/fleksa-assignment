@@ -5,20 +5,25 @@ import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { selectAppLinks } from '../../../../redux/slices/common.slices.redux';
 import { useAppSelector } from '../../../../redux/hooks.redux';
 
-interface IPropsAppButton {
+interface IPropsAppButtonComponent {
   direction: string;
+  theme?: string;
 }
 
 interface IPropsWrapperContainer {
   direction: string;
 }
 
-const AppButton = styled.div`
+interface IPropsAppButtonElement {
+  theme_color?: string;
+}
+
+const AppButton = styled.div<IPropsAppButtonElement>`
   flex: 1;
   display: inline-flex;
-  background: #202020;
-  color: #fff;
-  border: 2px solid #fff;
+  background: ${(props) => (props.theme_color === 'light' ? '#fff' : '#202020')};
+  color: ${(props) => (props.theme_color === 'light' ? '#202020' : '#fff')};
+  border: ${(props) => (props.theme_color === 'light' ? '2px solid #202020' : '2px solid #fff')};
   border-radius: 0.6rem;
   padding: 8px;
   line-height: 1rem;
@@ -57,13 +62,13 @@ const StoreName = styled.span`
   }
 `;
 
-const AppButtons: FunctionComponent<IPropsAppButton> = ({ direction }) => {
+const AppButtons: FunctionComponent<IPropsAppButtonComponent> = ({ direction, theme }) => {
   const appLinks = useAppSelector(selectAppLinks);
 
   return (
     <WrapperContainer direction={direction}>
       <CustomLink amplitude={{ type: 'button', text: 'android' }} target="_blank" externalHref={appLinks.android}>
-        <AppButton>
+        <AppButton theme_color={theme}>
           <Icon src="/assets/svg/app/google-playstore.svg" />
           <div>
             <Title>GET IT ON</Title>
@@ -72,7 +77,7 @@ const AppButtons: FunctionComponent<IPropsAppButton> = ({ direction }) => {
         </AppButton>
       </CustomLink>
       <CustomLink amplitude={{ type: 'button', text: 'ios' }} target="_blank" externalHref={appLinks.ios}>
-        <AppButton>
+        <AppButton theme_color={theme}>
           <Icon src="/assets/svg/app/apple-appstore.svg" />
           <div>
             <Title>Download on the</Title>

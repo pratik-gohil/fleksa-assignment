@@ -57,7 +57,9 @@ const OrderPlacedPageTemplateOne: FunctionComponent = ({}) => {
             <Title>{t('@greetings')}</Title>
             <Image src={OrderPlacedImage} alt="person jumping" />
             <ViewManageButton href={`/${languageCode}/account/order-history`}>{t('@manage')}</ViewManageButton>
-            <AppButtons direction="column" />
+            <AppButtons direction="row"
+            // theme="light" 
+            />
           </Col>
         </Row>
       </Container>
