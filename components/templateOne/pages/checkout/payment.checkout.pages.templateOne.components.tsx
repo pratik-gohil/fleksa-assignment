@@ -67,7 +67,7 @@ const PaymentMethodList = styled.div`
 
 const PaymentIconContainer = styled.div`
   display: flex;
-  width: 200px;
+  width: calc(100% - 20px);
   height: 100px;
   align-items: center;
   justify-content: center;
@@ -76,7 +76,7 @@ const PaymentIconContainer = styled.div`
   padding: 10px;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    width: 100px;
+    width: calc(100% - 10px);
     height: 70px;
     padding: 5px;
   }
@@ -100,6 +100,7 @@ const PaymentMethodItems = styled.button<{ isActive: boolean }>`
   align-items: center;
   background: transparent;
 
+  max-width: calc(100% / 3);
   height: max-content;
   padding: 0;
   border: none;
