@@ -2,6 +2,8 @@ import { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import CustomLink from '../amplitude/customLink';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
+import { selectAppLinks } from '../../../../redux/slices/common.slices.redux';
+import { useAppSelector } from '../../../../redux/hooks.redux';
 
 interface IPropsAppButton {
   direction: string;
@@ -56,9 +58,11 @@ const StoreName = styled.span`
 `;
 
 const AppButtons: FunctionComponent<IPropsAppButton> = ({ direction }) => {
+  const appLinks = useAppSelector(selectAppLinks);
+
   return (
     <WrapperContainer direction={direction}>
-      <CustomLink amplitude={{ type: 'button', text: '' }} target="_blank" externalHref="/">
+      <CustomLink amplitude={{ type: 'button', text: 'android' }} target="_blank" externalHref={appLinks.android}>
         <AppButton>
           <Icon src="/assets/svg/app/google-playstore.svg" />
           <div>
@@ -67,7 +71,7 @@ const AppButtons: FunctionComponent<IPropsAppButton> = ({ direction }) => {
           </div>
         </AppButton>
       </CustomLink>
-      <CustomLink amplitude={{ type: 'button', text: '' }} target="_blank" externalHref="/">
+      <CustomLink amplitude={{ type: 'button', text: 'ios' }} target="_blank" externalHref={appLinks.ios}>
         <AppButton>
           <Icon src="/assets/svg/app/apple-appstore.svg" />
           <div>

@@ -59,6 +59,10 @@ export interface ICommonSliceState {
     'twitter.handle': string;
     'twitter.site': string;
   };
+  app_links: {
+    android: string;
+    ios: string
+  }
 }
 
 const initialState: ICommonSliceState = {
@@ -109,6 +113,10 @@ const initialState: ICommonSliceState = {
     'twitter.handle': '',
     'twitter.site': '',
   },
+  app_links: {
+    android: '',
+    ios: ''
+  }
 };
 
 export const CommonSlice = createSlice({
@@ -121,6 +129,9 @@ export const CommonSlice = createSlice({
     updateSeoTagJson: (state, action) => {
       state.seo_tags_json = action.payload;
     },
+    updateAppLinks: (state, action) => {
+      state.app_links = action.payload;
+    },
   },
   extraReducers: {
     [HYDRATE]: (state, action) => {
@@ -132,7 +143,8 @@ export const CommonSlice = createSlice({
   },
 });
 
-export const { updateError, updateSeoTagJson } = CommonSlice.actions;
+export const { updateError, updateSeoTagJson, updateAppLinks } = CommonSlice.actions;
 
 export const selectError = (state: RootState) => state.common.error;
 export const selectSeoTagJson = (state: RootState) => state.common.seo_tags_json;
+export const selectAppLinks = (state: RootState) => state.common.app_links;
