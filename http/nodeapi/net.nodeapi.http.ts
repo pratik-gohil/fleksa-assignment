@@ -17,7 +17,6 @@ export default class NetNodeApi extends Net {
       : undefined;
     const url = `${this.configuration.baseUrlNodeApi}/v2/${postfix}`;
     const finalUrl = queryString ? `${url}?${queryString}` : url;
-    console.log(finalUrl);
     return finalUrl;
   }
 }

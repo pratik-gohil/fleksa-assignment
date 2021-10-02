@@ -321,7 +321,6 @@ const Title = styled.h4`
 `;
 const Description = styled.p`
   font-size: 1rem;
-  text-align: justify;
 `;
 
 const InputContainer = styled.div``;

@@ -20,9 +20,9 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ct
 
     return {
       props: {
-        ...(await serverSideTranslations((ctx as any).locale, ['header', 'footer'])),
+        ...(await serverSideTranslations((ctx as any).locale, ['header', 'footer', 'cart', 'page-order-placed'])),
         templateNumber: 0,
-        meta: responseIndex?.meta
+        meta: responseIndex?.meta,
       },
     };
   } catch (error) {
@@ -37,7 +37,7 @@ function Checkout({ templateNumber, meta }: any) {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       dispatch(updateClearCart());
-      dispatch(updateClearCheckout())
+      dispatch(updateClearCheckout());
     }
   }, [router]);
   return <TemplateToShow meta={meta} templateList={templateList} templateNumber={templateNumber} pageContainer={{ showFooter: false }} />;
