@@ -28,6 +28,7 @@ const WrapperContainer = styled.div<IPropsWrapperContainer>`
   min-width: fit-content;
   max-width: 360px;
   margin-top: 1rem;
+
   & > a:nth-child(2) {
     margin-left: 10px;
   }
@@ -42,6 +43,7 @@ const Icon = styled.img`
 const Title = styled.span`
   font-size: 12px;
   display: block;
+
   @media (max-width: ${BREAKPOINTS.sm}px) {
     display: none;
   }
@@ -50,6 +52,7 @@ const Title = styled.span`
 const StoreName = styled.span`
   font-weight: 700;
   display: block;
+
   @media (max-width: ${BREAKPOINTS.sm}px) {
     text-align: right;
   }
