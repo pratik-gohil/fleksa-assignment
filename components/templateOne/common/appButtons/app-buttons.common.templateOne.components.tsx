@@ -61,15 +61,18 @@ const AppButtons: FunctionComponent<IPropsAppButton> = ({ direction }) => {
       <CustomLink amplitude={{ type: 'button', text: '' }} target="_blank" externalHref="/">
         <AppButton>
           <Icon src="/assets/svg/app/google-playstore.svg" />
+
           <div>
             <Title>GET IT ON</Title>
             <StoreName>Google Play</StoreName>
           </div>
         </AppButton>
       </CustomLink>
+
       <CustomLink amplitude={{ type: 'button', text: '' }} target="_blank" externalHref="/">
         <AppButton>
           <Icon src="/assets/svg/app/apple-appstore.svg" />
+
           <div>
             <Title>Download on the</Title>
             <StoreName>Apple Store</StoreName>
