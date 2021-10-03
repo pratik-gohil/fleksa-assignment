@@ -91,7 +91,8 @@ const ItemTitleAdditional = styled.p`
 `;
 
 const OrderButton = styled.p<{ isActive: boolean }>`
-  background-color: ${(props) => (props.isActive ? '#222' : '#aaa')};
+  background-color: '#222';
+  display: ${(props) => (props.isActive ? 'block' : 'none')};
   color: #fff;
   padding: ${(props) => props.theme.dimen.X4}px;
   margin: 0 0 ${(props) => props.theme.dimen.X4}px 0;
@@ -137,6 +138,7 @@ const CartEmptyContainer = styled.div`
   flex-direction: column;
   align-items: center;
   margin-top: ${(props) => props.theme.dimen.X4 * 2}px;
+  overflow: hidden;
 `;
 
 const TextFeelingHungry = styled.p`
@@ -264,8 +266,6 @@ const Cart: FunctionComponent = ({}) => {
           <ListItem key="empty-cart">
             <CartEmptyContainer>
               <SvgCartEmpty />
-              <TextFeelingHungry>{t('@hungry')}</TextFeelingHungry>
-              <TextChooseDishes>{t('@choose')}</TextChooseDishes>
             </CartEmptyContainer>
           </ListItem>
         )}

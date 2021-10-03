@@ -52,7 +52,7 @@ const MenuPageMultipleSelector: FunctionComponent<IPropsMenuPageCategoryListItem
         callback={toggle}
         Override={StyledOptionsTitleContainer}
       >
-        <p style={{ margin: 0, padding: 12 }}>{choice.name_json[language]}</p>
+        <p style={{ margin: 0, padding: 12, fontWeight: 'bold' }}>{choice.name_json[language]}</p>
         <p style={{ margin: 0, padding: 12 }}>
           {isOptionOpen ? t('@choose-one') : choice.options.filter((i) => i.id === selectionMultipleId)[0].name_json[language]}
         </p>

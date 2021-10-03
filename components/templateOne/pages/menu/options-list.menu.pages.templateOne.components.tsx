@@ -27,9 +27,7 @@ export interface IPropsMenuPageCategoryListItem {
   setSelectedOption(name: number | undefined): void;
 }
 
-export const StyledOptionsWrapper = styled.div`
-  border-top: ${(props) => props.theme.border};
-`;
+export const StyledOptionsWrapper = styled.div``;
 
 export const StyledOptionsTitleContainer = styled.a`
   display: flex;
@@ -40,12 +38,12 @@ export const StyledOptionsTitleContainer = styled.a`
 export const StyledOptionsListContainer = styled.div<{ isOptionOpen: boolean }>`
   max-height: ${(props) => (props.isOptionOpen ? '260px' : '0px')};
   overflow: auto;
-  background-color: #f9f9f9;
+  /* background-color: #f9f9f9; */
   transition-duration: 500ms;
 `;
 
 export const StyledOptionsList = styled.ul`
-  border-top: ${(props) => props.theme.border};
+  /* border-top: ${(props) => props.theme.border}; */
 `;
 
 export const StyledOptionsListItem = styled.li`
@@ -61,7 +59,7 @@ export const StyledOptionsRadioButton = styled.span<{ selected: boolean; multise
   margin-left: 12px;
   display: block;
   border-radius: ${(props) => (props.multiselect ? '4px' : '100%')};
-  border: ${(props) => props.theme.border};
+  /* border: ${(props) => props.theme.border}; */
   background-color: ${(props) => props.selected && props.theme.primaryColor};
 `;
 
@@ -111,7 +109,7 @@ const MenuPageOptionsList: FunctionComponent<IPropsMenuPageCategoryListItem> = (
         callback={toggle}
         Override={StyledOptionsTitleContainer}
       >
-        <p style={{ margin: 0, padding: 12 }}>{choice.name_json[language]}</p>
+        <p style={{ margin: 0, padding: 12, fontWeight: 'bold' }}>{choice.name_json[language]}</p>
         <p style={{ margin: 0, padding: 12 }}>{isOptionOpen ? 'Choose One' : selectedIndex?.name[language]}</p>
       </CustomLink>
 
