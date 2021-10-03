@@ -66,7 +66,6 @@ const StoreName = styled.span`
   display: block;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    /* text-align: right; */
     font-size: 14px;
   }
 `;
@@ -75,7 +74,7 @@ const AppButtons: FunctionComponent<IPropsAppButtonComponent> = ({ direction, th
   const appLinks = useAppSelector(selectAppLinks);
   const { t } = useTranslation('app-buttons');
 
-  return (
+  return appLinks ? (
     <WrapperContainer direction={direction}>
       <CustomLink amplitude={{ type: 'button', text: 'android' }} target="_blank" externalHref={appLinks.android}>
         <AppButton theme_color={theme}>
@@ -98,6 +97,8 @@ const AppButtons: FunctionComponent<IPropsAppButtonComponent> = ({ direction, th
         </AppButton>
       </CustomLink>
     </WrapperContainer>
+  ) : (
+    <></>
   );
 };
 

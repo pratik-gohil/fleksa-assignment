@@ -87,20 +87,23 @@ const LegalLinks: FunctionComponent = () => {
   return (
     <Wrapper>
       <SocialMediaLinks>
-        {socialLinks.map((link, index) => (
-          <CustomLink
-            amplitude={{
-              type: 'icon',
-              text: link.name,
-            }}
-            target="_blank"
-            externalHref={link.url}
-            Override={IconContainer}
-            key={index}
-          >
-            <Icon src={link.icon} />
-          </CustomLink>
-        ))}
+        {socialLinks.map(
+          (link, index) =>
+            link.url && (
+              <CustomLink
+                amplitude={{
+                  type: 'icon',
+                  text: link.name,
+                }}
+                target="_blank"
+                externalHref={link.url}
+                Override={IconContainer}
+                key={index}
+              >
+                <Icon src={link.icon} />
+              </CustomLink>
+            ),
+        )}
       </SocialMediaLinks>
 
       <Text>

@@ -60,8 +60,8 @@ export interface ICommonSliceState {
     'twitter.site': string;
   };
   app_links: {
-    android: string;
-    ios: string
+    android?: string;
+    ios?: string
   }
 }
 
