@@ -4,6 +4,7 @@ import CustomLink from '../amplitude/customLink';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { selectAppLinks } from '../../../../redux/slices/common.slices.redux';
 import { useAppSelector } from '../../../../redux/hooks.redux';
+import { useTranslation } from 'react-i18next';
 
 interface IPropsAppButtonComponent {
   direction: string;
@@ -64,6 +65,7 @@ const StoreName = styled.span`
 
 const AppButtons: FunctionComponent<IPropsAppButtonComponent> = ({ direction, theme }) => {
   const appLinks = useAppSelector(selectAppLinks);
+  const { t } = useTranslation('app-buttons');
 
   return (
     <WrapperContainer direction={direction}>
@@ -71,7 +73,7 @@ const AppButtons: FunctionComponent<IPropsAppButtonComponent> = ({ direction, th
         <AppButton theme_color={theme}>
           <Icon src={theme == 'light' ? '/assets/svg/app/google-playstore-dark.svg' : '/assets/svg/app/google-playstore.svg'} />
           <div>
-            <Title>GET IT ON</Title>
+            <Title>{t('@android-title')}</Title>
             <StoreName>Google Play</StoreName>
           </div>
         </AppButton>
@@ -80,7 +82,7 @@ const AppButtons: FunctionComponent<IPropsAppButtonComponent> = ({ direction, th
         <AppButton theme_color={theme}>
           <Icon src={theme == 'light' ? '/assets/svg/app/apple-appstore-dark.svg' : '/assets/svg/app/apple-appstore.svg'} />
           <div>
-            <Title>Download on the</Title>
+            <Title>{t('@ios-title')}</Title>
             <StoreName>Apple Store</StoreName>
           </div>
         </AppButton>
