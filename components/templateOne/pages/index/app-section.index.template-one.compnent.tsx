@@ -1,5 +1,6 @@
 import { FunctionComponent } from 'react';
 import { Col, Container, Row } from 'react-grid-system';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import AppButtons from '../../common/appButtons/app-buttons.common.templateOne.components';
@@ -83,6 +84,8 @@ const Image = styled.img`
 `;
 
 const AppSection: FunctionComponent = () => {
+  const { t } = useTranslation('page-index');
+
   return (
     <WrapperContainer>
       <ImageSection>
@@ -92,13 +95,9 @@ const AppSection: FunctionComponent = () => {
         <Row>
           <Col xxl={7}>
             <div>
-              <Title>Jetzt die App herunterladen.</Title>
+              <Title>{t('@app-section-title')}</Title>
 
-              <Summary>
-                Laden Sie unsere App herunter. Wir wollen es Menschen wie Ihnen einfach und bequem machen. Sie können bequem von zu Hause
-                aus bestellen! Worauf warten Sie also noch? Es ist an der Zeit, dass wir uns jetzt treffen, also laden Sie unsere App sofort
-                herunter, indem Sie im iTunes oder Google Play Store suchen.
-              </Summary>
+              <Summary>{t('@app-section-summary')}</Summary>
 
               <AppButtons direction="row" />
             </div>
