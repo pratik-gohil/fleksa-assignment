@@ -190,11 +190,11 @@ const MenuFeatures: FunctionComponent = () => {
             }}
             Override={ChangeRestaurantButton}
             placeholder={t('@change-shop')}
-          />
-
-          <EditButton>
-            <SvgEdit />
-          </EditButton>
+          >
+            <EditButton>
+              <SvgEdit />
+            </EditButton>
+          </CustomLink>
         </ButtonContainer>
       )}
     </Wrapper>
