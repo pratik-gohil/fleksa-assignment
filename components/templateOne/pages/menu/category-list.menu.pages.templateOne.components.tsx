@@ -69,7 +69,7 @@ const CategoryTitle = styled.h3`
   }
 `;
 
-const CategoryTitleSticky = styled.h3`
+const CategoryTitleSticky = styled.div`
   font-size: 26px;
   margin: -2px -15px;
   text-align: center;
@@ -140,16 +140,15 @@ const MenuPageCategoryList: FunctionComponent = ({}) => {
       <List>
         {categories.map((category, index) => {
           if (category.products.length === 0) return <Fragment key={index} />;
+          const id = category.name_json?.[language]
+            .toLowerCase()
+            .replace(/[^A-Za-z0-9]/g, '')
+            .split(' ')
+            .join('-');
 
           return (
             <Fragment key={index}>
-              <ListItem
-                id={category.name_json.english
-                  .toLowerCase()
-                  .replace(/[^A-Za-z0-9]/g, '')
-                  .split(' ')
-                  .join('-')}
-              >
+              <ListItem>
                 {!!category.image ? (
                   <CategoryImageContainer>
                     <CategoryImage src={category.image} alt="category image" />
@@ -162,13 +161,14 @@ const MenuPageCategoryList: FunctionComponent = ({}) => {
                 ) : (
                   <CategoryTitleSticky>
                     <CategoryStickyTitle>{category.name_json[language]}</CategoryStickyTitle>
+
                     <CateogryDescription>
                       {!!category.description_json?.[language] && category.description_json[language]}
                     </CateogryDescription>
                   </CategoryTitleSticky>
                 )}
 
-                <List>
+                <List id={id}>
                   {category.products.map((product) => (
                     <MenuPageProductListItem
                       key={product.id}

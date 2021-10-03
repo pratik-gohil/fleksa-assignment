@@ -21,12 +21,13 @@ import {
 } from '../redux/slices/user.slices.redux';
 import PyApiHttpGetIndex from '../http/pyapi/index/get.index.pyapi.http';
 import PyApiHttpGetSEO from '../http/pyapi/seo/get.seo.pyapi.http';
+import PyApiHttpGetAppLinks from '../http/pyapi/page/get.page-data.pyapi.http';
 import { updateIndex } from '../redux/slices/index.slices.redux';
 import NodeApiHttpGetUser from '../http/nodeapi/user/get.user.nodeapi.http';
 import NodeApiHttpGetUserOrderHistory from '../http/nodeapi/account/get.account.order-history.nodeapi.http';
 import NodeApiHttpGetUserParticularOrder from '../http/nodeapi/account/get.order-view-by-id.nodeapi.http';
 import NodeApiHttpGetUserAllAddress from '../http/nodeapi/account/get.account.all-address.nodeapi.http';
-import { updateSeoTagJson } from '../redux/slices/common.slices.redux';
+import { updateSeoTagJson, updateAppLinks } from '../redux/slices/common.slices.redux';
 
 const multiRestaurantHosts = ['127.0.0.1:3000', 'localhost:3000', 'newqa.fleksa.de', 'localhost:3214', '192.168.1.14:3000'];
 
@@ -100,8 +101,11 @@ export async function getServerSidePropsCommon(
 
     // ??get seo tags
     const responseSEO = await new PyApiHttpGetSEO(configuration).get(responseIndex?.shop.id, ctx.req.url);
-
     if (responseSEO) await ctx.store.dispatch(updateSeoTagJson(responseSEO?.shop.seo_tags_json));
+
+    // get app links
+    const responseAppLinks = await new PyApiHttpGetAppLinks(configuration).get(responseIndex?.shop.id);
+    if (responseAppLinks) await ctx.store.dispatch(updateAppLinks(responseAppLinks?.shop.application_json.links));
 
     /**
      * Update current restarurnat menu id and url if it's not present

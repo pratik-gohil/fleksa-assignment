@@ -45,6 +45,10 @@ const Image = styled.img`
   }
 `;
 
+const AppButtonsContainer = styled.div`
+  padding: 1rem 0 0 0;
+`;
+
 const OrderPlacedPageTemplateOne: FunctionComponent = ({}) => {
   const languageCode = useAppSelector(selectLanguageCode);
   const { t } = useTranslation('page-order-placed');
@@ -57,7 +61,10 @@ const OrderPlacedPageTemplateOne: FunctionComponent = ({}) => {
             <Title>{t('@greetings')}</Title>
             <Image src={OrderPlacedImage} alt="person jumping" />
             <ViewManageButton href={`/${languageCode}/account/order-history`}>{t('@manage')}</ViewManageButton>
-            <AppButtons direction="column" />
+
+            <AppButtonsContainer>
+              <AppButtons direction="row" theme="light" />
+            </AppButtonsContainer>
           </Col>
         </Row>
       </Container>

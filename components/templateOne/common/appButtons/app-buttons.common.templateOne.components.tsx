@@ -2,23 +2,31 @@ import { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import CustomLink from '../amplitude/customLink';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
+import { selectAppLinks } from '../../../../redux/slices/common.slices.redux';
+import { useAppSelector } from '../../../../redux/hooks.redux';
+import { useTranslation } from 'react-i18next';
 
-interface IPropsAppButton {
+interface IPropsAppButtonComponent {
   direction: string;
+  theme?: string;
 }
 
 interface IPropsWrapperContainer {
   direction: string;
 }
 
-const AppButton = styled.div`
+interface IPropsAppButtonElement {
+  theme_color?: string;
+}
+
+const AppButton = styled.div<IPropsAppButtonElement>`
   flex: 1;
   display: inline-flex;
-  background: #202020;
-  color: #fff;
-  border: 2px solid #fff;
+  background: ${(props) => (props.theme_color === 'light' ? '#fff' : '#202020')};
+  color: ${(props) => (props.theme_color === 'light' ? '#202020' : '#fff')};
+  border: ${(props) => (props.theme_color === 'light' ? '2px solid #202020' : '2px solid #fff')};
   border-radius: 0.6rem;
-  padding: 0.5rem;
+  padding: 0.5rem 0.3rem;
   line-height: 1rem;
 `;
 
@@ -34,7 +42,7 @@ const WrapperContainer = styled.div<IPropsWrapperContainer>`
 `;
 
 const Icon = styled.img`
-  margin-right: 0.5rem;
+  margin-right: 0.2rem;
   width: 30px;
   height: 30px;
 
@@ -58,31 +66,33 @@ const StoreName = styled.span`
   display: block;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    text-align: right;
+    /* text-align: right; */
     font-size: 14px;
   }
 `;
 
-const AppButtons: FunctionComponent<IPropsAppButton> = ({ direction }) => {
+const AppButtons: FunctionComponent<IPropsAppButtonComponent> = ({ direction, theme }) => {
+  const appLinks = useAppSelector(selectAppLinks);
+  const { t } = useTranslation('app-buttons');
+
   return (
     <WrapperContainer direction={direction}>
-      <CustomLink amplitude={{ type: 'button', text: '' }} target="_blank" externalHref="/">
-        <AppButton>
-          <Icon src="/assets/svg/app/google-playstore.svg" />
+      <CustomLink amplitude={{ type: 'button', text: 'android' }} target="_blank" externalHref={appLinks.android}>
+        <AppButton theme_color={theme}>
+          <Icon src={theme == 'light' ? '/assets/svg/app/google-playstore-dark.svg' : '/assets/svg/app/google-playstore.svg'} />
 
           <div>
-            <Title>GET IT ON</Title>
+            <Title>{t('@android-title')}</Title>
             <StoreName>Google Play</StoreName>
           </div>
         </AppButton>
       </CustomLink>
 
-      <CustomLink amplitude={{ type: 'button', text: '' }} target="_blank" externalHref="/">
-        <AppButton>
-          <Icon src="/assets/svg/app/apple-appstore.svg" />
-
+      <CustomLink amplitude={{ type: 'button', text: 'ios' }} target="_blank" externalHref={appLinks.ios}>
+        <AppButton theme_color={theme}>
+          <Icon src={theme == 'light' ? '/assets/svg/app/apple-appstore-dark.svg' : '/assets/svg/app/apple-appstore.svg'} />
           <div>
-            <Title>Download on the</Title>
+            <Title>{t('@ios-title')}</Title>
             <StoreName>Apple Store</StoreName>
           </div>
         </AppButton>
