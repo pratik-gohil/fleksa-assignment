@@ -141,17 +141,6 @@ const CartEmptyContainer = styled.div`
   overflow: hidden;
 `;
 
-const TextFeelingHungry = styled.p`
-  text-align: center;
-  font-size: 24px;
-  font-weight: 600;
-  margin: ${(props) => props.theme.dimen.X4}px 0 0 0;
-`;
-
-const TextChooseDishes = styled(TextFeelingHungry)`
-  font-size: 16px;
-`;
-
 const MinimumOrderMessage = styled.p`
   font-size: 16px;
   font-weight: 400;
