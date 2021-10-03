@@ -65,7 +65,7 @@ export interface ICommonSliceState {
   }
 }
 
-const initialState: ICommonSliceState = {
+export const initialState: ICommonSliceState = {
   error: {
     message: 'test error message',
     severity: 'info',
