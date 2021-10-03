@@ -57,6 +57,7 @@ git pull origin <branch_name>
 3. BUG: In Mobile View, **Weiter** in CAPS not working.
 4. DESIGN: Added app links on index page, footer and order placed page.
 5. DESIGN: Payment Button Updated by new desing changes.
+6. UX: In Menu page the button should be clickable on completely instead of text.
 
 #### Change Logs of Merge request #80
 
