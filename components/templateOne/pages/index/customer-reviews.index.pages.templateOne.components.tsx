@@ -49,6 +49,10 @@ const Card = styled.div`
 const StarContainer = styled.div``;
 
 const responsive: IResponsive = {
+  xs: {
+    width: 300,
+    height: 400,
+  },
   sm: {
     width: 300,
     height: 400,

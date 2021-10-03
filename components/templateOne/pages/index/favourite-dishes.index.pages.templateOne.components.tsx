@@ -15,7 +15,6 @@ import CustomLink from '../../common/amplitude/customLink';
 
 const WrapperSection = styled.section`
   padding: ${(props) => props.theme.dimen.X4 * 4}px 0;
-  
 `;
 
 const Title = styled.h2`
@@ -115,6 +114,10 @@ const ItemToProduct = styled.a`
 `;
 
 const responsive: IResponsive = {
+  xs: {
+    width: 300,
+    height: 400,
+  },
   sm: {
     width: 300,
     height: 460,
