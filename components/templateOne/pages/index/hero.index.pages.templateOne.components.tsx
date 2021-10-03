@@ -42,7 +42,6 @@ const ContentContainer = styled.div`
   color: #fff;
   display: flex;
   flex: 1 1 auto;
-  padding: 0 0 0 1rem;
 
   div {
     align-self: center;
@@ -50,6 +49,7 @@ const ContentContainer = styled.div`
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     left: 0;
+
     div {
       width: 100%;
     }
@@ -74,6 +74,7 @@ const SubTitle = styled.h2`
   margin: 0;
   font-size: clamp(1rem, 1.8rem, 3vw);
   text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
+
   @media (max-width: ${BREAKPOINTS.sm}px) {
     padding-top: 0.5rem;
     font-weight: 400;
@@ -127,6 +128,8 @@ const Logo = styled.img`
 
 const Wrapper = styled.div`
   width: 100%;
+  margin: 0;
+  padding: 0;
 `;
 
 const SubTitle2 = styled(SubTitle)`
@@ -158,6 +161,10 @@ const CarouselSlide = styled.div<{ translateX: number }>`
   float: left;
   transition-duration: 500ms;
   transform: translateX(${(props) => props.translateX}%);
+`;
+
+const AppButtonsContainer = styled.div`
+  padding-top: 1rem;
 `;
 
 const slideChangeDealy = 5000;
@@ -232,7 +239,7 @@ const IndexPageHero: FunctionComponent = ({}) => {
       <ContentContainer>
         <Wrapper>
           <Container>
-            <Row>
+            <Row nogutter>
               <Col>
                 <LogoLink onClick={() => alert('clicked')} href="#">
                   {!!shopData?.logo && <Logo src={shopData?.logo} loading="lazy" />}
@@ -283,7 +290,10 @@ const IndexPageHero: FunctionComponent = ({}) => {
                     <SubTitle2>{t('@closed')}</SubTitle2>
                   </>
                 )}
-                <AppButtons direction="row" />
+
+                <AppButtonsContainer>
+                  <AppButtons direction="row" />
+                </AppButtonsContainer>
               </Col>
             </Row>
           </Container>

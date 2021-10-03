@@ -27,26 +27,26 @@ export interface IPropsMenuPageCategoryListItem {
   setSelectedOption(name: number | undefined): void;
 }
 
-export const StyledOptionsWrapper = styled.div``;
+export const StyledOptionsWrapper = styled.div`
+  border-top: ${(props) => props.theme.border};
+`;
 
 export const StyledOptionsTitleContainer = styled.a`
   display: flex;
   justify-content: space-between;
   cursor: pointer;
-
-  & > p {
-    font-weight: 700;
-  }
 `;
 
-export const StyledOptionsListContainer = styled.div`
+export const StyledOptionsListContainer = styled.div<{ isOptionOpen: boolean }>`
+  max-height: ${(props) => (props.isOptionOpen ? '260px' : '0px')};
   overflow: auto;
-  /* background-color: #f9f9f9; */
-
+  background-color: #f9f9f9;
   transition-duration: 500ms;
 `;
 
-export const StyledOptionsList = styled.ul``;
+export const StyledOptionsList = styled.ul`
+  border-top: ${(props) => props.theme.border};
+`;
 
 export const StyledOptionsListItem = styled.li`
   display: flex;
@@ -58,18 +58,11 @@ export const StyledOptionsListItem = styled.li`
 export const StyledOptionsRadioButton = styled.span<{ selected: boolean; multiselect: boolean }>`
   width: 20px;
   height: 20px;
-  border-radius: 50%;
   margin-left: 12px;
   display: block;
-  /* border-radius: ${(props) => (props.multiselect ? '4px' : '100%')}; */
-  /* border: ${(props) => props.theme.border}; */
-  border: 2px solid #eee;
-  outline: #000;
+  border-radius: ${(props) => (props.multiselect ? '4px' : '100%')};
+  border: ${(props) => props.theme.border};
   background-color: ${(props) => props.selected && props.theme.primaryColor};
-  & > span {
-    background: #000;
-    padding: 10px;
-  }
 `;
 
 export const StyledOptionsRadioButtonContainer = styled.div`
@@ -122,7 +115,7 @@ const MenuPageOptionsList: FunctionComponent<IPropsMenuPageCategoryListItem> = (
         <p style={{ margin: 0, padding: 12 }}>{isOptionOpen ? 'Choose One' : selectedIndex?.name[language]}</p>
       </CustomLink>
 
-      <StyledOptionsListContainer>
+      <StyledOptionsListContainer isOptionOpen={isOptionOpen}>
         <StyledOptionsList>
           {choice.options?.map((option, index) => (
             <StyledOptionsListItem

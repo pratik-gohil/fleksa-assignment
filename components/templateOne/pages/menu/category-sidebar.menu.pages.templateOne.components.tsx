@@ -88,16 +88,6 @@ const MenuPageCategorySidebar: FunctionComponent = ({}) => {
       behavior: 'smooth',
     });
 
-  function isInViewport(element: any) {
-    const rect = element.getBoundingClientRect();
-    return (
-      rect.top >= 0 &&
-      rect.left >= 0 &&
-      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-    );
-  }
-
   function navHighlighter(sections: NodeListOf<Element>) {
     let lastVisible: string | undefined = undefined;
     for (const current in sections) {
@@ -114,33 +104,24 @@ const MenuPageCategorySidebar: FunctionComponent = ({}) => {
       }
 
       const visible =
-        top >= window.pageYOffset &&
-        left >= window.pageXOffset &&
-        top + height <= window.pageYOffset + window.innerHeight &&
-        left + width <= window.pageXOffset + window.innerWidth;
-
-      // const visible =
-      //   top < window.pageYOffset + window.innerHeight &&
-      //   left < window.pageXOffset + window.innerWidth &&
-      //   top + height > window.pageYOffset &&
-      //   left + width > window.pageXOffset;
+        top < window.pageYOffset + window.innerHeight &&
+        left < window.pageXOffset + window.innerWidth &&
+        top + height > window.pageYOffset &&
+        left + width > window.pageXOffset;
 
       if (!sections[current].getAttribute) break;
 
-      if (visible) {
-        lastVisible = sections[current].getAttribute('id') as string;
-        break;
-      }
+      lastVisible = sections[current].getAttribute('id') as string;
+
+      if (visible) break;
     }
 
-    if (lastVisible && lastVisible !== activeId) {
-      setActiveId(lastVisible);
-    }
+    if (lastVisible && lastVisible !== activeId) setActiveId(lastVisible);
   }
 
   useEffect(() => {
     let sections: NodeListOf<Element>;
-    if (window !== undefined && idList.length > 0) {
+    if (window !== 'undefined' && idList.length > 0) {
       sections = document.querySelectorAll(idList.join(','));
       window.addEventListener('scroll', navHighlighter.bind(null, sections));
     }

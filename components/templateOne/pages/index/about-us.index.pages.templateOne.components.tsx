@@ -13,6 +13,10 @@ const WrapperSection = styled.section`
   border-bottom: ${(props) => props.theme.border};
   padding: ${(props) => props.theme.dimen.X4 * 8}px 0;
   background-color: #f9f9f9;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    padding: 0.5rem 0;
+  }
 `;
 
 const AboutUsContainer = styled.div`
@@ -127,13 +131,17 @@ const IndexPageAboutUs: FunctionComponent = ({}) => {
 
                 {(imagesData.length === 2 || imagesData.length >= 3) && (
                   <Col xs={imagesData.length === 2 ? 12 : 6} style={{ paddingRight: 1 }}>
-                    <ImageContiner>{imagesData[1] && <Image src={imagesData[1]} loading="lazy" layout="fill" objectFit="cover" />}</ImageContiner>
+                    <ImageContiner>
+                      {imagesData[1] && <Image src={imagesData[1]} loading="lazy" layout="fill" objectFit="cover" />}
+                    </ImageContiner>
                   </Col>
                 )}
 
                 {imagesData.length >= 3 && (
                   <Col xs={6} style={{ paddingLeft: 1 }}>
-                    <ImageContiner>{imagesData[2] && <Image src={imagesData[2]} loading="lazy" layout="fill" objectFit="cover" />}</ImageContiner>
+                    <ImageContiner>
+                      {imagesData[2] && <Image src={imagesData[2]} loading="lazy" layout="fill" objectFit="cover" />}
+                    </ImageContiner>
                   </Col>
                 )}
               </Row>

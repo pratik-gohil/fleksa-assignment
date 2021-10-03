@@ -15,6 +15,7 @@ import CustomLink from '../../common/amplitude/customLink';
 
 const WrapperSection = styled.section`
   padding: ${(props) => props.theme.dimen.X4 * 4}px 0;
+  
 `;
 
 const Title = styled.h2`

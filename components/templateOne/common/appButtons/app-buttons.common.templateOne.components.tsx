@@ -26,7 +26,7 @@ const AppButton = styled.div<IPropsAppButtonElement>`
   color: ${(props) => (props.theme_color === 'light' ? '#202020' : '#fff')};
   border: ${(props) => (props.theme_color === 'light' ? '2px solid #202020' : '2px solid #fff')};
   border-radius: 0.6rem;
-  padding: 8px;
+  padding: 0.5rem;
   line-height: 1rem;
 `;
 
@@ -34,32 +34,40 @@ const WrapperContainer = styled.div<IPropsWrapperContainer>`
   display: flex;
   flex-direction: ${(props) => props.direction};
   min-width: fit-content;
-  max-width: 360px;
   margin-top: 1rem;
+
   & > a:nth-child(2) {
     margin-left: 10px;
   }
 `;
 
 const Icon = styled.img`
-  margin-right: 10px;
+  margin-right: 0.5rem;
   width: 30px;
   height: 30px;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    width: 24px;
+    height: 24px;
+  }
 `;
 
 const Title = styled.span`
   font-size: 12px;
   display: block;
+
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    display: none;
+    font-size: 10px;
   }
 `;
 
 const StoreName = styled.span`
   font-weight: 700;
   display: block;
+
   @media (max-width: ${BREAKPOINTS.sm}px) {
     text-align: right;
+    font-size: 14px;
   }
 `;
 

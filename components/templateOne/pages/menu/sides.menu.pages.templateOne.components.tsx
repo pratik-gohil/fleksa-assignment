@@ -44,8 +44,8 @@ const MenuPageSides: FunctionComponent<IPropsMenuPageCategoryListItem> = ({
   const dispatch = useAppDispatch();
   const [optionKey] = useState(getNextIndex());
 
-  // const isOptionOpen = selectedOption === optionKey;
-  // const toggle = () => setSelectedOption(isOptionOpen ? optionKey + 1 : optionKey);
+  const isOptionOpen = selectedOption === optionKey;
+  const toggle = () => setSelectedOption(isOptionOpen ? optionKey + 1 : optionKey);
 
   return sidesList.length > 0 ? (
     <StyledOptionsWrapper>
@@ -54,13 +54,13 @@ const MenuPageSides: FunctionComponent<IPropsMenuPageCategoryListItem> = ({
           type: 'card',
           text: sideProduct.name_json[language],
         }}
-        // callback={toggle}
+        callback={toggle}
         Override={StyledOptionsTitleContainer}
       >
         <p style={{ margin: 0, padding: 12 }}>{sideProduct.name_json[language]}</p>
       </CustomLink>
 
-      <StyledOptionsListContainer>
+      <StyledOptionsListContainer isOptionOpen={isOptionOpen}>
         <StyledOptionsList>
           {sidesList.map((option, index) => (
             <StyledOptionsListItem
