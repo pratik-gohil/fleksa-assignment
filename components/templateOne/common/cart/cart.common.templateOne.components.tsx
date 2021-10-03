@@ -91,7 +91,7 @@ const ItemTitleAdditional = styled.p`
 `;
 
 const OrderButton = styled.p<{ isActive: boolean }>`
-  background-color: '#222';
+  background-color: #222;
   display: ${(props) => (props.isActive ? 'block' : 'none')};
   color: #fff;
   padding: ${(props) => props.theme.dimen.X4}px;
