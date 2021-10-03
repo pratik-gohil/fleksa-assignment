@@ -147,39 +147,41 @@ const MenuPageCategoryList: FunctionComponent = ({}) => {
             .join('-');
 
           return (
-            <Fragment key={index}>
-              <ListItem>
-                {!!category.image ? (
-                  <CategoryImageContainer>
-                    <CategoryImage src={category.image} alt="category image" />
-                    <CategoryTitle>
-                      {category.name_json[language]}
-                      <br />
-                      {!!category.description_json?.[language] && <span>{category.description_json[language]}</span>}
-                    </CategoryTitle>
-                  </CategoryImageContainer>
-                ) : (
-                  <CategoryTitleSticky>
-                    <CategoryStickyTitle>{category.name_json[language]}</CategoryStickyTitle>
+            <>
+              <Fragment key={index}>
+                <ListItem>
+                  {!!category.image ? (
+                    <CategoryImageContainer>
+                      <CategoryImage src={category.image} alt="category image" />
+                      <CategoryTitle>
+                        {category.name_json[language]}
+                        <br />
+                        {!!category.description_json?.[language] && <span>{category.description_json[language]}</span>}
+                      </CategoryTitle>
+                    </CategoryImageContainer>
+                  ) : (
+                    <CategoryTitleSticky>
+                      <CategoryStickyTitle>{category.name_json[language]}</CategoryStickyTitle>
 
-                    <CateogryDescription>
-                      {!!category.description_json?.[language] && category.description_json[language]}
-                    </CateogryDescription>
-                  </CategoryTitleSticky>
-                )}
+                      <CateogryDescription>
+                        {!!category.description_json?.[language] && category.description_json[language]}
+                      </CateogryDescription>
+                    </CategoryTitleSticky>
+                  )}
 
-                <List id={id}>
-                  {category.products.map((product) => (
-                    <MenuPageProductListItem
-                      key={product.id}
-                      product={product}
-                      isOpen={product.id === openItemId}
-                      setOpenItemId={setOpenItemId}
-                    />
-                  ))}
-                </List>
-              </ListItem>
-            </Fragment>
+                  <List id={id}>
+                    {category.products.map((product) => (
+                      <MenuPageProductListItem
+                        key={product.id}
+                        product={product}
+                        isOpen={product.id === openItemId}
+                        setOpenItemId={setOpenItemId}
+                      />
+                    ))}
+                  </List>
+                </ListItem>
+              </Fragment>
+            </>
           );
         })}
       </List>

@@ -57,7 +57,7 @@ const MenuPageSides: FunctionComponent<IPropsMenuPageCategoryListItem> = ({
         callback={toggle}
         Override={StyledOptionsTitleContainer}
       >
-        <p style={{ margin: 0, padding: 12 }}>{sideProduct.name_json[language]}</p>
+        <p style={{ margin: 0, padding: 12, fontWeight: 'bold' }}>{sideProduct.name_json[language]}</p>
       </CustomLink>
 
       <StyledOptionsListContainer isOptionOpen={isOptionOpen}>
