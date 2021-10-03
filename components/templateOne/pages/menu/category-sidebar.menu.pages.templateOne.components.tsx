@@ -41,6 +41,7 @@ const CategoryButtonText = styled.h2<{ active: boolean }>`
   display: block;
   font-size: 16px;
   margin: 0;
+
   &::after {
     content: '';
     display: block;
@@ -49,6 +50,7 @@ const CategoryButtonText = styled.h2<{ active: boolean }>`
     background: ${(props) => props.theme.primaryColor};
     transition: width 0.3s;
   }
+
   ${(props) =>
     props.active &&
     css`
@@ -56,6 +58,7 @@ const CategoryButtonText = styled.h2<{ active: boolean }>`
         width: 100%;
       }
     `}
+
   @media (min-width: ${BREAKPOINTS.lg}px) {
     text-align: right;
     &:hover::after {
@@ -82,20 +85,49 @@ const MenuPageCategorySidebar: FunctionComponent = ({}) => {
 
   const [activeId, setActiveId] = useState(idList[0]);
 
+  useEffect(() => {
+    let sections: NodeListOf<Element>;
+
+    if (typeof window !== 'undefined' && idList.length > 0) {
+      sections = document.querySelectorAll(idList.join(','));
+
+      window.addEventListener('scroll', navHighlighter.bind(null, sections));
+    }
+
+    return () => window.removeEventListener('scroll', navHighlighter.bind(null, sections));
+  }, []);
+
+  useEffect(() => {
+    const parent = document.getElementById('list-list');
+    const el = document.getElementById(`sidebar-${activeId}`);
+
+    if (parent && el) scrollParentToChild(parent, el);
+  }, [activeId]);
+
+  /**
+   *
+   * @param id Correspond category name
+   * @returns To scroll that parent start position
+   */
   const scrollIntoView = (id: string) =>
     document.getElementById(id)?.scrollIntoView({
       block: 'start',
       behavior: 'smooth',
     });
 
+  /**
+   *
+   * @param sections Group of elements from dom to highlight which on is active
+   */
   function navHighlighter(sections: NodeListOf<Element>) {
     let lastVisible: string | undefined = undefined;
+
     for (const current in sections) {
       let el = sections[current] as any;
-      var top = el.offsetTop;
-      var left = el.offsetLeft;
-      var width = el.offsetWidth;
-      var height = el.offsetHeight;
+      let top = el.offsetTop;
+      let left = el.offsetLeft;
+      let width = el.offsetWidth;
+      let height = el.offsetHeight;
 
       while (el.offsetParent) {
         el = el.offsetParent;
@@ -116,26 +148,20 @@ const MenuPageCategorySidebar: FunctionComponent = ({}) => {
       if (visible) break;
     }
 
-    if (lastVisible && lastVisible !== activeId) setActiveId(lastVisible);
+    if (lastVisible && lastVisible !== activeId) {
+      setActiveId(lastVisible);
+    }
   }
 
-  useEffect(() => {
-    let sections: NodeListOf<Element>;
-    if (window !== 'undefined' && idList.length > 0) {
-      sections = document.querySelectorAll(idList.join(','));
-      window.addEventListener('scroll', navHighlighter.bind(null, sections));
-    }
-    return () => window.removeEventListener('scroll', navHighlighter.bind(null, sections));
-  }, []);
-
   function scrollParentToChild(parent: HTMLElement, child: HTMLElement) {
-    var parentRect = parent.getBoundingClientRect();
-    var parentViewableArea = {
+    const parentRect = parent.getBoundingClientRect();
+    const parentViewableArea = {
       height: parent.clientHeight,
       width: parent.clientWidth,
     };
-    var childRect = child.getBoundingClientRect();
-    var isViewable = childRect.left >= parentRect.left && childRect.left <= parentRect.left + parentViewableArea.width;
+    const childRect = child.getBoundingClientRect();
+    const isViewable = childRect.left >= parentRect.left && childRect.left <= parentRect.left + parentViewableArea.width;
+
     if (!isViewable) {
       parent.scrollTo({
         top: 0,
@@ -145,12 +171,6 @@ const MenuPageCategorySidebar: FunctionComponent = ({}) => {
     }
   }
 
-  useEffect(() => {
-    const parent = document.getElementById('list-list');
-    const el = document.getElementById(`sidebar-${activeId}`);
-    if (parent && el) scrollParentToChild(parent, el);
-  }, [activeId]);
-
   return (
     <List id={'list-list'}>
       <ListItem key="search">
@@ -158,12 +178,14 @@ const MenuPageCategorySidebar: FunctionComponent = ({}) => {
       </ListItem>
 
       {categories.map((category, index) => {
-        const id = category.name_json.english
+        const id = category.name_json?.[language]
           .toLowerCase()
           .replace(/[^A-Za-z0-9]/g, '')
           .split(' ')
           .join('-');
+
         const sidebarId = `sidebar-${id}`;
+
         return (
           <ListItem key={index} id={sidebarId}>
             <CustomLink
