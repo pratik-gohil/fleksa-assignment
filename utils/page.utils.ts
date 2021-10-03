@@ -27,7 +27,7 @@ import NodeApiHttpGetUser from '../http/nodeapi/user/get.user.nodeapi.http';
 import NodeApiHttpGetUserOrderHistory from '../http/nodeapi/account/get.account.order-history.nodeapi.http';
 import NodeApiHttpGetUserParticularOrder from '../http/nodeapi/account/get.order-view-by-id.nodeapi.http';
 import NodeApiHttpGetUserAllAddress from '../http/nodeapi/account/get.account.all-address.nodeapi.http';
-import { updateSeoTagJson, updateAppLinks } from '../redux/slices/common.slices.redux';
+import { updateSeoTagJson, updateAppLinks, initialState as common_initial_state } from '../redux/slices/common.slices.redux';
 
 const multiRestaurantHosts = ['127.0.0.1:3000', 'localhost:3000', 'newqa.fleksa.de', 'localhost:3214', '192.168.1.14:3000'];
 
@@ -105,7 +105,7 @@ export async function getServerSidePropsCommon(
 
     // get app links
     const responseAppLinks = await new PyApiHttpGetAppLinks(configuration).get(responseIndex?.shop.id);
-    if (responseAppLinks) await ctx.store.dispatch(updateAppLinks(responseAppLinks?.shop.application_json.links));
+    if (responseAppLinks) await ctx.store.dispatch(updateAppLinks(responseAppLinks?.shop.application_json.links ?? common_initial_state.app_links));
 
     /**
      * Update current restarurnat menu id and url if it's not present
