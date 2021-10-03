@@ -26,7 +26,7 @@ const AppButton = styled.div<IPropsAppButtonElement>`
   color: ${(props) => (props.theme_color === 'light' ? '#202020' : '#fff')};
   border: ${(props) => (props.theme_color === 'light' ? '2px solid #202020' : '2px solid #fff')};
   border-radius: 0.6rem;
-  padding: 0.5rem;
+  padding: 0.5rem 0.3rem;
   line-height: 1rem;
 `;
 
@@ -42,7 +42,7 @@ const WrapperContainer = styled.div<IPropsWrapperContainer>`
 `;
 
 const Icon = styled.img`
-  margin-right: 0.5rem;
+  margin-right: 0.2rem;
   width: 30px;
   height: 30px;
 
@@ -66,7 +66,7 @@ const StoreName = styled.span`
   display: block;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    text-align: right;
+    /* text-align: right; */
     font-size: 14px;
   }
 `;
@@ -80,12 +80,14 @@ const AppButtons: FunctionComponent<IPropsAppButtonComponent> = ({ direction, th
       <CustomLink amplitude={{ type: 'button', text: 'android' }} target="_blank" externalHref={appLinks.android}>
         <AppButton theme_color={theme}>
           <Icon src={theme == 'light' ? '/assets/svg/app/google-playstore-dark.svg' : '/assets/svg/app/google-playstore.svg'} />
+
           <div>
             <Title>{t('@android-title')}</Title>
             <StoreName>Google Play</StoreName>
           </div>
         </AppButton>
       </CustomLink>
+
       <CustomLink amplitude={{ type: 'button', text: 'ios' }} target="_blank" externalHref={appLinks.ios}>
         <AppButton theme_color={theme}>
           <Icon src={theme == 'light' ? '/assets/svg/app/apple-appstore-dark.svg' : '/assets/svg/app/apple-appstore.svg'} />

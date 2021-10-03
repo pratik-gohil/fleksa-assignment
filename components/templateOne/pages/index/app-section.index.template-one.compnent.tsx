@@ -1,19 +1,19 @@
 import { FunctionComponent } from 'react';
+import { Col, Container, Row } from 'react-grid-system';
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
-import AppButtons from '../appButtons/app-buttons.common.templateOne.components';
+import AppButtons from '../../common/appButtons/app-buttons.common.templateOne.components';
 
 const WrapperContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-  margin-top: 10vh;
-  padding-bottom: 10vh;
+  padding: ${(props) => props.theme.dimen.X4 * 4}px 0;
+  margin: ${(props) => props.theme.dimen.X4 * 4}px 0;
 
   & > div {
     flex: 1;
-    padding: 0 100px;
   }
 
   @media (min-width: ${BREAKPOINTS.lg}px) {
@@ -37,16 +37,31 @@ const WrapperContainer = styled.div`
       background-size: cover;
     }
   }
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    padding: 2rem 0;
+    margin: 0;
+  }
 `;
 
 const Title = styled.span`
   font-size: 28px;
   font-weight: 700;
   color: #ffd100;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    text-align: center;
+    display: block;
+  }
 `;
 
 const Summary = styled.p`
   line-height: 2rem;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    text-align: justify;
+    display: block;
+  }
 `;
 
 const ImageSection = styled.div`
@@ -73,18 +88,23 @@ const AppSection: FunctionComponent = () => {
       <ImageSection>
         <Image src="assets/png/mobile-frame.png" />
       </ImageSection>
+      <Container>
+        <Row>
+          <Col xxl={7}>
+            <div>
+              <Title>Jetzt die App herunterladen.</Title>
 
-      <div>
-        <Title>Jetzt die App herunterladen.</Title>
+              <Summary>
+                Laden Sie unsere App herunter. Wir wollen es Menschen wie Ihnen einfach und bequem machen. Sie können bequem von zu Hause
+                aus bestellen! Worauf warten Sie also noch? Es ist an der Zeit, dass wir uns jetzt treffen, also laden Sie unsere App sofort
+                herunter, indem Sie im iTunes oder Google Play Store suchen.
+              </Summary>
 
-        <Summary>
-          Laden Sie unsere App herunter. Wir wollen es Menschen wie Ihnen einfach und bequem machen. Sie können bequem von zu Hause aus
-          bestellen! Worauf warten Sie also noch? Es ist an der Zeit, dass wir uns jetzt treffen, also laden Sie unsere App sofort herunter,
-          indem Sie im iTunes oder Google Play Store suchen.
-        </Summary>
-
-        <AppButtons direction="row" />
-      </div>
+              <AppButtons direction="row" />
+            </div>
+          </Col>
+        </Row>
+      </Container>
     </WrapperContainer>
   );
 };
