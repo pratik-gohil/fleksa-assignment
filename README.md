@@ -55,9 +55,11 @@ git pull origin <branch_name>
 1. BUG: For Pre order - VORBESTELLUNG again missing on pdf also repositioned for proper place to view.
 2. BUG: Success Page Switched from Eng to German not working.
 3. BUG: In Mobile View, **Weiter** in CAPS not working.
-4. DESIGN: Added app links on index page, footer and order placed page.
-5. DESIGN: Payment Button Updated by new desing changes.
-6. UX: In Menu page the button should be clickable on completely instead of text.
+4. BUG: Scrolling on mobile view. (Not fixed completely it's just temp fix we made).
+5. DESIGN: Added app links on index page, footer and order placed page.
+6. DESIGN: Updated new menu flow from figma.
+7. DESIGN: Payment Button Updated by new desing changes.
+8. UX: In Menu page the button should be clickable on completely instead of text.
 
 #### Change Logs of Merge request #80
 
