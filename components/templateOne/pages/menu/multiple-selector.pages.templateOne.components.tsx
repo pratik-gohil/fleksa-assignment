@@ -37,7 +37,7 @@ const MenuPageMultipleSelector: FunctionComponent<IPropsMenuPageCategoryListItem
   const language = useAppSelector(selectLanguage);
   const languageCode = useAppSelector(selectLanguageCode);
   const [optionKey] = useState(getNextIndex());
-  const { t } = useTranslation('page-menu-by-id');
+  const { t } = useTranslation('page-menu-id');
 
   const isOptionOpen = selectedOption === optionKey;
   const toggle = () => setSelectedOption(isOptionOpen ? optionKey + 1 : optionKey);
@@ -83,6 +83,7 @@ const MenuPageMultipleSelector: FunctionComponent<IPropsMenuPageCategoryListItem
                 <StyledOptionsRadioButton multiselect={false} selected={option.id === selectionMultipleId} />
                 <span style={{ margin: 0, padding: 12 }}>{option.name_json[language]}</span>
               </StyledOptionsRadioButtonContainer>
+
               {option.price > 0 && <span style={{ margin: 0, padding: 12 }}>+{formatCurrency(option.price, languageCode)}</span>}
             </StyledOptionsListItem>
           ))}

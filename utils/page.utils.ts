@@ -21,7 +21,7 @@ import {
 } from '../redux/slices/user.slices.redux';
 import PyApiHttpGetIndex from '../http/pyapi/index/get.index.pyapi.http';
 import PyApiHttpGetSEO from '../http/pyapi/seo/get.seo.pyapi.http';
-import PyApiHttpGetAppLinks from '../http/pyapi/app_links/get.app_links.pyapi.http';
+import PyApiHttpGetAppLinks from '../http/pyapi/page/get.page-data.pyapi.http';
 import { updateIndex } from '../redux/slices/index.slices.redux';
 import NodeApiHttpGetUser from '../http/nodeapi/user/get.user.nodeapi.http';
 import NodeApiHttpGetUserOrderHistory from '../http/nodeapi/account/get.account.order-history.nodeapi.http';
@@ -105,7 +105,7 @@ export async function getServerSidePropsCommon(
 
     // get app links
     const responseAppLinks = await new PyApiHttpGetAppLinks(configuration).get(responseIndex?.shop.id);
-    if(responseAppLinks) await ctx.store.dispatch(updateAppLinks(responseAppLinks?.shop.application_json.links));
+    if (responseAppLinks) await ctx.store.dispatch(updateAppLinks(responseAppLinks?.shop.application_json.links));
 
     /**
      * Update current restarurnat menu id and url if it's not present
