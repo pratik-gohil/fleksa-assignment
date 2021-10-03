@@ -149,6 +149,8 @@ const MenuPageCategoryList: FunctionComponent = ({}) => {
           return (
             <Fragment key={index}>
               <ListItem>
+                <div id={id} />
+
                 {!!category.image ? (
                   <CategoryImageContainer>
                     <CategoryImage src={category.image} alt="category image" />
@@ -168,7 +170,7 @@ const MenuPageCategoryList: FunctionComponent = ({}) => {
                   </CategoryTitleSticky>
                 )}
 
-                <List id={id}>
+                <List>
                   {category.products.map((product) => (
                     <MenuPageProductListItem
                       key={product.id}
