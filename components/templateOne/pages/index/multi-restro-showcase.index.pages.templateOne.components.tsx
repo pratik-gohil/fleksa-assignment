@@ -89,7 +89,8 @@ const ItemToProduct = styled.button`
   -ms-animation: pulsing 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
   animation: pulsing 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
   transition: all 300ms ease-in-out;
-  box-shadow: 0 0 0 0 rgba(${(props) => `${props.theme.primaryColorRed},${props.theme.primaryColorGreen},${props.theme.primaryColorBlue}, 0.7`});
+  box-shadow: 0 0 0 0
+    rgba(${(props) => `${props.theme.primaryColorRed},${props.theme.primaryColorGreen},${props.theme.primaryColorBlue}, 0.7`});
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     margin: 18px 0;
@@ -124,6 +125,10 @@ const Logo = styled.img`
 `;
 
 const responsive: IResponsive = {
+  xs: {
+    width: 300,
+    height: 400,
+  },
   sm: {
     width: 300,
     height: 370,
@@ -173,7 +178,13 @@ const IndexMultiRestaurantShowCase: FunctionComponent = ({}) => {
                     >
                       <ImageContainer>
                         {sibling.logo && (
-                          <Image src={sibling.cover_json.images?.[0]} layout="fill" loading="lazy" objectFit="cover" alt={t('@our-location')} />
+                          <Image
+                            src={sibling.cover_json.images?.[0]}
+                            layout="fill"
+                            loading="lazy"
+                            objectFit="cover"
+                            alt={t('@our-location')}
+                          />
                         )}
                       </ImageContainer>
 
