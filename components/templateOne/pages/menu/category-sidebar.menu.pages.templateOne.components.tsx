@@ -111,7 +111,7 @@ const MenuPageCategorySidebar: FunctionComponent = ({}) => {
    */
   const scrollIntoView = (id: string) =>
     document.getElementById(id)?.scrollIntoView({
-      block: 'nearest',
+      block: 'start',
       behavior: 'smooth',
     });
 
