@@ -53,7 +53,7 @@ const WrapperContainer = styled.div`
   }
 `;
 
-const Title = styled.span`
+const Title = styled.p`
   font-size: clamp(2.53rem, 5rem, 28px);
   font-weight: 700;
   color: #ffd100;
@@ -100,46 +100,20 @@ const Image = styled.div<IPropsImage>`
   }
 `;
 
-const ShopTitle = styled.h1`
+const ShopTitle = styled.p`
   font-size: 24px;
   margin: 0;
   padding: 0;
   width: 80%;
   color: #fff;
   font-weight: 600;
-  @media (max-width: ${BREAKPOINTS.lg}px) {
-    font-size: 28px;
-  }
-  @media (max-width: ${BREAKPOINTS.md}px) {
-    font-size: 24px;
-  }
-  @media (max-width: ${BREAKPOINTS.sm}px) {
-    font-size: 20px;
-  }
-  @media (max-width: ${BREAKPOINTS.xs}px) {
-    font-size: 14px;
-  }
+  font-size: 24px; ;
 `;
 
-const ShopSubTitle = styled.h2`
+const ShopSubTitle = styled.p`
   padding: 0;
   margin: 0;
-  font-size: 20px;
   color: #fff;
-  @media (max-width: ${BREAKPOINTS.lg}px) {
-    font-size: 28px;
-  }
-  @media (max-width: ${BREAKPOINTS.md}px) {
-    font-size: 18px;
-  }
-  @media (max-width: ${BREAKPOINTS.sm}px) {
-    padding-top: 0.5rem;
-    font-weight: 400;
-    font-size: 20px;
-  }
-  @media (max-width: ${BREAKPOINTS.xs}px) {
-    font-size: 12px;
-  }
 `;
 
 const LogoLink = styled.a`
@@ -169,11 +143,12 @@ const Logo = styled.img`
 const ShopInfo = styled.div`
   position: absolute;
   max-width: 280px;
-  padding: 20px;
+  padding: 40px 20px;
 `;
 
-const SubTitle2 = styled(ShopSubTitle)`
-  font-size: clamp(0.8rem, 1.2rem, 3vw);
+const IsClosed = styled.p`
+  color: #fff;
+  font-size: 16px;
   padding-top: 1rem;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
@@ -193,11 +168,10 @@ export const INITIAL_TIMING_STATE = {
 const OrderButton = styled.a`
   background-color: ${(props) => props.theme.primaryColor};
   font-weight: 700;
-  font-size: 24px;
   color: #222;
   border-radius: ${(props) => props.theme.borderRadius}px;
   border: ${(props) => props.theme.border};
-  padding: 12px 24px;
+  padding: 6px 12px;
   margin: 24px 0 0 0;
   display: inline-block;
   -webkit-animation: pulsing 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
@@ -268,10 +242,10 @@ const AppSection: FunctionComponent = () => {
                 Override={OrderButton}
               />
 
-              <SubTitle2>
+              <IsClosed>
                 {t('@next-hours-1')} {t('@next-hours')} {shop.next?.dayNumber ? ` ${shop.next?.dayNumber} ,` : ''}{' '}
                 {t(`@${shop.next?.day.toUpperCase()}`)}, {shop.next?.time}
-              </SubTitle2>
+              </IsClosed>
             </>
           ) : (
             <>
@@ -285,7 +259,7 @@ const AppSection: FunctionComponent = () => {
                 Override={OrderButton}
               />
 
-              <SubTitle2>{t('@closed')}</SubTitle2>
+              <IsClosed>{t('@closed')}</IsClosed>
             </>
           )}
         </ShopInfo>
