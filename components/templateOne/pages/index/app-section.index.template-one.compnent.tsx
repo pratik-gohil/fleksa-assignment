@@ -7,6 +7,7 @@ import AppButtons from '../../common/appButtons/app-buttons.common.templateOne.c
 import { useAppSelector } from '../../../../redux/hooks.redux';
 import { selectLanguage, selectSelectedMenu } from '../../../../redux/slices/configuration.slices.redux';
 import { selectAddress, selectShop, selectTimings } from '../../../../redux/slices/index.slices.redux';
+import { selectAppLinks } from '../../../../redux/slices/common.slices.redux';
 import { isShopOpened } from '../../../../utils/restaurant-timings.utils';
 import { IShopAvailablity } from '../../../../interfaces/common/index.common.interfaces';
 import CustomLink from '../../common/amplitude/customLink';
@@ -194,6 +195,7 @@ const AppSection: FunctionComponent = () => {
   const addressData = useAppSelector(selectAddress);
   const timingsData = useAppSelector(selectTimings);
   const selectedMenuId = useAppSelector(selectSelectedMenu);
+  const appLinks = useAppSelector(selectAppLinks);
 
   const [shop, setShop] = useState<IShopAvailablity>(INITIAL_TIMING_STATE);
 
@@ -207,7 +209,7 @@ const AppSection: FunctionComponent = () => {
     setShop(isShopOpened(timingsData, moment(), { has_pickup: addressData.has_pickup, has_delivery: addressData.has_delivery }));
   }, []);
 
-  return (
+  return appLinks ? (
     <WrapperContainer>
       <ImageSection>
         {!!shopData?.cover_json.images[0] && <Image image={shopData?.cover_json.images[0]} />}
@@ -276,6 +278,8 @@ const AppSection: FunctionComponent = () => {
         </Row>
       </Container>
     </WrapperContainer>
+  ) : (
+    <></>
   );
 };
 
