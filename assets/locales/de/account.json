@@ -19,9 +19,8 @@
   "@address-type": "Adresstyp",
   "@order": "Auftrag",
   "@review-now": "Jetzt bewerten",
-  "@view-receipt": "Quittung anzeigen",
-  "@re-order": "Nachbestellung",
   "@profile": "Profil",
+
   "@my-orders": "Bestellungen",
   "@address": "Adressen",
   "@logout": "Ausloggen",
@@ -43,5 +42,8 @@
   "@code-sent": "Bestätigungscode an Ihre E-Mail gesendet!",
   "@verify-success": "Wohoo 🎉 Erfolgreich verifiziert!",
   "@oops-error": "Oops! Something went wrong.",
-  "@confirmation": "Bist du sicher?"
+  "@confirmation": "Bist du sicher?",
+
+  "@view-receipt": "BESTELLUNG ANSEHEN",
+  "@re-order": "ERNEUT BESTELLEN"
 }

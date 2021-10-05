@@ -19,8 +19,7 @@
   "@address-type": "Address Type",
   "@order": "Order",
   "@review-now": "Review Now",
-  "@view-receipt": "View Receipt",
-  "@re-order": "Re-Order",
+
   "@profile": "Profile",
   "@my-orders": "My Orders",
   "@address": "Addresses",
@@ -43,5 +42,8 @@
   "@code-sent": "Verification code sent to your email!",
   "@verify-success": "Wohoo 🎉 Successfully verified!",
   "@oops-error": "Oops! Something went wrong.",
-  "@confirmation": "Are you sure?"
+  "@confirmation": "Are you sure?",
+
+  "@view-receipt": "VIEW ORDER",
+  "@re-order": "REORDER"
 }
