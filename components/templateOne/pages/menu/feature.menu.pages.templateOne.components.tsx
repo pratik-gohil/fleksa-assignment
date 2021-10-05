@@ -49,6 +49,17 @@ const ButtonContainer = styled.div`
     display: block;
     padding-left: 0.5rem;
   }
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    padding: 0 0.5rem;
+    margin: 0 0 0 0.5rem;
+    font-size: 15px;
+
+    svg {
+      padding: 0;
+      width: 24px;
+    }
+  }
 `;
 
 const ChangeRestaurantButton = styled.a`
@@ -58,6 +69,12 @@ const ChangeRestaurantButton = styled.a`
   height: 50px;
   font-weight: 700;
   color: #222;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    /* padding: 0 0.5rem; */
+    /* margin: 0 0 0 0.5rem; */
+    font-size: 14px;
+  }
 `;
 
 const OrderTypeContainer = styled.div`
@@ -69,6 +86,7 @@ const OrderTypeContainer = styled.div`
   cursor: pointer;
   padding: 0 ${(props) => props.theme.dimen.X4}px;
   background: #f9f9f9;
+
   svg {
     width: auto;
     height: 24px;
@@ -79,6 +97,16 @@ const OrderTypeContainer = styled.div`
     margin: 0 0 0 ${(props) => props.theme.dimen.X4}px;
     padding: 0;
     font-weight: 700;
+  }
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    p {
+      margin: 0 0 0 0.5rem;
+    }
+    svg {
+      padding-left: 0;
+      width: 24px;
+    }
   }
 `;
 
