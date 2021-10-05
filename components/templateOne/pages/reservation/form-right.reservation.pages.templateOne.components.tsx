@@ -234,8 +234,6 @@ const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGue
           margin: 0,
         }}
       >
-        <Label>{t('@guest')}​</Label>
-
         {siblings.length > 0 && (
           <Row nogutter>
             <Col xl={12}>
@@ -260,6 +258,8 @@ const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGue
             </Col>
           </Row>
         )}
+
+        <Label>{t('@guest')}​</Label>
 
         <Row nogutter>
           <Col xl={3} lg={3}>
