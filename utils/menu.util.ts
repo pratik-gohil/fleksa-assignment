@@ -82,8 +82,6 @@ export const filterViewableCategoriesByOrderType: (categories: Array<ICategory>,
         if (!isAvaialble) return;
       }
 
-      console.log('Is availabe ', category.name_json.english, ' ', isAvaialble);
-
       specificCategories.push(category);
     });
 

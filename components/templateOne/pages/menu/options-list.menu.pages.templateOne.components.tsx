@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import { ICategoryProductChoiceOptions } from '../../../../interfaces/common/category.common.interfaces';
@@ -27,9 +28,7 @@ export interface IPropsMenuPageCategoryListItem {
   setSelectedOption(name: number | undefined): void;
 }
 
-export const StyledOptionsWrapper = styled.div`
-  border-top: ${(props) => props.theme.border};
-`;
+export const StyledOptionsWrapper = styled.div``;
 
 export const StyledOptionsTitleContainer = styled.a`
   display: flex;
@@ -40,13 +39,10 @@ export const StyledOptionsTitleContainer = styled.a`
 export const StyledOptionsListContainer = styled.div<{ isOptionOpen: boolean }>`
   max-height: ${(props) => (props.isOptionOpen ? '260px' : '0px')};
   overflow: auto;
-  background-color: #f9f9f9;
   transition-duration: 500ms;
 `;
 
-export const StyledOptionsList = styled.ul`
-  border-top: ${(props) => props.theme.border};
-`;
+export const StyledOptionsList = styled.ul``;
 
 export const StyledOptionsListItem = styled.li`
   display: flex;
@@ -61,7 +57,6 @@ export const StyledOptionsRadioButton = styled.span<{ selected: boolean; multise
   margin-left: 12px;
   display: block;
   border-radius: ${(props) => (props.multiselect ? '4px' : '100%')};
-  border: ${(props) => props.theme.border};
   background-color: ${(props) => props.selected && props.theme.primaryColor};
 `;
 
@@ -78,10 +73,12 @@ const MenuPageOptionsList: FunctionComponent<IPropsMenuPageCategoryListItem> = (
   selectedOption,
   setSelectedOption,
 }) => {
+  const dispatch = useAppDispatch();
+  const { t } = useTranslation('page-menu-id');
+
   const language = useAppSelector(selectLanguage);
   const languageCode = useAppSelector(selectLanguageCode);
   const optionData = useAppSelector((state) => selectItemSelectionChoice(state, productId));
-  const dispatch = useAppDispatch();
   const [optionKey] = useState(getNextIndex());
 
   const selectedIndex = optionData && optionData[choiceIndex];
@@ -111,8 +108,8 @@ const MenuPageOptionsList: FunctionComponent<IPropsMenuPageCategoryListItem> = (
         callback={toggle}
         Override={StyledOptionsTitleContainer}
       >
-        <p style={{ margin: 0, padding: 12 }}>{choice.name_json[language]}</p>
-        <p style={{ margin: 0, padding: 12 }}>{isOptionOpen ? 'Choose One' : selectedIndex?.name[language]}</p>
+        <p style={{ margin: 0, padding: 12, fontWeight: 'bold' }}>{choice.name_json[language]}</p>
+        <p style={{ margin: 0, padding: 12 }}>{isOptionOpen ? t('@choose-one') : selectedIndex?.name[language]}</p>
       </CustomLink>
 
       <StyledOptionsListContainer isOptionOpen={isOptionOpen}>

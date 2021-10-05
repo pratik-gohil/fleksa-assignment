@@ -50,6 +50,17 @@ git pull origin <branch_name>
 
 🎉🎉 tada 🎉🎉
 
+#### Change Logs of Merge request #95
+
+1. BUG: For Pre-order - VORBESTELLUNG again missing on pdf also repositioned for a proper place to view.
+2. BUG: Success Page Switched from Eng to German not working.
+3. BUG: In Mobile View, **Weiter** in CAPS not working.
+4. BUG: Scrolling on mobile view. (Not fixed completely it's just a temp fix we made).
+5. DESIGN: Added app links on the index page, footer and order placed page.
+6. DESIGN: The updated new menu flow from Figma.
+7. DESIGN: Payment Button Updated by new design changes.
+8. UX: On the Menu page, the button should be clickable completely instead of text.
+
 #### Change Logs of Merge request #80
 
 1. Bottom space issue on reservation and menu.

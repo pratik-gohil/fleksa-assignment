@@ -8,11 +8,16 @@ import HorizontalList from '../../common/horizontal-list/horizontal-list.templat
 import HorizontalListItem, { IResponsive } from '../../common/horizontal-list/horizontal-list-item.templateOne.component';
 import { useTranslation } from 'react-i18next';
 import SvgStar from '../../../../public/assets/svg/star.svg';
+import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 
 const WrapperSection = styled.section`
   border-bottom: ${(props) => props.theme.border};
   text-align: center;
   padding: ${(props) => props.theme.dimen.X4 * 4}px 0;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    padding: 2rem 0;
+  }
 `;
 
 const Title = styled.h2`
@@ -44,6 +49,10 @@ const Card = styled.div`
 const StarContainer = styled.div``;
 
 const responsive: IResponsive = {
+  xs: {
+    width: 300,
+    height: 400,
+  },
   sm: {
     width: 300,
     height: 400,

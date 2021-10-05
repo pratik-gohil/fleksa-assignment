@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { useAppSelector } from '../../../../redux/hooks.redux';
 import { selectShop } from '../../../../redux/slices/index.slices.redux';
+import { selectAppLinks } from '../../../../redux/slices/common.slices.redux';
 import CustomLink from '../amplitude/customLink';
 
 const Wrapper = styled.div`
@@ -53,42 +54,56 @@ const Icon = styled.img`
 
 const LegalLinks: FunctionComponent = () => {
   const socialData = useAppSelector(selectShop)?.social;
+  const appLinks = useAppSelector(selectAppLinks);
   const { t } = useTranslation('footer');
   const socialLinks = [
     {
       name: 'twitter',
       icon: '/assets/svg/social/twitter.svg',
-      url: socialData?.twitter ?? 'https://twitter.com/fleksaofficial',
+      url: socialData?.twitter || 'https://twitter.com/fleksaofficial',
     },
     {
       name: 'facebook',
       icon: '/assets/svg/social/facebook.svg',
-      url: socialData?.facebook ?? 'https://www.facebook.com/fleksaofficial',
+      url: socialData?.facebook || 'https://www.facebook.com/fleksaofficial',
     },
     {
       name: 'instagram',
       icon: '/assets/svg/social/instagram.svg',
-      url: socialData?.instagram ?? 'https://www.instagram.com/fleksaofficial/',
+      url: socialData?.instagram || 'https://www.instagram.com/fleksaofficial/',
+    },
+    {
+      name: 'android',
+      icon: '/assets/svg/app/google-playstore.svg',
+      url: appLinks?.android,
+    },
+    {
+      name: 'ios',
+      icon: '/assets/svg/app/apple-appstore.svg',
+      url: appLinks?.ios,
     },
   ];
 
   return (
     <Wrapper>
       <SocialMediaLinks>
-        {socialLinks.map((link, index) => (
-          <CustomLink
-            amplitude={{
-              type: 'icon',
-              text: link.name,
-            }}
-            target="_blank"
-            externalHref={link.url}
-            Override={IconContainer}
-            key={index}
-          >
-            <Icon src={link.icon} />
-          </CustomLink>
-        ))}
+        {socialLinks.map(
+          (link, index) =>
+            link.url && (
+              <CustomLink
+                amplitude={{
+                  type: 'icon',
+                  text: link.name,
+                }}
+                target="_blank"
+                externalHref={link.url}
+                Override={IconContainer}
+                key={index}
+              >
+                <Icon src={link.icon} />
+              </CustomLink>
+            ),
+        )}
       </SocialMediaLinks>
 
       <Text>
