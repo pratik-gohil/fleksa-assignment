@@ -67,6 +67,10 @@ const ClosedViewInfoContainer = styled.div`
   display: flex;
   padding: 12px 0;
   justify-content: space-between;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    padding: 12px 0;
+  }
 `;
 
 const ClosedViewInfoContainerSection1 = styled.div`
