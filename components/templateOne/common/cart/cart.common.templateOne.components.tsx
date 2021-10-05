@@ -91,7 +91,8 @@ const ItemTitleAdditional = styled.p`
 `;
 
 const OrderButton = styled.p<{ isActive: boolean }>`
-  background-color: ${(props) => (props.isActive ? '#222' : '#aaa')};
+  background-color: #222;
+  display: ${(props) => (props.isActive ? 'block' : 'none')};
   color: #fff;
   padding: ${(props) => props.theme.dimen.X4}px;
   margin: 0 0 ${(props) => props.theme.dimen.X4}px 0;
@@ -137,19 +138,7 @@ const CartEmptyContainer = styled.div`
   flex-direction: column;
   align-items: center;
   margin-top: ${(props) => props.theme.dimen.X4 * 2}px;
-`;
-
-const TextFeelingHungry = styled.p`
-  text-align: center;
-  font-size: 24px;
-  font-weight: 600;
-  margin: ${(props) => props.theme.dimen.X4}px 0 0 0;
-`;
-
-const TextChooseDishes = styled(TextFeelingHungry)`
-  font-size: 16px;
-  font-weight: 400;
-  margin: 0 0 ${(props) => props.theme.dimen.X4}px 0;
+  overflow: hidden;
 `;
 
 const MinimumOrderMessage = styled.p`
@@ -174,7 +163,7 @@ const Cart: FunctionComponent = ({}) => {
   const languageCode = useAppSelector(selectLanguageCode);
   const selectedMenuId = useAppSelector(selectSelectedMenu);
   const deliveryFinances = useAppSelector(selectDeliveryFinances);
-  const { t } = useTranslation('page-menu-id');
+  const { t } = useTranslation('cart');
 
   const [orderPossible, setOrderPossible] = useState(false);
   const [noOrderTypeAvailable, setNoOrderTypeAvailable] = useState(true);
@@ -266,8 +255,6 @@ const Cart: FunctionComponent = ({}) => {
           <ListItem key="empty-cart">
             <CartEmptyContainer>
               <SvgCartEmpty />
-              <TextFeelingHungry>{t('@hungry')}</TextFeelingHungry>
-              <TextChooseDishes>{t('@choose')}</TextChooseDishes>
             </CartEmptyContainer>
           </ListItem>
         )}

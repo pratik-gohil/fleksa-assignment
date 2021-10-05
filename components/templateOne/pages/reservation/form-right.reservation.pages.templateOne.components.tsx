@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Col, Container, Row } from 'react-grid-system';
 import RestaurantTimingUtils, { ILabelValue } from '../../../../utils/restaurant-timings.utils';
 import { useAppSelector } from '../../../../redux/hooks.redux';
-import { selectAddress, selectTimings } from '../../../../redux/slices/index.slices.redux';
+import { selectAddress, selectTimings, selectSiblings } from '../../../../redux/slices/index.slices.redux';
 import moment from 'moment';
 import { BREAKPOINTS } from '../../../../constants/grid-system-configuration';
 import { useTranslation } from 'next-i18next';
@@ -151,6 +151,14 @@ const Dashed = styled.span`
   display: block;
 `;
 
+const SiblingContainer = styled.div`
+  margin: 0 0 1rem 0;
+  border-radius: 4px;
+  & > * {
+    padding: 1rem;
+  }
+`;
+
 interface IFormRightInputsProps {
   date: string;
   time: ILabelValue;
@@ -158,16 +166,21 @@ interface IFormRightInputsProps {
   setTotalGuest: React.Dispatch<React.SetStateAction<string>>;
   setDate: React.Dispatch<React.SetStateAction<string>>;
   setTime: React.Dispatch<React.SetStateAction<ILabelValue>>;
+  setShopId: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
 const timeUtils = new RestaurantTimingUtils();
 
-const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGuest }: IFormRightInputsProps) => {
+const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGuest, setShopId }: IFormRightInputsProps) => {
+  const { t } = useTranslation('reservation');
+
   const timingsData = useAppSelector(selectTimings);
   const addressData = useAppSelector(selectAddress);
   const currentLanguage = useAppSelector(selectLanguage);
+  const siblings = useAppSelector(selectSiblings);
+
   const [timingList, setTimingList] = useState<ILabelValue[]>([]);
-  const { t } = useTranslation('reservation');
+  const [shopName, setShopName] = useState('');
 
   const handleDateChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setDate(e.target.value);
@@ -222,6 +235,32 @@ const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGue
         }}
       >
         <Label>{t('@guest')}​</Label>
+
+        {siblings.length > 0 && (
+          <Row nogutter>
+            <Col xl={12}>
+              <SiblingContainer>
+                <SelectBox
+                  value={shopName}
+                  onChange={(e) => {
+                    setShopName(e.target.value);
+
+                    const selectedSibling = siblings.filter((s) => s.name === e.target.value)[0];
+
+                    setShopId(selectedSibling.id);
+                  }}
+                >
+                  {siblings.map((s, i) => (
+                    <Option key={i} value={s.name}>
+                      {s.name}
+                    </Option>
+                  ))}
+                </SelectBox>
+              </SiblingContainer>
+            </Col>
+          </Row>
+        )}
+
         <Row nogutter>
           <Col xl={3} lg={3}>
             <SelectBox

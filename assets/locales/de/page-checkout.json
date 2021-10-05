@@ -25,6 +25,9 @@
   "@tip": "Trinkgeld",
   "@other": "Andere",
   "@credit-card": "Karten und mehr",
+  "@CASH": "BAR",
+  "@PAYPAL": "PAYPAL",
+
   "@payment": "ZAHLUNG",
   "@agreement-part-1": "Durch Klicken auf",
   "@order-and-pay": "KOSTENPFLICHTIG BESTELLEN",
@@ -44,7 +47,7 @@
   "@dine-in": "Dine-In",
   "@dinein": "Dine-In",
   "@min-required": "Mindestbestellwert:",
-  "@proceed": "Weiter",
+  "@proceed": "WEITER",
   "@send": "Senden",
   "@re-send": "Erneut senden",
   "@enter-request": "Bitte geben sie ihre Telefonnummber ein:",

@@ -7,7 +7,8 @@
   "@customer-review-title": "WAS UNSERE KUNDEN ÜBER UNS SAGEN",
   "@to-product": "ZUM PRODUKT",
   "@our-location": "Unsere Standorte",
-  "@next-hours": "Nächste Lieferzeiten:",
+  "@next-delivery-hours": "Nächste Lieferzeiten:",
+  "@next-order-hours": "Öffnungszeiten der nächsten Bestellung:",
   "@next-hours-1": "Zur Zeit haben wir geschlossen.",
   "@TODAY": "Heute",
   "@TOMORROW": "Morgen",
@@ -17,5 +18,7 @@
   "@THURSDAY": "Donnerstag",
   "@FRIDAY": "Freitag",
   "@SATURDAY": "Samstag",
-  "@SUNDAY": "Sonntag"
+  "@SUNDAY": "Sonntag",
+  "@app-section-title": "Jetzt die App herunterladen.",
+  "@app-section-summary": "Laden Sie unsere App herunter. Wir wollen es Menschen wie Ihnen einfach und bequem machen. Sie können bequem von zu Hause aus bestellen! Worauf warten Sie also noch? Es ist an der Zeit, dass wir uns jetzt treffen, also laden Sie unsere App sofort herunter, indem Sie im iTunes oder Google Play Store suchen."
 }

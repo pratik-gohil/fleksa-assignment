@@ -1,0 +1,12 @@
+{
+  "@order": "Zur Kasse",
+  "@your-cart": "Warenkorb",
+  "@not-accept": "Das Restaurant nimmt im Moment keine Bestellungen an.",
+  "@min-amount-1": "Leider können Sie noch nicht bestellen, der Mindestbestellbetrag beträgt ",
+  "@min-amount-2": " ohne Lieferkosten.",
+  "@proceed": "WEITER",
+  "@hungry": "Hungrig?",
+  "@choose": "Wählen Sie köstliche Gerichte aus der Karte, um eine Bestellung aufzugeben.",
+  "@total": "Gesamt",
+  "@items": "Artikel"
+}

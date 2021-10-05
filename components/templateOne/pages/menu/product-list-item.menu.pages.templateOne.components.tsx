@@ -33,6 +33,7 @@ const ListItem = styled.li<IPropsListItem>`
   margin: -2px -15px;
   transition-duration: 500ms;
   z-index: -1;
+  padding: 0 20px;
   @media (min-width: ${BREAKPOINTS.sm}px) {
     margin: 20px 0;
     border: ${(props) => (props.isOpen ? props.theme.border : '1px solid transparent')};
@@ -64,8 +65,12 @@ const ClosedViewContainer = styled.div`
 
 const ClosedViewInfoContainer = styled.div`
   display: flex;
-  padding: 12px;
+  padding: 12px 0;
   justify-content: space-between;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    padding: 12px 0;
+  }
 `;
 
 const ClosedViewInfoContainerSection1 = styled.div`
@@ -79,8 +84,6 @@ const ClosedViewInfoContainerSection2 = styled.div`
   flex-shrink: 0;
   flex-direction: column;
   align-items: center;
-  width: 120px;
-  margin-left: 12px;
 `;
 
 const ClosedViewInfoImage = styled.img<IPropsClosedViewInfoImage>`
@@ -93,6 +96,13 @@ const ClosedViewInfoImage = styled.img<IPropsClosedViewInfoImage>`
 `;
 
 const OptionsContainer = styled.div<IPropsOptionsContainer>`
+  ${(props) =>
+    props.isOpen &&
+    css`
+      border-top: ${(props) => props.theme.border};
+      border-bottom: ${(props) => props.theme.border};
+      margin: 20px 0;
+    `}
   max-height: ${(props) => (props.isOpen ? '700px' : '0px')};
   transition-duration: 500ms;
 `;
@@ -126,12 +136,14 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
   const getNextIndex = () => ++optionsIndex;
 
   function toggle() {
-    amplitudeEvent(constructEventName('product wrapper', 'card'), { product, isOpen });
+    if ((!!product.choice && product.choice.length > 0) || (!!product.side_products_json && product.side_products_json.length > 0)) {
+      amplitudeEvent(constructEventName('product wrapper', 'card'), { product, isOpen });
 
-    if (isOpen) setOpenItemId(undefined);
-    else {
-      setOpenItemId(product.id);
-      setSelectedOption(1);
+      if (isOpen) setOpenItemId(undefined);
+      else {
+        setOpenItemId(product.id);
+        setSelectedOption(1);
+      }
     }
   }
 
@@ -167,15 +179,17 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
           <ClosedViewInfoContainerSection2>
             {product.image && <ClosedViewInfoImage src={product.image} loading="lazy" isOpen={isOpen} />}
 
-            <AddButton
-              setOpenItemId={setOpenItemId}
-              product={product}
-              canOpen={
-                (!!product.choice && product.choice.length > 0) || (!!product.side_products_json && product.side_products_json.length > 0)
-              }
-              hasImage={!!product.image}
-              isOpen={isOpen}
-            />
+            {!isOpen && (
+              <AddButton
+                setOpenItemId={setOpenItemId}
+                product={product}
+                canOpen={
+                  (!!product.choice && product.choice.length > 0) || (!!product.side_products_json && product.side_products_json.length > 0)
+                }
+                hasImage={!!product.image}
+                isOpen={isOpen}
+              />
+            )}
           </ClosedViewInfoContainerSection2>
         </ClosedViewInfoContainer>
       </ClosedViewContainer>
@@ -210,6 +224,19 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
             );
           })}
       </OptionsContainer>
+      {((!!product.choice && product.choice.length > 0) || (!!product.side_products_json && product.side_products_json.length > 0)) &&
+        isOpen && (
+          <AddButton
+            isBottom={true}
+            setOpenItemId={setOpenItemId}
+            product={product}
+            canOpen={
+              (!!product.choice && product.choice.length > 0) || (!!product.side_products_json && product.side_products_json.length > 0)
+            }
+            hasImage={!!product.image}
+            isOpen={isOpen}
+          />
+        )}
     </ListItem>
   );
 };

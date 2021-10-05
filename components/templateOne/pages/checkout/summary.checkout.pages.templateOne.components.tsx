@@ -14,6 +14,7 @@ import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { selectCart } from '../../../../redux/slices/cart.slices.redux';
 import {
   selectDeliveryFinances,
+  selectIsPreOrder,
   selectOrderType,
   selectSelectedAddressId,
   selectShowDateTimeSelect,
@@ -115,6 +116,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
   const shopId = useAppSelector(selectSelectedMenu);
   const customerAddresses = useAppSelector(selectCustomerAllAddress);
   const isShowOrderTypeSelection = useAppSelector(selectShowOrderTypeSelect);
+  const isPreOrder = useAppSelector(selectIsPreOrder);
 
   // ? Default selectiona ddress state
   const checkoutAddressId = useAppSelector(selectSelectedAddressId);
@@ -129,6 +131,103 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
   const { t } = useTranslation('page-checkout');
 
   const [addressData, setAddressData] = useState<IAddress | null | undefined>(undefined);
+
+  useEffect(() => {
+    if (shopData?.id === selectedMenuId) setAddressData(address);
+    else setAddressData(siblings.find((item) => item.id === selectedMenuId)?.address);
+  }, []);
+
+  // TODO: Update delivery or pickup timing of the order
+  useEffect(() => {
+    const timingList = timings.generateDates();
+    let foundDateTime = false;
+
+    for (let i = 0; i < timingList.length; i++) {
+      const selectedDate = timingList[i];
+
+      if (selectedDate && timingsData && orderType && addressData?.prepare_time && addressData?.delivery_time) {
+        const timeData = timings.generateTimeList({
+          date: selectedDate,
+          timingsData,
+          type: orderType,
+          interval: {
+            pickup_time: addressData?.prepare_time,
+            delivery_time: addressData?.delivery_time,
+          },
+          language: currentLanguage,
+        });
+
+        if (timeData.length > 0) {
+          dispatch(updateWantAt({ date: selectedDate, time: timeData[0] }));
+          foundDateTime = true;
+
+          // TODO: Updating sofort state
+          if (timeData[0].isSofort) {
+            dispatch(updateCheckoutIsSofort(true));
+            dispatch(updateCheckoutIsPreOrder(false));
+          } else {
+            dispatch(updateCheckoutIsSofort(false));
+            dispatch(updateCheckoutIsPreOrder(true));
+          }
+
+          break;
+        }
+      }
+    }
+
+    if (!foundDateTime) {
+      updateWantAt(null);
+      dispatch(updateCheckoutIsSofort(false));
+    }
+  }, [orderType, addressData?.prepare_time, addressData?.delivery_time]);
+
+  // TODO: Checking min amount value
+  useEffect(() => {
+    if (orderType === 'DELIVERY') setMinAmountCheck(isOrderPossible());
+  }, [orderType, deliveryFinances?.amount]);
+
+  // TODO: Pre order checking
+  useEffect(() => {
+    if (!address?.has_delivery && !address?.has_pickup && !address?.has_dinein && !address?.has_reservations) {
+      return setShop({
+        availability: false,
+        isClosed: true,
+      });
+    }
+
+    setShop(isShopOpened(timingsData, moment(), { has_pickup: address.has_pickup, has_delivery: address.has_delivery }));
+
+    // ? set pre order mode
+    // if (!shop.availability && !shop.isClosed) dispatch(updateCheckoutIsPreOrder(true));
+    // else dispatch(updateCheckoutIsPreOrder(false));
+  }, [shop.availability, shop.isClosed]);
+
+  // TODO: User address update depends on login status
+  useEffect(() => {
+    async function handleUserAddressUpdate() {
+      const addressResponse = await new NodeApiHttpGetUserAllAddress(configuration, bearerToken ?? '').get({});
+
+      dispatch(updateLoadAddressesList(addressResponse?.data.customer_address));
+    }
+
+    if (orderType === 'DELIVERY') {
+      const guestAddressString = window.localStorage.getItem(LS_GUEST_USER_ADDRESS);
+
+      // * If user logged in
+      if (isUserLoggedIn) {
+        if (!customerAddresses?.length) handleUserAddressUpdate();
+
+        // * If selected address already there
+        if (selectedAddress) setUserAddress(selectedAddress as IGuestAddress);
+        // * Not selected but guestAddressString is there
+        else if (guestAddressString) addGuestAddressOnServerIfExists();
+      } else if (guestAddressString) {
+        const guestAddress = JSON.parse(guestAddressString) as IGuestAddress;
+
+        setUserAddress(guestAddress);
+      }
+    }
+  }, [isUserLoggedIn, deliveryFinances, orderType, selectedAddress]);
 
   function isOrderPossible() {
     if (orderType === 'DELIVERY') return deliveryFinances && deliveryFinances.amount ? cartData.cartCost >= deliveryFinances.amount : true;
@@ -187,98 +286,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
     }
   }
 
-  useEffect(() => {
-    if (shopData?.id === selectedMenuId) setAddressData(address);
-    else setAddressData(siblings.find((item) => item.id === selectedMenuId)?.address);
-  }, []);
-
-  // TODO: Update delivery or pickup timing of the order
-  useEffect(() => {
-    const timingList = timings.generateDates();
-    let foundDateTime = false;
-
-    for (let i = 0; i < timingList.length; i++) {
-      const selectedDate = timingList[i];
-
-      if (selectedDate && timingsData && orderType && addressData?.prepare_time && addressData?.delivery_time) {
-        const timeData = timings.generateTimeList({
-          date: selectedDate,
-          timingsData,
-          type: orderType,
-          interval: {
-            pickup_time: addressData?.prepare_time,
-            delivery_time: addressData?.delivery_time,
-          },
-          language: currentLanguage,
-        });
-
-        if (timeData.length > 0) {
-          dispatch(updateWantAt({ date: selectedDate, time: timeData[0] }));
-          foundDateTime = true;
-
-          // TODO: Updating sofort state
-          if (timeData[0].isSofort) dispatch(updateCheckoutIsSofort(true));
-          else dispatch(updateCheckoutIsSofort(false));
-
-          break;
-        }
-      }
-    }
-
-    if (!foundDateTime) {
-      updateWantAt(null);
-      dispatch(updateCheckoutIsSofort(false));
-    }
-  }, [orderType, addressData?.prepare_time, addressData?.delivery_time]);
-
-  // TODO: Checking min amount value
-  useEffect(() => {
-    if (orderType === 'DELIVERY') setMinAmountCheck(isOrderPossible());
-  }, [orderType, deliveryFinances?.amount]);
-
-  // TODO: Pre order checking
-  useEffect(() => {
-    if (!address?.has_delivery && !address?.has_pickup && !address?.has_dinein && !address?.has_reservations) {
-      return setShop({
-        availability: false,
-        isClosed: true,
-      });
-    }
-
-    setShop(isShopOpened(timingsData, moment(), { has_pickup: address.has_pickup, has_delivery: address.has_delivery }));
-
-    // ? set pre order mode
-    if (!shop.availability && !shop.isClosed) dispatch(updateCheckoutIsPreOrder(true));
-    else dispatch(updateCheckoutIsPreOrder(false));
-  }, [shop.availability, shop.isClosed]);
-
-  // TODO: User address update depends on login status
-  useEffect(() => {
-    async function handleUserAddressUpdate() {
-      const addressResponse = await new NodeApiHttpGetUserAllAddress(configuration, bearerToken ?? '').get({});
-
-      dispatch(updateLoadAddressesList(addressResponse?.data.customer_address));
-    }
-
-    if (orderType === 'DELIVERY') {
-      const guestAddressString = window.localStorage.getItem(LS_GUEST_USER_ADDRESS);
-
-      // * If user logged in
-      if (isUserLoggedIn) {
-        if (!customerAddresses?.length) handleUserAddressUpdate();
-
-        // * If selected address already there
-        if (selectedAddress) setUserAddress(selectedAddress as IGuestAddress);
-        // * Not selected but guestAddressString is there
-        else if (guestAddressString) addGuestAddressOnServerIfExists();
-      } else if (guestAddressString) {
-        const guestAddress = JSON.parse(guestAddressString) as IGuestAddress;
-
-        setUserAddress(guestAddress);
-      }
-    }
-  }, [isUserLoggedIn, deliveryFinances, orderType, selectedAddress]);
-
+  // !shop.availability && !shop.isClosed
   return (
     <StyledCheckoutCard>
       <Row>
@@ -287,7 +295,7 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
             <TextContainer>
               <StyledCheckoutText>
                 {orderType === 'DINE_IN' ? t('@dine-in') : t(`@${orderType?.toLowerCase()}`)}{' '}
-                <span>{!shop.availability && !shop.isClosed && `(${t('@pre-order')})`}</span>
+                <span>{isPreOrder && `(${t('@pre-order')})`}</span>
               </StyledCheckoutText>
 
               {orderType === 'DELIVERY' && !minAmountCheck && (

@@ -114,6 +114,10 @@ const ItemToProduct = styled.a`
 `;
 
 const responsive: IResponsive = {
+  xs: {
+    width: 300,
+    height: 400,
+  },
   sm: {
     width: 300,
     height: 460,

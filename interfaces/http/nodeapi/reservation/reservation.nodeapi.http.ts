@@ -7,6 +7,10 @@ export interface INodeApiHttpReservationRequestData {
   guests_count: string;
   name: string;
   shop_id: number;
+  shop: {
+    is_multi: boolean;
+    id: number | null;
+  };
 }
 
 export interface INodeApiHttpReservationResponseData {

@@ -7,7 +7,8 @@
   "@customer-review-title": "WHAT OUR CUSTOMERS SAY ABOUT US",
   "@our-location": "Our Locations",
   "@to-product": "TO PRODUCT",
-  "@next-hours": "Next Delivery Hours:",
+  "@next-delivery-hours": "Next Delivery Hours:",
+  "@next-order-hours": "Next Order Hours:",
   "@next-hours-1": "We are closed at the moment.",
   "@TODAY": "Today",
   "@TOMORROW": "Tomorrow",
@@ -17,5 +18,7 @@
   "@THURSDAY": "Thursday",
   "@FRIDAY": "Friday",
   "@SATURDAY": "Saturday",
-  "@SUNDAY": "Sunday"
+  "@SUNDAY": "Sunday",
+  "@app-section-title": "Download the app",
+  "@app-section-summary": "Download our app, we want to make it easy and convenient for people like yourself. You can order from the comfort of your own home! So what are you waiting on? It's time that we get together right now, so download our app immediately by searching iTunes or Google Play Store."
 }

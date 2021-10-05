@@ -3,7 +3,7 @@ import { ICategory } from '../interfaces/common/category.common.interfaces';
 import { ICheckoutOrderTypes } from '../redux/slices/checkout.slices.redux';
 
 // ?? Setup default first day of the week[MONDAY]
-moment.defineLocale('', {
+moment.updateLocale('', {
   week: {
     dow: 1,
   },
@@ -81,8 +81,6 @@ export const filterViewableCategoriesByOrderType: (categories: Array<ICategory>,
 
         if (!isAvaialble) return;
       }
-
-      console.log('Is availabe ', category.name_json.english, ' ', isAvaialble);
 
       specificCategories.push(category);
     });

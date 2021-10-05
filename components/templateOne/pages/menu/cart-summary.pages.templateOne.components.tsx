@@ -29,7 +29,7 @@ const Text = styled.p`
 `;
 
 const MenuPageCartSummary: FunctionComponent = ({}) => {
-  const { t } = useTranslation('page-menu-id');
+  const { t } = useTranslation('cart');
   const cartData = useAppSelector(selectCart);
   const languageCode = useAppSelector(selectLanguageCode);
   const dispatch = useAppDispatch();
@@ -40,7 +40,7 @@ const MenuPageCartSummary: FunctionComponent = ({}) => {
     <WrapperCartSummary>
       <Text>
         <strong>
-          {itemsInCart} Item | {formatCurrency(cartData.cartCost, languageCode)}
+          {itemsInCart} {t('@items')} | {formatCurrency(cartData.cartCost, languageCode)}
         </strong>
       </Text>
       <Text onClick={() => dispatch(updateShowCart(true))}>

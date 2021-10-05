@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 import { IShopAvailablity } from '../../../../interfaces/common/index.common.interfaces';
 import CustomLink from '../../common/amplitude/customLink';
+import AppButtons from '../../common/appButtons/app-buttons.common.templateOne.components';
 
 const WrapperSection = styled.section`
   height: calc(100vh - ${(props) => props.theme.navMobile.height}px);
@@ -41,7 +42,6 @@ const ContentContainer = styled.div`
   color: #fff;
   display: flex;
   flex: 1 1 auto;
-  padding: 0 0 0 1rem;
 
   div {
     align-self: center;
@@ -49,6 +49,7 @@ const ContentContainer = styled.div`
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     left: 0;
+
     div {
       width: 100%;
     }
@@ -73,6 +74,7 @@ const SubTitle = styled.h2`
   margin: 0;
   font-size: clamp(1rem, 1.8rem, 3vw);
   text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
+
   @media (max-width: ${BREAKPOINTS.sm}px) {
     padding-top: 0.5rem;
     font-weight: 400;
@@ -94,7 +96,8 @@ const OrderButton = styled.a`
   -ms-animation: pulsing 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
   animation: pulsing 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
   transition: all 300ms ease-in-out;
-  box-shadow: 0 0 0 0 rgba(${(props) => `${props.theme.primaryColorRed},${props.theme.primaryColorGreen},${props.theme.primaryColorBlue}, 0.7`});
+  box-shadow: 0 0 0 0
+    rgba(${(props) => `${props.theme.primaryColorRed},${props.theme.primaryColorGreen},${props.theme.primaryColorBlue}, 0.7`});
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     margin: 18px 0;
@@ -125,6 +128,8 @@ const Logo = styled.img`
 
 const Wrapper = styled.div`
   width: 100%;
+  margin: 0;
+  padding: 0;
 `;
 
 const SubTitle2 = styled(SubTitle)`
@@ -156,6 +161,10 @@ const CarouselSlide = styled.div<{ translateX: number }>`
   float: left;
   transition-duration: 500ms;
   transform: translateX(${(props) => props.translateX}%);
+`;
+
+const AppButtonsContainer = styled.div`
+  padding-top: 1rem;
 `;
 
 const slideChangeDealy = 5000;
@@ -230,7 +239,7 @@ const IndexPageHero: FunctionComponent = ({}) => {
       <ContentContainer>
         <Wrapper>
           <Container>
-            <Row>
+            <Row nogutter>
               <Col>
                 <LogoLink onClick={() => alert('clicked')} href="#">
                   {!!shopData?.logo && <Logo src={shopData?.logo} loading="lazy" />}
@@ -262,8 +271,8 @@ const IndexPageHero: FunctionComponent = ({}) => {
                     />
 
                     <SubTitle2>
-                      {t('@next-hours-1')} {t('@next-hours')} {shop.next?.dayNumber ? ` ${shop.next?.dayNumber} ,` : ''}{' '}
-                      {t(`@${shop.next?.day.toUpperCase()}`)}, {shop.next?.time}
+                      {t('@next-hours-1')} {addressData?.has_delivery ? t('@next-delivery-hours') : t('@next-order-hours')}{' '}
+                      {shop.next?.dayNumber ? ` ${shop.next?.dayNumber} ,` : ''} {t(`@${shop.next?.day.toUpperCase()}`)}, {shop.next?.time}
                     </SubTitle2>
                   </>
                 ) : (
@@ -281,6 +290,10 @@ const IndexPageHero: FunctionComponent = ({}) => {
                     <SubTitle2>{t('@closed')}</SubTitle2>
                   </>
                 )}
+
+                <AppButtonsContainer>
+                  <AppButtons direction="row" />
+                </AppButtonsContainer>
               </Col>
             </Row>
           </Container>

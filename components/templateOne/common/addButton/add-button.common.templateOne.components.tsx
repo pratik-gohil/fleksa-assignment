@@ -3,15 +3,14 @@ import { FunctionComponent } from 'react';
 import styled, { css } from 'styled-components';
 import { ICategoryProduct } from '../../../../interfaces/common/category.common.interfaces';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
-import { selectCartItemByCartId, updateAddProduct, updateReduceProduct } from '../../../../redux/slices/cart.slices.redux';
+import { selectCartItemByCartId, updateAddProduct } from '../../../../redux/slices/cart.slices.redux';
 import { selectItemSelectionByTopProductId } from '../../../../redux/slices/item-selection.slices.redux';
 
-import SvgButtonPlus from '../../../../public/assets/svg/button-plus.svg';
-import SvgButtonMinus from '../../../../public/assets/svg/button-minus.svg';
 import CustomLink from '../amplitude/customLink';
 import { selectIsReOrder, selectPromoCode, updateCheckoutIsReOrder, updatePromoCode } from '../../../../redux/slices/checkout.slices.redux';
 
 export interface IPropsAddButton {
+  isBottom?: boolean;
   hasImage: boolean;
   isOpen: boolean;
   canOpen: boolean;
@@ -22,6 +21,10 @@ export interface IPropsAddButton {
 interface IPropsWrapperButton {
   hasImage: boolean;
   isOpen: boolean;
+}
+
+interface IButtonContainer {
+  isBottom: boolean;
 }
 
 const WrapperButton = styled.div<IPropsWrapperButton>`
@@ -44,7 +47,7 @@ const WrapperButton = styled.div<IPropsWrapperButton>`
   transition-duration: 500ms;
 `;
 
-const ButtonContainer = styled.div`
+const ButtonContainer = styled.div<IButtonContainer>`
   display: flex;
   flex: 1;
   flex-wrap: nowrap;
@@ -58,34 +61,16 @@ const ButtonContainer = styled.div`
   font-weight: 700;
   transition-duration: 500ms;
   overflow: hidden;
-`;
-
-const Separator = styled.div`
-  display: block;
-  height: 100%;
-  width: 2px;
-  background: rgba(255, 255, 255, 0.4);
-`;
-
-const ButtonItem = styled.a`
-  display: flex;
-  flex: 1;
-  height: inherit;
-  justify-content: center;
-  align-items: center;
-  margin: 0;
-  justify-content: center;
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.1);
-  }
-  svg {
-    width: 24px;
-    height: 24px;
-    fill: #222;
+  margin-bottom: ${(props) => (props.isBottom ? '20px' : 0)};
+  & > a {
+    width: 100%;
+    height: 100%;
+    line-height: 2.5rem;
+    text-align: center;
   }
 `;
 
-const AddButton: FunctionComponent<IPropsAddButton> = ({ setOpenItemId, product, canOpen, hasImage, isOpen }) => {
+const AddButton: FunctionComponent<IPropsAddButton> = ({ setOpenItemId, product, canOpen, hasImage, isOpen, isBottom }) => {
   const [lastCartId, setLastCartId] = useState<string | null>(null);
   const selectionData = useAppSelector((state) => selectItemSelectionByTopProductId(state, product.id));
   const cartData = useAppSelector((state) => selectCartItemByCartId(state, lastCartId));
@@ -143,10 +128,6 @@ const AddButton: FunctionComponent<IPropsAddButton> = ({ setOpenItemId, product,
     }
   }
 
-  function reduceItemFromCart() {
-    if ((!canOpen || (canOpen && isOpen)) && lastCartId) dispatch(updateReduceProduct({ cartId: lastCartId }));
-  }
-
   return (
     <WrapperButton
       onClick={(e) => {
@@ -155,64 +136,22 @@ const AddButton: FunctionComponent<IPropsAddButton> = ({ setOpenItemId, product,
       hasImage={hasImage}
       isOpen={isOpen}
     >
-      <ButtonContainer>
-        {cartData?.quantity ? (
-          <>
-            <CustomLink
-              amplitude={{
-                type: 'button',
-                text: `product minus`,
-                eventProperties: {
-                  product,
-                  canOpen,
-                  hasImage,
-                  isOpen,
-                  cartData,
-                },
-              }}
-              callback={reduceItemFromCart}
-              Override={ButtonItem}
-            >
-              <SvgButtonMinus />
-            </CustomLink>
-
-            <Separator />
-
-            <CustomLink
-              amplitude={{
-                type: 'button',
-                text: `product plus`,
-                eventProperties: {
-                  product,
-                  canOpen,
-                  hasImage,
-                  isOpen,
-                  cartData,
-                },
-              }}
-              callback={addItemToCart}
-              Override={ButtonItem}
-            >
-              <SvgButtonPlus />
-            </CustomLink>
-          </>
-        ) : (
-          <CustomLink
-            amplitude={{
-              type: 'button',
-              text: `ADD${canOpen && ' EXPANDABLE'}`,
-              eventProperties: {
-                product,
-                canOpen,
-                hasImage,
-                isOpen,
-                cartData,
-              },
-            }}
-            callback={addItemToCart}
-            placeholder={`ADD${!!canOpen ? ' +' : ''}`}
-          />
-        )}
+      <ButtonContainer isBottom={!!isBottom}>
+        <CustomLink
+          amplitude={{
+            type: 'button',
+            text: `ADD${canOpen && ' EXPANDABLE'}`,
+            eventProperties: {
+              product,
+              canOpen,
+              hasImage,
+              isOpen,
+              cartData,
+            },
+          }}
+          callback={addItemToCart}
+          placeholder={`ADD${!!canOpen && !isBottom ? ' +' : ''}`}
+        />
       </ButtonContainer>
     </WrapperButton>
   );

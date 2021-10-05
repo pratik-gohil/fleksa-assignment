@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { useTranslation } from 'next-i18next';
 import React, { FunctionComponent, useEffect } from 'react';
 import { useState } from 'react';
@@ -8,6 +9,7 @@ import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import {
   selectOrderType,
   selectWantAt,
+  updateCheckoutIsPreOrder,
   updateCheckoutIsSofort,
   updateShowDateTimeSelect,
   updateWantAt,
@@ -72,7 +74,9 @@ const Done = styled.button`
 const timings = new RestaurantTimingUtils();
 
 const CheckoutDateTime: FunctionComponent = ({}) => {
+  const { t } = useTranslation('page-checkout');
   const dispatch = useAppDispatch();
+
   const shopData = useAppSelector(selectShop);
   const address = useAppSelector(selectAddress);
   const wantAtData = useAppSelector(selectWantAt);
@@ -81,17 +85,23 @@ const CheckoutDateTime: FunctionComponent = ({}) => {
   const orderType = useAppSelector(selectOrderType);
   const currentLanguage = useAppSelector(selectLanguage);
   const selectedMenuId = useAppSelector(selectSelectedMenu);
+
   const [selectedDate, setSelectedDate] = useState<ILabelValue | null>(wantAtData?.date || null);
   const [datesList] = useState<Array<ILabelValue>>(timings.generateDates());
   const [timeList, setTimeList] = useState<Array<ILabelValue>>();
   const [addressData, setAddressData] = useState<IAddress | null | undefined>(undefined);
-  const { t } = useTranslation('page-checkout');
 
+  /**
+   * Setup selected multi restaurant address information to the local state
+   */
   useEffect(() => {
     if (shopData?.id == selectedMenuId) setAddressData(address);
     else setAddressData(siblings.find((item) => item.id == selectedMenuId)?.address);
   }, []);
 
+  /**
+   * Initial date time list calculation and update the state
+   */
   useEffect(() => {
     if (selectedDate && timingsData && orderType && addressData?.prepare_time && addressData?.delivery_time) {
       const timeData = timings.generateTimeList({
@@ -110,40 +120,58 @@ const CheckoutDateTime: FunctionComponent = ({}) => {
     }
   }, [selectedDate, timingsData, orderType, addressData?.prepare_time, addressData?.delivery_time]);
 
+  /**
+   *
+   * @param value ILabelValue | null
+   * @description Updating selected date for place the order
+   */
+  const handleDateChangeDropDownClick = async (value: ILabelValue | null) => {
+    setSelectedDate(value);
+
+    // TODO: Check the selected date was today or future
+    const isCurrentDate = moment(value?.value).isSame(new Date(), 'day');
+
+    if (!isCurrentDate) dispatch(updateCheckoutIsPreOrder(true));
+    else dispatch(updateCheckoutIsPreOrder(false));
+
+    amplitudeEvent(constructEventName(`summary date selection`, 'model'), {
+      prevSelected: selectedDate,
+      currentSelected: value,
+    });
+  };
+
+  /**
+   *
+   * @param value ILabelValue | null
+   * @description Updating selected time for place the order
+   */
+  const handleTimeChangeDropDownClick = async (value: ILabelValue | null) => {
+    dispatch(updateWantAt({ date: selectedDate, time: value }));
+    dispatch(updateCheckoutIsSofort(value?.isSofort));
+    dispatch(updateCheckoutIsPreOrder(!value?.isSofort));
+
+    amplitudeEvent(constructEventName(`summary time selection`, 'model'), {
+      prevSelected: wantAtData?.time,
+      currentSelected: value,
+    });
+  };
+
   return (
     <Wrapper>
       <ContentContainerView>
         <Title>{t('@time-selection-model-title')}</Title>
         <Item>
           <Text>{t('@choose-date')}</Text>
-          <Select
-            value={selectedDate}
-            options={datesList}
-            onChange={(value) => {
-              setSelectedDate(value);
-              amplitudeEvent(constructEventName(`summary date selection`, 'model'), {
-                prevSelected: selectedDate,
-                currentSelected: value,
-              });
-            }}
-          />
+
+          <Select value={selectedDate} options={datesList} onChange={handleDateChangeDropDownClick} />
         </Item>
+
         <Item>
           <Text>{t('@choose-time')}</Text>
-          <Select
-            value={wantAtData?.time || null}
-            options={timeList}
-            onChange={(value) => {
-              dispatch(updateWantAt({ date: selectedDate, time: value }));
-              dispatch(updateCheckoutIsSofort(value?.isSofort));
 
-              amplitudeEvent(constructEventName(`summary time selection`, 'model'), {
-                prevSelected: wantAtData?.time,
-                currentSelected: value,
-              });
-            }}
-          />
+          <Select value={wantAtData?.time || null} options={timeList} onChange={handleTimeChangeDropDownClick} />
         </Item>
+
         <Item>
           <Done
             onClick={() => {

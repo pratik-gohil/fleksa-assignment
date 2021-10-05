@@ -98,6 +98,7 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ct
           'login',
           'common-ordertype',
           'page-menu-id',
+          'cart',
         ])),
         templateNumber: 0,
         meta: responseIndex?.meta,

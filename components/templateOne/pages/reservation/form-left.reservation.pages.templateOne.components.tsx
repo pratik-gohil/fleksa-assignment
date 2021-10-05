@@ -1,3 +1,4 @@
+import 'react-phone-input-2/lib/material.css';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import PhoneInput from 'react-phone-input-2';
@@ -9,7 +10,7 @@ import LoginAllPages from '../../common/login/login.common.templateOne.component
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks.redux';
 import { updateError } from '../../../../redux/slices/common.slices.redux';
 import { selectConfiguration } from '../../../../redux/slices/configuration.slices.redux';
-import { selectAddress, selectShop } from '../../../../redux/slices/index.slices.redux';
+import { selectAddress, selectShop, selectSiblings } from '../../../../redux/slices/index.slices.redux';
 import { selectBearerToken, selectCustomer, selectIsUserLoggedIn } from '../../../../redux/slices/user.slices.redux';
 import { ILabelValue } from '../../../../utils/restaurant-timings.utils';
 import { useRouter } from 'next/router';
@@ -124,17 +125,21 @@ interface IFormLeftInputsProps {
   date: string;
   time: ILabelValue;
   totalGuest: string;
+  shopId: null | number;
 }
 
-const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
+const FormLeftInputs = ({ date, time, totalGuest, shopId }: IFormLeftInputsProps) => {
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+
   const bearerToken = useAppSelector(selectBearerToken);
   const configuration = useAppSelector(selectConfiguration);
   const shopData = useAppSelector(selectShop);
   const customerData = useAppSelector(selectCustomer);
   const addressData = useAppSelector(selectAddress);
   const isLoggedIn = useAppSelector(selectIsUserLoggedIn);
-  const dispatch = useAppDispatch();
-  const router = useRouter();
+  const siblings = useAppSelector(selectSiblings);
+
   const { t } = useTranslation('reservation');
 
   const [phone, setPhone] = useState('');
@@ -184,6 +189,10 @@ const FormLeftInputs = ({ date, time, totalGuest }: IFormLeftInputsProps) => {
         name,
         date_time: moment(`${date} ${time.value}`).format(),
         guests_count: totalGuest,
+        shop: {
+          is_multi: !!siblings.length,
+          id: shopId,
+        },
       });
 
       setLoading(false);

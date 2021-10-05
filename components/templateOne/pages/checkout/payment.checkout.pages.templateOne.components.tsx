@@ -43,7 +43,11 @@ import CheckoutLoginDropdown from './checkout.login.dropdown';
 import { amplitudeEvent, constructEventName } from '../../../../utils/amplitude.util';
 
 const Wrapper = styled.div`
-  /* margin-bottom: 48px; */
+  margin-bottom: 48px;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    margin-bottom: 0;
+  }
 `;
 
 const PaymentMethodList = styled.div`
@@ -52,35 +56,56 @@ const PaymentMethodList = styled.div`
   align-items: center;
 `;
 
+const PaymentIconContainer = styled.div`
+  display: flex;
+  width: calc(100% - 20px);
+  height: 100px;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 250ms ease-out;
+  border-radius: 0.5rem;
+  padding: 10px;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    width: calc(100% - 10px);
+    height: 70px;
+    padding: 5px;
+  }
+
+  & > img {
+    width: 100%;
+    height: 100%;
+  }
+
+  &:hover {
+    background: ${(p) => p.theme.textDarkActiveColor};
+  }
+`;
+
 const PaymentMethodItems = styled.button<{ isActive: boolean }>`
   display: flex;
   flex: 1;
-  margin: 0 ${(props) => props.theme.dimen.X4}px;
-  padding: ${(props) => props.theme.dimen.X4}px;
+  margin: 0;
 
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
-  border-radius: 3rem;
   background: transparent;
 
+  max-width: calc(100% / 3);
   height: max-content;
   padding: 0;
   border: none;
   outline: none;
 
   cursor: pointer;
-  border-color: ${(p) => (p.isActive ? '#FFD100' : 'none')};
-  box-shadow: ${(p) => (p.isActive ? `0 0 4px 4px #FFD100` : '0 0 4px 0 transparent')};
-  border: ${(p) => (p.isActive ? '2px solid rgba(0,0,0,0.2)' : 'none')};
 
-  img {
-    width: 100%;
-    height: 100%;
+  div {
+    background: ${(p) => (p.isActive ? p.theme.textDarkActiveColor : 'transparent')};
+    border: ${(p) => (p.isActive ? '2px solid transparent' : '2px solid black')};
   }
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
     margin: 0 0.1rem;
-    /* padding: 0.2rem; */
 
     &:first-child {
       padding: 0;
@@ -100,12 +125,9 @@ const OrderButtonTopLevelContainer = styled.div`
   margin-top: ${(props) => props.theme.dimen.X4}px;
 `;
 
-const PaymentIconImage = styled.img``;
-
 const CheckoutPagePayment: FunctionComponent = ({}) => {
   const router = useRouter();
-  const [orderButtonLoading, setOrderButtonLoading] = useState(false);
-  const [orderCanBePlaced, setOrderCanBePlaced] = useState(false);
+
   const deliveryFinances = useAppSelector(selectDeliveryFinances);
   const paymentMethodData = useAppSelector(selectPaymentMethod);
   const addressId = useAppSelector(selectSelectedAddressId);
@@ -128,8 +150,14 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   const isPreOrder = useAppSelector(selectIsPreOrder);
 
   const { t } = useTranslation('page-checkout');
+  const [inHover, setHover] = useState('');
   const [currentPaymentMethod, setCurrentPaymentMethod] = useState('STRIPE');
+  const [orderButtonLoading, setOrderButtonLoading] = useState(false);
+  const [orderCanBePlaced, setOrderCanBePlaced] = useState(false);
 
+  /**
+   * @description for creating a order from node api
+   */
   async function createOrder() {
     try {
       const products: Array<IMakeOrderProducts> = getPrductsFromCartData(cartData);
@@ -246,7 +274,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
     }
   }
 
-  let paymentTitle = paymentMethodData; // /? Default title
+  let paymentTitle = t(`@${paymentMethodData}`); // /? Default title
   let orderButton = (
     <CheckoutOrderAndPayButton
       orderButtonLoading={orderButtonLoading}
@@ -291,18 +319,30 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
               {[
                 {
                   method: 'STRIPE' as ICheckoutPaymentMethods,
-                  img: <PaymentIconImage src="/assets/svg/checkout/card.svg" alt="stripe" />,
+                  img:
+                    inHover === 'STRIPE' || currentPaymentMethod === 'STRIPE'
+                      ? '/assets/svg/checkout/v1/stripe-icon-hover.svg'
+                      : '/assets/svg/checkout/v1/stripe-icon.svg',
                   show: shopData?.stripe_available,
+                  isHover: inHover === 'STRIPE',
                 },
                 {
                   method: 'PAYPAL' as ICheckoutPaymentMethods,
-                  img: <PaymentIconImage src="/assets/svg/checkout/paypal.svg" alt="paypal" />,
+                  img:
+                    inHover === 'PAYPAL' || currentPaymentMethod === 'PAYPAL'
+                      ? '/assets/svg/checkout/v1/paypal-icon-hover.svg'
+                      : '/assets/svg/checkout/v1/paypal-icon.svg',
                   show: shopData?.paypal_available,
+                  isHover: inHover === 'PAYPAL',
                 },
                 {
                   method: 'CASH' as ICheckoutPaymentMethods,
-                  img: <PaymentIconImage src="/assets/svg/checkout/cash.svg" alt="cash" />,
+                  img:
+                    inHover === 'CASH' || currentPaymentMethod === 'CASH'
+                      ? '/assets/svg/checkout/v1/cash-icon-hover.svg'
+                      : '/assets/svg/checkout/v1/cash-icon.svg',
                   show: true,
+                  isHover: inHover === 'CASH',
                 },
               ].map((item) => {
                 return (
@@ -318,7 +358,9 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
                         });
                       }}
                     >
-                      {item.img}
+                      <PaymentIconContainer onMouseEnter={() => setHover(item.method)} onMouseLeave={() => setHover('')}>
+                        <img src={item.img} />
+                      </PaymentIconContainer>
                     </PaymentMethodItems>
                   )
                 );
