@@ -56,7 +56,8 @@ export const StyledOptionsRadioButton = styled.span<{ selected: boolean; multise
   height: 20px;
   margin-left: 12px;
   display: block;
-  border-radius: ${(props) => (props.multiselect ? '4px' : '100%')};
+  border: 2px solid #eee;
+  border-radius: 50%;
   background-color: ${(props) => props.selected && props.theme.primaryColor};
 `;
 

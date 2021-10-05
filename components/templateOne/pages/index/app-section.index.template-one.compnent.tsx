@@ -17,8 +17,6 @@ const WrapperContainer = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
-  padding: ${(props) => props.theme.dimen.X4 * 4}px 0;
-  margin: ${(props) => props.theme.dimen.X4 * 4}px 0;
 
   & > div {
     flex: 1;
@@ -77,7 +75,7 @@ const ImageSection = styled.div`
   position: relative;
   display: flex;
   justify-content: center;
-  height: 100%;
+  align-items: center;
 
   @media (max-width: ${BREAKPOINTS.lg}px) {
     align-items: center;
@@ -89,7 +87,10 @@ interface IPropsImage {
 }
 
 const Image = styled.div<IPropsImage>`
-  background-image: ${(props) => `url(${props.image})`};
+  background-image: url('/assets/png/navbar.png'), ${(props) => `url(${props.image})`};
+  background-repeat: no-repeat, no-repeat;
+  background-size: contain, cover;
+  background-position: bottom, center;
   width: 280px;
   height: 560px;
   border: 8px solid #222;
@@ -117,15 +118,11 @@ const ShopSubTitle = styled.p`
 `;
 
 const LogoLink = styled.a`
-  height: 120px;
-  width: 120px;
-  @media (max-width: ${BREAKPOINTS.lg}px) {
-    height: 100px;
-    width: 100px;
-  }
+  height: 100px;
+  width: 100px;
   @media (max-width: ${BREAKPOINTS.sm}px) {
-    height: 60px;
-    width: 60px;
+    height: 80px;
+    width: 80px;
   }
   border-radius: 50%;
   background-color: white;
