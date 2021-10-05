@@ -166,17 +166,21 @@ interface IFormRightInputsProps {
   setTotalGuest: React.Dispatch<React.SetStateAction<string>>;
   setDate: React.Dispatch<React.SetStateAction<string>>;
   setTime: React.Dispatch<React.SetStateAction<ILabelValue>>;
+  setShopId: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
 const timeUtils = new RestaurantTimingUtils();
 
-const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGuest }: IFormRightInputsProps) => {
+const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGuest, setShopId }: IFormRightInputsProps) => {
+  const { t } = useTranslation('reservation');
+
   const timingsData = useAppSelector(selectTimings);
   const addressData = useAppSelector(selectAddress);
   const currentLanguage = useAppSelector(selectLanguage);
   const siblings = useAppSelector(selectSiblings);
+
   const [timingList, setTimingList] = useState<ILabelValue[]>([]);
-  const { t } = useTranslation('reservation');
+  const [shopName, setShopName] = useState('');
 
   const handleDateChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setDate(e.target.value);
@@ -231,19 +235,19 @@ const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGue
         }}
       >
         <Label>{t('@guest')}​</Label>
+
         {siblings.length > 0 && (
           <Row nogutter>
             <Col xl={12}>
               <SiblingContainer>
                 <SelectBox
-                  value={totalGuest}
+                  value={shopName}
                   onChange={(e) => {
-                    setTotalGuest(e.target.value);
+                    setShopName(e.target.value);
 
-                    amplitudeEvent(constructEventName(`guests`, 'input'), {
-                      prev: totalGuest,
-                      current: e.target.value,
-                    });
+                    const selectedSibling = siblings.filter((s) => s.name === e.target.value)[0];
+
+                    setShopId(selectedSibling.id);
                   }}
                 >
                   {siblings.map((s, i) => (
@@ -256,6 +260,7 @@ const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGue
             </Col>
           </Row>
         )}
+
         <Row nogutter>
           <Col xl={3} lg={3}>
             <SelectBox
