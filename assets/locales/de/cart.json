@@ -7,5 +7,6 @@
   "@proceed": "WEITER",
   "@hungry": "Hungrig?",
   "@choose": "Wählen Sie köstliche Gerichte aus der Karte, um eine Bestellung aufzugeben.",
-  "@total": "Gesamt"
+  "@total": "Gesamt",
+  "@items": "Artikel"
 }

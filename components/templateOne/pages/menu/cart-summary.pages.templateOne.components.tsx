@@ -40,7 +40,7 @@ const MenuPageCartSummary: FunctionComponent = ({}) => {
     <WrapperCartSummary>
       <Text>
         <strong>
-          {itemsInCart} Item | {formatCurrency(cartData.cartCost, languageCode)}
+          {itemsInCart} {t('@items')} | {formatCurrency(cartData.cartCost, languageCode)}
         </strong>
       </Text>
       <Text onClick={() => dispatch(updateShowCart(true))}>
