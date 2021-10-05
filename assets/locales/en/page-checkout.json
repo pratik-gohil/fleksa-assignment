@@ -23,9 +23,12 @@
   "@first": "FIRST ORDER",
   "@select-code": "Select a promocode",
 
+  "@credit-card": "Cards and more",
+  "@CASH": "CASH",
+  "@PAYPAL": "PAYPAL",
+
   "@tip": "Tip",
   "@other": "Other",
-  "@credit-card": "Cards and more",
   "@payment": "PAYMENT",
   "@agreement-part-1": "By clicking on ",
   "@order-and-pay": "ORDER AND PAY",

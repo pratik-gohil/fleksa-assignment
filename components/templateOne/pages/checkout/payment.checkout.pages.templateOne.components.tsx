@@ -127,8 +127,7 @@ const OrderButtonTopLevelContainer = styled.div`
 
 const CheckoutPagePayment: FunctionComponent = ({}) => {
   const router = useRouter();
-  const [orderButtonLoading, setOrderButtonLoading] = useState(false);
-  const [orderCanBePlaced, setOrderCanBePlaced] = useState(false);
+
   const deliveryFinances = useAppSelector(selectDeliveryFinances);
   const paymentMethodData = useAppSelector(selectPaymentMethod);
   const addressId = useAppSelector(selectSelectedAddressId);
@@ -151,8 +150,10 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
   const isPreOrder = useAppSelector(selectIsPreOrder);
 
   const { t } = useTranslation('page-checkout');
-  const [currentPaymentMethod, setCurrentPaymentMethod] = useState('STRIPE');
   const [inHover, setHover] = useState('');
+  const [currentPaymentMethod, setCurrentPaymentMethod] = useState('STRIPE');
+  const [orderButtonLoading, setOrderButtonLoading] = useState(false);
+  const [orderCanBePlaced, setOrderCanBePlaced] = useState(false);
 
   /**
    * @description for creating a order from node api
@@ -273,7 +274,7 @@ const CheckoutPagePayment: FunctionComponent = ({}) => {
     }
   }
 
-  let paymentTitle = paymentMethodData; // /? Default title
+  let paymentTitle = t(`@${paymentMethodData}`); // /? Default title
   let orderButton = (
     <CheckoutOrderAndPayButton
       orderButtonLoading={orderButtonLoading}

@@ -25,6 +25,9 @@
   "@tip": "Trinkgeld",
   "@other": "Andere",
   "@credit-card": "Karten und mehr",
+  "@CASH": "BAR",
+  "@PAYPAL": "PAYPAL",
+
   "@payment": "ZAHLUNG",
   "@agreement-part-1": "Durch Klicken auf",
   "@order-and-pay": "KOSTENPFLICHTIG BESTELLEN",
