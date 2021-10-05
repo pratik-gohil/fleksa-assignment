@@ -105,7 +105,7 @@ export async function getServerSidePropsCommon(
 
     // get app links
     const responseAppLinks = await new PyApiHttpGetAppLinks(configuration).get(responseIndex?.shop.id);
-    if (responseAppLinks) await ctx.store.dispatch(updateAppLinks(responseAppLinks?.shop.application_json.links ?? common_initial_state.app_links));
+    if (responseAppLinks?.shop.application_json.links) await ctx.store.dispatch(updateAppLinks(responseAppLinks?.shop.application_json.links ?? common_initial_state.app_links));
 
     /**
      * Update current restarurnat menu id and url if it's not present
