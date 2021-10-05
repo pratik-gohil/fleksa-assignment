@@ -32,7 +32,7 @@ const WrapperContainer = styled.div`
   }
 
   @media (max-width: ${BREAKPOINTS.lg}px) {
-    flex-direction: column-reverse;
+    flex-direction: column;
 
     & > div {
       padding: 0 1rem;
