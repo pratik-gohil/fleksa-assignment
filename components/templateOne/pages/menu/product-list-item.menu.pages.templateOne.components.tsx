@@ -65,7 +65,7 @@ const ClosedViewContainer = styled.div`
 
 const ClosedViewInfoContainer = styled.div`
   display: flex;
-  padding: 12px;
+  padding: 12px 0;
   justify-content: space-between;
 
   @media (max-width: ${BREAKPOINTS.sm}px) {
@@ -84,8 +84,6 @@ const ClosedViewInfoContainerSection2 = styled.div`
   flex-shrink: 0;
   flex-direction: column;
   align-items: center;
-  max-width: 120px;
-  margin-left: 12px;
 `;
 
 const ClosedViewInfoImage = styled.img<IPropsClosedViewInfoImage>`
