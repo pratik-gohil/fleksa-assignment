@@ -24,6 +24,7 @@ const WrapperContainer = styled.div`
 
   @media (min-width: ${BREAKPOINTS.lg}px) {
     height: 100vh;
+    max-height: 900px;
     background-image: url('/assets/svg/app-section-background.svg');
     background-repeat: no-repeat;
     background-size: contain;
