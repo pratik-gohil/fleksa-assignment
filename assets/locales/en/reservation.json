@@ -16,5 +16,6 @@
   "@enter-name": "Please enter your Name!",
   "@enter-email": "Please enter your Email!",
   "@enter-phone": "Please enter your Phone!",
-  "@oops-error": "Ooops! Something went wrong."
+  "@oops-error": "Ooops! Something went wrong.",
+  "@restaurant-sibling-label": "Restaurant Name"
 }

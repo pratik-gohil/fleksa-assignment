@@ -16,5 +16,6 @@
   "@enter-name": "Bitte geben Sie Ihren Namen ein!",
   "@enter-email": "Bitte geben Sie ihre E-Mail-Adresse ein!",
   "@enter-phone": "Bitte geben Sie Ihr Telefon ein!",
-  "@oops-error": "Ups! Etwas ist schief gelaufen."
+  "@oops-error": "Ups! Etwas ist schief gelaufen.",
+  "@restaurant-sibling-label": "Name des Restaurants"
 }
