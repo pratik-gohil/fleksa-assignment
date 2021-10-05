@@ -63,8 +63,8 @@ const NavLanguageChange: FunctionComponent<IPropsNavLanguageChange> = ({ showTit
       }}
     >
       <FlagContainer style={style}>
-        <FlagImage src={router.locale === 'en' ? SvgFlagGerman : SvgFlagUnitedKingdom} />
-        {showTitle && <Title>{language.toUpperCase()}</Title>}
+        <FlagImage src={router.locale === 'en' ? SvgFlagUnitedKingdom : SvgFlagGerman} />
+        {showTitle && <Title>{language === 'english' ? 'ENGLISH' : 'DEUTSCH'}</Title>}
       </FlagContainer>
     </CustomLink>
   );
