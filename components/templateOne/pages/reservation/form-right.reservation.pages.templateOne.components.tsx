@@ -234,6 +234,8 @@ const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGue
           margin: 0,
         }}
       >
+        <Label>{t('@restaurant-sibling-label')}​</Label>
+
         {siblings.length > 0 && (
           <Row nogutter>
             <Col xl={12}>
