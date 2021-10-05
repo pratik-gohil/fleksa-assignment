@@ -162,8 +162,13 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
           foundDateTime = true;
 
           // TODO: Updating sofort state
-          if (timeData[0].isSofort) dispatch(updateCheckoutIsSofort(true));
-          else dispatch(updateCheckoutIsSofort(false));
+          if (timeData[0].isSofort) {
+            dispatch(updateCheckoutIsSofort(true));
+            dispatch(updateCheckoutIsPreOrder(false));
+          } else {
+            dispatch(updateCheckoutIsSofort(false));
+            dispatch(updateCheckoutIsPreOrder(true));
+          }
 
           break;
         }
@@ -193,8 +198,8 @@ const CheckoutPageSummary: FunctionComponent = ({}) => {
     setShop(isShopOpened(timingsData, moment(), { has_pickup: address.has_pickup, has_delivery: address.has_delivery }));
 
     // ? set pre order mode
-    if (!shop.availability && !shop.isClosed) dispatch(updateCheckoutIsPreOrder(true));
-    else dispatch(updateCheckoutIsPreOrder(false));
+    // if (!shop.availability && !shop.isClosed) dispatch(updateCheckoutIsPreOrder(true));
+    // else dispatch(updateCheckoutIsPreOrder(false));
   }, [shop.availability, shop.isClosed]);
 
   // TODO: User address update depends on login status

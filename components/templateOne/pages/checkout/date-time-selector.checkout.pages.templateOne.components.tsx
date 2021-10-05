@@ -140,6 +140,22 @@ const CheckoutDateTime: FunctionComponent = ({}) => {
     });
   };
 
+  /**
+   *
+   * @param value ILabelValue | null
+   * @description Updating selected time for place the order
+   */
+  const handleTimeChangeDropDownClick = async (value: ILabelValue | null) => {
+    dispatch(updateWantAt({ date: selectedDate, time: value }));
+    dispatch(updateCheckoutIsSofort(value?.isSofort));
+    dispatch(updateCheckoutIsPreOrder(!value?.isSofort));
+
+    amplitudeEvent(constructEventName(`summary time selection`, 'model'), {
+      prevSelected: wantAtData?.time,
+      currentSelected: value,
+    });
+  };
+
   return (
     <Wrapper>
       <ContentContainerView>
@@ -153,19 +169,7 @@ const CheckoutDateTime: FunctionComponent = ({}) => {
         <Item>
           <Text>{t('@choose-time')}</Text>
 
-          <Select
-            value={wantAtData?.time || null}
-            options={timeList}
-            onChange={(value) => {
-              dispatch(updateWantAt({ date: selectedDate, time: value }));
-              dispatch(updateCheckoutIsSofort(value?.isSofort));
-
-              amplitudeEvent(constructEventName(`summary time selection`, 'model'), {
-                prevSelected: wantAtData?.time,
-                currentSelected: value,
-              });
-            }}
-          />
+          <Select value={wantAtData?.time || null} options={timeList} onChange={handleTimeChangeDropDownClick} />
         </Item>
 
         <Item>
