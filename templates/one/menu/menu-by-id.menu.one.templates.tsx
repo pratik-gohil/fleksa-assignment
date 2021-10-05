@@ -164,6 +164,7 @@ const MenuByIdPageTemplateOne: FunctionComponent = ({}) => {
           </Col>
           <Col sm={12} md={12} lg={5} xxl={5}>
             <MenuPageCategoryList />
+
             <DisclaimerContainer>
               <Disclaimer>{t('line-1')}</Disclaimer>
               <Disclaimer>{t('line-2')}</Disclaimer>
