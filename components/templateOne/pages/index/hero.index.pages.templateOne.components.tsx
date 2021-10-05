@@ -271,8 +271,8 @@ const IndexPageHero: FunctionComponent = ({}) => {
                     />
 
                     <SubTitle2>
-                      {t('@next-hours-1')} {t('@next-hours')} {shop.next?.dayNumber ? ` ${shop.next?.dayNumber} ,` : ''}{' '}
-                      {t(`@${shop.next?.day.toUpperCase()}`)}, {shop.next?.time}
+                      {t('@next-hours-1')} {addressData?.has_delivery ? t('@next-delivery-hours') : t('@next-order-hours')}{' '}
+                      {shop.next?.dayNumber ? ` ${shop.next?.dayNumber} ,` : ''} {t(`@${shop.next?.day.toUpperCase()}`)}, {shop.next?.time}
                     </SubTitle2>
                   </>
                 ) : (
