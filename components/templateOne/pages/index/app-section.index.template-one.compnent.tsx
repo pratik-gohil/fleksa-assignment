@@ -17,8 +17,6 @@ const WrapperContainer = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
-  padding: ${(props) => props.theme.dimen.X4 * 4}px 0;
-  margin: ${(props) => props.theme.dimen.X4 * 4}px 0;
 
   & > div {
     flex: 1;
@@ -77,7 +75,7 @@ const ImageSection = styled.div`
   position: relative;
   display: flex;
   justify-content: center;
-  height: 100%;
+  align-items: center;
 
   @media (max-width: ${BREAKPOINTS.lg}px) {
     align-items: center;
