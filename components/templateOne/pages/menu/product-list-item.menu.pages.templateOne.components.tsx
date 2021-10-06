@@ -52,7 +52,8 @@ const ListItem = styled.li<IPropsListItem>`
 const BannerImage = styled.img<IPropsBannerImage>`
   height: ${(props) => (props.isOpen ? 200 : 0)}px;
   width: 100%;
-  object-fit: cover;
+  padding: ${(props) => (props.isOpen ? 20 : 0)}px;
+  object-fit: contain;
   display: block;
   transition-duration: 500ms;
 `;
@@ -136,7 +137,11 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
   const getNextIndex = () => ++optionsIndex;
 
   function toggle() {
-    if ((!!product.choice && product.choice.length > 0) || (!!product.side_products_json && product.side_products_json.length > 0)) {
+    if (
+      (!!product.choice && product.choice.length > 0) ||
+      (!!product.side_products_json && product.side_products_json.length > 0) ||
+      product.image
+    ) {
       amplitudeEvent(constructEventName('product wrapper', 'card'), { product, isOpen });
 
       if (isOpen) setOpenItemId(undefined);
@@ -179,7 +184,14 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
           <ClosedViewInfoContainerSection2>
             {product.image && <ClosedViewInfoImage src={product.image} loading="lazy" isOpen={isOpen} />}
 
-            {!isOpen && (
+            {((((!!product.choice && product.choice.length > 0) ||
+              (!!product.side_products_json && product.side_products_json.length > 0)) &&
+              !isOpen) ||
+              (!(
+                (!!product.choice && product.choice.length > 0) ||
+                (!!product.side_products_json && product.side_products_json.length > 0)
+              ) &&
+                true)) && (
               <AddButton
                 setOpenItemId={setOpenItemId}
                 product={product}
