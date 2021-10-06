@@ -52,7 +52,7 @@ const ListItem = styled.li<IPropsListItem>`
 const BannerImage = styled.img<IPropsBannerImage>`
   height: ${(props) => (props.isOpen ? 200 : 0)}px;
   width: 100%;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
   transition-duration: 500ms;
 `;
