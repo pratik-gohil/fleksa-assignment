@@ -136,7 +136,11 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
   const getNextIndex = () => ++optionsIndex;
 
   function toggle() {
-    if ((!!product.choice && product.choice.length > 0) || (!!product.side_products_json && product.side_products_json.length > 0)) {
+    if (
+      (!!product.choice && product.choice.length > 0) ||
+      (!!product.side_products_json && product.side_products_json.length > 0) ||
+      product.image
+    ) {
       amplitudeEvent(constructEventName('product wrapper', 'card'), { product, isOpen });
 
       if (isOpen) setOpenItemId(undefined);
@@ -224,19 +228,20 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
             );
           })}
       </OptionsContainer>
-      {((!!product.choice && product.choice.length > 0) || (!!product.side_products_json && product.side_products_json.length > 0)) &&
-        isOpen && (
-          <AddButton
-            isBottom={true}
-            setOpenItemId={setOpenItemId}
-            product={product}
-            canOpen={
-              (!!product.choice && product.choice.length > 0) || (!!product.side_products_json && product.side_products_json.length > 0)
-            }
-            hasImage={!!product.image}
-            isOpen={isOpen}
-          />
-        )}
+      {((((!!product.choice && product.choice.length > 0) || (!!product.side_products_json && product.side_products_json.length > 0)) &&
+        isOpen) ||
+        (isOpen && !!product.image)) && (
+        <AddButton
+          isBottom={true}
+          setOpenItemId={setOpenItemId}
+          product={product}
+          canOpen={
+            (!!product.choice && product.choice.length > 0) || (!!product.side_products_json && product.side_products_json.length > 0)
+          }
+          hasImage={!!product.image}
+          isOpen={isOpen}
+        />
+      )}
     </ListItem>
   );
 };
