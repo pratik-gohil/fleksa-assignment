@@ -52,6 +52,7 @@ const ListItem = styled.li<IPropsListItem>`
 const BannerImage = styled.img<IPropsBannerImage>`
   height: ${(props) => (props.isOpen ? 200 : 0)}px;
   width: 100%;
+  padding: ${(props) => (props.isOpen ? 20 : 0)}px;
   object-fit: contain;
   display: block;
   transition-duration: 500ms;
@@ -183,7 +184,14 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
           <ClosedViewInfoContainerSection2>
             {product.image && <ClosedViewInfoImage src={product.image} loading="lazy" isOpen={isOpen} />}
 
-            {!isOpen && (
+            {((((!!product.choice && product.choice.length > 0) ||
+              (!!product.side_products_json && product.side_products_json.length > 0)) &&
+              !isOpen) ||
+              (!(
+                (!!product.choice && product.choice.length > 0) ||
+                (!!product.side_products_json && product.side_products_json.length > 0)
+              ) &&
+                true)) && (
               <AddButton
                 setOpenItemId={setOpenItemId}
                 product={product}
@@ -228,20 +236,19 @@ const MenuPageProductListItem: FunctionComponent<IPropsMenuPageCategoryListItem>
             );
           })}
       </OptionsContainer>
-      {((((!!product.choice && product.choice.length > 0) || (!!product.side_products_json && product.side_products_json.length > 0)) &&
-        isOpen) ||
-        (isOpen && !!product.image)) && (
-        <AddButton
-          isBottom={true}
-          setOpenItemId={setOpenItemId}
-          product={product}
-          canOpen={
-            (!!product.choice && product.choice.length > 0) || (!!product.side_products_json && product.side_products_json.length > 0)
-          }
-          hasImage={!!product.image}
-          isOpen={isOpen}
-        />
-      )}
+      {((!!product.choice && product.choice.length > 0) || (!!product.side_products_json && product.side_products_json.length > 0)) &&
+        isOpen && (
+          <AddButton
+            isBottom={true}
+            setOpenItemId={setOpenItemId}
+            product={product}
+            canOpen={
+              (!!product.choice && product.choice.length > 0) || (!!product.side_products_json && product.side_products_json.length > 0)
+            }
+            hasImage={!!product.image}
+            isOpen={isOpen}
+          />
+        )}
     </ListItem>
   );
 };
