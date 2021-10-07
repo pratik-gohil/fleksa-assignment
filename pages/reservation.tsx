@@ -16,7 +16,7 @@ export const getServerSideProps = IndexStoreWrapper.getServerSideProps(async (ct
 
     return {
       props: {
-        ...(await serverSideTranslations((ctx as any).locale, ['header', 'footer', 'reservation', 'cart'])),
+        ...(await serverSideTranslations((ctx as any).locale, ['header', 'footer', 'reservation', 'cart', 'login'])),
         templateNumber: 0,
         meta: responseIndex?.meta,
       },

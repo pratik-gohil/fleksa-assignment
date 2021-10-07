@@ -234,31 +234,32 @@ const FormRightInputs = ({ time, date, totalGuest, setDate, setTime, setTotalGue
           margin: 0,
         }}
       >
-        <Label>{t('@restaurant-sibling-label')}​</Label>
-
         {siblings.length > 0 && (
-          <Row nogutter>
-            <Col xl={12}>
-              <SiblingContainer>
-                <SelectBox
-                  value={shopName}
-                  onChange={(e) => {
-                    setShopName(e.target.value);
+          <>
+            <Label>{t('@restaurant-sibling-label')}​</Label>
+            <Row nogutter>
+              <Col xl={12}>
+                <SiblingContainer>
+                  <SelectBox
+                    value={shopName}
+                    onChange={(e) => {
+                      setShopName(e.target.value);
 
-                    const selectedSibling = siblings.filter((s) => s.name === e.target.value)[0];
+                      const selectedSibling = siblings.filter((s) => s.name === e.target.value)[0];
 
-                    setShopId(selectedSibling.id);
-                  }}
-                >
-                  {siblings.map((s, i) => (
-                    <Option key={i} value={s.name}>
-                      {s.name}
-                    </Option>
-                  ))}
-                </SelectBox>
-              </SiblingContainer>
-            </Col>
-          </Row>
+                      setShopId(selectedSibling.id);
+                    }}
+                  >
+                    {siblings.map((s, i) => (
+                      <Option key={i} value={s.name}>
+                        {s.name}
+                      </Option>
+                    ))}
+                  </SelectBox>
+                </SiblingContainer>
+              </Col>
+            </Row>
+          </>
         )}
 
         <Label>{t('@guest')}​</Label>
